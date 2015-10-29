@@ -14,12 +14,7 @@ import android.os.AsyncTask;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import org.apache.commons.io.IOUtils;
-
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.StringWriter;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.ServerSocket;
@@ -35,18 +30,18 @@ import java.util.Date;
 public class WifiBroadcaster extends BroadcastReceiver {
     private static final int SOCKET_TIMEOUT = 8000;
     private static final int GROUP_PORT = 8888;
+    private SimpleDateFormat sdf = new SimpleDateFormat("MM-dd HH:mm:ss.SSS");
 
     WifiP2pManager mManager;
     WifiP2pManager.Channel mChannel;
     IntentFilter mIntentFilter;
 
     PeerDeviceListChangeListener peerDeviceListChangeListener;
-    InetAddress groupOwnerAddress;
 
     TextView logTxt;
     ListView deviceList;
 
-    SimpleDateFormat sdf = new SimpleDateFormat("MM-dd HH:mm:ss.SSS");
+    SendManager sendManager;
 
     public WifiBroadcaster(Context c, ListView deviceList, TextView logTxt){
         this.mManager = (WifiP2pManager)c.getSystemService(Context.WIFI_P2P_SERVICE);
@@ -93,11 +88,11 @@ public class WifiBroadcaster extends BroadcastReceiver {
                     if (info.groupFormed && info.isGroupOwner) {
                         // if current device is a server
                         writeLog("this device takes role of server, start listening...");
-                        new ExchangeDataAsyncTask().execute();
+                        new ServerTask().execute();
                     } else if (info.groupFormed) {
                         // if current device is a client
-                        writeLog("this device takes role of client, click on SAY HI button to send a message");
-                        groupOwnerAddress = info.groupOwnerAddress;
+                        writeLog("this device takes role of client...");
+                        new ClientTask(info.groupOwnerAddress.getHostAddress()).execute();
                     }
                 }
             });
@@ -229,33 +224,35 @@ public class WifiBroadcaster extends BroadcastReceiver {
         this.logTxt.append(sdf.format(new Date()) + ": " + msg + "\r\n");
     }
 
-    public class SendDataTask extends AsyncTask {
-        private String sendingData = "";
+    public class ClientTask extends AsyncTask {
+        String hostAddress;
 
-        public SendDataTask(String sendingData){
-            this.sendingData = sendingData;
+        public ClientTask(String address){
+            this.hostAddress = address;
         }
 
         @Override
         protected Object doInBackground(Object[] params) {
             Socket socket = new Socket();
 
-            String deviceName = "unknown";
-
             try {
+                // open client socket and
                 socket.bind(null);
-                String hostName = groupOwnerAddress.getHostAddress();
-                socket.connect(new InetSocketAddress(hostName, GROUP_PORT), SOCKET_TIMEOUT);
-                OutputStream stream = socket.getOutputStream();
+                socket.connect(new InetSocketAddress(hostAddress, GROUP_PORT), SOCKET_TIMEOUT);
 
-                String sendingData = "sending: " + this.sendingData + " from " + deviceName;
-                stream.write(sendingData.getBytes());
-                stream.close();
-                stream = null;
+                // listen on new client socket on a new thread
+                sendManager = new SendManager(socket, new SendManager.DataListener() {
+                    @Override
+                    public void available(Object data) {
+                        // when data is available at client
+                    }
+                });
+                sendManager.start();
 
-                return "data sent: " + sendingData;
-            } catch(IOException ex) {
-                return ("exception (" + ex.getClass() + "): " + ex.getMessage());
+                return null;
+            } catch(IOException e) {
+                writeLog("error: " + e.getMessage());
+                return null;
             } finally {
                 if (socket != null) {
                     try {
@@ -284,39 +281,46 @@ public class WifiBroadcaster extends BroadcastReceiver {
      * @param st
      */
     public void sendObject(Object st) {
-        new SendDataTask("").execute();
+        sendManager.write("hello");
     }
 
     /**
      * this class will implement a server socket to listen to client sockets
      * to receive message
      */
-    public class ExchangeDataAsyncTask extends AsyncTask {
-
-        public ExchangeDataAsyncTask() {
-        }
+    public class ServerTask extends AsyncTask {
 
         @Override
         protected Object doInBackground(Object[] params) {
+            ServerSocket serverSocket = null;
             try {
-                /**
-                 * Create a server socket and wait for client connections. This
-                 * call blocks until a connection is accepted from a client
-                 */
-                ServerSocket serverSocket = new ServerSocket(GROUP_PORT);
-                Socket client = serverSocket.accept();
+                serverSocket = new ServerSocket(GROUP_PORT);
 
-                InputStream inputStream = client.getInputStream();
-                StringWriter writer = new StringWriter();
-                IOUtils.copy(inputStream, writer, "UTF-8");
-                String theString = writer.toString();
+                while (true) {
 
-                serverSocket.close();
+                    // Create a server socket and wait for client connections. This
+                    // call blocks until a connection is accepted from a client
+                    Socket client = serverSocket.accept();
 
-                return theString;
+                    // handle a connection with server in a different socket on
+                    // a separated thread
+                    sendManager = new SendManager(client, new SendManager.DataListener() {
+                        @Override
+                        public void available(Object data) {
+                            // when data available at server
+                        }
+                    });
+                    sendManager.start();
+                }
             } catch (IOException e) {
                 writeLog("error: " + e.getMessage());
                 return null;
+            } finally {
+                try {
+                    serverSocket.close();
+                }catch (IOException ioEx) {
+                    //
+                }
             }
         }
 
