@@ -2,6 +2,8 @@ package com.minhld.supports;
 
 import android.util.Log;
 
+import com.minhld.jobshare.MainActivity;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -40,7 +42,7 @@ public class SendManager extends Thread {
                     break;
                 }
 
-                // print this to output stream
+                // send data to UI thread
                 if (listener != null) {
                     listener.available(input);
                 }
@@ -48,15 +50,21 @@ public class SendManager extends Thread {
             in.close();
         }catch(Exception e) {
             e.printStackTrace();
+            //utils.writeLog(MainActivity.this, null, "error: " + e.getMessage());
         }finally {
             try {
                 socket.close();
             }catch(IOException ioEx) {
-                //
+                ioEx.printStackTrace();
             }
         }
     }
 
+    /**
+     * write data to output to send to other peers
+     *
+     * @param st
+     */
     public void write(Object st) {
         try {
             outStream.write(st.toString().getBytes());

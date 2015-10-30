@@ -1,5 +1,6 @@
 package com.minhld.supports;
 
+import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -10,18 +11,19 @@ import android.net.wifi.p2p.WifiP2pDevice;
 import android.net.wifi.p2p.WifiP2pDeviceList;
 import android.net.wifi.p2p.WifiP2pInfo;
 import android.net.wifi.p2p.WifiP2pManager;
-import android.os.AsyncTask;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import java.io.IOException;
-import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.text.SimpleDateFormat;
 import java.util.Collection;
 import java.util.Date;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 
 /**
@@ -29,7 +31,7 @@ import java.util.Date;
  */
 public class WifiBroadcaster extends BroadcastReceiver {
     private static final int SOCKET_TIMEOUT = 8000;
-    private static final int GROUP_PORT = 8888;
+    private static final int GROUP_PORT = 8881;
     private SimpleDateFormat sdf = new SimpleDateFormat("MM-dd HH:mm:ss.SSS");
 
     WifiP2pManager mManager;
@@ -38,17 +40,19 @@ public class WifiBroadcaster extends BroadcastReceiver {
 
     PeerDeviceListChangeListener peerDeviceListChangeListener;
 
+    Activity mContext;
     TextView logTxt;
     ListView deviceList;
 
     SendManager sendManager;
 
-    public WifiBroadcaster(Context c, ListView deviceList, TextView logTxt){
-        this.mManager = (WifiP2pManager)c.getSystemService(Context.WIFI_P2P_SERVICE);
-        mChannel = mManager.initialize(c, c.getMainLooper(), null);
-
+    public WifiBroadcaster(Activity c, ListView deviceList, TextView logTxt){
+        this.mContext = c;
         this.deviceList = deviceList;
         this.logTxt = logTxt;
+
+        this.mManager = (WifiP2pManager)c.getSystemService(Context.WIFI_P2P_SERVICE);
+        mChannel = mManager.initialize(c, c.getMainLooper(), null);
     }
 
     @Override
@@ -88,11 +92,11 @@ public class WifiBroadcaster extends BroadcastReceiver {
                     if (info.groupFormed && info.isGroupOwner) {
                         // if current device is a server
                         writeLog("this device takes role of server, start listening...");
-                        new ServerTask().execute();
+                        new ServerTask().start();
                     } else if (info.groupFormed) {
                         // if current device is a client
                         writeLog("this device takes role of client...");
-                        new ClientTask(info.groupOwnerAddress.getHostAddress()).execute();
+                        new ClientTask(info.groupOwnerAddress.getHostAddress()).start();
                     }
                 }
             });
@@ -220,19 +224,75 @@ public class WifiBroadcaster extends BroadcastReceiver {
      *
      * @param msg
      */
-    public void writeLog(String msg){
-        this.logTxt.append(sdf.format(new Date()) + ": " + msg + "\r\n");
+    public void writeLog(final String msg){
+        mContext.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                logTxt.append(sdf.format(new Date()) + ": " + msg + "\r\n");
+            }
+        });
     }
 
-    public class ClientTask extends AsyncTask {
+    /**
+     * this class will implement a server socket to listen to client sockets
+     * to receive message
+     */
+    public class ServerTask extends Thread {
+        ServerSocket socket = null;
+        private final int THREAD_COUNT = 10;
+        /**
+         * A ThreadPool for client sockets.
+         */
+        private final ThreadPoolExecutor pool = new ThreadPoolExecutor(
+                        THREAD_COUNT, THREAD_COUNT, 10, TimeUnit.SECONDS,
+                        new LinkedBlockingQueue<Runnable>());
+
+        public ServerTask() { }
+
+        @Override
+        public void run() {
+            try {
+                socket = new ServerSocket(GROUP_PORT);
+                writeLog("server socket started");
+
+                while (true) {
+
+                    // A blocking operation. Initiate a ChatManager instance when
+                    // there is a new connection
+                    sendManager = new SendManager(socket.accept(), new SendManager.DataListener() {
+                        @Override
+                        public void available(Object data) {
+                            // code will be added here
+                            writeLog("server received " + data.toString());
+                        }
+                    });
+                    pool.execute(sendManager);
+                }
+            } catch (IOException e) {
+                try {
+                    if (socket != null && !socket.isClosed())
+                        socket.close();
+                } catch (IOException ioe) {
+                }
+                e.printStackTrace();
+                writeLog("error: " + e.getMessage());
+                pool.shutdownNow();
+            }
+        }
+
+        public ServerSocket getServerSocket() {
+            return socket;
+        }
+    }
+
+    public class ClientTask extends Thread {
         String hostAddress;
 
         public ClientTask(String address){
             this.hostAddress = address;
         }
 
-        @Override
-        protected Object doInBackground(Object[] params) {
+        public void run() {
             Socket socket = new Socket();
 
             try {
@@ -245,14 +305,12 @@ public class WifiBroadcaster extends BroadcastReceiver {
                     @Override
                     public void available(Object data) {
                         // when data is available at client
+                        writeLog("client received " + data.toString());
                     }
                 });
                 sendManager.start();
-
-                return null;
             } catch(IOException e) {
                 writeLog("error: " + e.getMessage());
-                return null;
             } finally {
                 if (socket != null) {
                     try {
@@ -263,14 +321,6 @@ public class WifiBroadcaster extends BroadcastReceiver {
                         e.printStackTrace();
                     }
                 }
-            }
-        }
-
-        @Override
-        protected void onPostExecute(Object result) {
-            super.onPostExecute(result);
-            if (result != null) {
-                writeLog(result.toString());
             }
         }
     }
@@ -284,55 +334,5 @@ public class WifiBroadcaster extends BroadcastReceiver {
         sendManager.write("hello");
     }
 
-    /**
-     * this class will implement a server socket to listen to client sockets
-     * to receive message
-     */
-    public class ServerTask extends AsyncTask {
 
-        @Override
-        protected Object doInBackground(Object[] params) {
-            ServerSocket serverSocket = null;
-            try {
-                serverSocket = new ServerSocket(GROUP_PORT);
-
-                while (true) {
-
-                    // Create a server socket and wait for client connections. This
-                    // call blocks until a connection is accepted from a client
-                    Socket client = serverSocket.accept();
-
-                    // handle a connection with server in a different socket on
-                    // a separated thread
-                    sendManager = new SendManager(client, new SendManager.DataListener() {
-                        @Override
-                        public void available(Object data) {
-                            // when data available at server
-                        }
-                    });
-                    sendManager.start();
-                }
-            } catch (IOException e) {
-                writeLog("error: " + e.getMessage());
-                return null;
-            } finally {
-                try {
-                    serverSocket.close();
-                }catch (IOException ioEx) {
-                    //
-                }
-            }
-        }
-
-        /**
-         * Start activity that can handle the JPEG image
-         */
-        @Override
-        protected void onPostExecute(Object result) {
-            super.onPostExecute(result);
-            if (result != null) {
-                writeLog("data received: " + result);
-            }
-        }
-    }
 }
