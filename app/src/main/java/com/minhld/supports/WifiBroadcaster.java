@@ -15,9 +15,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import java.io.IOException;
-import java.net.InetSocketAddress;
 import java.net.ServerSocket;
-import java.net.Socket;
 import java.text.SimpleDateFormat;
 import java.util.Collection;
 import java.util.Date;
@@ -38,12 +36,15 @@ public class WifiBroadcaster extends BroadcastReceiver {
     WifiP2pManager.Channel mChannel;
     IntentFilter mIntentFilter;
 
-    PeerDeviceListChangeListener peerDeviceListChangeListener;
+    BroadCastListener broadCastListener;
 
     Activity mContext;
     TextView logTxt;
     ListView deviceList;
 
+    SocketManager socketManager;
+    ServerTask serverTask;
+    ClientTask clientTask;
     SendManager sendManager;
 
     public WifiBroadcaster(Activity c, ListView deviceList, TextView logTxt){
@@ -77,8 +78,8 @@ public class WifiBroadcaster extends BroadcastReceiver {
                 public void onPeersAvailable(WifiP2pDeviceList peers) {
                     Collection<WifiP2pDevice> deviceList = peers.getDeviceList();
                     writeLog(deviceList.size() + " devices was found");
-                    if (peerDeviceListChangeListener != null){
-                        peerDeviceListChangeListener.peerDeviceListUpdated(deviceList);
+                    if (broadCastListener != null){
+                        broadCastListener.peerDeviceListUpdated(deviceList);
                     }
                 }
             });
@@ -89,14 +90,22 @@ public class WifiBroadcaster extends BroadcastReceiver {
             mManager.requestConnectionInfo(mChannel, new WifiP2pManager.ConnectionInfoListener() {
                 @Override
                 public void onConnectionInfoAvailable(WifiP2pInfo info) {
+                    String hostAddress = info.groupOwnerAddress.getHostAddress();
                     if (info.groupFormed && info.isGroupOwner) {
                         // if current device is a server
-                        writeLog("this device takes role of server, start listening...");
-                        new ServerTask().start();
+
+                        writeLog("[server] start listening @ " + hostAddress);
+                        socketManager = new SocketManager(SocketManager.SocketType.SERVER, hostAddress);
+
                     } else if (info.groupFormed) {
                         // if current device is a client
-                        writeLog("this device takes role of client...");
-                        new ClientTask(info.groupOwnerAddress.getHostAddress()).start();
+                        writeLog("[client] listening to @ " + info.groupOwnerAddress.getHostAddress());
+                        if (clientTask == null) {
+                            clientTask = new ClientTask(info.groupOwnerAddress.getHostAddress());
+                            clientTask.start();
+                        } else {
+                            writeLog("[client] will be reused");
+                        }
                     }
                 }
             });
@@ -164,6 +173,16 @@ public class WifiBroadcaster extends BroadcastReceiver {
      * @param listener
      */
     public void disconnect(final String deviceName, final WifiP2pConnectionListener listener){
+        // close the current socket
+        sendManager.close();
+
+        // if
+        if (serverTask != null) {
+            serverTask.dispose();
+            serverTask = null;
+        }
+
+        // dispose the group it connected to
         mManager.removeGroup(mChannel, new WifiP2pManager.ActionListener() {
             @Override
             public void onSuccess() {
@@ -211,12 +230,25 @@ public class WifiBroadcaster extends BroadcastReceiver {
         return this.mManager;
     }
 
-    public void setPeerDeviceListChangeListener(PeerDeviceListChangeListener pdlcListener){
-        this.peerDeviceListChangeListener = pdlcListener;
+    public void setBroadCastListener(BroadCastListener pdlcListener){
+        this.broadCastListener = pdlcListener;
     }
 
-    public interface PeerDeviceListChangeListener {
+    public interface BroadCastListener {
+        public static class SocketStatus {
+            public boolean status;
+
+            public SocketStatus() {
+                this.status = true;
+            }
+
+            public SocketStatus(boolean status) {
+                this.status = status;
+            }
+        }
+
         public void peerDeviceListUpdated(Collection<WifiP2pDevice> deviceList);
+        public void socketUpdated(SocketStatus socketStatus);
     }
 
     /**
@@ -240,9 +272,8 @@ public class WifiBroadcaster extends BroadcastReceiver {
     public class ServerTask extends Thread {
         ServerSocket socket = null;
         private final int THREAD_COUNT = 10;
-        /**
-         * A ThreadPool for client sockets.
-         */
+
+        // A ThreadPool for client sockets.
         private final ThreadPoolExecutor pool = new ThreadPoolExecutor(
                         THREAD_COUNT, THREAD_COUNT, 10, TimeUnit.SECONDS,
                         new LinkedBlockingQueue<Runnable>());
@@ -260,11 +291,21 @@ public class WifiBroadcaster extends BroadcastReceiver {
                     // A blocking operation. Initiate a ChatManager instance when
                     // there is a new connection
                     sendManager = new SendManager(socket.accept(), new SendManager.DataListener() {
+
                         @Override
-                        public void available(Object data) {
+                        public void socketReady(boolean ready) {
+                            writeLog("server socket status: " + (ready ? "is ready" : "not ready"));
+
+                            // update socket status
+                            broadCastListener.socketUpdated(new BroadCastListener.SocketStatus());
+                        }
+
+                        @Override
+                        public void dataAvailalbe(Object data) {
                             // code will be added here
                             writeLog("server received " + data.toString());
                         }
+
                     });
                     pool.execute(sendManager);
                 }
@@ -280,8 +321,12 @@ public class WifiBroadcaster extends BroadcastReceiver {
             }
         }
 
-        public ServerSocket getServerSocket() {
-            return socket;
+        public void dispose() {
+            try {
+                socket.close();
+            }catch(IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -293,35 +338,25 @@ public class WifiBroadcaster extends BroadcastReceiver {
         }
 
         public void run() {
-            Socket socket = new Socket();
-
-            try {
-                // open client socket and
-                socket.bind(null);
-                socket.connect(new InetSocketAddress(hostAddress, GROUP_PORT), SOCKET_TIMEOUT);
-
-                // listen on new client socket on a new thread
-                sendManager = new SendManager(socket, new SendManager.DataListener() {
-                    @Override
-                    public void available(Object data) {
-                        // when data is available at client
-                        writeLog("client received " + data.toString());
-                    }
-                });
-                sendManager.start();
-            } catch(IOException e) {
-                writeLog("error: " + e.getMessage());
-            } finally {
-                if (socket != null) {
-                    try {
-                        socket.close();
-                        socket = null;
-                    } catch(IOException e) {
-                        // noway it goes this line
-                        e.printStackTrace();
+            // listen on new client socket on a new thread
+            sendManager = new SendManager(hostAddress, new SendManager.DataListener() {
+                @Override
+                public void socketReady(boolean ready) {
+                    writeLog("client socket status: " + (ready ? "is ready" : "not ready"));
+                    if (broadCastListener != null) {
+                        broadCastListener.socketUpdated(new BroadCastListener.SocketStatus());
                     }
                 }
-            }
+
+                @Override
+                public void dataAvailalbe(Object data) {
+                    // when data is available at client
+                    writeLog("client received " + data.toString());
+                }
+
+            });
+
+            sendManager.start();
         }
     }
 

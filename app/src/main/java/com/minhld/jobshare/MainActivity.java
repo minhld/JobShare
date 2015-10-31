@@ -50,7 +50,7 @@ public class MainActivity extends AppCompatActivity {
 
         // configure wifi receiver
         mReceiver = new WifiBroadcaster(this, deviceList, infoText);
-        mReceiver.setPeerDeviceListChangeListener(new PeerListChangeHandler());
+        mReceiver.setBroadCastListener(new BroadcastUpdatesHandler());
         mReceiver.discoverPeers();
         mIntentFilter = mReceiver.getSingleIntentFilter();
 
@@ -66,6 +66,9 @@ public class MainActivity extends AppCompatActivity {
                 mReceiver.sendObject("hello!");
             }
         });
+
+        // the status button will only be available when the socket is enabled
+        sayHiBtn.setEnabled(false);
 
         broadcastBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -96,12 +99,24 @@ public class MainActivity extends AppCompatActivity {
     /**
      * this class handles the device list when it is updated
      */
-    private class PeerListChangeHandler implements WifiBroadcaster.PeerDeviceListChangeListener{
+    private class BroadcastUpdatesHandler implements WifiBroadcaster.BroadCastListener {
         @Override
         public void peerDeviceListUpdated(Collection<WifiP2pDevice> deviceList) {
             deviceListAdapter.clear();
             deviceListAdapter.addAll(deviceList);
             deviceListAdapter.notifyDataSetChanged();
+        }
+
+        @Override
+        public void socketUpdated(final SocketStatus socketStatus) {
+            // enable/disable the "Say Hi" button when its status changed
+            MainActivity.this.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    sayHiBtn.setEnabled(socketStatus.status);
+                }
+            });
+
         }
     }
 
