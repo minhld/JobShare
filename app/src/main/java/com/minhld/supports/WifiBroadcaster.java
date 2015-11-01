@@ -11,17 +11,14 @@ import android.net.wifi.p2p.WifiP2pDevice;
 import android.net.wifi.p2p.WifiP2pDeviceList;
 import android.net.wifi.p2p.WifiP2pInfo;
 import android.net.wifi.p2p.WifiP2pManager;
+import android.os.Handler;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import java.io.IOException;
-import java.net.ServerSocket;
 import java.text.SimpleDateFormat;
 import java.util.Collection;
 import java.util.Date;
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
 
 
 /**
@@ -41,6 +38,13 @@ public class WifiBroadcaster extends BroadcastReceiver {
     Activity mContext;
     TextView logTxt;
     ListView deviceList;
+
+    SocketHandler mSocketHandler;
+    Handler mSocketUIListener;
+
+    public void setSocketHandler(Handler skHandler) {
+        this.mSocketUIListener = skHandler;
+    }
 
     public WifiBroadcaster(Activity c, ListView deviceList, TextView logTxt){
         this.mContext = c;
@@ -88,10 +92,17 @@ public class WifiBroadcaster extends BroadcastReceiver {
                     String hostAddress = info.groupOwnerAddress.getHostAddress();
                     if (info.groupFormed && info.isGroupOwner) {
                         // if current device is a server
-                        writeLog("[server] start listening @ " + hostAddress);
+                        try {
+                            mSocketHandler = new GroupOwnerSocketHandler(mContext, logTxt, mSocketUIListener);
+                            mSocketHandler.start();
+                            writeLog("become server @ " + hostAddress);
+                        }catch(IOException e) {
+                            e.printStackTrace();
+                        }
                     } else if (info.groupFormed) {
                         // if current device is a client
-                        writeLog("[client] listening to @ " + info.groupOwnerAddress.getHostAddress());
+                        mSocketHandler = new ClientSocketHandler(mContext, logTxt, mSocketUIListener, info.groupOwnerAddress);
+                        mSocketHandler.start();
                     }
                 }
             });
@@ -214,20 +225,8 @@ public class WifiBroadcaster extends BroadcastReceiver {
     }
 
     public interface BroadCastListener {
-        public static class SocketStatus {
-            public boolean status;
-
-            public SocketStatus() {
-                this.status = true;
-            }
-
-            public SocketStatus(boolean status) {
-                this.status = status;
-            }
-        }
-
         public void peerDeviceListUpdated(Collection<WifiP2pDevice> deviceList);
-        public void socketUpdated(SocketStatus socketStatus);
+        public void socketUpdated(boolean connected);
     }
 
     /**
