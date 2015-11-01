@@ -42,11 +42,6 @@ public class WifiBroadcaster extends BroadcastReceiver {
     TextView logTxt;
     ListView deviceList;
 
-    SocketManager socketManager;
-    ServerTask serverTask;
-    ClientTask clientTask;
-    SendManager sendManager;
-
     public WifiBroadcaster(Activity c, ListView deviceList, TextView logTxt){
         this.mContext = c;
         this.deviceList = deviceList;
@@ -93,19 +88,10 @@ public class WifiBroadcaster extends BroadcastReceiver {
                     String hostAddress = info.groupOwnerAddress.getHostAddress();
                     if (info.groupFormed && info.isGroupOwner) {
                         // if current device is a server
-
                         writeLog("[server] start listening @ " + hostAddress);
-                        socketManager = new SocketManager(SocketManager.SocketType.SERVER, hostAddress);
-
                     } else if (info.groupFormed) {
                         // if current device is a client
                         writeLog("[client] listening to @ " + info.groupOwnerAddress.getHostAddress());
-                        if (clientTask == null) {
-                            clientTask = new ClientTask(info.groupOwnerAddress.getHostAddress());
-                            clientTask.start();
-                        } else {
-                            writeLog("[client] will be reused");
-                        }
                     }
                 }
             });
@@ -174,13 +160,6 @@ public class WifiBroadcaster extends BroadcastReceiver {
      */
     public void disconnect(final String deviceName, final WifiP2pConnectionListener listener){
         // close the current socket
-        sendManager.close();
-
-        // if
-        if (serverTask != null) {
-            serverTask.dispose();
-            serverTask = null;
-        }
 
         // dispose the group it connected to
         mManager.removeGroup(mChannel, new WifiP2pManager.ActionListener() {
@@ -266,107 +245,12 @@ public class WifiBroadcaster extends BroadcastReceiver {
     }
 
     /**
-     * this class will implement a server socket to listen to client sockets
-     * to receive message
-     */
-    public class ServerTask extends Thread {
-        ServerSocket socket = null;
-        private final int THREAD_COUNT = 10;
-
-        // A ThreadPool for client sockets.
-        private final ThreadPoolExecutor pool = new ThreadPoolExecutor(
-                        THREAD_COUNT, THREAD_COUNT, 10, TimeUnit.SECONDS,
-                        new LinkedBlockingQueue<Runnable>());
-
-        public ServerTask() { }
-
-        @Override
-        public void run() {
-            try {
-                socket = new ServerSocket(GROUP_PORT);
-                writeLog("server socket started");
-
-                while (true) {
-
-                    // A blocking operation. Initiate a ChatManager instance when
-                    // there is a new connection
-                    sendManager = new SendManager(socket.accept(), new SendManager.DataListener() {
-
-                        @Override
-                        public void socketReady(boolean ready) {
-                            writeLog("server socket status: " + (ready ? "is ready" : "not ready"));
-
-                            // update socket status
-                            broadCastListener.socketUpdated(new BroadCastListener.SocketStatus());
-                        }
-
-                        @Override
-                        public void dataAvailalbe(Object data) {
-                            // code will be added here
-                            writeLog("server received " + data.toString());
-                        }
-
-                    });
-                    pool.execute(sendManager);
-                }
-            } catch (IOException e) {
-                try {
-                    if (socket != null && !socket.isClosed())
-                        socket.close();
-                } catch (IOException ioe) {
-                }
-                e.printStackTrace();
-                writeLog("error: " + e.getMessage());
-                pool.shutdownNow();
-            }
-        }
-
-        public void dispose() {
-            try {
-                socket.close();
-            }catch(IOException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    public class ClientTask extends Thread {
-        String hostAddress;
-
-        public ClientTask(String address){
-            this.hostAddress = address;
-        }
-
-        public void run() {
-            // listen on new client socket on a new thread
-            sendManager = new SendManager(hostAddress, new SendManager.DataListener() {
-                @Override
-                public void socketReady(boolean ready) {
-                    writeLog("client socket status: " + (ready ? "is ready" : "not ready"));
-                    if (broadCastListener != null) {
-                        broadCastListener.socketUpdated(new BroadCastListener.SocketStatus());
-                    }
-                }
-
-                @Override
-                public void dataAvailalbe(Object data) {
-                    // when data is available at client
-                    writeLog("client received " + data.toString());
-                }
-
-            });
-
-            sendManager.start();
-        }
-    }
-
-    /**
      * this function will send an object through socket to the server
      *
      * @param st
      */
     public void sendObject(Object st) {
-        sendManager.write("hello");
+
     }
 
 
