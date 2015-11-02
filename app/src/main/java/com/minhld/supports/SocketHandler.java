@@ -44,6 +44,6 @@ public abstract class SocketHandler extends Thread {
     public abstract boolean isSocketWorking();
 
     public void writeLog(String msg) {
-        utils.writeLog(mContext, mLogText, msg);
+        Utility.writeLog(mContext, mLogText, msg);
     }
 }

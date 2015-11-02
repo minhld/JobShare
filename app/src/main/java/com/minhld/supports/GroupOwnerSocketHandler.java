@@ -28,7 +28,7 @@ public class GroupOwnerSocketHandler extends SocketHandler {
         super(c, t);
 
         try {
-            socket = new ServerSocket(utils.SERVER_PORT);
+            socket = new ServerSocket(Utility.SERVER_PORT);
             this.handler = handler;
             writeLog("[server] socket started");
         } catch (IOException e) {

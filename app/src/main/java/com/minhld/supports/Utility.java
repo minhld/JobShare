@@ -12,7 +12,7 @@ import java.util.Date;
 /**
  * Created by minhld on 9/22/2015.
  */
-public class utils {
+public class Utility {
     public static final int SERVER_PORT = 8881;
     public static final int SERVER_TIMEOUT = 5000;
     public static final int MESSAGE_READ = 0x400 + 1;

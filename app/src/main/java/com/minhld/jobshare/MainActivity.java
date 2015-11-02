@@ -12,7 +12,7 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.minhld.supports.utils;
+import com.minhld.supports.Utility;
 import com.minhld.supports.WifiBroadcaster;
 import com.minhld.supports.WifiPeerListAdapter;
 
@@ -47,15 +47,15 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void handleMessage(Message msg) {
             switch (msg.what) {
-                case utils.MESSAGE_READ:
+                case Utility.MESSAGE_READ:
                     byte[] readBuf = (byte[]) msg.obj;
                     // construct a string from the valid bytes in the buffer
                     String readMessage = new String(readBuf, 0, msg.arg1);
-                    utils.writeLog(MainActivity.this, infoText, "buddy: " + readMessage);
+                    Utility.writeLog(MainActivity.this, infoText, "buddy: " + readMessage);
                     break;
-                case utils.MY_HANDLE:
+                case Utility.MY_HANDLE:
                     Object obj = msg.obj;
-                    utils.writeLog(MainActivity.this, infoText, "me: " + obj.toString());
+                    Utility.writeLog(MainActivity.this, infoText, "me: " + obj.toString());
             }
 
         }

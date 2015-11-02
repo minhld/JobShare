@@ -28,7 +28,7 @@ public class ClientSocketHandler extends SocketHandler {
             // initiate client socket
             socket.bind(null);
             socket.connect(new InetSocketAddress(mAddress.getHostAddress(),
-                            utils.SERVER_PORT), utils.SERVER_TIMEOUT);
+                            Utility.SERVER_PORT), Utility.SERVER_TIMEOUT);
             writeLog("[client] launching the I/O handler");
 
             // connect it to a chat manager
