@@ -2,6 +2,8 @@ package com.minhld.jobshare;
 
 import android.content.IntentFilter;
 import android.net.wifi.p2p.WifiP2pDevice;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.method.ScrollingMovementMethod;
@@ -10,6 +12,7 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.minhld.supports.Utils;
 import com.minhld.supports.WifiBroadcaster;
 import com.minhld.supports.WifiPeerListAdapter;
 
@@ -40,6 +43,24 @@ public class MainActivity extends AppCompatActivity {
     WifiPeerListAdapter deviceListAdapter;
     List<WifiP2pDevice> peerArrayList = new ArrayList<>();
 
+    Handler socketHandler = new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case Utils.MESSAGE_READ:
+                    byte[] readBuf = (byte[]) msg.obj;
+                    // construct a string from the valid bytes in the buffer
+                    String readMessage = new String(readBuf, 0, msg.arg1);
+                    Utils.writeLog(MainActivity.this, infoText, "buddy: " + readMessage);
+                    break;
+                case Utils.MY_HANDLE:
+                    Object obj = msg.obj;
+                    Utils.writeLog(MainActivity.this, infoText, "me: " + obj.toString());
+            }
+
+        }
+    };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,6 +72,9 @@ public class MainActivity extends AppCompatActivity {
         // configure wifi receiver
         mReceiver = new WifiBroadcaster(this, deviceList, infoText);
         mReceiver.setBroadCastListener(new BroadcastUpdatesHandler());
+        mReceiver.setSocketHandler(socketHandler);
+
+        // start discovering
         mReceiver.discoverPeers();
         mIntentFilter = mReceiver.getSingleIntentFilter();
 
@@ -61,8 +85,6 @@ public class MainActivity extends AppCompatActivity {
         sayHiBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                Intent intent = new Intent(MainActivity.this, BroadcastActivity.class);
-//                startActivity(intent);
                 mReceiver.sendObject("hello!");
             }
         });
@@ -108,12 +130,12 @@ public class MainActivity extends AppCompatActivity {
         }
 
         @Override
-        public void socketUpdated(final SocketStatus socketStatus) {
+        public void socketUpdated(final boolean connected) {
             // enable/disable the "Say Hi" button when its status changed
             MainActivity.this.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    sayHiBtn.setEnabled(socketStatus.status);
+                    sayHiBtn.setEnabled(connected);
                 }
             });
 

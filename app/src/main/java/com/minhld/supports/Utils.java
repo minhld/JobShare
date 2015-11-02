@@ -12,8 +12,12 @@ import java.util.Date;
 /**
  * Created by minhld on 9/22/2015.
  */
-public class utils {
-    final SimpleDateFormat sdf = new SimpleDateFormat("MM-dd HH:mm:ss.SSS");
+public class Utils {
+    public static final int SERVER_PORT = 8881;
+    public static final int SERVER_TIMEOUT = 5000;
+    public static final int MESSAGE_READ = 0x400 + 1;
+    public static final int MY_HANDLE = 0x400 + 2;
+    public static final SimpleDateFormat SDF = new SimpleDateFormat("MM-dd HH:mm:ss.SSS");
 
     public static void showYesNo(Context c, String message, final ConfirmListener listener){
         AlertDialog.Builder builder = new AlertDialog.Builder(c);
@@ -47,11 +51,11 @@ public class utils {
      * @param log
      * @param msg
      */
-    public void writeLog(Activity c, final TextView log, final String msg){
+    public static void writeLog(Activity c, final TextView log, final String msg){
         c.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                log.append(sdf.format(new Date()) + ": " + msg + "\r\n");
+                log.append(SDF.format(new Date()) + ": " + msg + "\r\n");
             }
         });
     }
