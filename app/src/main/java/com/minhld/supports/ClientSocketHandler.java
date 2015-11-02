@@ -11,7 +11,6 @@ import java.net.InetSocketAddress;
 import java.net.Socket;
 
 public class ClientSocketHandler extends SocketHandler {
-    private static final String TAG = "ClientSocketHandler";
     private Handler handler;
     private ChatManager chat;
     private InetAddress mAddress;
@@ -20,20 +19,25 @@ public class ClientSocketHandler extends SocketHandler {
         super(c, t);
         this.handler = handler;
         this.mAddress = groupOwnerAddress;
+        this.socketType = socketType.CLIENT;
     }
 
     @Override
     public void run() {
         Socket socket = new Socket();
         try {
+            // initiate client socket
             socket.bind(null);
             socket.connect(new InetSocketAddress(mAddress.getHostAddress(),
                             Utils.SERVER_PORT), Utils.SERVER_TIMEOUT);
-            writeLog("Launching the I/O handler");
+            writeLog("[client] launching the I/O handler");
+
+            // connect it to a chat manager
             chat = new ChatManager(socket, handler);
             new Thread(chat).start();
         } catch (IOException e) {
             e.printStackTrace();
+            writeLog("[client] exception: " + e.getMessage());
             try {
                 socket.close();
             } catch (IOException e1) {
@@ -44,9 +48,19 @@ public class ClientSocketHandler extends SocketHandler {
     }
 
     @Override
+    public void write(Object data) {
+        chat.write(data.toString().getBytes());
+    }
+
+    @Override
     public void dispose() {
         // close socket here
 
+    }
+
+    @Override
+    public boolean isSocketWorking() {
+        return true;
     }
 
     public ChatManager getChat() {

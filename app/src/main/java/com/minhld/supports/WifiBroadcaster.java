@@ -64,7 +64,7 @@ public class WifiBroadcaster extends BroadcastReceiver {
             int state = intent.getIntExtra(WifiP2pManager.EXTRA_WIFI_STATE, -1);
             if (state == WifiP2pManager.WIFI_P2P_STATE_ENABLED) {
                 // Wifi P2P is enabled
-                writeLog("wifi p2p is enabled");
+                //writeLog("wifi p2p is enabled");
             } else {
                 // Wi-Fi P2P is not enabled
                 writeLog("wifi p2p is disabled");
@@ -84,32 +84,42 @@ public class WifiBroadcaster extends BroadcastReceiver {
             });
         } else if (WifiP2pManager.WIFI_P2P_CONNECTION_CHANGED_ACTION.equals(action)) {
             // Respond to new connection or disconnections
-            writeLog("device's connection changed");
+            //writeLog("device's connection changed");
 
             mManager.requestConnectionInfo(mChannel, new WifiP2pManager.ConnectionInfoListener() {
                 @Override
                 public void onConnectionInfoAvailable(WifiP2pInfo info) {
-                    String hostAddress = info.groupOwnerAddress.getHostAddress();
                     if (info.groupFormed && info.isGroupOwner) {
                         // if current device is a server
-                        try {
-                            mSocketHandler = new GroupOwnerSocketHandler(mContext, logTxt, mSocketUIListener);
-                            mSocketHandler.start();
-                            writeLog("become server @ " + hostAddress);
-                        }catch(IOException e) {
-                            e.printStackTrace();
+                        if (mSocketHandler != null && mSocketHandler.isSocketWorking()) {
+                            writeLog("server is still be reused @ " + info.groupOwnerAddress.getHostAddress());
+                        } else {
+                            try {
+                                mSocketHandler = new GroupOwnerSocketHandler(mContext, logTxt, mSocketUIListener);
+                                mSocketHandler.start();
+                                writeLog("become server @ " + info.groupOwnerAddress.getHostAddress());
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                                writeLog("[wifi] error: " + e.getMessage());
+                                return;     // we don't enable transmission
+                            }
                         }
+                        broadCastListener.socketUpdated(true);
                     } else if (info.groupFormed) {
                         // if current device is a client
                         mSocketHandler = new ClientSocketHandler(mContext, logTxt, mSocketUIListener, info.groupOwnerAddress);
                         mSocketHandler.start();
+                        broadCastListener.socketUpdated(true);
+                    } else {
+                        // if something different happens, then close the ability of data transmission
+                        broadCastListener.socketUpdated(false);
                     }
                 }
             });
 
         } else if (WifiP2pManager.WIFI_P2P_THIS_DEVICE_CHANGED_ACTION.equals(action)) {
             // Respond to this device's wifi state changing
-            writeLog("device's wifi state changed");
+            //writeLog("device's wifi state changed");
         }
 
     }
@@ -171,6 +181,7 @@ public class WifiBroadcaster extends BroadcastReceiver {
      */
     public void disconnect(final String deviceName, final WifiP2pConnectionListener listener){
         // close the current socket
+        mSocketHandler.dispose();
 
         // dispose the group it connected to
         mManager.removeGroup(mChannel, new WifiP2pManager.ActionListener() {

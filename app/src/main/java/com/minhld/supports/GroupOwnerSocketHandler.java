@@ -19,7 +19,6 @@ public class GroupOwnerSocketHandler extends SocketHandler {
     ServerSocket socket = null;
     private final int THREAD_COUNT = 10;
     private Handler handler;
-    private static final String TAG = "GroupOwnerSocketHandler";
 
     // A ThreadPool for client sockets.
     private final ThreadPoolExecutor pool = new ThreadPoolExecutor(
@@ -35,6 +34,7 @@ public class GroupOwnerSocketHandler extends SocketHandler {
             writeLog("[server] socket started");
         } catch (IOException e) {
             e.printStackTrace();
+            writeLog("[server-cons] exception: " + e.getMessage());
             pool.shutdownNow();
             throw e;
         }
@@ -53,12 +53,17 @@ public class GroupOwnerSocketHandler extends SocketHandler {
                     if (socket != null && !socket.isClosed())
                         socket.close();
                 } catch (IOException ioe) { }
-
                 e.printStackTrace();
                 pool.shutdownNow();
+                writeLog("[server-run] exception: " + e.getMessage());
                 break;
             }
         }
+    }
+
+    @Override
+    public void write(Object data) {
+
     }
 
     @Override
@@ -70,6 +75,12 @@ public class GroupOwnerSocketHandler extends SocketHandler {
 
         }catch(IOException e) {
             e.printStackTrace();
+            writeLog("[server-dispose] exception: " + e.getMessage());
         }
+    }
+
+    @Override
+    public boolean isSocketWorking() {
+        return !socket.isClosed();
     }
 }
