@@ -12,15 +12,19 @@ import java.net.Socket;
  * Created by minhld on 10/23/2015.
  */
 public class ChatManager implements Runnable {
+    private static final String TAG = "ChatHandler";
+
     private Socket socket = null;
     private Handler handler;
+
+    private InputStream iStream;
+    private OutputStream oStream;
+
     public ChatManager(Socket socket, Handler handler) {
         this.socket = socket;
         this.handler = handler;
     }
-    private InputStream iStream;
-    private OutputStream oStream;
-    private static final String TAG = "ChatHandler";
+
     @Override
     public void run() {
         try {
@@ -53,6 +57,7 @@ public class ChatManager implements Runnable {
             }
         }
     }
+
     public void write(byte[] buffer) {
         try {
             oStream.write(buffer);

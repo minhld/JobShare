@@ -91,7 +91,8 @@ public class WifiBroadcaster extends BroadcastReceiver {
                 public void onConnectionInfoAvailable(WifiP2pInfo info) {
                     if (info.groupFormed && info.isGroupOwner) {
                         // if current device is a server
-                        if (mSocketHandler != null && mSocketHandler.isSocketWorking()) {
+                        if (mSocketHandler != null && mSocketHandler.isSocketWorking() &&
+                                mSocketHandler.socketType == SocketHandler.SocketType.SERVER) {
                             writeLog("server is still be reused @ " + info.groupOwnerAddress.getHostAddress());
                         } else {
                             try {

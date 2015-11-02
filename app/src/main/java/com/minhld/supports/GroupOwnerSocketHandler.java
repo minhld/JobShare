@@ -6,6 +6,7 @@ import android.widget.TextView;
 
 import java.io.IOException;
 import java.net.ServerSocket;
+import java.util.ArrayList;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
@@ -19,10 +20,13 @@ public class GroupOwnerSocketHandler extends SocketHandler {
     private final int THREAD_COUNT = 10;
     private Handler handler;
 
+
     // A ThreadPool for client sockets.
     private final ThreadPoolExecutor pool = new ThreadPoolExecutor(
-            THREAD_COUNT, THREAD_COUNT, 10, TimeUnit.SECONDS,
-            new LinkedBlockingQueue<Runnable>());
+                        THREAD_COUNT, THREAD_COUNT, 10, TimeUnit.SECONDS,
+                        new LinkedBlockingQueue<Runnable>());
+    ArrayList<ChatManager> chatList = new ArrayList<>();
+
 
     public GroupOwnerSocketHandler(Activity c, TextView t, Handler handler) throws IOException {
         super(c, t);
@@ -45,9 +49,13 @@ public class GroupOwnerSocketHandler extends SocketHandler {
             try {
                 // A blocking operation. Initiate a ChatManager instance when
                 // there is a new connection
-                pool.execute(new ChatManager(socket.accept(), handler));
+                ChatManager chat = new ChatManager(socket.accept(), handler);
+                pool.execute(chat);
+                chatList.add(chat);
+
                 writeLog("[server] launching I/O handler");
             } catch (IOException e) {
+                // problem with server socket
                 try {
                     if (socket != null && !socket.isClosed())
                         socket.close();
@@ -62,7 +70,9 @@ public class GroupOwnerSocketHandler extends SocketHandler {
 
     @Override
     public void write(Object data) {
-
+        for (ChatManager chat : chatList) {
+            chat.write(data.toString().getBytes());
+        }
     }
 
     @Override
@@ -70,8 +80,9 @@ public class GroupOwnerSocketHandler extends SocketHandler {
         try {
             // shutdown the thread pool and socket
             pool.shutdownNow();
+            chatList.clear();
             socket.close();
-
+            writeLog("[server-dispose] close server socket");
         }catch(IOException e) {
             e.printStackTrace();
             writeLog("[server-dispose] exception: " + e.getMessage());
@@ -82,4 +93,5 @@ public class GroupOwnerSocketHandler extends SocketHandler {
     public boolean isSocketWorking() {
         return !socket.isClosed();
     }
+
 }
