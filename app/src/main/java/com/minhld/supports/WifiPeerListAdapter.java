@@ -81,8 +81,8 @@ public class WifiPeerListAdapter extends ArrayAdapter<WifiP2pDevice> {
                     break;
                 }
                 case WifiP2pDevice.CONNECTED: {
-                    Utility.showYesNo(context, "are you sure you want to disconnect with " + device.deviceName + "?",
-                            new Utility.ConfirmListener() {
+                    Utils.showYesNo(context, "are you sure you want to disconnect with " + device.deviceName + "?",
+                            new Utils.ConfirmListener() {
                                 @Override
                                 public void confirmed() {
                                     mWifiBroadcaster.disconnect(device.deviceName, null);
