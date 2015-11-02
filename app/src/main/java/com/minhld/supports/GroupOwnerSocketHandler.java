@@ -2,7 +2,6 @@ package com.minhld.supports;
 
 import android.app.Activity;
 import android.os.Handler;
-import android.util.Log;
 import android.widget.TextView;
 
 import java.io.IOException;
@@ -29,7 +28,7 @@ public class GroupOwnerSocketHandler extends SocketHandler {
         super(c, t);
 
         try {
-            socket = new ServerSocket(Utils.SERVER_PORT);
+            socket = new ServerSocket(utils.SERVER_PORT);
             this.handler = handler;
             writeLog("[server] socket started");
         } catch (IOException e) {

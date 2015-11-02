@@ -7,13 +7,12 @@ import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.method.ScrollingMovementMethod;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.minhld.supports.Utils;
+import com.minhld.supports.utils;
 import com.minhld.supports.WifiBroadcaster;
 import com.minhld.supports.WifiPeerListAdapter;
 
@@ -48,15 +47,15 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void handleMessage(Message msg) {
             switch (msg.what) {
-                case Utils.MESSAGE_READ:
+                case utils.MESSAGE_READ:
                     byte[] readBuf = (byte[]) msg.obj;
                     // construct a string from the valid bytes in the buffer
                     String readMessage = new String(readBuf, 0, msg.arg1);
-                    Utils.writeLog(MainActivity.this, infoText, "buddy: " + readMessage);
+                    utils.writeLog(MainActivity.this, infoText, "buddy: " + readMessage);
                     break;
-                case Utils.MY_HANDLE:
+                case utils.MY_HANDLE:
                     Object obj = msg.obj;
-                    Utils.writeLog(MainActivity.this, infoText, "me: " + obj.toString());
+                    utils.writeLog(MainActivity.this, infoText, "me: " + obj.toString());
             }
 
         }

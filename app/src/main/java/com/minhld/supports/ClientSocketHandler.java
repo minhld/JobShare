@@ -2,7 +2,6 @@ package com.minhld.supports;
 
 import android.app.Activity;
 import android.os.Handler;
-import android.util.Log;
 import android.widget.TextView;
 
 import java.io.IOException;
@@ -29,7 +28,7 @@ public class ClientSocketHandler extends SocketHandler {
             // initiate client socket
             socket.bind(null);
             socket.connect(new InetSocketAddress(mAddress.getHostAddress(),
-                            Utils.SERVER_PORT), Utils.SERVER_TIMEOUT);
+                            utils.SERVER_PORT), utils.SERVER_TIMEOUT);
             writeLog("[client] launching the I/O handler");
 
             // connect it to a chat manager

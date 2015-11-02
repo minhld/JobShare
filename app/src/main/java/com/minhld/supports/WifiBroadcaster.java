@@ -260,7 +260,7 @@ public class WifiBroadcaster extends BroadcastReceiver {
      * @param st
      */
     public void sendObject(Object st) {
-
+        mSocketHandler.write(st);
     }
 
 
