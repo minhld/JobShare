@@ -16,6 +16,7 @@ import com.minhld.supports.Utils;
 import com.minhld.supports.WifiBroadcaster;
 import com.minhld.supports.WifiPeerListAdapter;
 
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -47,15 +48,18 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void handleMessage(Message msg) {
             switch (msg.what) {
-                case Utils.MESSAGE_READ:
-                    byte[] readBuf = (byte[]) msg.obj;
+                case Utils.MESSAGE_READ: {
+                    ByteArrayOutputStream readBuf = (ByteArrayOutputStream) msg.obj;
                     // construct a string from the valid bytes in the buffer
-                    String readMessage = new String(readBuf, 0, msg.arg1);
+                    String readMessage = new String(readBuf.toByteArray());
                     Utils.writeLog(MainActivity.this, infoText, "buddy: " + readMessage);
                     break;
-                case Utils.MY_HANDLE:
+                }
+                case Utils.MY_HANDLE: {
                     Object obj = msg.obj;
-                    Utils.writeLog(MainActivity.this, infoText, "me: " + obj.toString());
+                    Utils.writeLog(MainActivity.this, infoText, "me: " + obj);
+                    break;
+                }
             }
 
         }

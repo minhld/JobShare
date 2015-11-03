@@ -3,6 +3,7 @@ package com.minhld.supports;
 import android.os.Handler;
 import android.util.Log;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -30,19 +31,24 @@ public class ChatManager implements Runnable {
         try {
             iStream = socket.getInputStream();
             oStream = socket.getOutputStream();
+
             byte[] buffer = new byte[1024];
-            int bytes;
-            handler.obtainMessage(Utils.MY_HANDLE, this).sendToTarget();
+            int readCount = 0;
+            handler.obtainMessage(Utils.MY_HANDLE, "OK").sendToTarget();
+            ByteArrayOutputStream byteStream = null;
+
             while (true) {
                 try {
-                    // Read from the InputStream
-                    bytes = iStream.read(buffer);
-                    if (bytes == -1) {
-                        break;
-                    }
+                    byteStream = new ByteArrayOutputStream();
+
+                    // read from the input stream
+                    do {
+                        readCount = iStream.read(buffer);
+                        byteStream.write(buffer, 0, readCount);
+                    } while (iStream.available() > 0);
+
                     // Send the obtained bytes to the UI Activity
-                    Log.d(TAG, "Rec:" + String.valueOf(buffer));
-                    handler.obtainMessage(Utils.MESSAGE_READ, bytes, -1, buffer).sendToTarget();
+                    handler.obtainMessage(Utils.MESSAGE_READ, readCount, -1, byteStream).sendToTarget();
                 } catch (IOException e) {
                     Log.e(TAG, "disconnected", e);
                 }
