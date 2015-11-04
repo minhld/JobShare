@@ -28,7 +28,15 @@ public abstract class SocketHandler extends Thread {
      *
      * @param data
      */
-    public abstract void write(Object data);
+    public abstract void write(byte[] data);
+
+    /**
+     * write data into the socket to a specific client
+     * 
+     * @param data
+     * @param channelIndex
+     */
+    public abstract void write(byte[] data, int channelIndex);
 
     /**
      * to dispose current socket. this only works on server socket.

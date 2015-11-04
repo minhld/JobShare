@@ -73,9 +73,19 @@ public class ServerSocketHandler extends SocketHandler {
     }
 
     @Override
-    public void write(Object data) {
+    public void write(byte[] data) {
+        // send the same data to all clients
         for (ChatManager chat : chatList) {
             chat.write(data.toString().getBytes());
+        }
+    }
+
+    @Override
+    public void write(byte[] data, int channelIndex) {
+
+        // send data to each client
+        if (channelIndex >= 0 && channelIndex < chatList.size()) {
+            chatList.get(channelIndex).write(data);
         }
     }
 

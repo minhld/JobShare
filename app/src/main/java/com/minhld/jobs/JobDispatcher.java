@@ -6,6 +6,7 @@ import android.os.AsyncTask;
 import android.os.Environment;
 
 import com.minhld.supports.Utils;
+import com.minhld.supports.WifiBroadcaster;
 
 import java.io.File;
 
@@ -13,10 +14,13 @@ import java.io.File;
  * Created by minhld on 11/3/2015.
  */
 public class JobDispatcher extends AsyncTask {
+    private WifiBroadcaster broadcaster;
     String jobPath = "";
     String dataPath = "";
 
-    public JobDispatcher() {
+    public JobDispatcher(WifiBroadcaster broadcaster) {
+        this.broadcaster = broadcaster;
+
         String downloadPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath();
         jobPath = downloadPath + "/Job.class";
         dataPath = downloadPath + "/mars.jpg";
@@ -39,8 +43,11 @@ public class JobDispatcher extends AsyncTask {
                 splitBmp = Bitmap.createBitmap(orgBmp, 0, 0, orgBmp.getWidth() / deviceNum, orgBmp.getHeight());
                 jobData = new JobData(splitBmp, new File(jobPath));
 
-                // and send
-
+                // and send to all the clients
+                // however it will skip the client 0, server will handle this
+                if (i > 0) {
+                    this.broadcaster.sendObject(jobData, i);
+                }
             }
             publishProgress();
         }

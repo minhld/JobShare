@@ -16,6 +16,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Collection;
 import java.util.Date;
@@ -242,6 +243,44 @@ public class WifiBroadcaster extends BroadcastReceiver {
     }
 
     /**
+     * this function will send an object through socket to the server
+     *
+     * @param st should be a serializable object
+     */
+    public void sendObject(Object st) {
+        if (st instanceof byte[]) {
+            mSocketHandler.write((byte[])st);
+        }else {
+            try {
+                // we need to serialize it to binary array before dispatching it
+                mSocketHandler.write(Utils.serialize(st));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    /**
+     * this function will send an object through socket from server to a
+     * specific client using channel index
+     *
+     * @param st should be a serializable object
+     * @param channelIndex index of each channel server connects to
+     */
+    public void sendObject(Object st, int channelIndex) {
+        if (st instanceof byte[]) {
+            mSocketHandler.write((byte[])st);
+        }else {
+            try {
+                // we need to serialize it to binary array before dispatching it
+                mSocketHandler.write(Utils.serialize(st));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    /**
      * write log to an output
      *
      * @param msg
@@ -254,15 +293,5 @@ public class WifiBroadcaster extends BroadcastReceiver {
             }
         });
     }
-
-    /**
-     * this function will send an object through socket to the server
-     *
-     * @param st
-     */
-    public void sendObject(Object st) {
-        mSocketHandler.write(st);
-    }
-
 
 }

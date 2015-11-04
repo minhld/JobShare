@@ -13,6 +13,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.ViewFlipper;
 
+import com.minhld.jobs.JobExecutor;
 import com.minhld.supports.Utils;
 import com.minhld.supports.WifiBroadcaster;
 import com.minhld.supports.WifiPeerListAdapter;
@@ -69,6 +70,8 @@ public class MainActivity extends AppCompatActivity {
         }
     };
 
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -93,7 +96,11 @@ public class MainActivity extends AppCompatActivity {
         sayHiBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mReceiver.sendObject("hello!");
+                //mReceiver.sendObject("hello!");
+                // 1. dispatch jobs to clients
+                //new JobDispatcher().execute();
+
+                // 2. listen to client responses
 
             }
         });
