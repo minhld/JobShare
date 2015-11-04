@@ -15,7 +15,7 @@ import java.util.concurrent.TimeUnit;
  * The implementation of a ServerSocket handler. This is used by the wifi p2p
  * group owner.
  */
-public class GroupOwnerSocketHandler extends SocketHandler {
+public class ServerSocketHandler extends SocketHandler {
     ServerSocket socket = null;
     private final int THREAD_COUNT = 10;
     private Handler handler;
@@ -25,11 +25,14 @@ public class GroupOwnerSocketHandler extends SocketHandler {
     private final ThreadPoolExecutor pool = new ThreadPoolExecutor(
                         THREAD_COUNT, THREAD_COUNT, 10, TimeUnit.SECONDS,
                         new LinkedBlockingQueue<Runnable>());
+
+    // list of devices to monitor
     ArrayList<ChatManager> chatList = new ArrayList<>();
 
-
-    public GroupOwnerSocketHandler(Activity c, TextView t, Handler handler) throws IOException {
+    public ServerSocketHandler(Activity c, TextView t, Handler handler) throws IOException {
         super(c, t);
+        chatList = new ArrayList<>();
+        Utils.connectedDevices = new ArrayList<>();
 
         try {
             socket = new ServerSocket(Utils.SERVER_PORT);
@@ -52,6 +55,7 @@ public class GroupOwnerSocketHandler extends SocketHandler {
                 ChatManager chat = new ChatManager(socket.accept(), handler);
                 pool.execute(chat);
                 chatList.add(chat);
+                Utils.connectedDevices.add(new Utils.XDevice());
 
                 writeLog("[server] launching I/O handler");
             } catch (IOException e) {
@@ -81,6 +85,7 @@ public class GroupOwnerSocketHandler extends SocketHandler {
             // shutdown the thread pool and socket
             pool.shutdownNow();
             chatList.clear();
+            Utils.connectedDevices.clear();
             socket.close();
             writeLog("[server-dispose] close server socket");
         }catch(IOException e) {

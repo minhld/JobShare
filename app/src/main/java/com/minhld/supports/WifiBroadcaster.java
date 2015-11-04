@@ -96,7 +96,7 @@ public class WifiBroadcaster extends BroadcastReceiver {
                             writeLog("server is still be reused @ " + info.groupOwnerAddress.getHostAddress());
                         } else {
                             try {
-                                mSocketHandler = new GroupOwnerSocketHandler(mContext, logTxt, mSocketUIListener);
+                                mSocketHandler = new ServerSocketHandler(mContext, logTxt, mSocketUIListener);
                                 mSocketHandler.start();
                                 writeLog("become server @ " + info.groupOwnerAddress.getHostAddress());
                             } catch (IOException e) {

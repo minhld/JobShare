@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.widget.TextView;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 
 /**
@@ -18,6 +19,24 @@ public class Utils {
     public static final int MESSAGE_READ = 0x400 + 1;
     public static final int MY_HANDLE = 0x400 + 2;
     public static final SimpleDateFormat SDF = new SimpleDateFormat("MM-dd HH:mm:ss.SSS");
+
+    public static class XDevice {
+        public String address;
+        public String name;
+
+        public XDevice () {}
+
+        public XDevice (String addr, String name) {
+            this.address = addr;
+            this.name = name;
+        }
+    }
+
+    /**
+     * list of connected client devices that currently connect to current server<br>
+     * this list will be used as iterating devices for sending, checking, etc...
+     */
+    public static ArrayList<XDevice> connectedDevices = new ArrayList<>();
 
     public static void showYesNo(Context c, String message, final ConfirmListener listener){
         AlertDialog.Builder builder = new AlertDialog.Builder(c);

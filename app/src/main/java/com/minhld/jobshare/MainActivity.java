@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.ViewFlipper;
 
 import com.minhld.supports.Utils;
 import com.minhld.supports.WifiBroadcaster;
@@ -37,6 +38,9 @@ public class MainActivity extends AppCompatActivity {
 
     @Bind(R.id.deviceList)
     ListView deviceList;
+
+    @Bind(R.id.viewFlipper)
+    ViewFlipper mViewFlipper;
 
     WifiBroadcaster mReceiver;
     IntentFilter mIntentFilter;
@@ -90,6 +94,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 mReceiver.sendObject("hello!");
+
             }
         });
 
