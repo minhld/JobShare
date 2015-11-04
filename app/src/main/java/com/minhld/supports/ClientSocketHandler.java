@@ -32,7 +32,7 @@ public class ClientSocketHandler extends SocketHandler {
             writeLog("[client] launching the I/O handler");
 
             // connect it to a chat manager
-            chat = new ChatManager(socket, handler);
+            chat = new ChatManager(Utils.SocketType.CLIENT, socket, handler);
             new Thread(chat).start();
         } catch (IOException e) {
             e.printStackTrace();
@@ -47,8 +47,13 @@ public class ClientSocketHandler extends SocketHandler {
     }
 
     @Override
-    public void write(Object data) {
+    public void write(byte[] data) {
         chat.write(data.toString().getBytes());
+    }
+
+    @Override
+    public void write(byte[] data, int channelIndex) {
+
     }
 
     @Override

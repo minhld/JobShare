@@ -15,13 +15,15 @@ import java.net.Socket;
 public class ChatManager implements Runnable {
     private static final String TAG = "ChatHandler";
 
+    private Utils.SocketType socketType;
     private Socket socket = null;
     private Handler handler;
 
     private InputStream iStream;
     private OutputStream oStream;
 
-    public ChatManager(Socket socket, Handler handler) {
+    public ChatManager(Utils.SocketType socketType, Socket socket, Handler handler) {
+        this.socketType = socketType;
         this.socket = socket;
         this.handler = handler;
     }
@@ -48,7 +50,11 @@ public class ChatManager implements Runnable {
                     } while (iStream.available() > 0);
 
                     // Send the obtained bytes to the UI Activity
-                    handler.obtainMessage(Utils.MESSAGE_READ, readCount, -1, byteStream).sendToTarget();
+                    if (socketType == Utils.SocketType.SERVER) {
+                        handler.obtainMessage(Utils.MESSAGE_READ_SERVER, readCount, -1, byteStream).sendToTarget();
+                    } else {
+                        handler.obtainMessage(Utils.MESSAGE_READ_CLIENT, readCount, -1, byteStream).sendToTarget();
+                    }
                 } catch (IOException e) {
                     Log.e(TAG, "disconnected", e);
                 }

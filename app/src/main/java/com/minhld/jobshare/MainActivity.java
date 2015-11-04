@@ -13,7 +13,9 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.ViewFlipper;
 
+import com.minhld.jobs.JobDispatcher;
 import com.minhld.jobs.JobExecutor;
+import com.minhld.supports.SocketHandler;
 import com.minhld.supports.Utils;
 import com.minhld.supports.WifiBroadcaster;
 import com.minhld.supports.WifiPeerListAdapter;
@@ -49,28 +51,50 @@ public class MainActivity extends AppCompatActivity {
     WifiPeerListAdapter deviceListAdapter;
     List<WifiP2pDevice> peerArrayList = new ArrayList<>();
 
+    // this will listen to the events happened with the main socket (server or client)
     Handler socketHandler = new Handler(){
         @Override
         public void handleMessage(Message msg) {
             switch (msg.what) {
-                case Utils.MESSAGE_READ: {
+                case Utils.MESSAGE_READ_CLIENT: {
+                    // client received job, will send the result here
                     ByteArrayOutputStream readBuf = (ByteArrayOutputStream) msg.obj;
-                    // construct a string from the valid bytes in the buffer
-                    String readMessage = new String(readBuf.toByteArray());
-                    Utils.writeLog(MainActivity.this, infoText, "buddy: " + readMessage);
+
+                    // run the job, result will be thrown to client executor handler
+                    new Thread(new JobExecutor(clientExecutorHandler, readBuf)).start();
+                    break;
+                }
+                case Utils.MESSAGE_READ_SERVER: {
+                    // server received client result, will merge the results here
+
                     break;
                 }
                 case Utils.MY_HANDLE: {
+                    // self instruction, don't care
                     Object obj = msg.obj;
                     Utils.writeLog(MainActivity.this, infoText, "me: " + obj);
                     break;
                 }
+
             }
 
         }
     };
 
-
+    // this will listen to the client job executor
+    Handler clientExecutorHandler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case JobExecutor.JOB_OK: {
+                    break;
+                }
+                case JobExecutor.JOB_FAILED: {
+                    break;
+                }
+            }
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -98,7 +122,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 //mReceiver.sendObject("hello!");
                 // 1. dispatch jobs to clients
-                //new JobDispatcher().execute();
+                new JobDispatcher(mReceiver, socketHandler).execute();
 
                 // 2. listen to client responses
 
@@ -146,12 +170,16 @@ public class MainActivity extends AppCompatActivity {
         }
 
         @Override
-        public void socketUpdated(final boolean connected) {
+        public void socketUpdated(final Utils.SocketType socketType, final boolean connected) {
             // enable/disable the "Say Hi" button when its status changed
             MainActivity.this.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    sayHiBtn.setEnabled(connected);
+                    // only server can send jobs to client, client cannot send job to server
+                    // but client will send job result to server
+                    if (socketType == Utils.SocketType.SERVER) {
+                        sayHiBtn.setEnabled(connected);
+                    }
                 }
             });
 

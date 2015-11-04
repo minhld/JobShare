@@ -7,20 +7,16 @@ import android.widget.TextView;
  * Created by minhld on 11/1/2015.
  */
 public abstract class SocketHandler extends Thread {
-    protected enum SocketType {
-        SERVER,
-        CLIENT
-    }
     protected Activity mContext;
     protected TextView mLogText;
-    protected SocketType socketType;
+    protected Utils.SocketType socketType;
 
     public SocketHandler() {}
 
     public SocketHandler(Activity c, TextView t) {
         this.mContext = c;
         this.mLogText = t;
-        this.socketType = SocketType.SERVER;
+        this.socketType = Utils.SocketType.SERVER;
     }
 
     /**
@@ -32,7 +28,7 @@ public abstract class SocketHandler extends Thread {
 
     /**
      * write data into the socket to a specific client
-     * 
+     *
      * @param data
      * @param channelIndex
      */

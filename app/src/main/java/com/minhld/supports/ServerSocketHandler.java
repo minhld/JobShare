@@ -52,7 +52,7 @@ public class ServerSocketHandler extends SocketHandler {
             try {
                 // A blocking operation. Initiate a ChatManager instance when
                 // there is a new connection
-                ChatManager chat = new ChatManager(socket.accept(), handler);
+                ChatManager chat = new ChatManager(Utils.SocketType.SERVER, socket.accept(), handler);
                 pool.execute(chat);
                 chatList.add(chat);
                 Utils.connectedDevices.add(new Utils.XDevice());

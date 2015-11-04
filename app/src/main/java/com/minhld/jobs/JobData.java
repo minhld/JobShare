@@ -11,15 +11,17 @@ import java.io.Serializable;
  * Created by minhld on 11/3/2015.
  */
 public class JobData implements Serializable {
+    public int index;
     public byte[] data;
     public byte[] jobClass;
 
     public JobData() {
-        data = new byte[0];
-        jobClass = new byte[0];
+        this.index = 0;
+        this.data = new byte[0];
+        this.jobClass = new byte[0];
     }
 
-    public JobData(Bitmap bmpData, File jobClassFile) {
+    public JobData(int index, Bitmap bmpData, File jobClassFile) {
         try {
             // assign the binary data
             ByteArrayOutputStream bos = new ByteArrayOutputStream();

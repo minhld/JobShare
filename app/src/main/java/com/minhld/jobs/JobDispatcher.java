@@ -4,6 +4,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Environment;
+import android.os.Handler;
 
 import com.minhld.supports.Utils;
 import com.minhld.supports.WifiBroadcaster;
@@ -15,11 +16,13 @@ import java.io.File;
  */
 public class JobDispatcher extends AsyncTask {
     private WifiBroadcaster broadcaster;
+    private Handler socketHandler;
     String jobPath = "";
     String dataPath = "";
 
-    public JobDispatcher(WifiBroadcaster broadcaster) {
+    public JobDispatcher(WifiBroadcaster broadcaster, Handler socketHandler) {
         this.broadcaster = broadcaster;
+        this.socketHandler = socketHandler;
 
         String downloadPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath();
         jobPath = downloadPath + "/Job.class";
@@ -41,7 +44,7 @@ public class JobDispatcher extends AsyncTask {
             for (int i = 0; i < deviceNum; i++) {
                 // create job data
                 splitBmp = Bitmap.createBitmap(orgBmp, 0, 0, orgBmp.getWidth() / deviceNum, orgBmp.getHeight());
-                jobData = new JobData(splitBmp, new File(jobPath));
+                jobData = new JobData(i, splitBmp, new File(jobPath));
 
                 // and send to all the clients
                 // however it will skip the client 0, server will handle this

@@ -17,6 +17,7 @@ import android.widget.TextView;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.net.Socket;
 import java.text.SimpleDateFormat;
 import java.util.Collection;
 import java.util.Date;
@@ -93,7 +94,7 @@ public class WifiBroadcaster extends BroadcastReceiver {
                     if (info.groupFormed && info.isGroupOwner) {
                         // if current device is a server
                         if (mSocketHandler != null && mSocketHandler.isSocketWorking() &&
-                                mSocketHandler.socketType == SocketHandler.SocketType.SERVER) {
+                                mSocketHandler.socketType == Utils.SocketType.SERVER) {
                             writeLog("server is still be reused @ " + info.groupOwnerAddress.getHostAddress());
                         } else {
                             try {
@@ -106,15 +107,15 @@ public class WifiBroadcaster extends BroadcastReceiver {
                                 return;     // we don't enable transmission
                             }
                         }
-                        broadCastListener.socketUpdated(true);
+                        broadCastListener.socketUpdated(Utils.SocketType.SERVER, true);
                     } else if (info.groupFormed) {
                         // if current device is a client
                         mSocketHandler = new ClientSocketHandler(mContext, logTxt, mSocketUIListener, info.groupOwnerAddress);
                         mSocketHandler.start();
-                        broadCastListener.socketUpdated(true);
+                        broadCastListener.socketUpdated(Utils.SocketType.CLIENT, true);
                     } else {
                         // if something different happens, then close the ability of data transmission
-                        broadCastListener.socketUpdated(false);
+                        broadCastListener.socketUpdated(Utils.SocketType.CLIENT, false);
                     }
                 }
             });
@@ -239,7 +240,7 @@ public class WifiBroadcaster extends BroadcastReceiver {
 
     public interface BroadCastListener {
         public void peerDeviceListUpdated(Collection<WifiP2pDevice> deviceList);
-        public void socketUpdated(boolean connected);
+        public void socketUpdated(Utils.SocketType socketType, boolean connected);
     }
 
     /**
