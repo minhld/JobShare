@@ -19,6 +19,7 @@ public class JobDispatcher extends AsyncTask {
     private Handler socketHandler;
     String jobPath = "";
     String dataPath = "";
+    int bmpWidth = 0, bmpHeight = 0;
 
     public JobDispatcher(WifiBroadcaster broadcaster, Handler socketHandler) {
         this.broadcaster = broadcaster;
@@ -35,24 +36,35 @@ public class JobDispatcher extends AsyncTask {
         if (new File(dataPath).exists()) {
             BitmapFactory.Options options = new BitmapFactory.Options();
             options.inSampleSize = 2;
+            // read the bitmap from the binary data
             Bitmap orgBmp = BitmapFactory.decodeFile(dataPath, options);
+            this.bmpWidth = orgBmp.getWidth();
+            this.bmpHeight = orgBmp.getHeight();
 
             // depend on number of clients, we will split the number
             JobData jobData;
             Bitmap splitBmp;
             int deviceNum = Utils.connectedDevices.size();
+            // get width of each slice
+            int pieceWidth = this.bmpWidth / deviceNum;
+
             for (int i = 0; i < deviceNum; i++) {
                 // create job data
-                splitBmp = Bitmap.createBitmap(orgBmp, 0, 0, orgBmp.getWidth() / deviceNum, orgBmp.getHeight());
+                splitBmp = Bitmap.createBitmap(orgBmp, (pieceWidth * i), 0, pieceWidth, orgBmp.getHeight());
                 jobData = new JobData(i, splitBmp, new File(jobPath));
 
                 // and send to all the clients
                 // however it will skip the client 0, server will handle this
-                if (i > 0) {
+                if (i == 0) {
+                    // do it at server
+
+                } else {
+                    // do it at client
                     this.broadcaster.sendObject(jobData, i);
                 }
             }
-            publishProgress();
+
+            publishProgress(orgBmp);
         }
         return null;
     }
@@ -62,5 +74,6 @@ public class JobDispatcher extends AsyncTask {
         super.onProgressUpdate(values);
 
         // sending completed
+        socketHandler.obtainMessage(Utils.MESSAGE_READ_JOB_SENT, "{ 'width': " + bmpWidth + ", 'height': " + bmpHeight + " }");
     }
 }

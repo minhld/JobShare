@@ -46,8 +46,12 @@ public class JobExecutor extends ClassLoader implements Runnable {
             Bitmap result = (Bitmap)regeneratedClass.getMethod("exec", Bitmap.class).
                                         invoke(regeneratedClass.newInstance(), this.orgBmp);
 
+            JobData resultJob = new JobData();
+            resultJob.data = Utils.serialize(result);
+            resultJob.index = this.jobData.index;
+
             // send this result to server
-            handler.obtainMessage(JOB_OK, result);
+            handler.obtainMessage(JOB_OK, resultJob);
 
         } catch (Exception e) {
             handler.obtainMessage(JOB_FAILED, e);

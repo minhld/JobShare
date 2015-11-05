@@ -1,6 +1,8 @@
 package com.minhld.jobshare;
 
 import android.content.IntentFilter;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.net.wifi.p2p.WifiP2pDevice;
 import android.os.Handler;
 import android.os.Message;
@@ -9,18 +11,22 @@ import android.os.Bundle;
 import android.text.method.ScrollingMovementMethod;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.ViewFlipper;
 
+import com.minhld.jobs.JobData;
 import com.minhld.jobs.JobDispatcher;
 import com.minhld.jobs.JobExecutor;
-import com.minhld.supports.SocketHandler;
 import com.minhld.supports.Utils;
 import com.minhld.supports.WifiBroadcaster;
 import com.minhld.supports.WifiPeerListAdapter;
 
+import org.json.JSONObject;
+
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -45,11 +51,17 @@ public class MainActivity extends AppCompatActivity {
     @Bind(R.id.viewFlipper)
     ViewFlipper mViewFlipper;
 
+    @Bind(R.id.previewImage)
+    ImageView mPreviewImage;
+
     WifiBroadcaster mReceiver;
     IntentFilter mIntentFilter;
 
     WifiPeerListAdapter deviceListAdapter;
     List<WifiP2pDevice> peerArrayList = new ArrayList<>();
+
+    // this bitmap will be used as the placeholder to merge the parts sent from clients
+    Bitmap finalBitmap = null;
 
     // this will listen to the events happened with the main socket (server or client)
     Handler socketHandler = new Handler(){
@@ -66,7 +78,31 @@ public class MainActivity extends AppCompatActivity {
                 }
                 case Utils.MESSAGE_READ_SERVER: {
                     // server received client result, will merge the results here
-
+                    JobData clientJobResult = (JobData) msg.obj;
+                    int imgIndex = clientJobResult.index;
+                    try {
+                        Bitmap partBmp = (Bitmap) Utils.deserialize(clientJobResult.data);
+                        Canvas canvas = new Canvas(finalBitmap);
+                        //canvas.drawBitmap(partBmp, imgIndex * partBmp.getWidth(), 0, partBmp.getWidth(), partBmp.getHeight());
+                        // also display it partially
+                        mPreviewImage.setImageBitmap(finalBitmap);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    break;
+                }
+                case Utils.MESSAGE_READ_JOB_SENT: {
+                    // when job is dispatched, a placeholder bitmap will be created
+                    // to accumulate the results from clients
+                    String jsonData = (String) msg.obj;
+                    try {
+                        JSONObject resultObj = new JSONObject(jsonData);
+                        int width = resultObj.getInt("width"),
+                                height = resultObj.getInt("height");
+                        finalBitmap = Bitmap.createBitmap(width, height, null);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                     break;
                 }
                 case Utils.MY_HANDLE: {
@@ -87,9 +123,20 @@ public class MainActivity extends AppCompatActivity {
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case JobExecutor.JOB_OK: {
+                    // when client completed the job and send back to server
+                    JobData jobData = (JobData) msg.obj;
+                    mReceiver.sendObject(jobData.data, jobData.index);
+                    // display it on client image view
+                    try {
+                        Bitmap pieceBmp = (Bitmap) Utils.deserialize(jobData.data);
+                        mPreviewImage.setImageBitmap(pieceBmp);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                     break;
                 }
                 case JobExecutor.JOB_FAILED: {
+                    // send some error data
                     break;
                 }
             }

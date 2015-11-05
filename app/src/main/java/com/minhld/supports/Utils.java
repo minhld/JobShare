@@ -21,9 +21,10 @@ import java.util.Date;
 public class Utils {
     public static final int SERVER_PORT = 8881;
     public static final int SERVER_TIMEOUT = 5000;
-    public static final int MESSAGE_READ_CLIENT = 0x400 + 1;
-    public static final int MESSAGE_READ_SERVER = 0x400 + 10;
-    public static final int MY_HANDLE = 0x400 + 2;
+    public static final int MESSAGE_READ_CLIENT = 0x500 + 1;
+    public static final int MESSAGE_READ_SERVER = 0x500 + 2;
+    public static final int MESSAGE_READ_JOB_SENT = 0x500 + 3;
+    public static final int MY_HANDLE = 0x500 + 6;
     public static final SimpleDateFormat SDF = new SimpleDateFormat("MM-dd HH:mm:ss.SSS");
 
     public enum SocketType {
