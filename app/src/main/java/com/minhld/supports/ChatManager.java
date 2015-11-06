@@ -3,6 +3,8 @@ package com.minhld.supports;
 import android.os.Handler;
 import android.util.Log;
 
+import org.apache.commons.io.IOUtils;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -43,17 +45,27 @@ public class ChatManager implements Runnable {
                 try {
                     byteStream = new ByteArrayOutputStream();
 
-                    // read from the input stream
-                    do {
-                        readCount = iStream.read(buffer);
-                        byteStream.write(buffer, 0, readCount);
-                    } while (iStream.available() > 0);
+                    byte[] data = IOUtils.toByteArray(iStream);
+
+//                    // read from the input stream
+//                    while ((readCount = iStream.read(buffer)) >= 0) {
+//                        byteStream.write(buffer, 0, readCount);
+//                        if (readCount < buffer.length) { break; }
+//                    }
+//                    do {
+//                        readCount = iStream.read(buffer);
+//                        if (readCount == -1) {
+//                            // when the connection is lost
+//                            return;
+//                        }
+//                        byteStream.write(buffer, 0, readCount);
+//                    } while (iStream.available() > 0);
 
                     // Send the obtained bytes to the UI Activity
                     if (socketType == Utils.SocketType.SERVER) {
-                        handler.obtainMessage(Utils.MESSAGE_READ_SERVER, readCount, -1, byteStream).sendToTarget();
+                        handler.obtainMessage(Utils.MESSAGE_READ_SERVER, byteStream);
                     } else {
-                        handler.obtainMessage(Utils.MESSAGE_READ_CLIENT, readCount, -1, byteStream).sendToTarget();
+                        handler.obtainMessage(Utils.MESSAGE_READ_CLIENT, data);
                     }
                 } catch (IOException e) {
                     Log.e(TAG, "disconnected", e);

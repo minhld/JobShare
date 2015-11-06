@@ -44,7 +44,7 @@ public class JobDispatcher extends AsyncTask {
             // depend on number of clients, we will split the number
             JobData jobData;
             Bitmap splitBmp;
-            int deviceNum = Utils.connectedDevices.size();
+            int deviceNum = Utils.connectedDevices.size() + 1;
             // get width of each slice
             int pieceWidth = this.bmpWidth / deviceNum;
 
@@ -59,12 +59,15 @@ public class JobDispatcher extends AsyncTask {
                     // do it at server
 
                 } else {
-                    // do it at client
+                    // dispatch this one to client to resolve it
                     this.broadcaster.sendObject(jobData, i);
                 }
             }
 
             publishProgress(orgBmp);
+        } else {
+            // no file available
+            publishProgress(null);
         }
         return null;
     }
@@ -74,6 +77,10 @@ public class JobDispatcher extends AsyncTask {
         super.onProgressUpdate(values);
 
         // sending completed
-        socketHandler.obtainMessage(Utils.MESSAGE_READ_JOB_SENT, "{ 'width': " + bmpWidth + ", 'height': " + bmpHeight + " }");
+        if (values.length > 0 && values[0] != null) {
+            socketHandler.obtainMessage(Utils.MESSAGE_READ_JOB_SENT, "{ 'width': " + bmpWidth + ", 'height': " + bmpHeight + " }");
+        } else {
+            socketHandler.obtainMessage(Utils.MESSAGE_READ_NO_FILE, "data file unavailable");
+        }
     }
 }

@@ -76,7 +76,7 @@ public class ServerSocketHandler extends SocketHandler {
     public void write(byte[] data) {
         // send the same data to all clients
         for (ChatManager chat : chatList) {
-            chat.write(data.toString().getBytes());
+            chat.write(data);
         }
     }
 
@@ -84,8 +84,8 @@ public class ServerSocketHandler extends SocketHandler {
     public void write(byte[] data, int channelIndex) {
 
         // send data to each client
-        if (channelIndex >= 0 && channelIndex < chatList.size()) {
-            chatList.get(channelIndex).write(data);
+        if (channelIndex > 0 && channelIndex - 1 < chatList.size()) {
+            chatList.get(channelIndex - 1).write(data);
         }
     }
 

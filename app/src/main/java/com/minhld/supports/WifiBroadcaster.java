@@ -274,7 +274,7 @@ public class WifiBroadcaster extends BroadcastReceiver {
         }else {
             try {
                 // we need to serialize it to binary array before dispatching it
-                mSocketHandler.write(Utils.serialize(st));
+                mSocketHandler.write(Utils.serialize(st), channelIndex);
             } catch (IOException e) {
                 e.printStackTrace();
             }

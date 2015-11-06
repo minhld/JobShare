@@ -2,6 +2,8 @@ package com.minhld.jobs;
 
 import android.graphics.Bitmap;
 
+import com.minhld.supports.Utils;
+
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -43,4 +45,16 @@ public class JobData implements Serializable {
             e.printStackTrace();
         }
     }
+
+//    public byte[] toByteArray() {
+//        try {
+//            ByteArrayOutputStream bos = new ByteArrayOutputStream();
+//            int dataSize = this.data.length;
+//            byte[] jobSizeBytes = Utils.serialize(new Long(jobSize));
+//            bos.write(jobSizeBytes, 0, jobSizeBytes.length);
+//            bos.write(this.data.s);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//    }
 }
