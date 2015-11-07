@@ -2,10 +2,7 @@ package com.minhld.jobshare;
 
 import android.content.IntentFilter;
 import android.graphics.Bitmap;
-import android.graphics.Canvas;
 import android.net.wifi.p2p.WifiP2pDevice;
-import android.os.Handler;
-import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.method.ScrollingMovementMethod;
@@ -16,17 +13,13 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.ViewFlipper;
 
-import com.minhld.jobs.JobData;
+import com.minhld.jobs.JobClientHandler;
 import com.minhld.jobs.JobDispatcher;
-import com.minhld.jobs.JobExecutor;
+import com.minhld.jobs.JobServerHandler;
 import com.minhld.supports.Utils;
 import com.minhld.supports.WifiBroadcaster;
 import com.minhld.supports.WifiPeerListAdapter;
 
-import org.json.JSONObject;
-
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -63,85 +56,11 @@ public class MainActivity extends AppCompatActivity {
     // this bitmap will be used as the placeholder to merge the parts sent from clients
     Bitmap finalBitmap = null;
 
-    // this will listen to the events happened with the main socket (server or client)
-    Handler socketHandler = new Handler(){
-        @Override
-        public void handleMessage(Message msg) {
-            switch (msg.what) {
-                case Utils.MESSAGE_READ_CLIENT: {
-                    // client received job, will send the result here
-                    ByteArrayOutputStream readBuf = (ByteArrayOutputStream) msg.obj;
-
-                    // run the job, result will be thrown to client executor handler
-                    new Thread(new JobExecutor(clientExecutorHandler, readBuf)).start();
-                    break;
-                }
-                case Utils.MESSAGE_READ_SERVER: {
-                    // server received client result, will merge the results here
-                    JobData clientJobResult = (JobData) msg.obj;
-                    int imgIndex = clientJobResult.index;
-                    try {
-                        Bitmap partBmp = (Bitmap) Utils.deserialize(clientJobResult.data);
-                        Canvas canvas = new Canvas(finalBitmap);
-                        //canvas.drawBitmap(partBmp, imgIndex * partBmp.getWidth(), 0, partBmp.getWidth(), partBmp.getHeight());
-                        // also display it partially
-                        mPreviewImage.setImageBitmap(finalBitmap);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                    break;
-                }
-                case Utils.MESSAGE_READ_JOB_SENT: {
-                    // when job is dispatched, a placeholder bitmap will be created
-                    // to accumulate the results from clients
-                    String jsonData = (String) msg.obj;
-                    try {
-                        JSONObject resultObj = new JSONObject(jsonData);
-                        int width = resultObj.getInt("width"),
-                                height = resultObj.getInt("height");
-                        finalBitmap = Bitmap.createBitmap(width, height, null);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                    break;
-                }
-                case Utils.MY_HANDLE: {
-                    // self instruction, don't care
-                    Object obj = msg.obj;
-                    Utils.writeLog(MainActivity.this, infoText, "me: " + obj);
-                    break;
-                }
-
-            }
-
-        }
-    };
-
     // this will listen to the client job executor
-    Handler clientExecutorHandler = new Handler() {
-        @Override
-        public void handleMessage(Message msg) {
-            switch (msg.what) {
-                case JobExecutor.JOB_OK: {
-                    // when client completed the job and send back to server
-                    JobData jobData = (JobData) msg.obj;
-                    mReceiver.sendObject(jobData.data, jobData.index);
-                    // display it on client image view
-                    try {
-                        Bitmap pieceBmp = (Bitmap) Utils.deserialize(jobData.data);
-                        mPreviewImage.setImageBitmap(pieceBmp);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                    break;
-                }
-                case JobExecutor.JOB_FAILED: {
-                    // send some error data
-                    break;
-                }
-            }
-        }
-    };
+    JobClientHandler clientExecutorHandler = null;
+
+    // this will listen to the events happened with the main socket (server or client)
+    JobServerHandler socketHandler = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -187,6 +106,10 @@ public class MainActivity extends AppCompatActivity {
                 mIntentFilter = mReceiver.getSingleIntentFilter();
             }
         });
+
+        // handlers registration
+        clientExecutorHandler = new JobClientHandler(mReceiver);
+        socketHandler = new JobServerHandler(this, clientExecutorHandler);
     }
 
     @Override

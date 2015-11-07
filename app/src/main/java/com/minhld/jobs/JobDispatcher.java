@@ -57,10 +57,10 @@ public class JobDispatcher extends AsyncTask {
                 // however it will skip the client 0, server will handle this
                 if (i == 0) {
                     // do it at server
-
+                    new Thread(new JobExecutor(this.socketHandler, jobData)).start();
                 } else {
                     // dispatch this one to client to resolve it
-                    this.broadcaster.sendObject(jobData, i);
+                    this.broadcaster.sendObject(jobData.toByteArray(), i);
                 }
             }
 

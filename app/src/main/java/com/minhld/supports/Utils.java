@@ -8,6 +8,8 @@ import android.widget.TextView;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -26,6 +28,12 @@ public class Utils {
     public static final int MESSAGE_READ_JOB_SENT = 0x500 + 3;
     public static final int MESSAGE_READ_NO_FILE = 0x500 + 5;
     public static final int MY_HANDLE = 0x500 + 6;
+
+    // same value as MESSAGE_READ_SERVER, because it will be used for replacing
+    // each other sometimes.
+    public static final int JOB_OK = 0x500 + 2;
+    public static final int JOB_FAILED = -1;
+
     public static final SimpleDateFormat SDF = new SimpleDateFormat("MM-dd HH:mm:ss.SSS");
 
     public enum SocketType {
@@ -102,6 +110,24 @@ public class Utils {
         ByteArrayInputStream b = new ByteArrayInputStream(bytes);
         ObjectInputStream o = new ObjectInputStream(b);
         return o.readObject();
+    }
+
+    /**
+     * read file and return binary array
+     *
+     * @param file
+     * @return
+     * @throws IOException
+     */
+    public static byte[] readFile(File file) throws IOException {
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        FileInputStream fis = new FileInputStream(file);
+        int read = 0;
+        byte[] buff = new byte[1024];
+        while ((read = fis.read(buff)) != -1) {
+            bos.write(buff, 0, buff.length);
+        }
+        return bos.toByteArray();
     }
 
     /**
