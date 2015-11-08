@@ -4,18 +4,25 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.os.Environment;
 import android.widget.TextView;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.lang.reflect.Method;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+
+import dalvik.system.DexClassLoader;
 
 /**
  * Created by minhld on 9/22/2015.
@@ -35,6 +42,10 @@ public class Utils {
     public static final int JOB_FAILED = -1;
 
     public static final SimpleDateFormat SDF = new SimpleDateFormat("MM-dd HH:mm:ss.SSS");
+    public static final String JOB_FILE_NAME = "Job.jar";
+    public static final String JOB_CLASS_NAME = "com.minhld.jobs.Job";
+    public static final String JOB_EXEC_METHOD = "exec";
+
 
     public enum SocketType {
         SERVER,
@@ -59,6 +70,13 @@ public class Utils {
      */
     public static ArrayList<XDevice> connectedDevices = new ArrayList<>();
 
+    /**
+     * display confirmation YES/NO
+     *
+     * @param c
+     * @param message
+     * @param listener
+     */
     public static void showYesNo(Context c, String message, final ConfirmListener listener){
         AlertDialog.Builder builder = new AlertDialog.Builder(c);
         builder.setTitle("confirm");
@@ -113,6 +131,45 @@ public class Utils {
     }
 
     /**
+     * this function will execute a class that is stored in Download folder
+     *
+     * @param c
+     * @return
+     * @throws Exception
+     */
+    public static Object runRemote(Context c, String jobPath, Bitmap srcBmp) throws Exception {
+        // check if the files are valid or not
+        if (!new File(jobPath).exists()) {
+            throw new Exception("job or data file does not exist");
+        }
+
+        // address the class object and its executable method
+        String dex_dir = c.getDir("dex", 0).getAbsolutePath();
+        ClassLoader parent  = c.getClass().getClassLoader();
+        DexClassLoader loader = new DexClassLoader(jobPath, dex_dir, null, parent);
+        Class jobClass = loader.loadClass(JOB_CLASS_NAME);
+        Object o = jobClass.newInstance();
+        Method m = jobClass.getMethod(JOB_EXEC_METHOD, Bitmap.class);
+
+        // address the resource
+        return (Bitmap) m.invoke(o, srcBmp);
+    }
+
+    /**
+     * write data from a byte array to file
+     *
+     * @param outputFilePath
+     * @param data
+     * @throws IOException
+     */
+    public static void writeFile(String outputFilePath, byte[] data) throws IOException {
+        FileOutputStream fos = new FileOutputStream(outputFilePath);
+        fos.write(data, 0, data.length);
+        fos.flush();
+        fos.close();
+    }
+
+    /**
      * read file and return binary array
      *
      * @param file
@@ -125,9 +182,19 @@ public class Utils {
         int read = 0;
         byte[] buff = new byte[1024];
         while ((read = fis.read(buff)) != -1) {
-            bos.write(buff, 0, buff.length);
+            bos.write(buff, 0, read);
         }
         return bos.toByteArray();
+    }
+
+    /**
+     * get the absolute path of the default Download folder
+     *
+     * @return
+     */
+    public static String getDownloadPath() {
+        return Environment.getExternalStoragePublicDirectory(
+                    Environment.DIRECTORY_DOWNLOADS).getAbsolutePath();
     }
 
     /**

@@ -35,7 +35,7 @@ public class JobServerHandler extends Handler {
                 ByteArrayOutputStream readBuf = (ByteArrayOutputStream) msg.obj;
 
                 // run the job, result will be thrown to client executor handler
-                new Thread(new JobExecutor(clientHandler, readBuf)).start();
+                new Thread(new JobExecutor(parent, clientHandler, readBuf)).start();
                 break;
             }
             case Utils.MESSAGE_READ_SERVER: {
@@ -72,8 +72,9 @@ public class JobServerHandler extends Handler {
             }
             case Utils.MY_HANDLE: {
                 // self instruction, don't care
-                //Object obj = msg.obj;
-
+                Object obj = msg.obj;
+                // disable printing out me recognition
+                //Utils.writeLog(parent, infoText, "me: " + obj);
                 break;
             }
 

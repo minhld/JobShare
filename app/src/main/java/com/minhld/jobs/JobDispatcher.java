@@ -1,5 +1,6 @@
 package com.minhld.jobs;
 
+import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
@@ -15,18 +16,20 @@ import java.io.File;
  * Created by minhld on 11/3/2015.
  */
 public class JobDispatcher extends AsyncTask {
+    private Activity context;
     private WifiBroadcaster broadcaster;
     private Handler socketHandler;
     String jobPath = "";
     String dataPath = "";
     int bmpWidth = 0, bmpHeight = 0;
 
-    public JobDispatcher(WifiBroadcaster broadcaster, Handler socketHandler) {
+    public JobDispatcher(Activity c, WifiBroadcaster broadcaster, Handler socketHandler) {
+        this.context = c;
         this.broadcaster = broadcaster;
         this.socketHandler = socketHandler;
 
-        String downloadPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath();
-        jobPath = downloadPath + "/Job.class";
+        String downloadPath = Utils.getDownloadPath();
+        jobPath = downloadPath + "/Job.jar";
         dataPath = downloadPath + "/mars.jpg";
     }
 
@@ -34,9 +37,9 @@ public class JobDispatcher extends AsyncTask {
     protected Object doInBackground(Object[] params) {
         // start sending data
         if (new File(dataPath).exists()) {
+            // read the bitmap from the binary data
             BitmapFactory.Options options = new BitmapFactory.Options();
             options.inSampleSize = 2;
-            // read the bitmap from the binary data
             Bitmap orgBmp = BitmapFactory.decodeFile(dataPath, options);
             this.bmpWidth = orgBmp.getWidth();
             this.bmpHeight = orgBmp.getHeight();
@@ -57,7 +60,7 @@ public class JobDispatcher extends AsyncTask {
                 // however it will skip the client 0, server will handle this
                 if (i == 0) {
                     // do it at server
-                    new Thread(new JobExecutor(this.socketHandler, jobData)).start();
+                    new Thread(new JobExecutor(this.context, this.socketHandler, jobData)).start();
                 } else {
                     // dispatch this one to client to resolve it
                     this.broadcaster.sendObject(jobData.toByteArray(), i);
@@ -78,7 +81,8 @@ public class JobDispatcher extends AsyncTask {
 
         // sending completed
         if (values.length > 0 && values[0] != null) {
-            socketHandler.obtainMessage(Utils.MESSAGE_READ_JOB_SENT, "{ 'width': " + bmpWidth + ", 'height': " + bmpHeight + " }");
+            socketHandler.obtainMessage(Utils.MESSAGE_READ_JOB_SENT,
+                        "{ 'width': " + bmpWidth + ", 'height': " + bmpHeight + " }");
         } else {
             socketHandler.obtainMessage(Utils.MESSAGE_READ_NO_FILE, "data file unavailable");
         }

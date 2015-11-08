@@ -1,6 +1,7 @@
 package com.minhld.jobs;
 
 import android.graphics.Bitmap;
+import android.util.Log;
 
 import com.minhld.supports.Utils;
 
@@ -31,6 +32,23 @@ public class JobData implements Serializable {
         this.jobClass = jobClassBytes;
     }
 
+    public JobData(int index, Bitmap bmpData, byte[] jobClassBytes) {
+        this.index = index;
+
+        try {
+            // assign the binary data
+            ByteArrayOutputStream bos = new ByteArrayOutputStream();
+            bmpData.compress(Bitmap.CompressFormat.JPEG, 0, bos);
+            byteData = bos.toByteArray();
+            bos.close();
+
+            // assign the job details data
+            this.jobClass = jobClassBytes;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     public JobData(int index, Bitmap bmpData, File jobClassFile) {
         this.index = index;
 
@@ -42,15 +60,7 @@ public class JobData implements Serializable {
             bos.close();
 
             // assign the job details data
-            bos = new ByteArrayOutputStream();
-            FileInputStream fis = new FileInputStream(jobClassFile);
-            int read = 0;
-            while ((read = fis.read()) != -1) {
-                bos.write(read);
-            }
-            jobClass = bos.toByteArray();
-            bos.close();
-
+            jobClass = Utils.readFile(jobClassFile);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -65,6 +75,7 @@ public class JobData implements Serializable {
         try {
             ByteArrayOutputStream bos = new ByteArrayOutputStream();
             byte[] thisBytesData = Utils.serialize(this);
+            Log.d("AAAAAAAA", "package size sent: "  + thisBytesData.length);
             byte[] jobSizeBytes = Utils.serialize(new Integer(thisBytesData.length));
             bos.write(jobSizeBytes, 0, jobSizeBytes.length);
             bos.write(thisBytesData, 0, thisBytesData.length);

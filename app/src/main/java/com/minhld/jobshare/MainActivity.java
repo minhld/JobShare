@@ -70,6 +70,10 @@ public class MainActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         infoText.setMovementMethod(new ScrollingMovementMethod());
 
+        // handlers registration
+        clientExecutorHandler = new JobClientHandler(mReceiver);
+        socketHandler = new JobServerHandler(this, clientExecutorHandler);
+
         // configure wifi receiver
         mReceiver = new WifiBroadcaster(this, deviceList, infoText);
         mReceiver.setBroadCastListener(new BroadcastUpdatesHandler());
@@ -86,12 +90,8 @@ public class MainActivity extends AppCompatActivity {
         sayHiBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //mReceiver.sendObject("hello!");
                 // 1. dispatch jobs to clients
-                new JobDispatcher(mReceiver, socketHandler).execute();
-
-                // 2. listen to client responses
-
+                new JobDispatcher(MainActivity.this, mReceiver, socketHandler).execute();
             }
         });
 
@@ -107,9 +107,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        // handlers registration
-        clientExecutorHandler = new JobClientHandler(mReceiver);
-        socketHandler = new JobServerHandler(this, clientExecutorHandler);
     }
 
     @Override

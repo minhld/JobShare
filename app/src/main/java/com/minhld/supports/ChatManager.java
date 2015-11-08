@@ -18,7 +18,7 @@ import java.util.Arrays;
 public class ChatManager implements Runnable {
     private static final String TAG = "ChatHandler";
     private static final int BUFF_LENGTH = 1024;
-    private static final int LENGTH_SIZE = 4;
+    private static final int LENGTH_SIZE = 81;
 
     private Utils.SocketType socketType;
     private Socket socket = null;
@@ -47,19 +47,21 @@ public class ChatManager implements Runnable {
             int readCount = 0, totalCount = 0;
             int length = 0;
 
-            while (true) {
-                try {
+            try {
+                while (true) {
+
                     byteStream = new ByteArrayOutputStream();
                     length = 0;
                     // read from the input stream
                     while ((readCount = iStream.read(buffer)) >= 0) {
-                        totalCount += readCount;
 
                         if (length > 0) {
                             byteStream.write(buffer, 0, readCount);
+                            totalCount += readCount;
                         } else {
                             // detect length of the package
-                            byteStream.write(buffer, LENGTH_SIZE, readCount);
+                            byteStream.write(buffer, LENGTH_SIZE, readCount - LENGTH_SIZE);
+                            totalCount = 0;
                             byte[] lengthBytes = Arrays.copyOfRange(buffer, 0, LENGTH_SIZE);
                             try {
                                 length = (Integer)Utils.deserialize(lengthBytes);
@@ -74,16 +76,26 @@ public class ChatManager implements Runnable {
                         }
                     }
 
+                    if (readCount == -1) {
+                        throw new IOException("client socket is terminated");
+                    }
+
+                    // reset the measurements
+                    length = 0;
+                    totalCount = 0;
+
                     // Send the obtained bytes to the UI Activity
                     if (socketType == Utils.SocketType.SERVER) {
                         handler.obtainMessage(Utils.MESSAGE_READ_SERVER, byteStream);
                     } else {
                         handler.obtainMessage(Utils.MESSAGE_READ_CLIENT, byteStream);
                     }
-                } catch (IOException e) {
-                    Log.e(TAG, "disconnected", e);
+
                 }
+            } catch (IOException e) {
+                Log.e(TAG, "disconnected", e);
             }
+
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
