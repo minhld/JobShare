@@ -48,12 +48,12 @@ public class ClientSocketHandler extends SocketHandler {
 
     @Override
     public void write(byte[] data) {
-        chat.write(data.toString().getBytes());
+        chat.write(data);
     }
 
     @Override
     public void write(byte[] data, int channelIndex) {
-
+        chat.write(data);
     }
 
     @Override

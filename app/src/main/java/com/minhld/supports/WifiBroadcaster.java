@@ -268,7 +268,7 @@ public class WifiBroadcaster extends BroadcastReceiver {
      */
     public void sendObject(Object st, int channelIndex) {
         if (st instanceof byte[]) {
-            mSocketHandler.write((byte[])st);
+            mSocketHandler.write((byte[])st, channelIndex);
         }else {
             try {
                 // we need to serialize it to binary array before dispatching it
