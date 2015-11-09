@@ -84,7 +84,7 @@ public class JobDispatcher extends AsyncTask {
         // sending completed
         if (values.length > 0 && values[0] != null) {
             socketHandler.obtainMessage(Utils.MESSAGE_READ_JOB_SENT,
-                        "{ 'width': " + bmpWidth + ", 'height': " + bmpHeight + " }");
+                        "{ 'width': " + bmpWidth + ", 'height': " + bmpHeight + " }").sendToTarget();
         } else {
             socketHandler.obtainMessage(Utils.MESSAGE_READ_NO_FILE, "data file unavailable");
         }

@@ -45,18 +45,27 @@ public class JobServerHandler extends Handler {
             }
             case Utils.MESSAGE_READ_SERVER: {
                 // server received client result, will merge the results here
-                ByteArrayOutputStream readBuf = (ByteArrayOutputStream) msg.obj;
+                JobData clientJobResult = null;
 
                 try {
-                    JobData clientJobResult = (JobData) Utils.deserialize(readBuf.toByteArray());
+                    if (msg.obj instanceof JobData) {
+                        // this case happens when server finishes its own job
+                        clientJobResult = (JobData) msg.obj;
+                    } else {
+                        // this case happens when server receives a result from client - in
+                        // binary array
+                        ByteArrayOutputStream readBuf = (ByteArrayOutputStream) msg.obj;
+                        clientJobResult = (JobData) Utils.deserialize(readBuf.toByteArray());
+                    }
+
                     int imgIndex = clientJobResult.index;
                     Bitmap partBmp = BitmapFactory.decodeByteArray(
                             clientJobResult.byteData, 0, clientJobResult.byteData.length);
-                    Canvas canvas = new Canvas(finalBitmap);
-                    //canvas.drawBitmap(partBmp, imgIndex * partBmp.getWidth(), 0, partBmp.getWidth(), partBmp.getHeight());
+                    drawBitmap(partBmp, finalBitmap, imgIndex);
+
                     // also display it partially
-                    mainUiHandler.obtainMessage(Utils.MAIN_INFO, "[server] received data from client [" + imgIndex + "]");
-                    mainUiHandler.obtainMessage(Utils.MAIN_JOB_DONE, partBmp);
+                    mainUiHandler.obtainMessage(Utils.MAIN_INFO, "[server] received data from client [" + imgIndex + "]").sendToTarget();
+                    mainUiHandler.obtainMessage(Utils.MAIN_JOB_DONE, finalBitmap).sendToTarget();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -68,9 +77,8 @@ public class JobServerHandler extends Handler {
                 String jsonData = (String) msg.obj;
                 try {
                     JSONObject resultObj = new JSONObject(jsonData);
-                    int width = resultObj.getInt("width"),
-                            height = resultObj.getInt("height");
-                    finalBitmap = Bitmap.createBitmap(width, height, null);
+                    int width = resultObj.getInt("width"), height = resultObj.getInt("height");
+                    finalBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -85,5 +93,11 @@ public class JobServerHandler extends Handler {
             }
 
         }
+    }
+
+    private void drawBitmap(Bitmap source, Bitmap dest, int index) {
+        int pieceWidth = source.getWidth();
+        Canvas canvas = new Canvas(dest);
+        canvas.drawBitmap(source, index * pieceWidth, 0, null);
     }
 }

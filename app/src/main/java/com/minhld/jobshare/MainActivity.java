@@ -73,7 +73,8 @@ public class MainActivity extends AppCompatActivity {
                 case Utils.MAIN_JOB_DONE: {
                     Bitmap bmp = (Bitmap) msg.obj;
                     mPreviewImage.setImageBitmap(bmp);
-                    mViewFlipper.showNext();
+                    //mViewFlipper.showNext();
+                    mViewFlipper.setDisplayedChild(1);
                     break;
                 }
                 case Utils.MAIN_INFO: {
