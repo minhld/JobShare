@@ -37,7 +37,7 @@ public class JobServerHandler extends Handler {
                 ByteArrayOutputStream readBuf = (ByteArrayOutputStream) msg.obj;
 
                 // print out that it received a job from server
-                this.mainUiHandler.obtainMessage(Utils.MAIN_INFO, "[client] received a job from server").sendToTarget();
+                this.mainUiHandler.obtainMessage(Utils.MAIN_INFO, "[client] received a job from server. running... ").sendToTarget();
 
                 // run the job, result will be thrown to client executor handler
                 new Thread(new JobExecutor(parent, clientHandler, readBuf)).start();
@@ -55,7 +55,8 @@ public class JobServerHandler extends Handler {
                     Canvas canvas = new Canvas(finalBitmap);
                     //canvas.drawBitmap(partBmp, imgIndex * partBmp.getWidth(), 0, partBmp.getWidth(), partBmp.getHeight());
                     // also display it partially
-                    //mPreviewImage.setImageBitmap(finalBitmap);
+                    mainUiHandler.obtainMessage(Utils.MAIN_INFO, "[server] received data from client [" + imgIndex + "]");
+                    mainUiHandler.obtainMessage(Utils.MAIN_JOB_DONE, partBmp);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

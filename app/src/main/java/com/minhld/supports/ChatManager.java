@@ -79,6 +79,10 @@ public class ChatManager implements Runnable {
                         }
                     }
 
+                    if (readCount == -1) {
+                        throw new IOException("socket should be disconnected");
+                    }
+
                     // Send the obtained bytes to the UI Activity
                     if (socketType == Utils.SocketType.SERVER) {
                         handler.obtainMessage(Utils.MESSAGE_READ_SERVER, byteStream).sendToTarget();

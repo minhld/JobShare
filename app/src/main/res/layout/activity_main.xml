@@ -55,7 +55,15 @@
                 <ImageView
                     android:id="@+id/previewImage"
                     android:layout_width="fill_parent"
-                    android:layout_height="fill_parent" />
+                    android:layout_height="fill_parent"
+                    android:scaleType="fitCenter"/>
+
+                <Button
+                    android:id="@+id/closeViewBtn"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:text="@string/close_button"
+                    android:layout_gravity="right|top" />
 
             </FrameLayout>
 

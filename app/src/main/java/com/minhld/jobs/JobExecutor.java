@@ -8,7 +8,6 @@ import android.os.Handler;
 import com.minhld.supports.Utils;
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
 
 /**
  * Created by minhld on 11/3/2015.

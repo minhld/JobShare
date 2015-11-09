@@ -34,6 +34,7 @@ public class JobClientHandler extends Handler {
 
                 try {
                     Bitmap pieceBmp = BitmapFactory.decodeByteArray(jobData.byteData, 0, jobData.byteData.length);
+                    mainUiHandler.obtainMessage(Utils.MAIN_INFO, "[client] job done. send back result.").sendToTarget();
                     mainUiHandler.obtainMessage(Utils.MAIN_JOB_DONE, pieceBmp).sendToTarget();
                 } catch (Exception e) {
                     e.printStackTrace();

@@ -49,6 +49,9 @@ public class MainActivity extends AppCompatActivity {
     @Bind(R.id.previewImage)
     ImageView mPreviewImage;
 
+    @Bind(R.id.closeViewBtn)
+    Button closeViewBtn;
+
     WifiBroadcaster mReceiver;
     IntentFilter mIntentFilter;
 
@@ -129,6 +132,12 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        closeViewBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mViewFlipper.showNext();
+            }
+        });
     }
 
     @Override
