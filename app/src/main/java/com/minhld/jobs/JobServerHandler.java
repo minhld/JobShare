@@ -20,10 +20,12 @@ public class JobServerHandler extends Handler {
 
     Activity parent;
     JobClientHandler clientHandler;
+    Handler mainUiHandler;
     Bitmap finalBitmap;
 
-    public JobServerHandler(Activity parent, JobClientHandler clientHandler) {
+    public JobServerHandler(Activity parent, Handler uiHandler, JobClientHandler clientHandler) {
         this.parent = parent;
+        this.mainUiHandler = uiHandler;
         this.clientHandler = clientHandler;
     }
 
@@ -33,6 +35,9 @@ public class JobServerHandler extends Handler {
             case Utils.MESSAGE_READ_CLIENT: {
                 // client received job, will send the result here
                 ByteArrayOutputStream readBuf = (ByteArrayOutputStream) msg.obj;
+
+                // print out that it received a job from server
+                this.mainUiHandler.obtainMessage(Utils.MAIN_INFO, "[client] received a job from server").sendToTarget();
 
                 // run the job, result will be thrown to client executor handler
                 new Thread(new JobExecutor(parent, clientHandler, readBuf)).start();

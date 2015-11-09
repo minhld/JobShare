@@ -27,8 +27,6 @@ import java.util.Date;
  * Created by minhld on 9/17/2015.
  */
 public class WifiBroadcaster extends BroadcastReceiver {
-    private static final int SOCKET_TIMEOUT = 8000;
-    private static final int GROUP_PORT = 8881;
     private SimpleDateFormat sdf = new SimpleDateFormat("MM-dd HH:mm:ss.SSS");
 
     WifiP2pManager mManager;

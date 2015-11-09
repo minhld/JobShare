@@ -18,6 +18,8 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.lang.reflect.Method;
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -40,6 +42,9 @@ public class Utils {
     // each other sometimes.
     public static final int JOB_OK = 0x500 + 2;
     public static final int JOB_FAILED = -1;
+
+    public static final int MAIN_JOB_DONE = 1;
+    public static final int MAIN_INFO = -1;
 
     public static final SimpleDateFormat SDF = new SimpleDateFormat("MM-dd HH:mm:ss.SSS");
     public static final String JOB_FILE_NAME = "Job.jar";
@@ -185,6 +190,14 @@ public class Utils {
             bos.write(buff, 0, read);
         }
         return bos.toByteArray();
+    }
+
+    public static byte[] intToBytes(int val) {
+        return ByteBuffer.allocate(4).order(ByteOrder.LITTLE_ENDIAN).putInt(val).array();
+    }
+
+    public static int bytesToInt(byte[] arr) {
+        return ByteBuffer.wrap(arr).order(ByteOrder.LITTLE_ENDIAN).getInt();
     }
 
     /**

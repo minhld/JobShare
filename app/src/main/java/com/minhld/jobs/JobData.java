@@ -75,11 +75,9 @@ public class JobData implements Serializable {
         try {
             ByteArrayOutputStream bos = new ByteArrayOutputStream();
             byte[] thisBytesData = Utils.serialize(this);
-            Log.d("AAAAAAAA", "package size sent: "  + thisBytesData.length);
-            byte[] jobSizeBytes = Utils.serialize(new Integer(thisBytesData.length));
-            bos.write(jobSizeBytes, 0, jobSizeBytes.length);
+            byte[] lengthBytes = Utils.intToBytes(thisBytesData.length);
+            bos.write(lengthBytes, 0, lengthBytes.length);
             bos.write(thisBytesData, 0, thisBytesData.length);
-
             return bos.toByteArray();
         } catch (IOException e) {
             e.printStackTrace();

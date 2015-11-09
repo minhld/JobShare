@@ -68,7 +68,7 @@ public class JobExecutor extends ClassLoader implements Runnable {
 
             // send this result to server
             JobData jobResult = new JobData(this.jobData.index, result, new byte[0]);
-            handler.obtainMessage(Utils.JOB_OK, jobResult);
+            handler.obtainMessage(Utils.JOB_OK, jobResult).sendToTarget();
 
         } catch (Exception e) {
             handler.obtainMessage(Utils.JOB_FAILED, e);

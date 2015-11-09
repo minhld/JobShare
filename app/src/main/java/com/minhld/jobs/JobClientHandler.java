@@ -12,9 +12,14 @@ import com.minhld.supports.WifiBroadcaster;
  * Created by minhld on 11/6/2015.
  */
 public class JobClientHandler extends Handler {
+    Handler mainUiHandler;
     WifiBroadcaster mReceiver;
 
-    public JobClientHandler(WifiBroadcaster mReceiver) {
+    public JobClientHandler(Handler uiHandler) {
+        this.mainUiHandler = uiHandler;
+    }
+
+    public void setBroadcaster(WifiBroadcaster mReceiver) {
         this.mReceiver = mReceiver;
     }
 
@@ -27,12 +32,13 @@ public class JobClientHandler extends Handler {
                 JobData jobData = (JobData) msg.obj;
                 mReceiver.sendObject(jobData.toByteArray(), jobData.index);
 
-                // display it on client image view
                 try {
                     Bitmap pieceBmp = BitmapFactory.decodeByteArray(jobData.byteData, 0, jobData.byteData.length);
-                    //mPreviewImage.setImageBitmap(pieceBmp);
+                    mainUiHandler.obtainMessage(Utils.MAIN_JOB_DONE, pieceBmp).sendToTarget();
                 } catch (Exception e) {
                     e.printStackTrace();
+                    mainUiHandler.obtainMessage(Utils.MAIN_INFO,
+                                "exception: " + e.getMessage()).sendToTarget();
                 }
                 break;
             }

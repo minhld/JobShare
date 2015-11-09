@@ -63,7 +63,9 @@ public class JobDispatcher extends AsyncTask {
                     new Thread(new JobExecutor(this.context, this.socketHandler, jobData)).start();
                 } else {
                     // dispatch this one to client to resolve it
-                    this.broadcaster.sendObject(jobData.toByteArray(), i);
+                    // it should be 32288 bytes to be sent
+                    byte[] jobBytes = jobData.toByteArray();
+                    this.broadcaster.sendObject(jobBytes, i);
                 }
             }
 

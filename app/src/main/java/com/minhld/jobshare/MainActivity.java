@@ -3,6 +3,8 @@ package com.minhld.jobshare;
 import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.net.wifi.p2p.WifiP2pDevice;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.method.ScrollingMovementMethod;
@@ -58,9 +60,27 @@ public class MainActivity extends AppCompatActivity {
 
     // this will listen to the client job executor
     JobClientHandler clientExecutorHandler = null;
-
     // this will listen to the events happened with the main socket (server or client)
     JobServerHandler socketHandler = null;
+
+    Handler mainUiHandler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case Utils.MAIN_JOB_DONE: {
+                    Bitmap bmp = (Bitmap) msg.obj;
+                    mPreviewImage.setImageBitmap(bmp);
+                    mViewFlipper.showNext();
+                    break;
+                }
+                case Utils.MAIN_INFO: {
+                    String strMsg = (String) msg.obj;
+                    Utils.writeLog(MainActivity.this, infoText, strMsg);
+                    break;
+                }
+            }
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,13 +91,15 @@ public class MainActivity extends AppCompatActivity {
         infoText.setMovementMethod(new ScrollingMovementMethod());
 
         // handlers registration
-        clientExecutorHandler = new JobClientHandler(mReceiver);
-        socketHandler = new JobServerHandler(this, clientExecutorHandler);
+        clientExecutorHandler = new JobClientHandler(mainUiHandler);
+        socketHandler = new JobServerHandler(this, mainUiHandler, clientExecutorHandler);
 
         // configure wifi receiver
         mReceiver = new WifiBroadcaster(this, deviceList, infoText);
         mReceiver.setBroadCastListener(new BroadcastUpdatesHandler());
         mReceiver.setSocketHandler(socketHandler);
+
+        clientExecutorHandler.setBroadcaster(mReceiver);
 
         // start discovering
         mReceiver.discoverPeers();
