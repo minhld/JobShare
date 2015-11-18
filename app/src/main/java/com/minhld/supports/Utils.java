@@ -192,6 +192,19 @@ public class Utils {
         return bos.toByteArray();
     }
 
+    /**
+     * create a scaled down bitmap with new width & height
+     * but maintain the image ratio
+     *
+     * @param src
+     * @param width
+     * @return
+     */
+    public static Bitmap createScaleImage(Bitmap src, int width) {
+        int height = (width * src.getHeight()) / src.getWidth();
+        return Bitmap.createScaledBitmap(src, width, height, true);
+    }
+
     public static byte[] intToBytes(int val) {
         return ByteBuffer.allocate(4).order(ByteOrder.LITTLE_ENDIAN).putInt(val).array();
     }
@@ -238,7 +251,7 @@ public class Utils {
         c.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                log.append(SDF.format(new Date()) + "[" + prefix + "] " + e.getMessage() + "\r\n");
+                log.append(SDF.format(new Date()) + ": [" + prefix + "] " + e.getMessage() + "\r\n");
                 e.printStackTrace();
             }
         });

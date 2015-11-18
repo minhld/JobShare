@@ -2,6 +2,7 @@ package com.minhld.jobshare;
 
 import android.content.IntentFilter;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.wifi.p2p.WifiP2pDevice;
 import android.os.Handler;
 import android.os.Message;
@@ -21,6 +22,7 @@ import com.minhld.jobs.JobServerHandler;
 import com.minhld.supports.Utils;
 import com.minhld.supports.WifiBroadcaster;
 import com.minhld.supports.WifiPeerListAdapter;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -72,7 +74,12 @@ public class MainActivity extends AppCompatActivity {
             switch (msg.what) {
                 case Utils.MAIN_JOB_DONE: {
                     Bitmap bmp = (Bitmap) msg.obj;
-                    mPreviewImage.setImageBitmap(bmp);
+                    Bitmap scaleBmp = Utils.createScaleImage(bmp, 500);
+
+                    //// release the bitmap
+                    //bmp.recycle();
+                    mPreviewImage.setImageBitmap(scaleBmp);
+
                     //mViewFlipper.showNext();
                     mViewFlipper.setDisplayedChild(1);
                     break;

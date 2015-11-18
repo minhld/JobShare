@@ -8,6 +8,7 @@ import android.os.Handler;
 import com.minhld.supports.Utils;
 
 import java.io.ByteArrayOutputStream;
+import java.io.FileOutputStream;
 
 /**
  * Created by minhld on 11/3/2015.
@@ -62,10 +63,14 @@ public class JobExecutor extends ClassLoader implements Runnable {
         try {
             // get the original bitmap
             orgBmp = BitmapFactory.decodeByteArray(jobData.byteData, 0, jobData.byteData.length);
+            String orgFilePath = Utils.getDownloadPath() + "/org.png";
+            orgBmp.compress(Bitmap.CompressFormat.PNG, 100, new FileOutputStream(orgFilePath));
 
             // initiate the Job algorithm class & execute it
             String jobPath = Utils.getDownloadPath() + "/" + Utils.JOB_FILE_NAME;
             result = (Bitmap) Utils.runRemote(this.context, jobPath, orgBmp);
+            String resFilePath = Utils.getDownloadPath() + "/res.png";
+            orgBmp.compress(Bitmap.CompressFormat.PNG, 100, new FileOutputStream(resFilePath));
 
             // release the original image
             orgBmp.recycle();

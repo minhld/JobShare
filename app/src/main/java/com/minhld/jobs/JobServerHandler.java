@@ -69,7 +69,6 @@ public class JobServerHandler extends Handler {
                     mainUiHandler.obtainMessage(Utils.MAIN_JOB_DONE, finalBitmap).sendToTarget();
                 } catch (Exception e) {
                     ((MainActivity) parent).writeLog("server-error", e);
-                    //e.printStackTrace();
                 }
                 break;
             }
@@ -83,7 +82,6 @@ public class JobServerHandler extends Handler {
                     finalBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
                 } catch (Exception e) {
                     ((MainActivity) parent).writeLog("server-error", e);
-                    //e.printStackTrace();
                 }
                 break;
             }
@@ -115,8 +113,5 @@ public class JobServerHandler extends Handler {
         int pieceWidth = source.getWidth();
         Canvas canvas = new Canvas(dest);
         canvas.drawBitmap(source, index * pieceWidth, 0, null);
-
-        // release the source bitmap
-        source.recycle();
     }
 }

@@ -32,8 +32,11 @@ public class JobClientHandler extends Handler {
                 JobData jobData = (JobData) msg.obj;
                 mReceiver.sendObject(jobData.toByteArray(), jobData.index);
 
+                // displaying small image on client device
                 try {
-                    Bitmap pieceBmp = BitmapFactory.decodeByteArray(jobData.byteData, 0, jobData.byteData.length);
+                    BitmapFactory.Options options = new BitmapFactory.Options();
+                    options.inSampleSize = 2;
+                    Bitmap pieceBmp = BitmapFactory.decodeByteArray(jobData.byteData, 0, jobData.byteData.length, options);
                     mainUiHandler.obtainMessage(Utils.MAIN_INFO, "[client] job done. send back result.").sendToTarget();
                     mainUiHandler.obtainMessage(Utils.MAIN_JOB_DONE, pieceBmp).sendToTarget();
                 } catch (Exception e) {
