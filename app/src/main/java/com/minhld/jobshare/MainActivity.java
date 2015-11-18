@@ -185,4 +185,23 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * write to log
+     *
+     * @param log
+     */
+    public void writeLog(String log) {
+        Utils.writeLog(this, this.infoText, log);
+    }
+
+    /**
+     * write to log with exception
+     *
+     * @param prefix
+     * @param e
+     */
+    public void writeLog(String prefix, Exception e) {
+        Utils.writeLog(this, this.infoText, prefix, e);
+    }
+
 }

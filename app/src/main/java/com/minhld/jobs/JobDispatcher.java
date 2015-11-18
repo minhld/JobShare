@@ -21,7 +21,7 @@ public class JobDispatcher extends AsyncTask {
     private Handler socketHandler;
     String jobPath = "";
     String dataPath = "";
-    int bmpWidth = 0, bmpHeight = 0;
+    //int bmpWidth = 0, bmpHeight = 0;
 
     public JobDispatcher(Activity c, WifiBroadcaster broadcaster, Handler socketHandler) {
         this.context = c;
@@ -36,40 +36,56 @@ public class JobDispatcher extends AsyncTask {
     @Override
     protected Object doInBackground(Object[] params) {
         // start sending data
+        Bitmap orgBmp = null;
+
         if (new File(dataPath).exists()) {
-            // read the bitmap from the binary data
-            BitmapFactory.Options options = new BitmapFactory.Options();
-            options.inSampleSize = 2;
-            Bitmap orgBmp = BitmapFactory.decodeFile(dataPath, options);
-            this.bmpWidth = orgBmp.getWidth();
-            this.bmpHeight = orgBmp.getHeight();
+            try {
+                // read the bitmap from the binary data
+                BitmapFactory.Options options = new BitmapFactory.Options();
+                //options.inSampleSize = 2;
+                orgBmp = BitmapFactory.decodeFile(dataPath, options);
+                int bmpWidth = orgBmp.getWidth();
+                int bmpHeight = orgBmp.getHeight();
 
-            // depend on number of clients, we will split the number
-            JobData jobData;
-            Bitmap splitBmp;
-            int deviceNum = Utils.connectedDevices.size() + 1;
-            // get width of each slice
-            int pieceWidth = this.bmpWidth / deviceNum;
+                // depend on number of clients, we will split the number
+                JobData jobData;
+                Bitmap splitBmp;
+                int deviceNum = Utils.connectedDevices.size() + 1;
+                // get width of each slice
+                int pieceWidth = bmpWidth / deviceNum;
 
-            for (int i = 0; i < deviceNum; i++) {
-                // create job data
-                splitBmp = Bitmap.createBitmap(orgBmp, (pieceWidth * i), 0, pieceWidth, orgBmp.getHeight());
-                jobData = new JobData(i, splitBmp, new File(jobPath));
+                for (int i = 0; i < deviceNum; i++) {
+                    // create job data
+                    splitBmp = Bitmap.createBitmap(orgBmp, (pieceWidth * i), 0, pieceWidth, orgBmp.getHeight());
+                    jobData = new JobData(i, splitBmp, new File(jobPath));
 
-                // and send to all the clients
-                // however it will skip the client 0, server will handle this
-                if (i == 0) {
-                    // do it at server
-                    new Thread(new JobExecutor(this.context, this.socketHandler, jobData)).start();
-                } else {
-                    // dispatch this one to client to resolve it
-                    // it should be 32288 bytes to be sent
-                    byte[] jobBytes = jobData.toByteArray();
-                    this.broadcaster.sendObject(jobBytes, i);
+                    // no longer need this data
+                    splitBmp.recycle();
+
+                    // and send to all the clients
+                    // however it will skip the client 0, server will handle this
+                    if (i == 0) {
+                        // do it at server
+                        new Thread(new JobExecutor(this.context, this.socketHandler, jobData)).start();
+                    } else {
+                        // dispatch this one to client to resolve it
+                        // it should be 32288 bytes to be sent
+                        byte[] jobBytes = jobData.toByteArray();
+                        this.broadcaster.sendObject(jobBytes, i);
+                    }
+                }
+
+                // release the original image
+                orgBmp.recycle();
+
+                publishProgress(new Integer[] { bmpWidth, bmpHeight });
+            } catch (Exception e) {
+                socketHandler.obtainMessage(Utils.JOB_FAILED, "[server] " + e.getMessage());
+            } finally {
+                if (orgBmp != null && !orgBmp.isRecycled()) {
+                    orgBmp.recycle();
                 }
             }
-
-            publishProgress(orgBmp);
         } else {
             // no file available
             publishProgress(null);
@@ -79,14 +95,16 @@ public class JobDispatcher extends AsyncTask {
 
     @Override
     protected void onProgressUpdate(Object[] values) {
-        super.onProgressUpdate(values);
+        //super.onProgressUpdate(values);
 
         // sending completed
-        if (values.length > 0 && values[0] != null) {
+        if (values.length > 0) {
+            int bmpWidth = (int) values[0];
+            int bmpHeight = (int) values[1];
             socketHandler.obtainMessage(Utils.MESSAGE_READ_JOB_SENT,
                         "{ 'width': " + bmpWidth + ", 'height': " + bmpHeight + " }").sendToTarget();
         } else {
-            socketHandler.obtainMessage(Utils.MESSAGE_READ_NO_FILE, "data file unavailable");
+            socketHandler.obtainMessage(Utils.MESSAGE_READ_NO_FILE, "[server] data file unavailable");
         }
     }
 }

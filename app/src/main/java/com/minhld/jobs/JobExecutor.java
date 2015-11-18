@@ -57,21 +57,41 @@ public class JobExecutor extends ClassLoader implements Runnable {
 
     @Override
     public void run() {
+        Bitmap orgBmp = null;
+        Bitmap result = null;
         try {
             // get the original bitmap
-            Bitmap orgBmp = BitmapFactory.decodeByteArray(jobData.byteData, 0, jobData.byteData.length);
+            orgBmp = BitmapFactory.decodeByteArray(jobData.byteData, 0, jobData.byteData.length);
 
             // initiate the Job algorithm class & execute it
             String jobPath = Utils.getDownloadPath() + "/" + Utils.JOB_FILE_NAME;
-            Bitmap result = (Bitmap) Utils.runRemote(this.context, jobPath, orgBmp);
+            result = (Bitmap) Utils.runRemote(this.context, jobPath, orgBmp);
+
+            // release the original image
+            orgBmp.recycle();
 
             // send this result to server
             JobData jobResult = new JobData(this.jobData.index, result, new byte[0]);
+
+            // release the result bitmap
+            result.recycle();
+
             handler.obtainMessage(Utils.JOB_OK, jobResult).sendToTarget();
 
         } catch (Exception e) {
             handler.obtainMessage(Utils.JOB_FAILED, e);
+        } finally {
+            // release the result bitmap
+            if (result != null && !result.isRecycled()) {
+                result.recycle();
+            }
+
+            // release the original bitmap
+            if (orgBmp != null && !orgBmp.isRecycled()) {
+                orgBmp.recycle();
+            }
         }
+
     }
 
 }

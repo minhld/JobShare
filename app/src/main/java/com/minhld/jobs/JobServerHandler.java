@@ -7,6 +7,7 @@ import android.graphics.Canvas;
 import android.os.Handler;
 import android.os.Message;
 
+import com.minhld.jobshare.MainActivity;
 import com.minhld.supports.Utils;
 
 import org.json.JSONObject;
@@ -67,7 +68,8 @@ public class JobServerHandler extends Handler {
                     mainUiHandler.obtainMessage(Utils.MAIN_INFO, "[server] received data from client [" + imgIndex + "]").sendToTarget();
                     mainUiHandler.obtainMessage(Utils.MAIN_JOB_DONE, finalBitmap).sendToTarget();
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    ((MainActivity) parent).writeLog("server-error", e);
+                    //e.printStackTrace();
                 }
                 break;
             }
@@ -80,8 +82,14 @@ public class JobServerHandler extends Handler {
                     int width = resultObj.getInt("width"), height = resultObj.getInt("height");
                     finalBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    ((MainActivity) parent).writeLog("server-error", e);
+                    //e.printStackTrace();
                 }
+                break;
+            }
+            case Utils.JOB_FAILED: {
+                String exStr = (String) msg.obj;
+                ((MainActivity) parent).writeLog(exStr);
                 break;
             }
             case Utils.MY_HANDLE: {
@@ -95,9 +103,20 @@ public class JobServerHandler extends Handler {
         }
     }
 
+    /**
+     * draw the piece bitmap on our canvas. This one will also remove the source
+     * bitmap once it is drawn
+     *
+     * @param source
+     * @param dest
+     * @param index
+     */
     private void drawBitmap(Bitmap source, Bitmap dest, int index) {
         int pieceWidth = source.getWidth();
         Canvas canvas = new Canvas(dest);
         canvas.drawBitmap(source, index * pieceWidth, 0, null);
+
+        // release the source bitmap
+        source.recycle();
     }
 }

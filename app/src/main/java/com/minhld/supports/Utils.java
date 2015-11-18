@@ -207,7 +207,7 @@ public class Utils {
      */
     public static String getDownloadPath() {
         return Environment.getExternalStoragePublicDirectory(
-                    Environment.DIRECTORY_DOWNLOADS).getAbsolutePath();
+                Environment.DIRECTORY_DOWNLOADS).getAbsolutePath();
     }
 
     /**
@@ -222,6 +222,24 @@ public class Utils {
             @Override
             public void run() {
                 log.append(SDF.format(new Date()) + ": " + msg + "\r\n");
+            }
+        });
+    }
+
+    /**
+     * write the logout with prefix and exception
+     *
+     * @param c
+     * @param log
+     * @param prefix
+     * @param e
+     */
+    public static void writeLog(Activity c, final TextView log, final String prefix, final Exception e){
+        c.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                log.append(SDF.format(new Date()) + "[" + prefix + "] " + e.getMessage() + "\r\n");
+                e.printStackTrace();
             }
         });
     }
