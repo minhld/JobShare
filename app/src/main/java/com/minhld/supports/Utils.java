@@ -5,7 +5,6 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Environment;
 import android.widget.TextView;
 
@@ -174,6 +173,21 @@ public class Utils {
         fos.close();
     }
 
+    public static void writeBitmapToFile(String outputBitmapPath, Bitmap bmp,
+                                         boolean releaseBitmap) throws IOException {
+        File file = new File(outputBitmapPath);
+        FileOutputStream fOut = new FileOutputStream(file);
+
+        bmp.compress(Bitmap.CompressFormat.PNG, 100, fOut);
+        fOut.flush();
+        fOut.close();
+
+        if (releaseBitmap) {
+            bmp.recycle();
+            System.gc();
+        }
+    }
+
     /**
      * read file and return binary array
      *
@@ -203,6 +217,35 @@ public class Utils {
     public static Bitmap createScaleImage(Bitmap src, int width) {
         int height = (width * src.getHeight()) / src.getWidth();
         return Bitmap.createScaledBitmap(src, width, height, true);
+    }
+
+    /**
+     * calculate the sample size
+     *
+     * @param bmp
+     * @param resizedWidth
+     * @return
+     */
+    public static int calculateInSampleSize(Bitmap bmp, int resizedWidth) {
+        final int width = bmp.getWidth();
+        final int height = bmp.getHeight();
+
+        final int resizedHeight = (resizedWidth * height) / width;
+        int inSampleSize = 1;
+
+        if (height > resizedHeight || width > resizedWidth) {
+            final int halfHeight = height / 2;
+            final int halfWidth = width / 2;
+
+            // Calculate the largest inSampleSize value that is a power of 2 and keeps both
+            // height and width larger than the requested height and width.
+            while ((halfHeight / inSampleSize) > resizedHeight &&
+                    (halfWidth / inSampleSize) > resizedWidth) {
+                inSampleSize *= 2;
+            }
+        }
+
+        return inSampleSize;
     }
 
     public static byte[] intToBytes(int val) {

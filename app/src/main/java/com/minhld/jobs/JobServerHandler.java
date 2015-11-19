@@ -94,7 +94,7 @@ public class JobServerHandler extends Handler {
                 // self instruction, don't care
                 Object obj = msg.obj;
                 // disable printing out me recognition
-                //Utils.writeLog(parent, infoText, "me: " + obj);
+                ((MainActivity) parent).writeLog("" + obj);
                 break;
             }
 

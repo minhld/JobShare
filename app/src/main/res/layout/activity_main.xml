@@ -82,4 +82,15 @@
             android:layout_weight="1"/>
     </LinearLayout>
 
+    <CheckBox
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Use Cluster"
+        android:id="@+id/useClusterCheck"
+        android:layout_alignTop="@+id/sayHiBtn"
+        android:layout_toRightOf="@+id/sayHiBtn"
+        android:layout_toEndOf="@+id/sayHiBtn"
+        android:layout_marginTop="10dp"
+        android:checked="true" />
+
 </RelativeLayout>

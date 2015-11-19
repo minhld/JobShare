@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
-import android.os.Environment;
 import android.os.Handler;
 
 import com.minhld.supports.Utils;
@@ -21,12 +20,13 @@ public class JobDispatcher extends AsyncTask {
     private Handler socketHandler;
     String jobPath = "";
     String dataPath = "";
-    //int bmpWidth = 0, bmpHeight = 0;
+    boolean useCluster = true;
 
-    public JobDispatcher(Activity c, WifiBroadcaster broadcaster, Handler socketHandler) {
+    public JobDispatcher(Activity c, WifiBroadcaster broadcaster, Handler socketHandler, boolean useCluster) {
         this.context = c;
         this.broadcaster = broadcaster;
         this.socketHandler = socketHandler;
+        this.useCluster = useCluster;
 
         String downloadPath = Utils.getDownloadPath();
         jobPath = downloadPath + "/Job.jar";
@@ -41,9 +41,7 @@ public class JobDispatcher extends AsyncTask {
         if (new File(dataPath).exists()) {
             try {
                 // read the bitmap from the binary data
-                BitmapFactory.Options options = new BitmapFactory.Options();
-                //options.inSampleSize = 2;
-                orgBmp = BitmapFactory.decodeFile(dataPath, options);
+                orgBmp = BitmapFactory.decodeFile(dataPath);
                 int bmpWidth = orgBmp.getWidth();
                 int bmpHeight = orgBmp.getHeight();
 
@@ -64,14 +62,21 @@ public class JobDispatcher extends AsyncTask {
 
                     // and send to all the clients
                     // however it will skip the client 0, server will handle this
-                    if (i == 0) {
-                        // do it at server
-                        new Thread(new JobExecutor(this.context, this.socketHandler, jobData)).start();
+                    if (this.useCluster) {
+                        if (i == 0) {
+                            // do it at server
+                            this.socketHandler.obtainMessage(Utils.MY_HANDLE, "[server] do own job #" + i);
+                            new Thread(new JobExecutor(this.context, this.socketHandler, jobData)).start();
+                        } else {
+                            // dispatch this one to client to resolve it
+                            // it should be 32288 bytes to be sent
+                            byte[] jobBytes = jobData.toByteArray();
+                            this.broadcaster.sendObject(jobBytes, i);
+                        }
                     } else {
-                        // dispatch this one to client to resolve it
-                        // it should be 32288 bytes to be sent
-                        byte[] jobBytes = jobData.toByteArray();
-                        this.broadcaster.sendObject(jobBytes, i);
+                        // do all of the tasks at server
+                        this.socketHandler.obtainMessage(Utils.MY_HANDLE, "[server] do own job #" + i).sendToTarget();
+                        new Thread(new JobExecutor(this.context, this.socketHandler, jobData)).start();
                     }
                 }
 

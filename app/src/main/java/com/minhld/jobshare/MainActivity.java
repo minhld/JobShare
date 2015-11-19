@@ -2,7 +2,6 @@ package com.minhld.jobshare;
 
 import android.content.IntentFilter;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.wifi.p2p.WifiP2pDevice;
 import android.os.Handler;
 import android.os.Message;
@@ -11,6 +10,8 @@ import android.os.Bundle;
 import android.text.method.ScrollingMovementMethod;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -22,7 +23,6 @@ import com.minhld.jobs.JobServerHandler;
 import com.minhld.supports.Utils;
 import com.minhld.supports.WifiBroadcaster;
 import com.minhld.supports.WifiPeerListAdapter;
-import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -54,6 +54,9 @@ public class MainActivity extends AppCompatActivity {
     @Bind(R.id.closeViewBtn)
     Button closeViewBtn;
 
+    @Bind(R.id.useClusterCheck)
+    CheckBox useClusterCheck;
+
     WifiBroadcaster mReceiver;
     IntentFilter mIntentFilter;
 
@@ -74,7 +77,7 @@ public class MainActivity extends AppCompatActivity {
             switch (msg.what) {
                 case Utils.MAIN_JOB_DONE: {
                     Bitmap bmp = (Bitmap) msg.obj;
-                    Bitmap scaleBmp = Utils.createScaleImage(bmp, 500);
+                    Bitmap scaleBmp = Utils.createScaleImage(bmp, 1000);
 
                     //// release the bitmap
                     //bmp.recycle();
@@ -124,7 +127,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 // 1. dispatch jobs to clients
-                new JobDispatcher(MainActivity.this, mReceiver, socketHandler).execute();
+                boolean useCluster = useClusterCheck.isChecked();
+                new JobDispatcher(MainActivity.this, mReceiver, socketHandler, useCluster).execute();
             }
         });
 
@@ -144,6 +148,14 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 mViewFlipper.showNext();
+            }
+        });
+
+        // enable button if we don't use cluster
+        useClusterCheck.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                sayHiBtn.setEnabled(!isChecked);
             }
         });
     }
