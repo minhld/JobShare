@@ -27,17 +27,11 @@ import java.util.Date;
  * Created by minhld on 9/17/2015.
  */
 public class WifiBroadcaster extends BroadcastReceiver {
-    private SimpleDateFormat sdf = new SimpleDateFormat("MM-dd HH:mm:ss.SSS");
-
     WifiP2pManager mManager;
     WifiP2pManager.Channel mChannel;
     IntentFilter mIntentFilter;
 
     BroadCastListener broadCastListener;
-
-    Activity mContext;
-    TextView logTxt;
-    ListView deviceList;
 
     SocketHandler mSocketHandler;
     Handler mSocketUIListener;
@@ -46,11 +40,7 @@ public class WifiBroadcaster extends BroadcastReceiver {
         this.mSocketUIListener = skHandler;
     }
 
-    public WifiBroadcaster(Activity c, ListView deviceList, TextView logTxt){
-        this.mContext = c;
-        this.deviceList = deviceList;
-        this.logTxt = logTxt;
-
+    public WifiBroadcaster(Activity c){
         this.mManager = (WifiP2pManager)c.getSystemService(Context.WIFI_P2P_SERVICE);
         mChannel = mManager.initialize(c, c.getMainLooper(), null);
     }
@@ -285,12 +275,8 @@ public class WifiBroadcaster extends BroadcastReceiver {
      * @param msg
      */
     public void writeLog(final String msg){
-        mContext.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                logTxt.append(sdf.format(new Date()) + ": " + msg + "\r\n");
-            }
-        });
+        String outMsg = Utils.SDF.format(new Date()) + ": " + msg + "\r\n";
+        mSocketUIListener.obtainMessage(Utils.MESSAGE_INFO, outMsg);
     }
 
 }

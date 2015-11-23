@@ -1,12 +1,8 @@
 package com.minhld.supports;
 
-import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.os.Environment;
-import android.widget.TextView;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -21,7 +17,6 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 
 import dalvik.system.DexClassLoader;
 
@@ -62,8 +57,8 @@ public class Utils {
 
         public XDevice () {}
 
-        public XDevice (String addr, String name) {
-            this.address = addr;
+        public XDevice (String address, String name) {
+            this.address = address;
             this.name = name;
         }
     }
@@ -73,38 +68,6 @@ public class Utils {
      * this list will be used as iterating devices for sending, checking, etc...
      */
     public static ArrayList<XDevice> connectedDevices = new ArrayList<>();
-
-    /**
-     * display confirmation YES/NO
-     *
-     * @param c
-     * @param message
-     * @param listener
-     */
-    public static void showYesNo(Context c, String message, final ConfirmListener listener){
-        AlertDialog.Builder builder = new AlertDialog.Builder(c);
-        builder.setTitle("confirm");
-        builder.setMessage(message);
-
-        builder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-                if (listener != null) {
-                    listener.confirmed();
-                }
-            }
-        });
-
-        builder.setNegativeButton("NO", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-            }
-        });
-
-        AlertDialog alert = builder.create();
-        alert.show();
-    }
 
     /**
      * Serialize an object to binary array
@@ -173,21 +136,6 @@ public class Utils {
         fos.close();
     }
 
-    public static void writeBitmapToFile(String outputBitmapPath, Bitmap bmp,
-                                         boolean releaseBitmap) throws IOException {
-        File file = new File(outputBitmapPath);
-        FileOutputStream fOut = new FileOutputStream(file);
-
-        bmp.compress(Bitmap.CompressFormat.PNG, 100, fOut);
-        fOut.flush();
-        fOut.close();
-
-        if (releaseBitmap) {
-            bmp.recycle();
-            System.gc();
-        }
-    }
-
     /**
      * read file and return binary array
      *
@@ -204,48 +152,6 @@ public class Utils {
             bos.write(buff, 0, read);
         }
         return bos.toByteArray();
-    }
-
-    /**
-     * create a scaled down bitmap with new width & height
-     * but maintain the image ratio
-     *
-     * @param src
-     * @param width
-     * @return
-     */
-    public static Bitmap createScaleImage(Bitmap src, int width) {
-        int height = (width * src.getHeight()) / src.getWidth();
-        return Bitmap.createScaledBitmap(src, width, height, true);
-    }
-
-    /**
-     * calculate the sample size
-     *
-     * @param bmp
-     * @param resizedWidth
-     * @return
-     */
-    public static int calculateInSampleSize(Bitmap bmp, int resizedWidth) {
-        final int width = bmp.getWidth();
-        final int height = bmp.getHeight();
-
-        final int resizedHeight = (resizedWidth * height) / width;
-        int inSampleSize = 1;
-
-        if (height > resizedHeight || width > resizedWidth) {
-            final int halfHeight = height / 2;
-            final int halfWidth = width / 2;
-
-            // Calculate the largest inSampleSize value that is a power of 2 and keeps both
-            // height and width larger than the requested height and width.
-            while ((halfHeight / inSampleSize) > resizedHeight &&
-                    (halfWidth / inSampleSize) > resizedWidth) {
-                inSampleSize *= 2;
-            }
-        }
-
-        return inSampleSize;
     }
 
     public static byte[] intToBytes(int val) {
@@ -266,41 +172,4 @@ public class Utils {
                 Environment.DIRECTORY_DOWNLOADS).getAbsolutePath();
     }
 
-    /**
-     * write the log out to the main screen
-     *
-     * @param c
-     * @param log
-     * @param msg
-     */
-    public static void writeLog(Activity c, final TextView log, final String msg){
-        c.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                log.append(SDF.format(new Date()) + ": " + msg + "\r\n");
-            }
-        });
-    }
-
-    /**
-     * write the logout with prefix and exception
-     *
-     * @param c
-     * @param log
-     * @param prefix
-     * @param e
-     */
-    public static void writeLog(Activity c, final TextView log, final String prefix, final Exception e){
-        c.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                log.append(SDF.format(new Date()) + ": [" + prefix + "] " + e.getMessage() + "\r\n");
-                e.printStackTrace();
-            }
-        });
-    }
-
-    public interface ConfirmListener {
-        public void confirmed();
-    }
 }

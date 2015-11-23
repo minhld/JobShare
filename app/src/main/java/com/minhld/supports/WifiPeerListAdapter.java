@@ -81,6 +81,7 @@ public class WifiPeerListAdapter extends ArrayAdapter<WifiP2pDevice> {
                     break;
                 }
                 case WifiP2pDevice.CONNECTED: {
+                    /*
                     Utils.showYesNo(context, "are you sure you want to disconnect with " + device.deviceName + "?",
                             new Utils.ConfirmListener() {
                                 @Override
@@ -88,6 +89,9 @@ public class WifiPeerListAdapter extends ArrayAdapter<WifiP2pDevice> {
                                     mWifiBroadcaster.disconnect(device.deviceName, null);
                                 }
                             });
+                    */
+                    // just disconnect, no confirmation
+                    mWifiBroadcaster.disconnect(device.deviceName, null);
                     break;
                 }
                 case WifiP2pDevice.AVAILABLE: {

@@ -77,7 +77,7 @@ public class MainActivity extends AppCompatActivity {
             switch (msg.what) {
                 case Utils.MAIN_JOB_DONE: {
                     Bitmap bmp = (Bitmap) msg.obj;
-                    Bitmap scaleBmp = Utils.createScaleImage(bmp, 1000);
+                    Bitmap scaleBmp = UITools.createScaleImage(bmp, 1000);
 
                     //// release the bitmap
                     //bmp.recycle();
@@ -89,7 +89,7 @@ public class MainActivity extends AppCompatActivity {
                 }
                 case Utils.MAIN_INFO: {
                     String strMsg = (String) msg.obj;
-                    Utils.writeLog(MainActivity.this, infoText, strMsg);
+                    UITools.writeLog(MainActivity.this, infoText, strMsg);
                     break;
                 }
             }
@@ -109,7 +109,7 @@ public class MainActivity extends AppCompatActivity {
         socketHandler = new JobServerHandler(this, mainUiHandler, clientExecutorHandler);
 
         // configure wifi receiver
-        mReceiver = new WifiBroadcaster(this, deviceList, infoText);
+        mReceiver = new WifiBroadcaster(this);
         mReceiver.setBroadCastListener(new BroadcastUpdatesHandler());
         mReceiver.setSocketHandler(socketHandler);
 
@@ -210,7 +210,7 @@ public class MainActivity extends AppCompatActivity {
      * @param log
      */
     public void writeLog(String log) {
-        Utils.writeLog(this, this.infoText, log);
+        UITools.writeLog(this, this.infoText, log);
     }
 
     /**
@@ -220,7 +220,7 @@ public class MainActivity extends AppCompatActivity {
      * @param e
      */
     public void writeLog(String prefix, Exception e) {
-        Utils.writeLog(this, this.infoText, prefix, e);
+        UITools.writeLog(this, this.infoText, prefix, e);
     }
 
 }
