@@ -18,8 +18,6 @@ import java.util.concurrent.TimeUnit;
 public class ServerSocketHandler extends SocketHandler {
     ServerSocket socket = null;
     private final int THREAD_COUNT = 10;
-    private Handler handler;
-
 
     // A ThreadPool for client sockets.
     private final ThreadPoolExecutor pool = new ThreadPoolExecutor(
@@ -29,8 +27,8 @@ public class ServerSocketHandler extends SocketHandler {
     // list of devices to monitor
     ArrayList<ChatManager> chatList = new ArrayList<>();
 
-    public ServerSocketHandler(Activity c, TextView t, Handler handler) throws IOException {
-        super(c, t);
+    public ServerSocketHandler(Handler handler) throws IOException {
+        super(handler);
         chatList = new ArrayList<>();
         Utils.connectedDevices = new ArrayList<>();
 

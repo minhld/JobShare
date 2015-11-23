@@ -35,7 +35,7 @@ public class Utils {
     public static final int MESSAGE_READ_SERVER = 0x500 + 2;
     public static final int MESSAGE_READ_JOB_SENT = 0x500 + 3;
     public static final int MESSAGE_READ_NO_FILE = 0x500 + 5;
-    public static final int MY_HANDLE = 0x500 + 6;
+    public static final int MESSAGE_INFO = 0x500 + 6;
 
     // same value as MESSAGE_READ_SERVER, because it will be used for replacing
     // each other sometimes.
@@ -141,7 +141,7 @@ public class Utils {
      * @return
      * @throws Exception
      */
-    public static Object runRemote(Context c, String jobPath, Bitmap srcBmp) throws Exception {
+    public static Object runRemote(Context c, String jobPath, Object srcObject, Class type) throws Exception {
         // check if the files are valid or not
         if (!new File(jobPath).exists()) {
             throw new Exception("job or data file does not exist");
@@ -153,10 +153,10 @@ public class Utils {
         DexClassLoader loader = new DexClassLoader(jobPath, dex_dir, null, parent);
         Class jobClass = loader.loadClass(JOB_CLASS_NAME);
         Object o = jobClass.newInstance();
-        Method m = jobClass.getMethod(JOB_EXEC_METHOD, Bitmap.class);
+        Method m = jobClass.getMethod(JOB_EXEC_METHOD, type);
 
         // address the resource
-        return (Bitmap) m.invoke(o, srcBmp);
+        return m.invoke(o, srcObject);
     }
 
     /**

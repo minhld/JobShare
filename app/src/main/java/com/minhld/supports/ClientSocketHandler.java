@@ -10,13 +10,11 @@ import java.net.InetSocketAddress;
 import java.net.Socket;
 
 public class ClientSocketHandler extends SocketHandler {
-    private Handler handler;
     private ChatManager chat;
     private InetAddress mAddress;
 
-    public ClientSocketHandler(Activity c, TextView t, Handler handler, InetAddress groupOwnerAddress) {
-        super(c, t);
-        this.handler = handler;
+    public ClientSocketHandler(Handler handler, InetAddress groupOwnerAddress) {
+        super(handler);
         this.mAddress = groupOwnerAddress;
         this.socketType = socketType.CLIENT;
     }

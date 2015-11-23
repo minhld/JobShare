@@ -96,7 +96,7 @@ public class WifiBroadcaster extends BroadcastReceiver {
                             writeLog("server is still be reused @ " + info.groupOwnerAddress.getHostAddress());
                         } else {
                             try {
-                                mSocketHandler = new ServerSocketHandler(mContext, logTxt, mSocketUIListener);
+                                mSocketHandler = new ServerSocketHandler(mSocketUIListener);
                                 mSocketHandler.start();
                                 writeLog("become server @ " + info.groupOwnerAddress.getHostAddress());
                             } catch (IOException e) {
@@ -108,7 +108,7 @@ public class WifiBroadcaster extends BroadcastReceiver {
                         broadCastListener.socketUpdated(Utils.SocketType.SERVER, true);
                     } else if (info.groupFormed) {
                         // if current device is a client
-                        mSocketHandler = new ClientSocketHandler(mContext, logTxt, mSocketUIListener, info.groupOwnerAddress);
+                        mSocketHandler = new ClientSocketHandler(mSocketUIListener, info.groupOwnerAddress);
                         mSocketHandler.start();
                         broadCastListener.socketUpdated(Utils.SocketType.CLIENT, true);
                     } else {

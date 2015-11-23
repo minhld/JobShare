@@ -90,7 +90,7 @@ public class JobServerHandler extends Handler {
                 ((MainActivity) parent).writeLog(exStr);
                 break;
             }
-            case Utils.MY_HANDLE: {
+            case Utils.MESSAGE_INFO: {
                 // self instruction, don't care
                 Object obj = msg.obj;
                 // disable printing out me recognition

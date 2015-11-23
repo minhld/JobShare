@@ -3,8 +3,6 @@ package com.minhld.supports;
 import android.os.Handler;
 import android.util.Log;
 
-import org.apache.commons.io.IOUtils;
-
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -41,7 +39,7 @@ public class ChatManager implements Runnable {
 
             byte[] buffer = new byte[BUFF_LENGTH];
 
-            handler.obtainMessage(Utils.MY_HANDLE, "OK").sendToTarget();
+            handler.obtainMessage(Utils.MESSAGE_INFO, "OK").sendToTarget();
             ByteArrayOutputStream byteStream = null;
 
             int readCount = 0, totalCount = 0;

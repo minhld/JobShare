@@ -65,7 +65,7 @@ public class JobExecutor extends ClassLoader implements Runnable {
 
             // initiate the Job algorithm class & execute it
             String jobPath = Utils.getDownloadPath() + "/" + Utils.JOB_FILE_NAME;
-            result = (Bitmap) Utils.runRemote(this.context, jobPath, orgBmp);
+            result = (Bitmap) Utils.runRemote(this.context, jobPath, orgBmp, Bitmap.class);
 
             // release the original image
             orgBmp.recycle();

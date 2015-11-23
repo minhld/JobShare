@@ -1,21 +1,18 @@
 package com.minhld.supports;
 
 import android.app.Activity;
+import android.os.Handler;
 import android.widget.TextView;
 
 /**
  * Created by minhld on 11/1/2015.
  */
 public abstract class SocketHandler extends Thread {
-    protected Activity mContext;
-    protected TextView mLogText;
+    protected Handler handler;
     protected Utils.SocketType socketType;
 
-    public SocketHandler() {}
-
-    public SocketHandler(Activity c, TextView t) {
-        this.mContext = c;
-        this.mLogText = t;
+    public SocketHandler(Handler handler) {
+        this.handler = handler;
         this.socketType = Utils.SocketType.SERVER;
     }
 
@@ -47,7 +44,12 @@ public abstract class SocketHandler extends Thread {
      */
     public abstract boolean isSocketWorking();
 
+    /**
+     * dispatch messages
+     *
+     * @param msg
+     */
     public void writeLog(String msg) {
-        Utils.writeLog(mContext, mLogText, msg);
+        this.handler.obtainMessage(Utils.MESSAGE_INFO, msg).sendToTarget();
     }
 }
