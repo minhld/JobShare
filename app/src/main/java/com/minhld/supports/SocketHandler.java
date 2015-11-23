@@ -1,8 +1,6 @@
 package com.minhld.supports;
 
-import android.app.Activity;
 import android.os.Handler;
-import android.widget.TextView;
 
 /**
  * Created by minhld on 11/1/2015.

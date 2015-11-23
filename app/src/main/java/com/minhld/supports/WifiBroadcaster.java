@@ -12,13 +12,8 @@ import android.net.wifi.p2p.WifiP2pDeviceList;
 import android.net.wifi.p2p.WifiP2pInfo;
 import android.net.wifi.p2p.WifiP2pManager;
 import android.os.Handler;
-import android.widget.ListView;
-import android.widget.TextView;
 
 import java.io.IOException;
-import java.io.Serializable;
-import java.net.Socket;
-import java.text.SimpleDateFormat;
 import java.util.Collection;
 import java.util.Date;
 

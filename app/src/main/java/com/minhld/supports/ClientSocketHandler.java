@@ -1,8 +1,6 @@
 package com.minhld.supports;
 
-import android.app.Activity;
 import android.os.Handler;
-import android.widget.TextView;
 
 import java.io.IOException;
 import java.net.InetAddress;
