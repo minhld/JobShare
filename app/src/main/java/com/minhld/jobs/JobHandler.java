@@ -53,10 +53,11 @@ public class JobHandler {
 
         clientHandler.setBroadcaster(mReceiver);
 
+        discoverPeers();
+
         // configure the device list
         deviceListAdapter = new WifiPeerListAdapter(this.context, R.layout.row_devices, peerArrayList, mReceiver);
 
-        mReceiver.discoverPeers();
     }
 
     /**

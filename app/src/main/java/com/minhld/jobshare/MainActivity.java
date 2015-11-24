@@ -1,8 +1,6 @@
 package com.minhld.jobshare;
 
-import android.content.IntentFilter;
 import android.graphics.Bitmap;
-import android.net.wifi.p2p.WifiP2pDevice;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
@@ -17,18 +15,9 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.ViewFlipper;
 
-import com.minhld.jobs.JobClientHandler;
 import com.minhld.jobs.JobDataParser;
-import com.minhld.jobs.JobDispatcher;
 import com.minhld.jobs.JobHandler;
-import com.minhld.jobs.JobServerHandler;
 import com.minhld.supports.Utils;
-import com.minhld.supports.WifiBroadcaster;
-import com.minhld.supports.WifiPeerListAdapter;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
