@@ -18,7 +18,9 @@ import android.widget.TextView;
 import android.widget.ViewFlipper;
 
 import com.minhld.jobs.JobClientHandler;
+import com.minhld.jobs.JobDataParser;
 import com.minhld.jobs.JobDispatcher;
+import com.minhld.jobs.JobHandler;
 import com.minhld.jobs.JobServerHandler;
 import com.minhld.supports.Utils;
 import com.minhld.supports.WifiBroadcaster;
@@ -57,19 +59,12 @@ public class MainActivity extends AppCompatActivity {
     @Bind(R.id.useClusterCheck)
     CheckBox useClusterCheck;
 
-    WifiBroadcaster mReceiver;
-    IntentFilter mIntentFilter;
 
-    WifiPeerListAdapter deviceListAdapter;
-    List<WifiP2pDevice> peerArrayList = new ArrayList<>();
 
     // this bitmap will be used as the placeholder to merge the parts sent from clients
     Bitmap finalBitmap = null;
 
-    // this will listen to the client job executor
-    JobClientHandler clientExecutorHandler = null;
-    // this will listen to the events happened with the main socket (server or client)
-    JobServerHandler socketHandler = null;
+    JobHandler jobHandler;
 
     Handler mainUiHandler = new Handler() {
         @Override
@@ -104,31 +99,37 @@ public class MainActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         infoText.setMovementMethod(new ScrollingMovementMethod());
 
+        // bitmap parser
+        JobDataParser dataParser = new BitmapJobDataParser();
         // handlers registration
-        clientExecutorHandler = new JobClientHandler(mainUiHandler);
-        socketHandler = new JobServerHandler(this, mainUiHandler, clientExecutorHandler);
+        jobHandler = new JobHandler(this, mainUiHandler, dataParser);
+        jobHandler.setJobListener(new JobHandler.JobListener() {
+            @Override
+            public void socketUpdated(final boolean isServer, final boolean isConnected) {
+                // enable/disable the "Say Hi" button when its status changed
+                MainActivity.this.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        // only server can send jobs to client, client cannot send job to server
+                        // but client will send job result to server
+                        if (isServer) {
+                            sayHiBtn.setEnabled(isConnected);
+                        }
+                    }
+                });
 
-        // configure wifi receiver
-        mReceiver = new WifiBroadcaster(this);
-        mReceiver.setBroadCastListener(new BroadcastUpdatesHandler());
-        mReceiver.setSocketHandler(socketHandler);
+            }
+        });
 
-        clientExecutorHandler.setBroadcaster(mReceiver);
-
-        // start discovering
-        mReceiver.discoverPeers();
-        mIntentFilter = mReceiver.getSingleIntentFilter();
-
-        // configure the device list
-        deviceListAdapter = new WifiPeerListAdapter(this, R.layout.row_devices, peerArrayList, mReceiver);
-        deviceList.setAdapter(deviceListAdapter);
+        deviceList.setAdapter(jobHandler.getDeviceListAdapter());
 
         sayHiBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // 1. dispatch jobs to clients
+                // 1. check if cluster is used
                 boolean useCluster = useClusterCheck.isChecked();
-                new JobDispatcher(MainActivity.this, mReceiver, socketHandler, useCluster).execute();
+                // 2. dispatch jobs to clients
+                jobHandler.dispatchJob(useCluster);
             }
         });
 
@@ -138,9 +139,8 @@ public class MainActivity extends AppCompatActivity {
         broadcastBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mReceiver.writeLog("attempting discover...");
-                mReceiver.discoverPeers();
-                mIntentFilter = mReceiver.getSingleIntentFilter();
+                writeLog("attempting discover...");
+                jobHandler.discoverPeers();
             }
         });
 
@@ -163,45 +163,17 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        if (mReceiver != null && mIntentFilter != null) {
-            registerReceiver(mReceiver, mIntentFilter);
-        }
+
+        // reset app back to activate mode
+        jobHandler.actOnResume();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        if (mReceiver != null && mIntentFilter != null) {
-            unregisterReceiver(mReceiver);
-        }
-    }
 
-    /**
-     * this class handles the device list when it is updated
-     */
-    private class BroadcastUpdatesHandler implements WifiBroadcaster.BroadCastListener {
-        @Override
-        public void peerDeviceListUpdated(Collection<WifiP2pDevice> deviceList) {
-            deviceListAdapter.clear();
-            deviceListAdapter.addAll(deviceList);
-            deviceListAdapter.notifyDataSetChanged();
-        }
-
-        @Override
-        public void socketUpdated(final Utils.SocketType socketType, final boolean connected) {
-            // enable/disable the "Say Hi" button when its status changed
-            MainActivity.this.runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    // only server can send jobs to client, client cannot send job to server
-                    // but client will send job result to server
-                    if (socketType == Utils.SocketType.SERVER) {
-                        sayHiBtn.setEnabled(connected);
-                    }
-                }
-            });
-
-        }
+        // reset app to sleep mode
+        jobHandler.actOnPause();
     }
 
     /**

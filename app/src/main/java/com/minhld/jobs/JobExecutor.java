@@ -1,8 +1,6 @@
 package com.minhld.jobs;
 
 import android.app.Activity;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Handler;
 
 import com.minhld.supports.Utils;
@@ -16,6 +14,7 @@ public class JobExecutor extends ClassLoader implements Runnable {
     Activity context;
     JobData jobData;
     private Handler handler;
+    private JobDataParser dataParser;
 
     /**
      * this constructor is used in client mode, when client receives a package
@@ -26,9 +25,11 @@ public class JobExecutor extends ClassLoader implements Runnable {
      * @param handler
      * @param jobDataBytes
      */
-    public JobExecutor(Activity c, Handler handler, ByteArrayOutputStream jobDataBytes) {
+    public JobExecutor(Activity c, Handler handler, JobDataParser dataParser,
+                       ByteArrayOutputStream jobDataBytes) {
         this.context = c;
         this.handler = handler;
+        this.dataParser = dataParser;
 
         try {
             this.jobData = (JobData) Utils.deserialize(jobDataBytes.toByteArray());
@@ -49,32 +50,36 @@ public class JobExecutor extends ClassLoader implements Runnable {
      * @param handler
      * @param jobData
      */
-    public JobExecutor(Activity c, Handler handler, JobData jobData) {
+    public JobExecutor(Activity c, Handler handler, JobDataParser dataParser,
+                       JobData jobData) {
         this.context = c;
         this.handler = handler;
+        this.dataParser = dataParser;
         this.jobData = jobData;
     }
 
     @Override
     public void run() {
-        Bitmap orgBmp = null;
-        Bitmap result = null;
+        Object orgObj = null;
+        Object resObj = null;
         try {
-            // get the original bitmap
-            orgBmp = BitmapFactory.decodeByteArray(jobData.byteData, 0, jobData.byteData.length);
+            // get the original data
+            orgObj = dataParser.parseToObject(jobData.byteData);
 
             // initiate the Job algorithm class & execute it
+            // suppose that job was download to Download folder in local device
             String jobPath = Utils.getDownloadPath() + "/" + Utils.JOB_FILE_NAME;
-            result = (Bitmap) Utils.runRemote(this.context, jobPath, orgBmp, Bitmap.class);
+            resObj = Utils.runRemote(this.context, jobPath, orgObj, dataParser.getDataClass());
 
-            // release the original image
-            orgBmp.recycle();
+            // release the original data
+            dataParser.destroy(orgObj);
 
             // send this result to server
-            JobData jobResult = new JobData(this.jobData.index, result, new byte[0]);
+            byte[] resObjBytes = dataParser.parseToBytes(resObj);
+            JobData jobResult = new JobData(this.jobData.index, resObjBytes, new byte[0]);
 
-            // release the result bitmap
-            result.recycle();
+            // release the result data
+            dataParser.destroy(orgObj);
 
             handler.obtainMessage(Utils.JOB_OK, jobResult).sendToTarget();
 
@@ -82,13 +87,13 @@ public class JobExecutor extends ClassLoader implements Runnable {
             handler.obtainMessage(Utils.JOB_FAILED, e);
         } finally {
             // release the result bitmap
-            if (result != null && !result.isRecycled()) {
-                result.recycle();
+            if (resObj != null && !dataParser.isObjectDestroyed(resObj)) {
+                dataParser.destroy(resObj);
             }
 
             // release the original bitmap
-            if (orgBmp != null && !orgBmp.isRecycled()) {
-                orgBmp.recycle();
+            if (orgObj != null && !dataParser.isObjectDestroyed(orgObj)) {
+                dataParser.destroy(orgObj);
             }
         }
 

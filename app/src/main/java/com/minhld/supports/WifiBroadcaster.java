@@ -271,7 +271,7 @@ public class WifiBroadcaster extends BroadcastReceiver {
      */
     public void writeLog(final String msg){
         String outMsg = Utils.SDF.format(new Date()) + ": " + msg + "\r\n";
-        mSocketUIListener.obtainMessage(Utils.MESSAGE_INFO, outMsg);
+        mSocketUIListener.obtainMessage(Utils.MESSAGE_INFO, outMsg).sendToTarget();
     }
 
 }

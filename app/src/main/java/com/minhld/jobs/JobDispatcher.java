@@ -18,14 +18,17 @@ public class JobDispatcher extends AsyncTask {
     private Activity context;
     private WifiBroadcaster broadcaster;
     private Handler socketHandler;
+    private JobDataParser dataParser;
+
     String jobPath = "";
     String dataPath = "";
     boolean useCluster = true;
 
-    public JobDispatcher(Activity c, WifiBroadcaster broadcaster, Handler socketHandler, boolean useCluster) {
+    public JobDispatcher(Activity c, WifiBroadcaster broadcaster, Handler socketHandler, JobDataParser dataParser, boolean useCluster) {
         this.context = c;
         this.broadcaster = broadcaster;
         this.socketHandler = socketHandler;
+        this.dataParser = dataParser;
         this.useCluster = useCluster;
 
         String downloadPath = Utils.getDownloadPath();
@@ -36,29 +39,31 @@ public class JobDispatcher extends AsyncTask {
     @Override
     protected Object doInBackground(Object[] params) {
         // start sending data
-        Bitmap orgBmp = null;
+        Object orgObj = null;
 
         if (new File(dataPath).exists()) {
             try {
                 // read the bitmap from the binary data
-                orgBmp = BitmapFactory.decodeFile(dataPath);
-                int bmpWidth = orgBmp.getWidth();
-                int bmpHeight = orgBmp.getHeight();
+                orgObj = dataParser.readFile(dataPath);
+
+                int bmpWidth = ((Bitmap) orgObj).getWidth();
+                int bmpHeight = ((Bitmap) orgObj).getHeight();
 
                 // depend on number of clients, we will split the number
                 JobData jobData;
-                Bitmap splitBmp;
+                Object splitObject;
                 int deviceNum = Utils.connectedDevices.size() + 1;
                 // get width of each slice
-                int pieceWidth = bmpWidth / deviceNum;
+                //int pieceWidth = bmpWidth / deviceNum;
 
                 for (int i = 0; i < deviceNum; i++) {
                     // create job data
-                    splitBmp = Bitmap.createBitmap(orgBmp, (pieceWidth * i), 0, pieceWidth, orgBmp.getHeight());
-                    jobData = new JobData(i, splitBmp, new File(jobPath));
+                    splitObject = dataParser.getPartData(orgObj, deviceNum, i);//Bitmap.createBitmap(orgBmp, (pieceWidth * i), 0, pieceWidth, orgBmp.getHeight());
+                    byte[] objectBytes = dataParser.parseToBytes(splitObject);
+                    jobData = new JobData(i, objectBytes, new File(jobPath));
 
                     // no longer need this data
-                    splitBmp.recycle();
+                    dataParser.destroy(splitObject);
 
                     // and send to all the clients
                     // however it will skip the client 0, server will handle this
@@ -66,7 +71,7 @@ public class JobDispatcher extends AsyncTask {
                         if (i == 0) {
                             // do it at server
                             this.socketHandler.obtainMessage(Utils.MESSAGE_INFO, "[server] do own job #" + i);
-                            new Thread(new JobExecutor(this.context, this.socketHandler, jobData)).start();
+                            new Thread(new JobExecutor(this.context, this.socketHandler, dataParser, jobData)).start();
                         } else {
                             // dispatch this one to client to resolve it
                             // it should be 32288 bytes to be sent
@@ -76,19 +81,19 @@ public class JobDispatcher extends AsyncTask {
                     } else {
                         // do all of the tasks at server
                         this.socketHandler.obtainMessage(Utils.MESSAGE_INFO, "[server] do own job #" + i).sendToTarget();
-                        new Thread(new JobExecutor(this.context, this.socketHandler, jobData)).start();
+                        new Thread(new JobExecutor(this.context, this.socketHandler, dataParser, jobData)).start();
                     }
                 }
 
                 // release the original image
-                orgBmp.recycle();
+                dataParser.destroy(orgObj);
 
                 publishProgress(new Integer[] { bmpWidth, bmpHeight });
             } catch (Exception e) {
                 socketHandler.obtainMessage(Utils.JOB_FAILED, "[server] " + e.getMessage());
             } finally {
-                if (orgBmp != null && !orgBmp.isRecycled()) {
-                    orgBmp.recycle();
+                if (dataParser.isObjectDestroyed(orgObj)) {
+                    dataParser.destroy(orgObj);
                 }
             }
         } else {

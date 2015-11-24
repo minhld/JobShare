@@ -1,13 +1,9 @@
 package com.minhld.jobs;
 
-import android.graphics.Bitmap;
-import android.util.Log;
-
 import com.minhld.supports.Utils;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.Serializable;
 
@@ -42,40 +38,6 @@ public class JobData implements Serializable {
         try {
             jobClass = Utils.readFile(jobClassFile);
         } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public JobData(int index, Bitmap bmpData, byte[] jobClassBytes) {
-        this.index = index;
-
-        try {
-            // assign the binary data
-            ByteArrayOutputStream bos = new ByteArrayOutputStream();
-            bmpData.compress(Bitmap.CompressFormat.JPEG, 0, bos);
-            byteData = bos.toByteArray();
-            bos.close();
-
-            // assign the job details data
-            this.jobClass = jobClassBytes;
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    public JobData(int index, Bitmap bmpData, File jobClassFile) {
-        this.index = index;
-
-        try {
-            // assign the binary data
-            ByteArrayOutputStream bos = new ByteArrayOutputStream();
-            bmpData.compress(Bitmap.CompressFormat.JPEG, 0, bos);
-            byteData = bos.toByteArray();
-            bos.close();
-
-            // assign the job details data
-            jobClass = Utils.readFile(jobClassFile);
-        } catch (Exception e) {
             e.printStackTrace();
         }
     }
