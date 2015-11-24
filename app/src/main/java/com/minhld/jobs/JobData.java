@@ -32,6 +32,20 @@ public class JobData implements Serializable {
         this.jobClass = jobClassBytes;
     }
 
+    public JobData(int index, byte[] bmpData, File jobClassFile) {
+        this.index = index;
+
+        // assign the binary data
+        this.byteData = bmpData;
+
+        // assign the job details data
+        try {
+            jobClass = Utils.readFile(jobClassFile);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     public JobData(int index, Bitmap bmpData, byte[] jobClassBytes) {
         this.index = index;
 

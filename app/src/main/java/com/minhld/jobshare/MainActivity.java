@@ -77,7 +77,7 @@ public class MainActivity extends AppCompatActivity {
             switch (msg.what) {
                 case Utils.MAIN_JOB_DONE: {
                     Bitmap bmp = (Bitmap) msg.obj;
-                    Bitmap scaleBmp = UITools.createScaleImage(bmp, 1000);
+                    Bitmap scaleBmp = BitmapTools.createScaleImage(bmp, 1000);
 
                     //// release the bitmap
                     //bmp.recycle();
