@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.os.Handler;
 import android.os.Message;
 
-import com.minhld.jobshare.MainActivity;
 import com.minhld.supports.Utils;
 
 import java.io.ByteArrayOutputStream;
@@ -62,7 +61,7 @@ public class JobServerHandler extends Handler {
                     mainUiHandler.obtainMessage(Utils.MAIN_INFO, "[server] received data from client [" + clientJobResult.index + "]").sendToTarget();
                     mainUiHandler.obtainMessage(Utils.MAIN_JOB_DONE, finalObject).sendToTarget();
                 } catch (Exception e) {
-                    ((MainActivity) parent).writeLog("server-error", e);
+                    mainUiHandler.obtainMessage(Utils.MAIN_INFO, "[server-error] " + e.getMessage()).sendToTarget();
                 }
                 break;
             }
@@ -75,14 +74,13 @@ public class JobServerHandler extends Handler {
             }
             case Utils.JOB_FAILED: {
                 String exStr = (String) msg.obj;
-                ((MainActivity) parent).writeLog(exStr);
+                mainUiHandler.obtainMessage(Utils.MAIN_INFO, exStr).sendToTarget();
                 break;
             }
             case Utils.MESSAGE_INFO: {
                 // self instruction, don't care
                 Object obj = msg.obj;
-                // disable printing out me recognition
-                ((MainActivity) parent).writeLog("" + obj);
+                mainUiHandler.obtainMessage(Utils.MAIN_INFO, msg.obj + "").sendToTarget();
                 break;
             }
 
