@@ -70,15 +70,9 @@ public class BitmapJobDataParser implements JobDataParser {
     }
 
     @Override
-    public Object mergeParts(Object finalObj, Object partObj, int index) {
+    public Object mergeParts(Object finalObj, byte[] partObj, int index) {
         // get bitmap from original data
-        Bitmap partBmp = null;
-        if (partObj instanceof Bitmap) {
-            partBmp = (Bitmap) partObj;
-        } else if (partObj instanceof byte[]) {
-            byte[] partBytes = (byte[]) partObj;
-            partBmp = BitmapFactory.decodeByteArray(partBytes, 0, partBytes.length);
-        }
+        Bitmap partBmp = BitmapFactory.decodeByteArray(partObj, 0, partObj.length);
 
         int pieceWidth = partBmp.getWidth();
         Canvas canvas = new Canvas((Bitmap) finalObj);
