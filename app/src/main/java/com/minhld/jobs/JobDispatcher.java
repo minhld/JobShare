@@ -23,16 +23,15 @@ public class JobDispatcher extends AsyncTask {
     String objJsonMetadata = "";
     boolean useCluster = true;
 
-    public JobDispatcher(Activity c, WifiBroadcaster broadcaster, Handler socketHandler, JobDataParser dataParser, boolean useCluster) {
+    public JobDispatcher(Activity c, WifiBroadcaster broadcaster, Handler socketHandler,
+                         JobDataParser dataParser, boolean useCluster, String dataPath, String jobPath) {
         this.context = c;
         this.broadcaster = broadcaster;
         this.socketHandler = socketHandler;
         this.dataParser = dataParser;
         this.useCluster = useCluster;
-
-        String downloadPath = Utils.getDownloadPath();
-        jobPath = downloadPath + "/Job.jar";
-        dataPath = downloadPath + "/mars.jpg";
+        this.dataPath = dataPath;
+        this.jobPath = jobPath;
     }
 
     @Override

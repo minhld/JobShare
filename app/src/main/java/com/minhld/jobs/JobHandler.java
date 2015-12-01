@@ -74,8 +74,9 @@ public class JobHandler {
      *
      * @param useCluster
      */
-    public void dispatchJob(boolean useCluster) {
-        new JobDispatcher(context, mReceiver, serverHandler, dataParser, useCluster).execute();
+    public void dispatchJob(boolean useCluster, String dataPath, String jobPath) {
+        new JobDispatcher(context, mReceiver, serverHandler, dataParser,
+                useCluster, dataPath, jobPath).execute();
     }
 
     /**

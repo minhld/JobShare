@@ -122,7 +122,10 @@ public class MainActivity extends AppCompatActivity {
                 boolean useCluster = useClusterCheck.isChecked();
 
                 // 2. dispatch jobs to clients
-                jobHandler.dispatchJob(useCluster);
+                String downloadPath = Utils.getDownloadPath();
+                String dataPath = downloadPath + "/mars.jpg";
+                String jobPath = downloadPath + "/Job.jar";
+                jobHandler.dispatchJob(useCluster, dataPath, jobPath);
             }
         });
 
