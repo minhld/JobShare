@@ -92,7 +92,7 @@ public class MainActivity extends AppCompatActivity {
         JobDataParser dataParser = new BitmapJobDataParser();
         // handlers registration
         jobHandler = new JobHandler(this, mainUiHandler, dataParser);
-        jobHandler.setJobListener(new JobHandler.JobListener() {
+        jobHandler.setSocketListener(new JobHandler.JobSocketListener() {
             @Override
             public void socketUpdated(final boolean isServer, final boolean isConnected) {
                 // enable/disable the "Say Hi" button when its status changed

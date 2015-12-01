@@ -33,9 +33,9 @@ public class JobHandler {
     WifiPeerListAdapter deviceListAdapter;
     List<WifiP2pDevice> peerArrayList = new ArrayList<>();
 
-    JobListener jobListener;
-    public void setJobListener(JobListener jobListener) {
-        this.jobListener = jobListener;
+    JobSocketListener jobSocketListener;
+    public void setSocketListener(JobSocketListener jobSocketListener) {
+        this.jobSocketListener = jobSocketListener;
     }
 
     public JobHandler(Activity c, Handler uiHandler, JobDataParser dataParser) {
@@ -114,13 +114,13 @@ public class JobHandler {
 
         @Override
         public void socketUpdated(final Utils.SocketType socketType, final boolean connected) {
-            if (jobListener != null) {
-                jobListener.socketUpdated(socketType == Utils.SocketType.SERVER, connected);
+            if (jobSocketListener != null) {
+                jobSocketListener.socketUpdated(socketType == Utils.SocketType.SERVER, connected);
             }
         }
     }
 
-    public interface JobListener {
+    public interface JobSocketListener {
         public void socketUpdated(boolean isServer, boolean isConnected);
     }
 }
