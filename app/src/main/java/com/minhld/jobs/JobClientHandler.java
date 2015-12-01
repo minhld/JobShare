@@ -1,7 +1,5 @@
 package com.minhld.jobs;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Handler;
 import android.os.Message;
 
@@ -13,10 +11,12 @@ import com.minhld.supports.WifiBroadcaster;
  */
 public class JobClientHandler extends Handler {
     Handler mainUiHandler;
+    JobDataParser dataParser;
     WifiBroadcaster mReceiver;
 
-    public JobClientHandler(Handler uiHandler) {
+    public JobClientHandler(Handler uiHandler, JobDataParser dataParser) {
         this.mainUiHandler = uiHandler;
+        this.dataParser = dataParser;
     }
 
     public void setBroadcaster(WifiBroadcaster mReceiver) {
@@ -34,12 +34,9 @@ public class JobClientHandler extends Handler {
 
                 // displaying small image on client device
                 try {
-                    //BitmapFactory.Options options = new BitmapFactory.Options();
-                    //options.inSampleSize = Utils.calculateInSampleSize();
-                    Bitmap pieceBmp = BitmapFactory.decodeByteArray(jobData.byteData, 0, jobData.byteData.length);
-                                    // BitmapFactory.decodeByteArray(jobData.byteData, 0, jobData.byteData.length, options);
+                    Object pieceObj = dataParser.parseToObject(jobData.byteData);
                     mainUiHandler.obtainMessage(Utils.MAIN_INFO, "[client] job done. send back result.").sendToTarget();
-                    mainUiHandler.obtainMessage(Utils.MAIN_JOB_DONE, pieceBmp).sendToTarget();
+                    mainUiHandler.obtainMessage(Utils.MAIN_JOB_DONE, pieceObj).sendToTarget();
                 } catch (Exception e) {
                     e.printStackTrace();
                     mainUiHandler.obtainMessage(Utils.MAIN_INFO,

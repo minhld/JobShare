@@ -115,8 +115,12 @@ public class MainActivity extends AppCompatActivity {
         sayHiBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // go back to the device list screen
+                mViewFlipper.setDisplayedChild(0);
+
                 // 1. check if cluster is used
                 boolean useCluster = useClusterCheck.isChecked();
+
                 // 2. dispatch jobs to clients
                 jobHandler.dispatchJob(useCluster);
             }

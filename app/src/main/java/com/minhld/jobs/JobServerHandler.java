@@ -1,16 +1,11 @@
 package com.minhld.jobs;
 
 import android.app.Activity;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
 import android.os.Handler;
 import android.os.Message;
 
 import com.minhld.jobshare.MainActivity;
 import com.minhld.supports.Utils;
-
-import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 
@@ -23,7 +18,7 @@ public class JobServerHandler extends Handler {
     JobClientHandler clientHandler;
     Handler mainUiHandler;
     JobDataParser dataParser;
-    Bitmap finalBitmap;
+    Object finalObject;
 
     public JobServerHandler(Activity parent, Handler uiHandler, JobClientHandler clientHandler, JobDataParser dataParser) {
         this.parent = parent;
@@ -61,14 +56,11 @@ public class JobServerHandler extends Handler {
                         clientJobResult = (JobData) Utils.deserialize(readBuf.toByteArray());
                     }
 
-                    int imgIndex = clientJobResult.index;
-                    Bitmap partBmp = BitmapFactory.decodeByteArray(
-                            clientJobResult.byteData, 0, clientJobResult.byteData.length);
-                    drawBitmap(partBmp, finalBitmap, imgIndex);
+                    dataParser.mergeParts(finalObject, clientJobResult.byteData, clientJobResult.index);
 
                     // also display it partially
-                    mainUiHandler.obtainMessage(Utils.MAIN_INFO, "[server] received data from client [" + imgIndex + "]").sendToTarget();
-                    mainUiHandler.obtainMessage(Utils.MAIN_JOB_DONE, finalBitmap).sendToTarget();
+                    mainUiHandler.obtainMessage(Utils.MAIN_INFO, "[server] received data from client [" + clientJobResult.index + "]").sendToTarget();
+                    mainUiHandler.obtainMessage(Utils.MAIN_JOB_DONE, finalObject).sendToTarget();
                 } catch (Exception e) {
                     ((MainActivity) parent).writeLog("server-error", e);
                 }
@@ -78,13 +70,7 @@ public class JobServerHandler extends Handler {
                 // when job is dispatched, a placeholder bitmap will be created
                 // to accumulate the results from clients
                 String jsonData = (String) msg.obj;
-                try {
-                    JSONObject resultObj = new JSONObject(jsonData);
-                    int width = resultObj.getInt("width"), height = resultObj.getInt("height");
-                    finalBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
-                } catch (Exception e) {
-                    ((MainActivity) parent).writeLog("server-error", e);
-                }
+                finalObject = dataParser.buildFinalObjectFromMetadata(jsonData);
                 break;
             }
             case Utils.JOB_FAILED: {
@@ -103,17 +89,4 @@ public class JobServerHandler extends Handler {
         }
     }
 
-    /**
-     * draw the piece bitmap on our canvas. This one will also remove the source
-     * bitmap once it is drawn
-     *
-     * @param source
-     * @param dest
-     * @param index
-     */
-    private void drawBitmap(Bitmap source, Bitmap dest, int index) {
-        int pieceWidth = source.getWidth();
-        Canvas canvas = new Canvas(dest);
-        canvas.drawBitmap(source, index * pieceWidth, 0, null);
-    }
 }

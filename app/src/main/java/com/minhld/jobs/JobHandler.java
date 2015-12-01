@@ -43,7 +43,7 @@ public class JobHandler {
         this.uiHandler = uiHandler;
         this.dataParser = dataParser;
 
-        clientHandler = new JobClientHandler(uiHandler);
+        clientHandler = new JobClientHandler(uiHandler, dataParser);
         serverHandler = new JobServerHandler(this.context, uiHandler, clientHandler, dataParser);
 
         // configure wifi receiver

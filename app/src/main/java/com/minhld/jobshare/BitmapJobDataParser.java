@@ -2,8 +2,11 @@ package com.minhld.jobshare;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
 
 import com.minhld.jobs.JobDataParser;
+
+import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 
@@ -46,6 +49,41 @@ public class BitmapJobDataParser implements JobDataParser {
         Bitmap bmpData = (Bitmap) data;
         int pieceWidth = bmpData.getWidth() / numOfParts;
         return Bitmap.createBitmap(bmpData, (pieceWidth * index), 0, pieceWidth, bmpData.getHeight());
+    }
+
+    @Override
+    public String getJsonMetadata(Object objData) {
+        Bitmap bmp = (Bitmap) objData;
+        return "{ 'width': " + bmp.getWidth() + ", 'height': " + bmp.getHeight() + " }";
+    }
+
+    @Override
+    public Object buildFinalObjectFromMetadata(String jsonMetadata) {
+        try {
+            JSONObject resultObj = new JSONObject(jsonMetadata);
+            int width = resultObj.getInt("width"), height = resultObj.getInt("height");
+            Bitmap finalBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+            return finalBitmap;
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    @Override
+    public Object mergeParts(Object finalObj, Object partObj, int index) {
+        // get bitmap from original data
+        Bitmap partBmp = null;
+        if (partObj instanceof Bitmap) {
+            partBmp = (Bitmap) partObj;
+        } else if (partObj instanceof byte[]) {
+            byte[] partBytes = (byte[]) partObj;
+            partBmp = BitmapFactory.decodeByteArray(partBytes, 0, partBytes.length);
+        }
+
+        int pieceWidth = partBmp.getWidth();
+        Canvas canvas = new Canvas((Bitmap) finalObj);
+        canvas.drawBitmap(partBmp, index * pieceWidth, 0, null);
+        return null;
     }
 
     @Override

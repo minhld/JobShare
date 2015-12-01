@@ -14,6 +14,9 @@ public interface JobDataParser {
     public byte[] parseToBytes(Object objData) throws Exception;
     public Object parseToObject(byte[] byteData) throws Exception;
     public Object getPartData(Object objData, int numOfParts, int index);
+    public String getJsonMetadata(Object objData);
+    public Object buildFinalObjectFromMetadata(String jsonMetadata);
+    public Object mergeParts(Object finalObj, Object partObj, int index);
     public void destroy(Object data);
     public boolean isObjectDestroyed(Object data);
 }

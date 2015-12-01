@@ -22,6 +22,7 @@ public class JobDispatcher extends AsyncTask {
 
     String jobPath = "";
     String dataPath = "";
+    String objJsonMetadata = "";
     boolean useCluster = true;
 
     public JobDispatcher(Activity c, WifiBroadcaster broadcaster, Handler socketHandler, JobDataParser dataParser, boolean useCluster) {
@@ -46,8 +47,7 @@ public class JobDispatcher extends AsyncTask {
                 // read the bitmap from the binary data
                 orgObj = dataParser.readFile(dataPath);
 
-                int bmpWidth = ((Bitmap) orgObj).getWidth();
-                int bmpHeight = ((Bitmap) orgObj).getHeight();
+                objJsonMetadata = dataParser.getJsonMetadata(orgObj);
 
                 // depend on number of clients, we will split the number
                 JobData jobData;
@@ -88,7 +88,7 @@ public class JobDispatcher extends AsyncTask {
                 // release the original image
                 dataParser.destroy(orgObj);
 
-                publishProgress(new Integer[] { bmpWidth, bmpHeight });
+                publishProgress( objJsonMetadata );
             } catch (Exception e) {
                 socketHandler.obtainMessage(Utils.JOB_FAILED, "[server] " + e.getMessage());
             } finally {
@@ -109,10 +109,7 @@ public class JobDispatcher extends AsyncTask {
 
         // sending completed
         if (values.length > 0) {
-            int bmpWidth = (int) values[0];
-            int bmpHeight = (int) values[1];
-            socketHandler.obtainMessage(Utils.MESSAGE_READ_JOB_SENT,
-                        "{ 'width': " + bmpWidth + ", 'height': " + bmpHeight + " }").sendToTarget();
+            socketHandler.obtainMessage(Utils.MESSAGE_READ_JOB_SENT, values[0].toString()).sendToTarget();
         } else {
             socketHandler.obtainMessage(Utils.MESSAGE_READ_NO_FILE, "[server] data file unavailable");
         }
