@@ -27,12 +27,12 @@ public class BitmapJobDataParser implements JobDataParser {
     }
 
     @Override
-    public Object parseToObject(byte[] byteData) throws Exception {
+    public Object parseBytesToObject(byte[] byteData) throws Exception {
         return BitmapFactory.decodeByteArray(byteData, 0, byteData.length);
     }
 
     @Override
-    public byte[] parseToBytes(Object objData) throws Exception {
+    public byte[] parseObjectToBytes(Object objData) throws Exception {
         Bitmap bmpData = (Bitmap) objData;
 
         // assign the binary data
@@ -45,7 +45,7 @@ public class BitmapJobDataParser implements JobDataParser {
     }
 
     @Override
-    public Object getPartData(Object data, int numOfParts, int index) {
+    public Object getSinglePart(Object data, int numOfParts, int index) {
         Bitmap bmpData = (Bitmap) data;
         int pieceWidth = bmpData.getWidth() / numOfParts;
         return Bitmap.createBitmap(bmpData, (pieceWidth * index), 0, pieceWidth, bmpData.getHeight());
@@ -58,7 +58,7 @@ public class BitmapJobDataParser implements JobDataParser {
     }
 
     @Override
-    public Object buildFinalObjectFromMetadata(String jsonMetadata) {
+    public Object createPlaceholder(String jsonMetadata) {
         try {
             JSONObject resultObj = new JSONObject(jsonMetadata);
             int width = resultObj.getInt("width"), height = resultObj.getInt("height");
@@ -70,12 +70,12 @@ public class BitmapJobDataParser implements JobDataParser {
     }
 
     @Override
-    public Object mergeParts(Object finalObj, byte[] partObj, int index) {
+    public Object copyPartToPlaceholder(Object placeholderObj, byte[] partObj, int index) {
         // get bitmap from original data
         Bitmap partBmp = BitmapFactory.decodeByteArray(partObj, 0, partObj.length);
 
         int pieceWidth = partBmp.getWidth();
-        Canvas canvas = new Canvas((Bitmap) finalObj);
+        Canvas canvas = new Canvas((Bitmap) placeholderObj);
         canvas.drawBitmap(partBmp, index * pieceWidth, 0, null);
         return null;
     }

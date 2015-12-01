@@ -55,7 +55,7 @@ public class JobServerHandler extends Handler {
                         clientJobResult = (JobData) Utils.deserialize(readBuf.toByteArray());
                     }
 
-                    dataParser.mergeParts(finalObject, clientJobResult.byteData, clientJobResult.index);
+                    dataParser.copyPartToPlaceholder(finalObject, clientJobResult.byteData, clientJobResult.index);
 
                     // also display it partially
                     mainUiHandler.obtainMessage(Utils.MAIN_INFO, "[server] received data from client [" + clientJobResult.index + "]").sendToTarget();
@@ -69,7 +69,7 @@ public class JobServerHandler extends Handler {
                 // when job is dispatched, a placeholder bitmap will be created
                 // to accumulate the results from clients
                 String jsonData = (String) msg.obj;
-                finalObject = dataParser.buildFinalObjectFromMetadata(jsonData);
+                finalObject = dataParser.createPlaceholder(jsonData);
                 break;
             }
             case Utils.JOB_FAILED: {

@@ -64,7 +64,7 @@ public class JobExecutor extends ClassLoader implements Runnable {
         Object resObj = null;
         try {
             // get the original data
-            orgObj = dataParser.parseToObject(jobData.byteData);
+            orgObj = dataParser.parseBytesToObject(jobData.byteData);
 
             // initiate the Job algorithm class & execute it
             // suppose that job was download to Download folder in local device
@@ -75,7 +75,7 @@ public class JobExecutor extends ClassLoader implements Runnable {
             dataParser.destroy(orgObj);
 
             // send this result to server
-            byte[] resObjBytes = dataParser.parseToBytes(resObj);
+            byte[] resObjBytes = dataParser.parseObjectToBytes(resObj);
             JobData jobResult = new JobData(this.jobData.index, resObjBytes, new byte[0]);
 
             // release the result data

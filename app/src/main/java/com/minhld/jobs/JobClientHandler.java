@@ -34,7 +34,7 @@ public class JobClientHandler extends Handler {
 
                 // displaying small image on client device
                 try {
-                    Object pieceObj = dataParser.parseToObject(jobData.byteData);
+                    Object pieceObj = dataParser.parseBytesToObject(jobData.byteData);
                     mainUiHandler.obtainMessage(Utils.MAIN_INFO, "[client] job done. send back result.").sendToTarget();
                     mainUiHandler.obtainMessage(Utils.MAIN_JOB_DONE, pieceObj).sendToTarget();
                 } catch (Exception e) {

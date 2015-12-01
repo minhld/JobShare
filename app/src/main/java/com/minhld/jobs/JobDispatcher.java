@@ -1,8 +1,6 @@
 package com.minhld.jobs;
 
 import android.app.Activity;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Handler;
 
@@ -58,8 +56,8 @@ public class JobDispatcher extends AsyncTask {
 
                 for (int i = 0; i < deviceNum; i++) {
                     // create job data
-                    splitObject = dataParser.getPartData(orgObj, deviceNum, i);//Bitmap.createBitmap(orgBmp, (pieceWidth * i), 0, pieceWidth, orgBmp.getHeight());
-                    byte[] objectBytes = dataParser.parseToBytes(splitObject);
+                    splitObject = dataParser.getSinglePart(orgObj, deviceNum, i);//Bitmap.createBitmap(orgBmp, (pieceWidth * i), 0, pieceWidth, orgBmp.getHeight());
+                    byte[] objectBytes = dataParser.parseObjectToBytes(splitObject);
                     jobData = new JobData(i, objectBytes, new File(jobPath));
 
                     // no longer need this data
