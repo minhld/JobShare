@@ -48,7 +48,7 @@ public class MainActivity extends AppCompatActivity {
     @Bind(R.id.useClusterCheck)
     CheckBox useClusterCheck;
 
-
+    long startTime = 0;
 
     // this bitmap will be used as the placeholder to merge the parts sent from clients
     Bitmap finalBitmap = null;
@@ -66,6 +66,9 @@ public class MainActivity extends AppCompatActivity {
                     //// release the bitmap
                     //bmp.recycle();
                     mPreviewImage.setImageBitmap(scaleBmp);
+
+                    long totalTime = System.currentTimeMillis() - startTime;
+                    UITools.writeLog(MainActivity.this, infoText, "end time: " + totalTime);
 
                     //mViewFlipper.showNext();
                     mViewFlipper.setDisplayedChild(1);
@@ -120,6 +123,8 @@ public class MainActivity extends AppCompatActivity {
 
                 // 1. check if cluster is used
                 boolean useCluster = useClusterCheck.isChecked();
+
+                startTime = System.currentTimeMillis();
 
                 // 2. dispatch jobs to clients
                 String downloadPath = Utils.getDownloadPath();

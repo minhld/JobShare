@@ -7,9 +7,8 @@ import android.graphics.Bitmap;
  */
 public class Job {
 
-    public Object exec(Object orgObj) {
+    public Bitmap exec(Bitmap orgBmp) {
         int radius = 35;
-        Bitmap orgBmp = (Bitmap) orgObj;
         Bitmap bitmap = orgBmp.copy(orgBmp.getConfig(), true);
 
         if (radius < 1) {

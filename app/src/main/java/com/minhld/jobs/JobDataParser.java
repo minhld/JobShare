@@ -1,7 +1,5 @@
 package com.minhld.jobs;
 
-import java.io.IOException;
-
 /**
  * this interface holds an abstraction of data parser. developer needs to override
  * this method to have the suitable parser for their data
