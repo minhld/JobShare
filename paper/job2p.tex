@@ -1,5 +1,35 @@
 \documentclass[conference]{IEEEtran}
 
+% graphic declaration
+\usepackage{graphicx}
+\usepackage{listings}
+\usepackage[english]{babel}
+\usepackage{float}
+\usepackage{color}
+
+\definecolor{dkgreen}{rgb}{0,0.6,0}
+\definecolor{gray}{rgb}{0.5,0.5,0.5}
+\definecolor{mauve}{rgb}{0.58,0,0.82}
+
+\lstset{frame=tb,
+  language=Java,
+  aboveskip=3mm,
+  belowskip=3mm,
+  showstringspaces=false,
+  columns=flexible,
+  basicstyle={\footnotesize\ttfamily},
+  numbers=none,
+  numberstyle=\tiny\color{gray},
+  keywordstyle=\color{blue},
+  commentstyle=\color{dkgreen},
+  stringstyle=\color{mauve},
+  breaklines=true,
+  breakatwhitespace=true,
+  tabsize=3
+}
+
+\graphicspath{ {data/} }
+
 \ifCLASSINFOpdf
   % \usepackage[pdftex]{graphicx}
   % declare the path(s) where your graphic files are
@@ -50,11 +80,11 @@ young.kwon@usu.edu}}
 \maketitle
 
 \begin{abstract}
-These days, along with the rapid revolution of mobile device industry, software is also being built heavier and consumes more CPU performance and energy than they were in the past few years. Since the modern mobile devices support multiple connection methods like Wi-Fi, Bluetooth or NFC, the requirements of sharing the workloads and resources among the devices within a network to reduce full workload on an arbitrary device are being considered, especially in the areas Internet is not available, which can be found anywhere these days.
+These days, along with the rapid revolution of mobile device industry, software is also being built heavier and consumes more CPU performance and energy than they were in the past few years. Since the modern mobile devices support multiple connection methods like Wi-Fi, Bluetooth or NFC, the requirements of sharing the workloads and resources among the devices within a network to reduce full workload on an arbitrary device are being considered, especially in the areas Internet is not available, which can be found anywhere.
 
-To address those limitations on mobile devices, we proposed Job2P as the Job Scheduling APIs for Android development that leverages Wi-Fi Direct to support sharing workloads and resources over peer-to-peer mobile device network, which doesn't require any Internet connections. Job2P provides a simple and straightforward API interface to get rid of sophistication of network implementation, letting developers easily create their distributed mobile applications with capability of forming closed range network. In term of workload distribution, Job2P splits task and resource and packs them into the smaller units called jobs and dispatch to the peers. To distributed jobs equitably among the peers, a decision maker is added to decide the amount of resource the peer has to handle bases on its percentage of availability. Moreover, our APIs can handle fault tolerant for network malfunctions. 
+To address those limitations on mobile devices, we proposed Job2P as the Job Scheduling APIs for Android development that leverages Wi-Fi Direct to support sharing workloads and resources over peer-to-peer mobile device network, which doesn't require any Internet connections. Job2P provides a simple and straightforward API interface to get rid of sophistication of network implementation, letting developers easily create their distributed mobile applications with capability of forming closed range network. In term of workload distribution, Job2P splits task and resource into parts and packs them into the smaller units called jobs and dispatch to the peers. To distributed jobs equitably among the peers, a decision maker is added to decide the amount of resource the peer has to handle bases on its percentage of availability. Moreover, our APIs can handle fault tolerant for network malfunctions. 
 
-Based on our experiments, we realized that Job2P improves up to 45\% performance of running task in term of performance and energy consumption. 
+Through our case studies, we realized that Job2P improves up to 45\% performance of running task in term of performance and energy consumption. 
 \end{abstract}
 
 
@@ -71,17 +101,24 @@ Based on our experiments, we realized that Job2P improves up to 45\% performance
 
 
 \section{Introduction}
-These days, mobile phones have been playing a very important role in human society. People need their cellphone anytime during a general day, surfing Internet, searching for information, purchasing products on online shopping malls, communicating with friends, taking photos and sharing etc. As a result of highly intensive completions between the global mobile phone manufactures like Samsung and Apple, the cellphones are more and more equipped themselves with high specifications (CPU, RAM and built-in storage) and top functionality so that they are powerful enough in compare with those in the past or even with a desktop. 
-
-One of the remarkable network capability is installed on modern mobile devices are Wi-Fi Direct, which allows them to discover the others in any short distance less than 200 meters without having to use wireless access point. Therefore no internet connections are required, and it will help the owner to connect to the devices within a closed distance. By establishing connection between the two devices to form a pair, Wi-Fi Direct can provide the simple APIs to dynamically initiate a peer-to-peer network. Available on Android devices from version 4.0 (which more than 96\% of devices are using these days), as well as a number of Intel-featured laptops and game consoles, there is the high possibility of discovering the other mobile devices at anywhere.
+These days, mobile phones have been playing a very important role in human society. People need their cellphone everyday for surfing Internet, searching for information, online shopping, communicating with friends, taking and sharing photos etc. As a result of highly intensive completions between the global mobile phone manufactures like Samsung and Apple, the cellphones are more and more equipped themselves with high specifications (CPU, RAM and built-in storage) and top functionality so that they are powerful enough in compare with those in the past or even with a desktop. 
 
 With the hardware rapid development, software is also being built more and more sophisticated in many aspects. They may occupy more space on local storage, use more memory, and thus consume more energy. Even though the software is designed to run on mobile device, its size may vary up to 1GB (like image processing or image recognizing) and memory consumption can be up to 1GB as well. Since there are possibly many heavy workloads running on a device at some points, the needs of sharing workloads among the mobile devices is really necessary with respect to performance and energy efficiency. 
 
-Distributed computing are so far well-developed in PC or embedded networks, bringing the synthesized power of computation from multiple computers to solve a problem. Up to now, there are thousands of solutions for the developers to create a distributed computing system. For instance, the emergency of a number of message-oriented middleware like DataTurbine \cite{rbnb}, RabbitMQ \cite{rabbitmq} or NaradaBrokering \cite{naradabrokering} lessened the effort of development for distributed applications to the minimum but still maintained all equipped functionality like data mirroring, dynamic network topology or fault tolerant. However, despite of stunning equipments, it is revealed that the most disadvantage of this kind of applications is the dependence of network connections or wireless access points. Without a network established, nothing happens.
+Distributed computing are so far well-developed in PC or embedded networks, bringing the synthesized power of computation from multiple computers to solve a problem. Up to now, there are thousands of solutions for the developers to create a distributed computing system. For instance, the emergency of a number of message-oriented middleware like DataTurbine \cite{rbnb}, RabbitMQ \cite{rabbitmq} or NaradaBrokering \cite{naradabrokering} lessened the effort of development for distributed applications to the minimum but still maintained all equipped functionality like data mirroring, dynamic network topology or fault tolerant. However, despite of stunning equipments, it is revealed that the most disadvantage of this kind of applications is the dependence of network connection or wireless access point. Without a network established, nothing happens.
 
-Unlike the other PCs or wired devices, the mobile devices have their own advantage of multiple non-equivalent network capability. However 
+Unlike the other PCs or wired devices, the mobile devices have their own advantage of multiple non-equivalent network capability. One of the remarkable network capability is installed on modern mobile devices are Wi-Fi Direct, which allows them to discover the others in any short distance less than 200 meters without utilizing Internet and wireless access point. No internet connections are required, and it will help the owner to connect to the devices within a closed distance. By establishing connection between the two devices to form a pair, Wi-Fi Direct can provide the simple way to dynamically initiate a peer-to-peer network. Available on Android devices from version 4.0 (which more than 96\% of devices are using these days), as well as a number of Intel-featured laptops and game consoles, there is the high possibility of discovering the other mobile devices at anywhere.
 
-To address those limitations on mobile devices, we proposed Job2P as the Job Scheduling APIs for Android development that leverages Wi-Fi Direct to support sharing workloads and resources over peer-to-peer mobile device network, which doesn't require any Internet connections. Job2P provides a simple and straightforward API interface to get rid of sophistication of network implementation, letting developers easily create their distributed mobile applications with capability of forming closed range network. In term of workload distribution, Job2P splits task and resource and packs them into the smaller units called jobs and dispatch to the peers. To distributed jobs equitably among the peers, a decision maker is added to decide the amount of resource the peer has to handle bases on its percentage of availability. Moreover, our APIs can handle fault tolerant for network malfunctions. 
+To address those limitations with heavy software on mobile devices, we proposed Job2P as the Job Scheduling APIs for Android development that leverages Wi-Fi Direct to support sharing workloads and resources over peer-to-peer mobile device network, which doesn't require any Internet connections. Job2P provides a simple and straightforward API interface to get rid of sophistication of network implementation, letting developers easily create their distributed mobile applications with capability of forming closed range network. In term of workload distribution, Job2P splits task and resource into the smaller units called jobs, and dispatch to the peers. To distributed jobs equitably among the peers, a decision making module is added to decide the amount of resource the peer has to handle bases on its percentage of availability. Moreover, our APIs can handle fault tolerant for network malfunctions.
+
+Based on our experiments and results, our contributions are as follow
+\begin{itemize}
+	\item \textbf{Simple Job Scheduling APIs} for developers to build up mobile peer-to-peer network
+	\item \textbf{Job Scheduler} to handle job and resource delivery
+	\item \textbf{Decision making module} to select appropriate devices to execute bases on their availability
+	\item \textbf{High productivity results} of the APIs in different test cases
+\end{itemize}
+ 
 
 
 % An example of a floating figure using the graphicx package.
@@ -181,7 +218,42 @@ To address those limitations on mobile devices, we proposed Job2P as the Job Sch
 
 \section{Related Works}
 
-\section{Study Approach}
+\section{Approach}
+To retrieve the goals, as well as making our APIs widely adaptive to different context and usages, our penetrated idea of design is hiding the complexity of system implementation and open to developers the capability of customization. This below figure describes the internal architecture of a typical application utilizing our APIs to form a distributed mobile peer-to-peer system.
+
+\begin{figure}[H]
+\caption{Architecture of a typical application implementing Job2P}
+\centerline {
+\includegraphics[width=0.39\textwidth, natwidth=643, natheight=559]{data/jobShareArch}
+}
+\end{figure}
+
+\subsection{APIs for Peer-to-peer Network}
+To easily establish connections between devices in the network, we utilized Wi-Fi Direct, the new feature available on Android 4.0 and later. \texttt{Wi-Fi Peer-to-peer Broadcaster} (WPB) module wraps up 
+
+When the app starts up, WPB will call \texttt{discoverPeers()} to send a message to the other peers to let them know its availability. Once a peer receives such message, WPB will update the list of devices and reform the network
+
+
+\begin{figure}[H]
+\caption{Forming peer-to-peer network}
+\centerline {
+\includegraphics[width=0.5\textwidth, natwidth=1127, natheight=615]{data/discoverPeers}
+}
+\end{figure}
+
+\subsection{Job definition}
+The system should accept any kind of Job. To avoid any mistakes in remote execution, we provide an united Job interface
+
+\begin{lstlisting}[caption=Job Definition]
+public class Job {
+	public Object exec(Object originalObject) {
+		// job implementation
+	}
+}
+\end{lstlisting}
+
+Since Android SDK doesn't support call 
+
 
 \section{Experiments}
 
