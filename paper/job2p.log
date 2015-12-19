@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.16 (MiKTeX 2.9) (preloaded format=pdflatex 2015.12.15)  18 DEC 2015 18:13
+This is pdfTeX, Version 3.14159265-2.6-1.40.16 (MiKTeX 2.9) (preloaded format=pdflatex 2015.12.15)  18 DEC 2015 18:49
 entering extended mode
 **job2p.tex
 (job2p.tex
@@ -369,10 +369,10 @@ Before submitting the final camera ready copy, remember to:
 
 ] (job2p.aux) ) 
 Here is how much of TeX's memory you used:
- 4854 strings out of 493673
- 77306 string characters out of 3141514
+ 4855 strings out of 493673
+ 77318 string characters out of 3141514
  178935 words of memory out of 3000000
- 8179 multiletter control sequences out of 15000+200000
+ 8180 multiletter control sequences out of 15000+200000
  36280 words of font info for 68 fonts, out of 3000000 for 9000
  1028 hyphenation exceptions out of 8191
  36i,8n,40p,920b,1018s stack positions out of 5000i,500n,10000p,200000b,50000s
@@ -386,7 +386,7 @@ X 2.9/fonts/type1/public/amsfonts/cm/cmsy5.pfb><C:/Program Files (x86)/MiKTeX 2.
 fb><C:/Program Files (x86)/MiKTeX 2.9/fonts/type1/urw/courier/ucrr8a.pfb><C:/Program Files (x86)/MiKTeX 2.9/fonts/type1/
 urw/times/utmb8a.pfb><C:/Program Files (x86)/MiKTeX 2.9/fonts/type1/urw/times/utmbi8a.pfb><C:/Program Files (x86)/MiKTeX
  2.9/fonts/type1/urw/times/utmr8a.pfb><C:/Program Files (x86)/MiKTeX 2.9/fonts/type1/urw/times/utmri8a.pfb>
-Output written on job2p.pdf (4 pages, 243495 bytes).
+Output written on job2p.pdf (4 pages, 244645 bytes).
 PDF statistics:
  82 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 500000)

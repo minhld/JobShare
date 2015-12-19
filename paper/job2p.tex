@@ -267,7 +267,7 @@ Since Dalvik VM didn't support loading class the way Java VM does. Instead it wi
 
 When client peer receives an object of \texttt{JobData} sent from server, it will firstly check checksum to confirm the consistency, then deserialize it into \texttt{Job} and resources and execute the job with that data.
 
-\subsection{Job Scheduling and Decision Maker}
+\subsection{Job Scheduling and Decision Maker} \label{scheduling}
 
 In peer-to-peer network supported by our APIs, the server will distribute jobs to peers bases on investigating their availability by \texttt{DecisionMaker} (Figure \ref{fig:checkStatus}). At the early stage before the transmission, decision maker sends request for status to some of selected peers in its network. If one peer receives this request, it will calculate its capability of response using the measurements CPU, memory and battery usage at a certain point of time. 
 
@@ -305,7 +305,10 @@ To measure the performance of the system equipped with our APIs, we decorated a 
 \end{itemize}
 
 \subsection{Preliminary Estimations}
-Assume that we have a Wi-Fi peer-to-peer network available with $n$ devices, each device at a certain time has level of responsibility $RL_{i}$
+Assume that we have a Wi-Fi peer-to-peer network available with $n$ devices, each device at a certain time has level of responsibility $RL_{i} (i = \overline{1,n})$. According to the section \ref{scheduling}, if $E$ is the total energy consumed by \\
+
+$E_{0} = E\sum$
+
 \subsection{Results}
 
 \section{Conclusions}
