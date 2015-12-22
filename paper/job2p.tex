@@ -8,6 +8,7 @@
 \usepackage{color}
 \usepackage{caption}
 \usepackage{indentfirst}
+\usepackage{amsmath}
 
 \definecolor{dkgreen}{rgb}{0,0.6,0}
 \definecolor{gray}{rgb}{0.5,0.5,0.5}
@@ -115,10 +116,10 @@ To address those limitations with heavy software on mobile devices, we proposed 
 
 Based on our experiments and results, our contributions are as follow
 \begin{itemize}
-	\item \textbf{Simple Job Scheduling APIs} for developers to build up mobile peer-to-peer network
-	\item \textbf{Job Scheduler} to handle job and resource delivery
-	\item \textbf{Decision making module} to select appropriate devices to execute bases on their availability
-	\item \textbf{High productivity results} of the APIs in different test cases
+	\item \textbf{Simple Job Scheduling APIs} a library for developers facilitates making mobile peer-to-peer network
+	\item \textbf{Job Scheduler} for job manipulation and resource heterogeneous adaptation
+	\item \textbf{Decision making module} determines a list of appropriate devices to execute bases on applied algorithm on availability
+	\item \textbf{High productivity results} our test case experiments will give the proof of APIs productivity
 \end{itemize}
  
 
@@ -271,11 +272,11 @@ When client peer receives an object of \texttt{JobData} sent from server, it wil
 
 In peer-to-peer network supported by our APIs, the server will distribute jobs to peers bases on investigating their availability by \texttt{DecisionMaker} (Figure \ref{fig:checkStatus}). At the early stage before the transmission, decision maker sends request for status to some of selected peers in its network. If one peer receives this request, it will calculate its capability of response using the measurements CPU, memory and battery usage at a certain point of time. 
 
-Retrieved from \texttt{/proc/stat} system file \cite{stat_explain}, the percentage of CPU usage is expressed by this following expression in two short consecutive times\\
+Retrieved from \texttt{/proc/stat} system file \cite{stat_explain}, the percentage of CPU usage is expressed by this following expression in two short consecutive times
 
-$Usage_{CPU} = \frac{(\sum{T_{CPU2}} - T_{Idle2}) - (\sum{T_{CPU1}} - T_{Idle1})}{(\sum{T_{CPU2}} - \sum{T_{CPU1}})}$\\
+$$Usage_{CPU} = \frac{(\sum{T_{CPU2}} - T_{Idle2}) - (\sum{T_{CPU1}} - T_{Idle1})}{(\sum{T_{CPU2}} - \sum{T_{CPU1}})}$$
 
-When $\sum{T_{CPU}}$ is total time of running CPU and $T_{Idle}$ is idle time correspondingly in hertz. In term of memory usage, the $Usage_{Mem}$ can be determined by using \texttt{MemoryInfo} to retrieve $Mem_{Avail}$ and $Mem_{Total}$, so the $Usage_{Battery}$.
+When $\sum{T_{CPU}}$ is total time of running CPU and $T_{Idle}$ is idle time correspondingly in hertz. In term of memory usage, the $Usage_{Mem}$ can be determined by using \texttt{MemoryInfo} from Android API to retrieve $Mem_{Avail}$ and $Mem_{Total}$, so the $Usage_{Battery}$.
 
 \begin{figure}[H]
 \centerline {
@@ -285,14 +286,13 @@ When $\sum{T_{CPU}}$ is total time of running CPU and $T_{Idle}$ is idle time co
 \label{fig:checkStatus}
 \end{figure}
 
-Since in the mobile device, the lower resource usage state states the higher availability, and the higher specifications represents the better responsibility. Then the level of responsibility of device can be simply summarized by the below expression\\
+Since in the mobile device, the lower resource usage state states the higher availability, and the higher specifications represents the better responsibility. Then the level of responsibility of device can be simply summarized by the below expression
 
-$RL = \frac{CPU_{Spec}}{Usage_{CPU}} + \frac{Mem_{Spec}}{Usage_{Mem}} + \frac{Battery_{Spec}}{Usage_{Battery \times 1000}}$\\
+$$RL = \frac{CPU_{Spec}}{Usage_{CPU}} + \frac{Mem_{Spec}}{Usage_{Mem}} + \frac{Battery_{Spec}}{Usage_{Battery \times 1000}}$$
 
-Where $CPU_{Spec}$ has GHz unit, $Mem_{Spec}$ has GB unit and $Battery_{Spec}$ has uAh unit. Especially $CPU_{Spec}$ is determined by number of its core. For example, a quad-core CPU at speed of 1.3GHz can be counted as $1.3 \times 4$ or 5.2. At a certain time of that device, if $Usage_{CPU}$ is 0.3, $Usage_{Mem}$ is 0.5 (half of 1GB memory consumed), $Usage_{Battery}$ is 0.7 or 70\% used over a 2800uAh capacity battery, the value of $RL$ will be\\
+Where $CPU_{Spec}$ has GHz unit, $Mem_{Spec}$ has GB unit and $Battery_{Spec}$ has uAh unit. Especially $CPU_{Spec}$ is determined by number of its core. For example, a quad-core CPU at speed of 1.3GHz can be counted as $1.3 \times 4$ or 5.2. At a certain time of that device, if $Usage_{CPU}$ is 0.3, $Usage_{Mem}$ is 0.5 (half of 1GB memory consumed), $Usage_{Battery}$ is 0.7 or 70\% used over a 2800uAh capacity battery, the value of $RL$ will be
 
-$RL = \frac{5.2}{0.3} + \frac{1}{0.5} + \frac{2800}{0.7 \times 1000} = 23.33$\\
-
+$$RL = \frac{5.2}{0.3} + \frac{1}{0.5} + \frac{2800}{0.7 \times 1000} = 23.33$$
 
 
 \section{Experiments and Results}
@@ -305,9 +305,21 @@ To measure the performance of the system equipped with our APIs, we decorated a 
 \end{itemize}
 
 \subsection{Preliminary Estimations}
-Assume that we have a Wi-Fi peer-to-peer network available with $n$ devices, each device at a certain time has level of responsibility $RL_{i} (i = \overline{1,n})$. According to the section \ref{scheduling}, if $E$ is the total energy consumed by \\
+Assume that we have a Wi-Fi peer-to-peer network available with $n$ devices, each device at a certain time has level of responsibility $RL_{i} (i = \overline{1,n})$. According to the section \ref{scheduling}, if $E$ is the energy consumed by the application for only completing the task regardless of other ambiances, the total energy $E_{0}$ will be
 
-$E_{0} = E\sum$
+$$E_{0} = E + E_{w}$$
+
+Where $E_{w}$ is energy the app requires for waiting. Also, 
+
+$$E_{p2p} = E(\frac{RL_{0}}{\sum_{i=1}^{n}{RL_{i}}}) + E_{Wi-Fi} + E_{w}$$ 
+
+Where $E_{Wi-Fi}$ is energy consumed by Wi-Fi for the job transmissions
+
+In this estimation we skipped considering $E_{w}$ since it will depend on apperance of applications. If application have no GUI (like system services), $E_{w}$ will cause very little effect. 
+
+$$E_{Diff} = E_{0} - E_{p2p}$$ or $$E_{Diff} = E(1 - \frac{RL_{0}}{\sum_{i=1}^{n}{RL_{i}}}) - E_{Wi-Fi}$$
+
+According to \cite{wifi_energy}, Wi-Fi caused battery drained linearly by time during the transmission, particularly the drain can be represented by $y = 17.01x - 0.93$ for downloading and $y = 17.31x - 2.28$ for uploading. Therefore, it is inferred that in a mobile system with a certain number of devices in different levels of responsibility, if E is big enough, in other words, if the task to perform is big enough then $E_{Diff} > 0$, thus deploying a peer-to-peer cluster will give the great benefit in term of energy efficiency, the greater $E_{Diff}$, the more benefit we will archive.
 
 \subsection{Results}
 
@@ -369,6 +381,10 @@ Fred Chung, \emph{Custom Class Loading in Dalvik}, http://android-developers.blo
 
 \bibitem{stat_explain}
 \emph{/proc/stat Explained}, http://www.linuxhowtos.org/System/procstat.htm
+
+\bibitem{wifi_energy}
+Kalic, G., Bojic, I., Kusek, M., \emph{Energy consumption in android phones when using wireless communication technologies}, p754-759, MIPRO May 2012
+
 
 \end{thebibliography}
 
