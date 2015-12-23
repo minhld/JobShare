@@ -278,7 +278,7 @@ When the app starts up, WPB will call \texttt{discoverPeers()} to send a message
 
 When peers have information of the others, they are ready to connect. We provide function \texttt{connectToADevice()} holding \texttt{WifiP2pDevice} as one input parameter to invoke the handshake with another device. Once connection established, the device actively invoked will be assigned as client, which utilize the \texttt{ClientSocketHandler} to listen to a client socket. The device passively received the invocation will be promoted as server and use the \texttt{ServerSocketHandler} to initiate server socket with an random port. If the invoked device is already a server, it will maintain its current state and continuously accept the new client. Moreover, since a device can either be a server to some peers, or serve as client to the others, this method is able to build up a close range peer-to-peer network.
 
-\subsection{Job definition}
+\subsection{Job definition} \label{job-description}
 We give the job definition to developers. To avoid any misconfiguration from remote execution, we provide a common Job definition interface
 
 \noindent \shadowbox{%
@@ -387,7 +387,9 @@ First of all, developer needs to define the \texttt{UIHandler} to receive messag
 
 \end{minipage}}
 
-Secondly, developer needs to define \texttt{DataParser}, \texttt{JobHandler} and \texttt{discoverPeers()} \texttt{dispatchJob()} \\
+Secondly, developer needs to declare \texttt{DataParser} to determine data-type and parser to equip for manipulating data at run-time (see sub section \ref{job-description}). \texttt{JobHandler} is the main component which wraps up the complexity , and exposes only the necessary functions like \texttt{discoverPeers()} and \texttt{dispatchJob()}. To send ACK messages to other peers for exchanging acknowledgments and reforming network, we need to call \texttt{discoverPeers()} function on the program, this work should be done as soon as application starts. 
+
+When network is formed and connections are held from some of the peers, \texttt{dispatchJob()} will be call to locate the resources and job which predefined in local storage, it then invokes \texttt{DecisionMaker} (sub section \ref{scheduling}) for job splitting and binary serialization. Finally jobs will be dispatched over the socket\\
 
 \noindent \shadowbox{%
 \begin{minipage}{1\columnwidth}

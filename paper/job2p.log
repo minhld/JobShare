@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.16 (MiKTeX 2.9) (preloaded format=pdflatex 2015.12.15)  22 DEC 2015 16:15
+This is pdfTeX, Version 3.14159265-2.6-1.40.16 (MiKTeX 2.9) (preloaded format=pdflatex 2015.12.15)  22 DEC 2015 16:56
 entering extended mode
 **job2p.tex
 (job2p.tex
@@ -388,27 +388,25 @@ Overfull \hbox (10.79999pt too wide) in paragraph at lines 368--389
  []
 
 
-Underfull \hbox (badness 5711) in paragraph at lines 390--391
-[]\OT1/ptm/m/n/10 Secondly, de-vel-oper needs to de-fine \OT1/pcr/m/n/10 DataParser\OT1/ptm/m/n/10 ,
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 390--391
+Underfull \hbox (badness 10000) in paragraph at lines 392--393
 
  []
 
 
-Overfull \hbox (10.79999pt too wide) in paragraph at lines 392--425
+Overfull \hbox (10.79999pt too wide) in paragraph at lines 394--427
 [] 
  []
 
-[4]
-Underfull \hbox (badness 3460) in paragraph at lines 485--486
+
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [4]
+Underfull \hbox (badness 3460) in paragraph at lines 487--488
 []\OT1/ptm/m/n/8 Fred Chung, \OT1/ptm/m/it/8 Cus-tom Class Load-ing in Dalvik\OT1/ptm/m/n/8 , http://android-
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 485--486
+Underfull \hbox (badness 10000) in paragraph at lines 487--488
 \OT1/ptm/m/n/8 developers.blogspot.com/2011/07/custom-class-loading-in-dalvik.html,
  []
 
@@ -427,10 +425,10 @@ Before submitting the final camera ready copy, remember to:
 
 ] (job2p.aux) ) 
 Here is how much of TeX's memory you used:
- 5671 strings out of 493673
- 86887 string characters out of 3141514
- 218893 words of memory out of 3000000
- 8971 multiletter control sequences out of 15000+200000
+ 5672 strings out of 493673
+ 86904 string characters out of 3141514
+ 222893 words of memory out of 3000000
+ 8972 multiletter control sequences out of 15000+200000
  39463 words of font info for 74 fonts, out of 3000000 for 9000
  1028 hyphenation exceptions out of 8191
  36i,8n,40p,920b,1093s stack positions out of 5000i,500n,10000p,200000b,50000s
@@ -443,7 +441,7 @@ ts/cm/cmsy7.pfb><C:/Program Files (x86)/MiKTeX 2.9/fonts/type1/urw/courier/ucrb8
 /fonts/type1/urw/courier/ucrr8a.pfb><C:/Program Files (x86)/MiKTeX 2.9/fonts/type1/urw/times/utmb8a.pfb><C:/Program File
 s (x86)/MiKTeX 2.9/fonts/type1/urw/times/utmbi8a.pfb><C:/Program Files (x86)/MiKTeX 2.9/fonts/type1/urw/times/utmr8a.pfb
 ><C:/Program Files (x86)/MiKTeX 2.9/fonts/type1/urw/times/utmri8a.pfb>
-Output written on job2p.pdf (5 pages, 236398 bytes).
+Output written on job2p.pdf (5 pages, 237371 bytes).
 PDF statistics:
  77 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 500000)
