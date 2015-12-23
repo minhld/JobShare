@@ -9,11 +9,13 @@
 \usepackage{caption}
 \usepackage{indentfirst}
 \usepackage{amsmath}
+\usepackage{fancybox}
 
 \definecolor{dkgreen}{rgb}{0,0.6,0}
 \definecolor{gray}{rgb}{0.5,0.5,0.5}
 \definecolor{mauve}{rgb}{0.58,0,0.82}
 
+\iffalse
 \lstset{frame=tb,
   language=Java,
   aboveskip=3mm,
@@ -29,6 +31,30 @@
   breaklines=true,
   breakatwhitespace=true,
   tabsize=3
+}
+\fi
+
+\lstset{%
+  numberstyle=\scriptsize\color[gray]{0.3},
+  numbersep=5pt,
+  stepnumber=1,
+  numbers=left,
+  xleftmargin=15pt,
+  belowcaptionskip=\bigskipamount,
+  captionpos=b,
+  escapeinside={*'}{'*},
+  language=Java,
+  tabsize=2,
+  emphstyle={\bf},
+  commentstyle=\it,
+  stringstyle=\mdseries\ttfamily,
+  showspaces=false,
+  keywordstyle=\bfseries,
+  morekeywords={then,end},
+  columns=flexible,
+  basicstyle=\scriptsize\ttfamily,
+  showstringspaces=false,
+  morecomment=[l]\%,
 }
 
 \graphicspath{ {data/} }
@@ -116,7 +142,7 @@ To address those limitations with heavy software on mobile devices, we proposed 
 
 Based on our experiments and results, our contributions are as follow
 \begin{itemize}
-	\item \textbf{Simple Job Scheduling APIs} a library for developers facilitates making mobile peer-to-peer network
+	\item \textbf{Simple Job Scheduling APIs} a library for developers facilitates establishing mobile peer-to-peer network.
 	\item \textbf{Job Scheduler} for job manipulation and resource heterogeneous adaptation
 	\item \textbf{Decision making module} determines a list of appropriate devices to execute bases on applied algorithm on availability
 	\item \textbf{High productivity results} our test case experiments will give the proof of APIs productivity
@@ -253,16 +279,21 @@ When the app starts up, WPB will call \texttt{discoverPeers()} to send a message
 When peers have information of the others, they are ready to connect. We provide function \texttt{connectToADevice()} holding \texttt{WifiP2pDevice} as one input parameter to invoke the handshake with another device. Once connection established, the device actively invoked will be assigned as client, which utilize the \texttt{ClientSocketHandler} to listen to a client socket. The device passively received the invocation will be promoted as server and use the \texttt{ServerSocketHandler} to initiate server socket with an random port. If the invoked device is already a server, it will maintain its current state and continuously accept the new client. Moreover, since a device can either be a server to some peers, or serve as client to the others, this method is able to build up a close range peer-to-peer network.
 
 \subsection{Job definition}
-To accept any kind of Job predefined by user, as well as to avoid any misconfiguration from the remote executions, we provide a common Job definition interface
+We give the job definition to developers. To avoid any misconfiguration from remote execution, we provide a common Job definition interface
 
-\begin{lstlisting}
-public class Job {
-	public Object exec(Object originalObject) {
-		// job implementation
+\noindent \shadowbox{%
+\begin{minipage}{1\columnwidth}
+	\captionof{lstlisting}{Job Definition}
+	
+	\begin{lstlisting}
+	public class Job {
+		public Object exec(Object originalObject) {
+			// job implementation
+		}
 	}
-}
-\end{lstlisting}
-\captionof{lstlisting}{Job Definition}
+	\end{lstlisting}
+	
+\end{minipage}}	
 
 Since Dalvik VM didn't support loading class the way Java VM does. Instead it will load Dalvik execution ("dex") files from an alternative locations such as internal storage or network. We provide \texttt{DexCreator} tool, the windows application supports compiling the \texttt{Job} java file into the dex job package (a jar file). Dex package and splitted resources in binary format will be added into one \texttt{JobData} object by \texttt{JobDispatcher}, signed with checksum for consistency and dispatched to the other peers.
 
@@ -294,14 +325,19 @@ Where $CPU_{Spec}$ has GHz unit, $Mem_{Spec}$ has GB unit and $Battery_{Spec}$ h
 
 $$RL = \frac{5.2}{0.3} + \frac{1}{0.5} + \frac{2800}{0.7 \times 1000} = 23.33$$
 
+In a peer-to-peer network comprising of $n$ devices, where $i$-device has responsibility level $RL_{i}$, the \texttt{DecisionMaker} will assign the job with carrying amount of data ($M_{i}$) which is equivalent to
+
+$$M_{i} = M\frac{RL_{i}}{\sum_{j = \overline{1,n}}{RL_{j}}}$$
+
+Where $M$ is total size of data in bytes.
 
 \section{Experiments and Results}
 
 To measure the performance of the system equipped with our APIs, we decorated a small testbed with collaboration of 5 different Android devices to perform our 3 test cases:
 \begin{itemize}
 	\item \textbf{Image Processing} we will initiate the peer-to-peer network test to perform blurring a large scale image which is unable to process at any of our devices. Particularly, to process an image with size $4000 \times 4000$ and 4 bytes to express each pixel color, application must spare the amount of memory equivalent to 64MB which is too expensive for the system, occasionally this kind of image would be refused to load. 
-	\item \textbf{Text analysis} text analysis .
-	\item \textbf{GPS} establishing a GPS connection is proof of high energy consuming
+	\item \textbf{Text analysis} another proof of performance on text processing. Our APIs will yield the data parser to developer for data heterogeneous adaptation.
+	\item \textbf{GPS} establishing a GPS connection is proof of high energy consuming. It would be impossible for a device with low battery to keep update with GPS frequently. We will base on Job2P to build a simple system so that one device can benefit GPS locations from the healthier devices.
 \end{itemize}
 
 \subsection{Preliminary Estimations}
@@ -311,17 +347,86 @@ $$E_{0} = E + E_{w}$$
 
 Where $E_{w}$ is energy the app requires for waiting. Also, 
 
-$$E_{p2p} = E(\frac{RL_{0}}{\sum_{i=1}^{n}{RL_{i}}}) + E_{Wi-Fi} + E_{w}$$ 
+$$E_{p2p} = E(\frac{RL_{0}}{\sum_{i = 1}^{n}{RL_{i}}}) + E_{WiFi} + E_{w}$$ 
 
-Where $E_{Wi-Fi}$ is energy consumed by Wi-Fi for the job transmissions
+Where $E_{WiFi}$ is energy consumed by Wi-Fi for sending jobs to other peers.
 
-In this estimation we skipped considering $E_{w}$ since it will depend on apperance of applications. If application have no GUI (like system services), $E_{w}$ will cause very little effect. 
+In this estimation we skipped considering $E_{w}$ since it will depend on appearance of applications. If application have no GUI like system background services, $E_{w}$ will cause very little effect. From the two above equations, we can get the difference energy consumption between the two job processing mechanisms $E_{Diff}$ 
 
-$$E_{Diff} = E_{0} - E_{p2p}$$ or $$E_{Diff} = E(1 - \frac{RL_{0}}{\sum_{i=1}^{n}{RL_{i}}}) - E_{Wi-Fi}$$
+$$E_{Diff} = E_{0} - E_{p2p}$$ or $$E_{Diff} = E(1 - \frac{RL_{0}}{\sum_{i=1}^{n}{RL_{i}}}) - E_{WiFi}$$
 
-According to \cite{wifi_energy}, Wi-Fi caused battery drained linearly by time during the transmission, particularly the drain can be represented by $y = 17.01x - 0.93$ for downloading and $y = 17.31x - 2.28$ for uploading. Therefore, it is inferred that in a mobile system with a certain number of devices in different levels of responsibility, if E is big enough, in other words, if the task to perform is big enough then $E_{Diff} > 0$, thus deploying a peer-to-peer cluster will give the great benefit in term of energy efficiency, the greater $E_{Diff}$, the more benefit we will archive.
+According to \cite{wifi_energy}, Wi-Fi caused battery drained linearly by time during the transmission, particularly the drain can be represented by $y = 17.01x - 0.93$ for downloading and $y = 17.31x - 2.28$ for uploading. Therefore, it is inferred that in a mobile system with a certain number of devices in different levels of responsibility, if E is big enough, in other words, if the task to perform is big enough, then $E_{Diff} > 0$ will happen, thus deploying a peer-to-peer cluster will give the great benefit in term of energy efficiency. The bigger value of $E_{Diff}$, the more benefit we will archive.
 
 \subsection{Results}
+
+\subsubsection{Applying Job2P to an Android project}
+The library should be simple, so that developer can integrate within a few steps.
+
+First of all, developer needs to define the \texttt{UIHandler} to receive messages from system when it goes in real-time. While system is in progress, it will periodically return \texttt{MAIN\_INFO} to inform logs or statuses. When job-results have been collected from all the peers, the \texttt{MAIN\_JOB\_DONE} message will be thrown along with the final proceeded and merged data.\\
+
+
+\noindent \shadowbox{%
+\begin{minipage}{1\columnwidth}
+	\captionof{lstlisting}{UI handler}
+
+	\begin{lstlisting}
+	Handler mainUiHandler = new Handler() {
+		@Override
+		public void handleMessage(Message msg) {
+			switch (msg.what) {
+				case Utils.MAIN_JOB_DONE: {
+					// when job is completely finished
+				}
+				case Utils.MAIN_INFO: {
+					// to receive messages from the processor
+				}
+			}
+		}
+	};
+	\end{lstlisting}
+
+\end{minipage}}
+
+Secondly, developer needs to define \texttt{DataParser}, \texttt{JobHandler} and \texttt{discoverPeers()} \texttt{dispatchJob()} \\
+
+\noindent \shadowbox{%
+\begin{minipage}{1\columnwidth}
+	\captionof{lstlisting}{Declare DataParser and JobHandler}
+
+	\begin{lstlisting}
+	// data parser: to determine datatype how to split the data 
+	dataParser = new BitmapJobDataParser();
+	...
+	// handlers registration
+	jobHandler = new JobHandler(this, dataParser);
+	jobHandler.setSocketListener(
+		new JobHandler.JobSocketListener() {
+			@Override
+			public void socketUpdated(... isConnected) {
+					// when socket is updated
+			}
+	});
+	...
+	// update the device list
+	deviceList.setAdapter(
+		jobHandler.getDeviceListAdapter());
+	...
+	// send ACK to other members to reconstruct network
+	jobHandler.discoverPeers();
+	...
+	// address resources and job to execute
+	String dataPath = downloadPath + "/mars.jpg";
+  String jobPath = downloadPath + "/Job.jar";
+  jobHandler.dispatchJob(dataPath, jobPath);
+
+	\end{lstlisting}
+
+\end{minipage}}
+
+
+
+\subsubsection{Performances}
+Diagrams go here
 
 \section{Conclusions}
 The conclusion goes here.
@@ -384,6 +489,15 @@ Fred Chung, \emph{Custom Class Loading in Dalvik}, http://android-developers.blo
 
 \bibitem{wifi_energy}
 Kalic, G., Bojic, I., Kusek, M., \emph{Energy consumption in android phones when using wireless communication technologies}, p754-759, MIPRO May 2012
+
+\bibitem{live_video_collaboration}
+Marco de Sa, David A. Shamma, Elizabeth F. Churchill, \emph{Live mobile collaboration for video production: design, guidelines, and requirements}, p693-707, Journal of Personal and Ubiquitous Computing, Volume 18 Issue 3, March 2014
+
+\bibitem{coast}
+Cong Shi, Kaustubh Joshi, Rajesh K. Panta, Mostafa H. Ammar, Ellen W. Zegura, \emph{CoAST: collaborative application-aware scheduling of last-mile cellular traffic}, p245-258, MobiSys 2014
+
+\bibitem{rio}
+Ardalan Amiri Sani, Kevin Boos, Min Hong Yun, and Lin Zhong, \emph{Rio: a system solution for sharing i/o between mobile systems}, p259-272, MobiSys 2014
 
 
 \end{thebibliography}

@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.16 (MiKTeX 2.9) (preloaded format=pdflatex 2015.12.15)  21 DEC 2015 18:08
+This is pdfTeX, Version 3.14159265-2.6-1.40.16 (MiKTeX 2.9) (preloaded format=pdflatex 2015.12.15)  22 DEC 2015 16:15
 entering extended mode
 **job2p.tex
 (job2p.tex
@@ -286,36 +286,49 @@ LaTeX Font Info:    Redeclaring font encoding OMS on input line 567.
 LaTeX Info: Redefining \[ on input line 2665.
 LaTeX Info: Redefining \] on input line 2666.
 )
-("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\listings\lstlang1.sty"
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\fancybox\fancybox.sty"
+Package: fancybox 2010/05/15 1.4
+
+Style option: `fancybox' v1.4 <2010/05/15> (tvz)
+\@fancybox=\box34
+\shadowsize=\dimen149
+\@Sbox=\box35
+\do@VerbBox=\toks24
+\the@fancyput=\toks25
+\this@fancyput=\toks26
+\EndVerbatimTokens=\toks27
+\Verbatim@Outfile=\write3
+\Verbatim@Infile=\read1
+) ("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\listings\lstlang1.sty"
 File: lstlang1.sty 2015/06/04 1.6 listings language file
 ) (job2p.aux)
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 59.
-LaTeX Font Info:    ... okay on input line 59.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 59.
-LaTeX Font Info:    ... okay on input line 59.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 59.
-LaTeX Font Info:    ... okay on input line 59.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 59.
-LaTeX Font Info:    ... okay on input line 59.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 59.
-LaTeX Font Info:    ... okay on input line 59.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 59.
-LaTeX Font Info:    ... okay on input line 59.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 85.
+LaTeX Font Info:    ... okay on input line 85.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 85.
+LaTeX Font Info:    ... okay on input line 85.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 85.
+LaTeX Font Info:    ... okay on input line 85.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 85.
+LaTeX Font Info:    ... okay on input line 85.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 85.
+LaTeX Font Info:    ... okay on input line 85.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 85.
+LaTeX Font Info:    ... okay on input line 85.
 
 -- Lines per column: 56 (exact).
 ("C:\Program Files (x86)\MiKTeX 2.9\tex\context\base\supp-pdf.mkii"
 [Loading MPS to PDF converter (version 2006.09.02).]
 \scratchcounter=\count118
-\scratchdimen=\dimen149
-\scratchbox=\box34
+\scratchdimen=\dimen150
+\scratchbox=\box36
 \nofMPsegments=\count119
 \nofMParguments=\count120
-\everyMPshowfont=\toks24
+\everyMPshowfont=\toks28
 \MPscratchCnt=\count121
-\MPscratchDim=\dimen150
+\MPscratchDim=\dimen151
 \MPnumerator=\count122
 \makeMPintoPDFobject=\count123
-\everyMPtoPDFconversion=\toks25
+\everyMPtoPDFconversion=\toks29
 )
 \c@lstlisting=\count124
 Package caption Info: Begin \AtBeginDocument code.
@@ -327,48 +340,75 @@ Package caption Info: End \AtBeginDocument code.
 <data/jobShareArch.png, id=8, 338.01282pt x 439.6425pt>
 File: data/jobShareArch.png Graphic file (type png)
  <use data/jobShareArch.png>
-Package pdftex.def Info: data/jobShareArch.png used on input line 230.
+Package pdftex.def Info: data/jobShareArch.png used on input line 256.
 (pdftex.def)             Requested size: 201.23969pt x 261.75488pt.
-LaTeX Font Info:    Try loading font information for OT1+pcr on input line 241.
+LaTeX Font Info:    Try loading font information for OT1+pcr on input line 267.
 
 ("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\psnfss\ot1pcr.fd"
 File: ot1pcr.fd 2001/06/04 font definitions for OT1/pcr.
 )
-Underfull \hbox (badness 10000) in paragraph at lines 243--244
+Underfull \hbox (badness 10000) in paragraph at lines 269--270
 []\OT1/ptm/m/n/10 When the app starts up, WPB will call
  []
 
 
-Underfull \hbox (badness 2961) in paragraph at lines 243--244
+Underfull \hbox (badness 2961) in paragraph at lines 269--270
 \OT1/pcr/m/n/10 discoverPeers() \OT1/ptm/m/n/10 to send a mes-sage to the other
  []
 
 <data/discoverPeers.png, id=9, 848.4197pt x 462.97969pt>
 File: data/discoverPeers.png Graphic file (type png)
  <use data/discoverPeers.png>
-Package pdftex.def Info: data/discoverPeers.png used on input line 248.
+Package pdftex.def Info: data/discoverPeers.png used on input line 274.
 (pdftex.def)             Requested size: 258.0pt x 140.78825pt.
- [2 <./data/jobShareArch.png> <./data/discoverPeers.png>]
+LaTeX Font Info:    Font shape `OT1/pcr/bx/n' in size <7> not available
+(Font)              Font shape `OT1/pcr/b/n' tried instead on input line 289.
 
-Package caption Warning: \captionsetup{type*=...} or \captionof
-(caption)                outside box or environment on input line 265.
-See the caption package documentation for explanation.
+Overfull \hbox (10.79999pt too wide) in paragraph at lines 284--297
+[] 
+ []
 
-<data/checkStatusFlow.png, id=18, 413.29407pt x 378.06244pt>
+[2 <./data/jobShareArch.png> <./data/discoverPeers.png>] <data/checkStatusFlow.png, id=18, 413.29407pt x 378.06244pt>
 File: data/checkStatusFlow.png Graphic file (type png)
- <use data/checkStatusFlow.png>
-Package pdftex.def Info: data/checkStatusFlow.png used on input line 284.
+
+<use data/checkStatusFlow.png>
+Package pdftex.def Info: data/checkStatusFlow.png used on input line 315.
 (pdftex.def)             Requested size: 232.19843pt x 212.40576pt.
 
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
  [3 <./data/checkStatusFlow.png>]
-Underfull \hbox (badness 3460) in paragraph at lines 380--381
+Underfull \hbox (badness 10000) in paragraph at lines 365--366
+
+ []
+
+
+Overfull \hbox (10.79999pt too wide) in paragraph at lines 368--389
+[] 
+ []
+
+
+Underfull \hbox (badness 5711) in paragraph at lines 390--391
+[]\OT1/ptm/m/n/10 Secondly, de-vel-oper needs to de-fine \OT1/pcr/m/n/10 DataParser\OT1/ptm/m/n/10 ,
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 390--391
+
+ []
+
+
+Overfull \hbox (10.79999pt too wide) in paragraph at lines 392--425
+[] 
+ []
+
+[4]
+Underfull \hbox (badness 3460) in paragraph at lines 485--486
 []\OT1/ptm/m/n/8 Fred Chung, \OT1/ptm/m/it/8 Cus-tom Class Load-ing in Dalvik\OT1/ptm/m/n/8 , http://android-
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 380--381
+Underfull \hbox (badness 10000) in paragraph at lines 485--486
 \OT1/ptm/m/n/8 developers.blogspot.com/2011/07/custom-class-loading-in-dalvik.html,
  []
 
@@ -383,29 +423,29 @@ Before submitting the final camera ready copy, remember to:
  uses only Type 1 fonts and that every step in the generation
  process uses the appropriate paper size.
 
-[4
+[5
 
 ] (job2p.aux) ) 
 Here is how much of TeX's memory you used:
- 5450 strings out of 493673
- 84099 string characters out of 3141514
- 190267 words of memory out of 3000000
- 8758 multiletter control sequences out of 15000+200000
- 36734 words of font info for 70 fonts, out of 3000000 for 9000
+ 5671 strings out of 493673
+ 86887 string characters out of 3141514
+ 218893 words of memory out of 3000000
+ 8971 multiletter control sequences out of 15000+200000
+ 39463 words of font info for 74 fonts, out of 3000000 for 9000
  1028 hyphenation exceptions out of 8191
- 36i,8n,40p,920b,1530s stack positions out of 5000i,500n,10000p,200000b,50000s
+ 36i,8n,40p,920b,1093s stack positions out of 5000i,500n,10000p,200000b,50000s
 {C:/Program Files (x86)/MiKTeX 2.9/fonts/enc/dvips/fontname/8r.enc}<C:/Program Files (x86)/MiKTeX 2.9/fon
 ts/type1/public/amsfonts/cm/cmex10.pfb><C:/Program Files (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmmi10.pfb><C:/
 Program Files (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmmi7.pfb><C:/Program Files (x86)/MiKTeX 2.9/fonts/type1/p
 ublic/amsfonts/cm/cmr10.pfb><C:/Program Files (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr7.pfb><C:/Program Files
  (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmsy10.pfb><C:/Program Files (x86)/MiKTeX 2.9/fonts/type1/public/amsfon
-ts/cm/cmsy7.pfb><C:/Program Files (x86)/MiKTeX 2.9/fonts/type1/urw/courier/ucrr8a.pfb><C:/Program Files (x86)/MiKTeX 2.9
-/fonts/type1/urw/times/utmb8a.pfb><C:/Program Files (x86)/MiKTeX 2.9/fonts/type1/urw/times/utmbi8a.pfb><C:/Program Files
- (x86)/MiKTeX 2.9/fonts/type1/urw/times/utmr8a.pfb><C:/Program Files (x86)/MiKTeX 2.9/fonts/type1/urw/times/utmri8a.pfb>
-
-Output written on job2p.pdf (4 pages, 220710 bytes).
+ts/cm/cmsy7.pfb><C:/Program Files (x86)/MiKTeX 2.9/fonts/type1/urw/courier/ucrb8a.pfb><C:/Program Files (x86)/MiKTeX 2.9
+/fonts/type1/urw/courier/ucrr8a.pfb><C:/Program Files (x86)/MiKTeX 2.9/fonts/type1/urw/times/utmb8a.pfb><C:/Program File
+s (x86)/MiKTeX 2.9/fonts/type1/urw/times/utmbi8a.pfb><C:/Program Files (x86)/MiKTeX 2.9/fonts/type1/urw/times/utmr8a.pfb
+><C:/Program Files (x86)/MiKTeX 2.9/fonts/type1/urw/times/utmri8a.pfb>
+Output written on job2p.pdf (5 pages, 236398 bytes).
 PDF statistics:
- 70 PDF objects out of 1000 (max. 8388607)
+ 77 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 500000)
  16 words of extra memory for PDF output out of 10000 (max. 10000000)
 
