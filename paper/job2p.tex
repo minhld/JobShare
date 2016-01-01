@@ -111,9 +111,9 @@ young.kwon@usu.edu}}
 \begin{abstract}
 These days, along with the rapid revolution of mobile device industry, software is also being built heavier and consumes more CPU performance and energy than they were in the past few years. Since the modern mobile devices support multiple connection methods like Wi-Fi, Bluetooth or NFC, the requirements of sharing the workloads and resources among the devices within a network to reduce full workload on an arbitrary device are being considered, especially in the areas Internet is not available, which can be found anywhere.
 
-To address those limitations on mobile devices, we proposed Job2P as the Job Scheduling APIs for Android development that leverages Wi-Fi Direct to support sharing workloads and resources over peer-to-peer mobile device network, which doesn't require any Internet connections. Job2P provides a simple and straightforward API interface to get rid of sophistication of network implementation, letting developers easily create their distributed mobile applications with capability of forming closed range network. In term of workload distribution, Job2P splits task and resource into parts and packs them into the smaller units called jobs and dispatch to the peers. To distributed jobs equitably among the peers, a decision maker is added to decide the amount of resource the peer has to handle bases on its percentage of availability. Moreover, our APIs can handle fault tolerant for network malfunctions. 
+To address those limitations on mobile devices, we proposed Job2P as the Job Scheduling APIs for Android development that leverages Wi-Fi Direct to support sharing workloads and resources over peer-to-peer mobile device network, which doesn't require any Internet connections. Job2P provides a simple and straightforward API interface to get rid of sophistication of network implementation, letting developers easily create their distributed mobile applications with capability of forming closed range network. In term of workload distribution, Job2P splits task and resource into parts and packs them into the smaller units called jobs and dispatch to the peers. To distributed jobs equitably among the peers, a Decision Maker is added to decide the amount of resource the peer has to handle bases on its percentage of availability. Moreover, our APIs can handle fault tolerant for network malfunctions. 
 
-Through our case studies, we realized that Job2P improves up to 45\% performance of running task in term of performance and energy consumption. 
+Through our experiments with image processing, text processing and GPS location, we realized that Job2P improves significant productivity in term of performance and energy consumption. 
 \end{abstract}
 
 
@@ -301,13 +301,7 @@ When client peer receives an object of \texttt{JobData} sent from server, it wil
 
 \subsection{Job Scheduling and Decision Maker} \label{scheduling}
 
-In peer-to-peer network supported by our APIs, the server will distribute jobs to peers bases on investigating their availability by \texttt{DecisionMaker} (Figure \ref{fig:checkStatus}). At the early stage before the transmission, decision maker sends request for status to some of selected peers in its network. If one peer receives this request, it will calculate its capability of response using the measurements CPU, memory and battery usage at a certain point of time. 
-
-Retrieved from \texttt{/proc/stat} system file \cite{stat_explain}, the percentage of CPU usage is expressed by this following expression in two short consecutive times
-
-$$Usage_{CPU} = \frac{(\sum{T_{CPU2}} - T_{Idle2}) - (\sum{T_{CPU1}} - T_{Idle1})}{(\sum{T_{CPU2}} - \sum{T_{CPU1}})}$$
-
-When $\sum{T_{CPU}}$ is total time of running CPU and $T_{Idle}$ is idle time correspondingly in hertz. In term of memory usage, the $Usage_{Mem}$ can be determined by using \texttt{MemoryInfo} from Android API to retrieve $Mem_{Avail}$ and $Mem_{Total}$, so the $Usage_{Battery}$.
+In peer-to-peer network supported by our APIs, the server will distribute jobs to peers bases on investigating their availability by \texttt{DecisionMaker} (Figure \ref{fig:checkStatus}). At the early stage before the transmission, the Decision Maker sends inquiring request for status (\texttt{IRS}) to some of selected peers in its network. If one peer receives this request, its Decision Maker will estimate its capability of response using the measurements of CPU, memory and battery usage at that time. 
 
 \begin{figure}[H]
 \centerline {
@@ -316,6 +310,46 @@ When $\sum{T_{CPU}}$ is total time of running CPU and $T_{Idle}$ is idle time co
 \caption{Decision making workflow}
 \label{fig:checkStatus}
 \end{figure}
+
+\subsubsection{Determine feasible peers}\label{ss_dfp}
+
+A mobile device at any time maintains a certain number of connection with the others. Before delivering jobs, it dispatches IRS messages to all the peers for acknowledgment of their availability ($RL$ - Level of Responsibility). The code snipe \ref{code:jsonResponse} shows a typical response 
+
+When it receives an IRS message, it will run the estimation to generate the resource summary as the response. , where Level of Responsibility ($RL$).
+
+\noindent \shadowbox{%
+\begin{minipage}{1\columnwidth}
+	\captionof{lstlisting}{JSON response from peer}
+	\label{code:jsonResponse}
+	
+	\begin{lstlisting}
+	{
+		"device" : "LG-Volt",
+    "RL" : 24.83,
+    "availability" : "low",
+    "cpu" : {
+			"usage" : "0.3",
+      "speed" : "1.3",
+      "cores" : 4
+    },
+    "memory" : {
+      "usage" : "0.5",
+      "total" : 2
+    },
+    "battery" : {
+      "usage" : 0.8,
+      "total" : 2800
+    }
+	}
+	\end{lstlisting}
+	
+\end{minipage}}	
+
+Retrieved from \texttt{/proc/stat} system file \cite{stat_explain}, the percentage of CPU usage is expressed by this following expression in two short consecutive times
+
+$$Usage_{CPU} = \frac{(\sum{T_{CPU2}} - T_{Idle2}) - (\sum{T_{CPU1}} - T_{Idle1})}{(\sum{T_{CPU2}} - \sum{T_{CPU1}})}$$
+
+When $\sum{T_{CPU}}$ is total time of running CPU and $T_{Idle}$ is idle time correspondingly in hertz. In term of memory usage, the $Usage_{Mem}$ can be determined by using \texttt{MemoryInfo} from Android API to retrieve $Mem_{Avail}$ and $Mem_{Total}$, so the $Usage_{Battery}$.
 
 Since in the mobile device, the lower resource usage state states the higher availability, and the higher specifications represents the better responsibility. Then the level of responsibility of device can be simply summarized by the below expression
 
