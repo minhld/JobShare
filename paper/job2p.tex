@@ -143,107 +143,11 @@ To address those limitations with heavy software on mobile devices, we proposed 
 Based on our experiments and results, our contributions are as follow
 \begin{itemize}
 	\item \textbf{Simple Job Scheduling APIs} a library for developers facilitates establishing mobile peer-to-peer network.
-	\item \textbf{Job Scheduler} for job manipulation and resource heterogeneous adaptation
-	\item \textbf{Decision making module} determines a list of appropriate devices to execute bases on applied algorithm on availability
+	\item \textbf{Job Scheduler} for scheduling job execution and resource heterogeneity adaptation
+	\item \textbf{Decision making module} determines the number of devices with according appropriate jobs for the remote execution bases on applied algorithm on level of availability.  
 	\item \textbf{High productivity results} our test case experiments will give the proof of APIs productivity
 \end{itemize}
  
-
-
-% An example of a floating figure using the graphicx package.
-% Note that \label must occur AFTER (or within) \caption.
-% For figures, \caption should occur after the \includegraphics.
-% Note that IEEEtran v1.7 and later has special internal code that
-% is designed to preserve the operation of \label within \caption
-% even when the captionsoff option is in effect. However, because
-% of issues like this, it may be the safest practice to put all your
-% \label just after \caption rather than within \caption{}.
-%
-% Reminder: the "draftcls" or "draftclsnofoot", not "draft", class
-% option should be used if it is desired that the figures are to be
-% displayed while in draft mode.
-%
-%\begin{figure}[!t]
-%\centering
-%\includegraphics[width=2.5in]{myfigure}
-% where an .eps filename suffix will be assumed under latex, 
-% and a .pdf suffix will be assumed for pdflatex; or what has been declared
-% via \DeclareGraphicsExtensions.
-%\caption{Simulation results for the network.}
-%\label{fig_sim}
-%\end{figure}
-
-% Note that the IEEE typically puts floats only at the top, even when this
-% results in a large percentage of a column being occupied by floats.
-
-
-% An example of a double column floating figure using two subfigures.
-% (The subfig.sty package must be loaded for this to work.)
-% The subfigure \label commands are set within each subfloat command,
-% and the \label for the overall figure must come after \caption.
-% \hfil is used as a separator to get equal spacing.
-% Watch out that the combined width of all the subfigures on a 
-% line do not exceed the text width or a line break will occur.
-%
-%\begin{figure*}[!t]
-%\centering
-%\subfloat[Case I]{\includegraphics[width=2.5in]{box}%
-%\label{fig_first_case}}
-%\hfil
-%\subfloat[Case II]{\includegraphics[width=2.5in]{box}%
-%\label{fig_second_case}}
-%\caption{Simulation results for the network.}
-%\label{fig_sim}
-%\end{figure*}
-%
-% Note that often IEEE papers with subfigures do not employ subfigure
-% captions (using the optional argument to \subfloat[]), but instead will
-% reference/describe all of them (a), (b), etc., within the main caption.
-% Be aware that for subfig.sty to generate the (a), (b), etc., subfigure
-% labels, the optional argument to \subfloat must be present. If a
-% subcaption is not desired, just leave its contents blank,
-% e.g., \subfloat[].
-
-
-% An example of a floating table. Note that, for IEEE style tables, the
-% \caption command should come BEFORE the table and, given that table
-% captions serve much like titles, are usually capitalized except for words
-% such as a, an, and, as, at, but, by, for, in, nor, of, on, or, the, to
-% and up, which are usually not capitalized unless they are the first or
-% last word of the caption. Table text will default to \footnotesize as
-% the IEEE normally uses this smaller font for tables.
-% The \label must come after \caption as always.
-%
-%\begin{table}[!t]
-%% increase table row spacing, adjust to taste
-%\renewcommand{\arraystretch}{1.3}
-% if using array.sty, it might be a good idea to tweak the value of
-% \extrarowheight as needed to properly center the text within the cells
-%\caption{An Example of a Table}
-%\label{table_example}
-%\centering
-%% Some packages, such as MDW tools, offer better commands for making tables
-%% than the plain LaTeX2e tabular which is used here.
-%\begin{tabular}{|c||c|}
-%\hline
-%One & Two\\
-%\hline
-%Three & Four\\
-%\hline
-%\end{tabular}
-%\end{table}
-
-
-% Note that the IEEE does not put floats in the very first column
-% - or typically anywhere on the first page for that matter. Also,
-% in-text middle ("here") positioning is typically not used, but it
-% is allowed and encouraged for Computer Society conferences (but
-% not Computer Society journals). Most IEEE journals/conferences use
-% top floats exclusively. 
-% Note that, LaTeX2e, unlike IEEE journals/conferences, places
-% footnotes above bottom floats. This can be corrected via the
-% \fnbelowfloat command of the stfloats package.
-
 
 \section{Related Works}
 
@@ -259,14 +163,14 @@ To retrieve the goals, as well as making our APIs widely adaptive to different c
 \end{figure}
 
 \begin{itemize}
-	\item \textbf{Job Handler} splits the task into jobs, each contains a process definition and resources, and base on making decision on conditions of peers, dispatch jobs to the appropriate peers. Moreover, it handles merging results completed by peers by predefined splitting and merging mechanisms.
+	\item \textbf{Job Handler} in charge of splitting the task into jobs, each contains a process definition and resources, and base on making decision on conditions of peers, dispatch jobs to the appropriate peers. Moreover, it handles merging results completed by peers by predefined splitting and merging mechanisms.
 	\item \textbf{Wi-Fi Peer-to-peer Broadcaster} hides the details implementation and provide a simpler API interface for forming peer-to-peer network.
 \end{itemize}
 
 \subsection{APIs for Peer-to-peer Network}
-To easily form up multiple pair connections between devices in the network, we utilized Wi-Fi Direct, the new feature available on Android 4.0 and later. \texttt{Wi-Fi Peer-to-peer Broadcaster} (WPB) module wrapped up the complexity of Wi-Fi Direct library of Android APIs and simplify the functions to minimum to let developers get rid of low level network implementation. These below steps figures out a way to simply initiate a mobile network.
+To easily form up multiple pair connections between devices in the network, we utilized Wi-Fi Direct, the new feature available on Android 4.0 and later. \texttt{Wi-Fi Peer-to-peer Broadcaster} (\texttt{WPB}) module wrapped up the complexity of Wi-Fi Direct library of Android APIs and simplify the functions to minimum to let developers get rid of low level network implementation. These below steps figures out a way to simply initiate a mobile network.
 
-When the app starts up, WPB will call \texttt{discoverPeers()} to send a message to the other peers to let them know its availability. Once a peer receives such message WPB will update the list of devices, therefore reform the network. See figure \ref{fig:forming}
+When the app starts up, \texttt{WPB} will call \texttt{discoverPeers()} to send a message to the other peers to let them know its availability. Once a peer receives such message \texttt{WPB} will update the list of devices, therefore reform the network. See figure \ref{fig:forming}
 
 \begin{figure}[H]
 \centerline {
@@ -375,37 +279,15 @@ $$M_{i} = M\frac{RL_{i}}{\sum_{j = \overline{1,n}}{RL_{j}}}$$
 
 Where $M$ is total size of data in bytes.
 
-\section{Experiments and Results}
+\section{Programming model}
 
-To measure the performance of the system equipped with our APIs, we decorated a small testbed with collaboration of 5 different Android devices to perform our 3 test cases:
-\begin{itemize}
-	\item \textbf{Image Processing} we will initiate the peer-to-peer network test to perform blurring a large scale image which is unable to process at any of our devices. Particularly, to process an image with size $4000 \times 4000$ and 4 bytes to express each pixel color, application must spare the amount of memory equivalent to 64MB which is too expensive for the system, occasionally this kind of image would be refused to load. 
-	\item \textbf{Text analysis} another proof of performance on text processing. Our APIs will yield the data parser to developer for data heterogeneous adaptation.
-	\item \textbf{GPS} establishing a GPS connection is proof of high energy consuming. It would be impossible for a device with low battery to keep update with GPS frequently. We will base on Job2P to build a simple system so that one device can benefit GPS locations from the healthier devices.
-\end{itemize}
+The library should be simple, so that developer can integrate within just a few steps. This section will describe step-by-step the way to utilize our API to enable a typical peer-to-peer network.
 
-\subsection{Preliminary Estimations}
-Assume that we have a Wi-Fi peer-to-peer network available with $n$ devices, each device at a certain time has level of responsibility $RL_{i} (i = \overline{1,n})$. According to the section \ref{scheduling}, if $E$ is the energy consumed by the application for only completing the task regardless of other ambiances, the total energy $E_{0}$ will be
+\subsection{Define Job}
 
-$$E_{0} = E + E_{w}$$
+Job implementation is the prerequisite work to determine what to execute on the remote device and how to cast and manipulate data from the abstract object. According to section \ref{job-description}, developer needs to define the Job class file separately by overriding the \texttt{exec()} method and cast the input abstract parameter to the concrete. Then run the \texttt{DexCreator} tool on the Job class to compile and compact it into the DEX jar package. The final outcome is the \texttt{job.jar} file, it should be saved in the internal storage of the caller device. To simplify, we can store it in the \texttt{Download} folder.  
 
-Where $E_{w}$ is energy the app requires for waiting. Also, 
-
-$$E_{p2p} = E(\frac{RL_{0}}{\sum_{i = 1}^{n}{RL_{i}}}) + E_{WiFi} + E_{w}$$ 
-
-Where $E_{WiFi}$ is energy consumed by Wi-Fi for sending jobs to other peers.
-
-In this estimation we skipped considering $E_{w}$ since it will depend on appearance of applications. If application have no GUI like system background services, $E_{w}$ will cause very little effect. From the two above equations, we can get the difference energy consumption between the two job processing mechanisms $E_{Diff}$ 
-
-$$E_{Diff} = E_{0} - E_{p2p}$$ or $$E_{Diff} = E(1 - \frac{RL_{0}}{\sum_{i=1}^{n}{RL_{i}}}) - E_{WiFi}$$
-
-According to \cite{wifi_energy}, Wi-Fi caused battery drained linearly by time during the transmission, particularly the drain can be represented by $y = 17.01x - 0.93$ for downloading and $y = 17.31x - 2.28$ for uploading. Therefore, it is inferred that in a mobile system with a certain number of devices in different levels of responsibility, if E is big enough, in other words, if the task to perform is big enough, then $E_{Diff} > 0$ will happen, thus deploying a peer-to-peer cluster will give the great benefit in term of energy efficiency. The bigger value of $E_{Diff}$, the more benefit we will archive.
-
-\subsection{Results}
-
-\subsubsection{Applying Job2P to an Android project}
-The library should be simple, so that developer can integrate within a few steps.
-
+\subsection{Implementation}
 First of all, developer needs to define the \texttt{UIHandler} to receive messages from system when it goes in real-time. While system is in progress, it will periodically return \texttt{MAIN\_INFO} to inform logs or statuses. When job-results have been collected from all the peers, the \texttt{MAIN\_JOB\_DONE} message will be thrown along with the final proceeded and merged data.\\
 
 
@@ -469,6 +351,35 @@ When network is formed and connections are held from some of the peers, \texttt{
 
 \end{minipage}}
 
+\section{Experiments and Results}
+
+To measure the performance of the system equipped with our APIs, we decorated a small testbed with collaboration of 5 different Android devices to perform our 3 test cases:
+\begin{itemize}
+	\item \textbf{Image Processing} we will initiate the peer-to-peer network test to perform blurring a large scale image which is unable to process at any of our devices. Particularly, to process an image with size $4000 \times 4000$ and 4 bytes to express each pixel color, application must spare the amount of memory equivalent to 64MB which is too expensive for the system, occasionally this kind of image would be refused to load. 
+	\item \textbf{Text analysis} another proof of performance on text processing. Our APIs will yield the data parser to developer for data heterogeneous adaptation.
+	\item \textbf{GPS} establishing a GPS connection is proof of high energy consuming. It would be impossible for a device with low battery to keep update with GPS frequently. We will base on Job2P to build a simple system so that one device can benefit GPS locations from the healthier devices.
+\end{itemize}
+
+\subsection{Preliminary Estimations}
+Assume that we have a Wi-Fi peer-to-peer network available with $n$ devices, each device at a certain time has level of responsibility $RL_{i} (i = \overline{1,n})$. According to the section \ref{scheduling}, if $E$ is the energy consumed by the application for only completing the task regardless of other ambiances, the total energy $E_{0}$ will be
+
+$$E_{0} = E + E_{w}$$
+
+Where $E_{w}$ is energy the app requires for waiting. Also, 
+
+$$E_{p2p} = E(\frac{RL_{0}}{\sum_{i = 1}^{n}{RL_{i}}}) + E_{WiFi} + E_{w}$$ 
+
+Where $E_{WiFi}$ is energy consumed by Wi-Fi for sending jobs to other peers.
+
+In this estimation we skipped considering $E_{w}$ since it will depend on appearance of applications. If application have no GUI like system background services, $E_{w}$ will cause very little effect. From the two above equations, we can get the difference energy consumption between the two job processing mechanisms $E_{Diff}$ 
+
+$$E_{Diff} = E_{0} - E_{p2p}$$ or $$E_{Diff} = E(1 - \frac{RL_{0}}{\sum_{i=1}^{n}{RL_{i}}}) - E_{WiFi}$$
+
+According to \cite{wifi_energy}, Wi-Fi caused battery drained linearly by time during the transmission, particularly the drain can be represented by $y = 17.01x - 0.93$ for downloading and $y = 17.31x - 2.28$ for uploading. Therefore, it is inferred that in a mobile system with a certain number of devices in different levels of responsibility, if E is big enough, in other words, if the task to perform is big enough, then $E_{Diff} > 0$ will happen, thus deploying a peer-to-peer cluster will give the great benefit in term of energy efficiency. The bigger value of $E_{Diff}$, the more benefit we will archive.
+
+\subsection{Results}
+
+\subsubsection{Applying Job2P to an Android project}
 
 
 \subsubsection{Performances}
