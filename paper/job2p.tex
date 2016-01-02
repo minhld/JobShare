@@ -282,7 +282,7 @@ When peers have information of the others, they are ready to connect. We provide
 We give the job definition to developers. To avoid any misconfiguration from remote execution, we provide a common Job definition interface
 
 \noindent \shadowbox{%
-\begin{minipage}{1\columnwidth}
+\begin{minipage}{239pt}
 	\captionof{lstlisting}{Job Definition}
 	
 	\begin{lstlisting}
@@ -301,7 +301,7 @@ When client peer receives an object of \texttt{JobData} sent from server, it wil
 
 \subsection{Job Scheduling and Decision Maker} \label{scheduling}
 
-In peer-to-peer network supported by our APIs, the server will distribute jobs to peers bases on investigating their availability by \texttt{DecisionMaker} (Figure \ref{fig:checkStatus}). At the early stage before the transmission, the Decision Maker sends inquiring request for status (\texttt{IRS}) to some of selected peers in its network. If one peer receives this request, its Decision Maker will estimate its capability of response using the measurements of CPU, memory and battery usage at that time. 
+In peer-to-peer network supported by our APIs, the server will distribute jobs to peers bases on investigating their availability by \texttt{DecisionMaker} (Figure \ref{fig:checkStatus}). At the early stage before the transmission, the \texttt{DecisionMaker} of the calling device sends inquiring request for status (\texttt{IRS}) to some of selected peers in the network. If one receives this IRS request, its \texttt{DecisionMaker} will estimate its capability of response using the measurements of CPU, memory and battery usage at that time. 
 
 \begin{figure}[H]
 \centerline {
@@ -313,39 +313,47 @@ In peer-to-peer network supported by our APIs, the server will distribute jobs t
 
 \subsubsection{Determine feasible peers}\label{ss_dfp}
 
-A mobile device at any time maintains a certain number of connection with the others. Before delivering jobs, it dispatches IRS messages to all the peers for acknowledgment of their availability ($RL$ - Level of Responsibility). The code snipe \ref{code:jsonResponse} shows a typical response 
-
-When it receives an IRS message, it will run the estimation to generate the resource summary as the response. , where Level of Responsibility ($RL$).
+A mobile device at any time maintains a certain number of connection with the others. Before delivering jobs, it dispatches IRS messages to all the peers for acknowledgment of their availability ($RL$ - Level of Responsibility). If a peer receives an IRS, its \texttt{DecisionMaker} will capture its configuration and corresponding usage states to generate a response in JSON format, The code snipe \ref{code:jsonResponse} shows such a typical response.\\
 
 \noindent \shadowbox{%
-\begin{minipage}{1\columnwidth}
+\begin{minipage}{239pt}
 	\captionof{lstlisting}{JSON response from peer}
 	\label{code:jsonResponse}
 	
 	\begin{lstlisting}
 	{
-		"device" : "LG-Volt",
-    "RL" : 24.83,
-    "availability" : "low",
-    "cpu" : {
-			"usage" : "0.3",
-      "speed" : "1.3",
-      "cores" : 4
-    },
-    "memory" : {
-      "usage" : "0.5",
-      "total" : 2
-    },
-    "battery" : {
-      "usage" : 0.8,
-      "total" : 2800
-    }
+	  "device" : "LG-Volt",
+      "RL" : 24.83,
+      "availability" : "low",
+      "cpu" : {
+        "usage" : "0.3",
+      	"speed" : "1.3",
+      	"cores" : 4
+      },
+      "memory" : {
+        "usage" : "0.5",
+        "total" : 2
+      },
+      "battery" : {
+        "usage" : 0.85,
+        "total" : 2800
+      }
 	}
 	\end{lstlisting}
 	
 \end{minipage}}	
 
-Retrieved from \texttt{/proc/stat} system file \cite{stat_explain}, the percentage of CPU usage is expressed by this following expression in two short consecutive times
+Where $RL$ is peer's Level of Responsibility (for estimation of $RL$ as well as the other usage parameters, see \ref{ss_jqfp}), \texttt{availability} indicates whether the peer is feasible for handling job, and \texttt{cpu}, \texttt{memory} and \texttt{battery} are essential status information of the resources accordingly at the time of response. 
+
+In any IRS response, parameter \texttt{availability} can be assigned with value of \texttt{low}, \texttt{medium} or \texttt{high}. The \texttt{low} availability will inform the calling peer that it is not available due to temporary resource limitation, therefore eliminate the caller from sending jobs to. Only the peers with \texttt{availability} higher than \texttt{medium} will accept jobs for execution. The decision is given bases on the thresholds of battery usage which are set by default at value higher than 0.8 (or 80\% overall usage) for the \texttt{low}, 0.5 to 0.8 for the \texttt{medium} and lower than 0.5 for the \texttt{high}. User can override those thresholds by updating the \texttt{availability-thresholds} in the configuration file before app initialization. 
+
+In the above example (code snipe \ref{code:jsonResponse}), the battery usage was 0.85 or 15\% remained, so the \texttt{DecisionMaker} on it stated that its \texttt{availability} is \texttt{low}, in other words it is not able to handle any jobs and should be excluded from the dispatched list.\\
+
+\subsubsection{Job quantitation for peers}\label{ss_jqfp}
+
+The calling peer quantitates the jobs from a task to distribute to the other available devices in the network suitably. To achieve this, the $RL$ parameter will be used as the main coefficient for the split. 
+ 
+To calculate $RL$ as well as the other parameters in IRS, retrieved from \texttt{/proc/stat} system file \cite{stat_explain}, the percentage of CPU usage is expressed by this following expression in two short consecutive times
 
 $$Usage_{CPU} = \frac{(\sum{T_{CPU2}} - T_{Idle2}) - (\sum{T_{CPU1}} - T_{Idle1})}{(\sum{T_{CPU2}} - \sum{T_{CPU1}})}$$
 
@@ -358,6 +366,8 @@ $$RL = \frac{CPU_{Spec}}{Usage_{CPU}} + \frac{Mem_{Spec}}{Usage_{Mem}} + \frac{B
 Where $CPU_{Spec}$ has GHz unit, $Mem_{Spec}$ has GB unit and $Battery_{Spec}$ has uAh unit. Especially $CPU_{Spec}$ is determined by number of its core. For example, a quad-core CPU at speed of 1.3GHz can be counted as $1.3 \times 4$ or 5.2. At a certain time of that device, if $Usage_{CPU}$ is 0.3, $Usage_{Mem}$ is 0.5 (half of 1GB memory consumed), $Usage_{Battery}$ is 0.7 or 70\% used over a 2800uAh capacity battery, the value of $RL$ will be
 
 $$RL = \frac{5.2}{0.3} + \frac{1}{0.5} + \frac{2800}{0.7 \times 1000} = 23.33$$
+
+To reduce the latency and to avoid miscalculation at the calling peer, $RL$ is prematurely calculated by each available called peer and wrapped up in the IRS response sending back to the caller. 
 
 In a peer-to-peer network comprising of $n$ devices, where $i$-device has responsibility level $RL_{i}$, the \texttt{DecisionMaker} will assign the job with carrying amount of data ($M_{i}$) which is equivalent to
 
@@ -400,7 +410,7 @@ First of all, developer needs to define the \texttt{UIHandler} to receive messag
 
 
 \noindent \shadowbox{%
-\begin{minipage}{1\columnwidth}
+\begin{minipage}{239pt}
 	\captionof{lstlisting}{UI handler}
 
 	\begin{lstlisting}
@@ -426,7 +436,7 @@ Secondly, developer needs to declare \texttt{DataParser} to determine data-type 
 When network is formed and connections are held from some of the peers, \texttt{dispatchJob()} will be call to locate the resources and job which predefined in local storage, it then invokes \texttt{DecisionMaker} (sub section \ref{scheduling}) for job splitting and binary serialization. Finally jobs will be dispatched over the socket\\
 
 \noindent \shadowbox{%
-\begin{minipage}{1\columnwidth}
+\begin{minipage}{239pt}
 	\captionof{lstlisting}{Declare DataParser and JobHandler}
 
 	\begin{lstlisting}
