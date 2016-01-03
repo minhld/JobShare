@@ -152,7 +152,7 @@ Based on our experiments and results, our contributions are as follow
 \section{Related Works}
 
 \section{Approach}
-To retrieve the goals, as well as making our APIs widely adaptive to different context and usages, our penetrated idea of design is hiding the complexity of system implementation and open to developers the capability of customization. This below figure describes the internal architecture of a typical application utilizing our APIs to form a distributed mobile peer-to-peer system (Figure \ref{fig:architecture}). Basically, our system comprises of two main components:
+To retrieve the goals, as well as making our APIs widely adaptive to different context and usages, our penetrating idea of design is hiding the complexity of system implementation and open to the developers the capability of customization. This below figure describes the internal architecture of a typical application utilizing our APIs to form a distributed mobile peer-to-peer system (Figure \ref{fig:architecture}). Basically, our system comprises of two main components:
 
 \begin{figure}[H]
 \centerline {
@@ -285,16 +285,20 @@ The library should be simple, so that developer can integrate within just a few 
 
 \subsection{Define Job}
 
-Job implementation is the prerequisite work to determine what to execute on the remote device and how to cast and manipulate data from the abstract object. According to section \ref{job-description}, developer needs to define the Job class file separately by overriding the \texttt{exec()} method and cast the input abstract parameter to the concrete. Then run the \texttt{DexCreator} tool on the Job class to compile and compact it into the DEX jar package. The final outcome is the \texttt{job.jar} file, it should be saved in the internal storage of the caller device. To simplify, we can store it in the \texttt{Download} folder.  
+Job implementation is the prerequisite work to determine what to execute on the remote device and how to cast and manipulate data from the abstract object. According to section \ref{job-description}, developer needs to implement the Job class file separately by overriding the \texttt{exec()} method and cast the input abstract parameter to the concrete. Then run the \texttt{DexCreator} tool on the Job class to compile and compact it into the DEX jar package. The final outcome is the \texttt{job.jar} file, it should be saved in the internal storage of the caller device. To simplify, we can store it in the \texttt{Download} folder.  
 
-\subsection{Implementation}
-First of all, developer needs to define the \texttt{UIHandler} to receive messages from system when it goes in real-time. While system is in progress, it will periodically return \texttt{MAIN\_INFO} to inform logs or statuses. When job-results have been collected from all the peers, the \texttt{MAIN\_JOB\_DONE} message will be thrown along with the final proceeded and merged data.\\
+\subsection{APIs for Android applications}
 
+This sub section will describe 3 basic steps to implement an Android application to utilize our APIs
+
+\subsubsection{Message Handler}
+
+The Message Handler is required to instantiate at the beginning. In particular, an instance of \texttt{UIHandler} is initiated to receive messages from system when it goes into runtime. While system is in progress, the log and information messages will periodically be returned with label \texttt{MAIN\_INFO} (Snipe code \ref{ui_handler}). When each job result comes, \texttt{JobHandler} will collect and handle by  to partially put into a placeholder. When all results arrived, the placeholder with label \texttt{MAIN\_JOB\_DONE} will be returned to inform the completion of job collaboration, as well as bring the final result back to the main app UI.\\
 
 \noindent \shadowbox{%
 \begin{minipage}{239pt}
 	\captionof{lstlisting}{UI handler}
-
+    \label{ui_handler}
 	\begin{lstlisting}
 	Handler mainUiHandler = new Handler() {
 		@Override
@@ -313,7 +317,11 @@ First of all, developer needs to define the \texttt{UIHandler} to receive messag
 
 \end{minipage}}
 
+\subsubsection{Data Parser}
+
 Secondly, developer needs to declare \texttt{DataParser} to determine data-type and parser to equip for manipulating data at run-time (see sub section \ref{job-description}). \texttt{JobHandler} is the main component which wraps up the complexity , and exposes only the necessary functions like \texttt{discoverPeers()} and \texttt{dispatchJob()}. To send ACK messages to other peers for exchanging acknowledgments and reforming network, we need to call \texttt{discoverPeers()} function on the program, this work should be done as soon as application starts. 
+
+\subsubsection{Discovery Peer and Dispatching Jobs}
 
 When network is formed and connections are held from some of the peers, \texttt{dispatchJob()} will be call to locate the resources and job which predefined in local storage, it then invokes \texttt{DecisionMaker} (sub section \ref{scheduling}) for job splitting and binary serialization. Finally jobs will be dispatched over the socket\\
 
