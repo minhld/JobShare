@@ -152,7 +152,7 @@ Based on our experiments and results, our contributions are as follow
 \section{Related Works}
 
 \section{Approach}
-To retrieve the goals, as well as making our APIs widely adaptive to different context and usages, our penetrating idea of design is hiding the complexity of system implementation and open to the developers the capability of customization. This below figure describes the internal architecture of a typical application utilizing our APIs to form a distributed mobile peer-to-peer system (Figure \ref{fig:architecture}). Basically, our system comprises of two main components:
+To retrieve the goals, as well as making our APIs widely adaptive to different context and usages, our consistent idea of design is hiding the complexity of system implementation and open to the developers the capability of customization. This below figure describes the internal architecture of a typical application utilizing our APIs to form a distributed mobile peer-to-peer system (Figure \ref{fig:architecture}). Basically, our system comprises of two main components:
 
 \begin{figure}[H]
 \centerline {
@@ -163,14 +163,14 @@ To retrieve the goals, as well as making our APIs widely adaptive to different c
 \end{figure}
 
 \begin{itemize}
-	\item \textbf{Job Handler} in charge of splitting the task into jobs, each contains a process definition and resources, and base on making decision on conditions of peers, dispatch jobs to the appropriate peers. Moreover, it handles merging results completed by peers by predefined splitting and merging mechanisms.
-	\item \textbf{Wi-Fi Peer-to-peer Broadcaster} hides the details implementation and provide a simpler API interface for forming peer-to-peer network.
+	\item \textbf{Wi-Fi Peer-to-peer Broadcaster} (\texttt{WPB}) wraps up Wi-Fi Direct implementation, socket management and connection establishment. Moreover the \texttt{WiFiBroadcaster} provides a simplified API interface to form peer-to-peer network.
+	\item \textbf{Job Handler} in charge of making decision on selecting available peers, determining and splitting the appropriate amount of jobs from the assigned task. The \texttt{JobDispatcher} sub module dispatches job and \texttt{JobExecutor} perform job execution at a single peer. Besides, \texttt{JobHandler} merges the scattered incoming results into the final placeholder and relay information messages to the main application.
 \end{itemize}
 
-\subsection{APIs for Peer-to-peer Network}
-To easily form up multiple pair connections between devices in the network, we utilized Wi-Fi Direct, the new feature available on Android 4.0 and later. \texttt{Wi-Fi Peer-to-peer Broadcaster} (\texttt{WPB}) module wrapped up the complexity of Wi-Fi Direct library of Android APIs and simplify the functions to minimum to let developers get rid of low level network implementation. These below steps figures out a way to simply initiate a mobile network.
+\subsection{Wi-Fi Peer-to-peer Broadcaster}
+To easily form up multiple pair connections between devices in the network, we utilized Wi-Fi Direct, the new feature available from Android APIs 4.0. We developed the \texttt{WiFiDirectManager} sub module inside the \texttt{WPB} to wrap up the complexity of Wi-Fi Direct implementation. Holding an instance of \texttt{WifiP2pManager}, \texttt{WiFiDirectManager} maintains connectivity over peer-to-peer network, discover available peers and setup the connections. 
 
-When the app starts up, \texttt{WPB} will call \texttt{discoverPeers()} to send a message to the other peers to let them know its availability. Once a peer receives such message \texttt{WPB} will update the list of devices, therefore reform the network. See figure \ref{fig:forming}
+When the app starts up, \texttt{WPB} from a peer will spread acknowledgments by calling \texttt{discoverPeers()} to inform its availability to the other peers. If a peer receives such message, its \texttt{WPB} module will collect information from the new comer and update the list of devices. When all the peers are updated with their new device list, the network will be reformed. See figure \ref{fig:forming}
 
 \begin{figure}[H]
 \centerline {
@@ -182,8 +182,11 @@ When the app starts up, \texttt{WPB} will call \texttt{discoverPeers()} to send 
 
 When peers have information of the others, they are ready to connect. We provide function \texttt{connectToADevice()} holding \texttt{WifiP2pDevice} as one input parameter to invoke the handshake with another device. Once connection established, the device actively invoked will be assigned as client, which utilize the \texttt{ClientSocketHandler} to listen to a client socket. The device passively received the invocation will be promoted as server and use the \texttt{ServerSocketHandler} to initiate server socket with an random port. If the invoked device is already a server, it will maintain its current state and continuously accept the new client. Moreover, since a device can either be a server to some peers, or serve as client to the others, this method is able to build up a close range peer-to-peer network.
 
-\subsection{Job definition} \label{job-description}
-We give the job definition to developers. To avoid any misconfiguration from remote execution, we provide a common Job definition interface
+Both \texttt{ClientSocketHandler} and \texttt{ServerSocket Handler} are constituted by a sub module named \texttt{DataTransmitManager}, which periodically observes input and output streams of parent socket (Can be either server or client socket) to verify checksum, check data consistency, send/receive data from the socket. Inheriting the \texttt{TransmitManager} abstract class, developer can instantiate their own version of \texttt{DataTransmitManager} to customize the data consistency checker or improve security. 
+
+\subsection{Job Definition and Data Parser}
+\subsubsection{Job definition} \label{job-description}
+We give the job definition to developers. To avoid any misconfiguration from remote execution, we provide a common Job definition interface\\
 
 \noindent \shadowbox{%
 \begin{minipage}{239pt}
@@ -191,7 +194,7 @@ We give the job definition to developers. To avoid any misconfiguration from rem
 	
 	\begin{lstlisting}
 	public class Job {
-		public Object exec(Object originalObject) {
+		public Object exec(Object partialObject) {
 			// job implementation
 		}
 	}
@@ -202,6 +205,8 @@ We give the job definition to developers. To avoid any misconfiguration from rem
 Since Dalvik VM didn't support loading class the way Java VM does. Instead it will load Dalvik execution ("dex") files from an alternative locations such as internal storage or network. We provide \texttt{DexCreator} tool, the windows application supports compiling the \texttt{Job} java file into the dex job package (a jar file). Dex package and splitted resources in binary format will be added into one \texttt{JobData} object by \texttt{JobDispatcher}, signed with checksum for consistency and dispatched to the other peers.
 
 When client peer receives an object of \texttt{JobData} sent from server, it will firstly check checksum to confirm the consistency, then deserialize it into \texttt{Job} and resources and execute the job with that data.
+
+\subsubsection{Data Parser}
 
 \subsection{Job Scheduling and Decision Maker} \label{scheduling}
 
