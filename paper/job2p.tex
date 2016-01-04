@@ -230,7 +230,8 @@ public interface DataParser {
   public Object parseBytesToObject(byte[] byteData);
 
   public Object getSinglePart(Object objData, 
-                  int numOfParts, int index);
+                  int numOfParts, int firstOffset, 
+                  int lastOffset);
     
   public Object createPlaceholder(String jsonMetadata);
 
@@ -320,6 +321,28 @@ In any IRS response, parameter \texttt{availability} can be assigned with value 
 
 In the above example (code snipe \ref{code:jsonResponse}), the battery usage was 0.85 or 15\% remained, so the \texttt{DecisionMaker} on it stated that its \texttt{availability} is \texttt{low}, in other words it is not able to handle any jobs and should be excluded from the dispatched list.\\
 
+\begin{algorithm}
+
+\caption{Select Available Peers Algorithm}
+\label{alg:select_peers}
+\begin{algorithmic}[1]
+\Function{selectPeers()}{}
+\State Send IRS requests to all peers 
+\State $P_{AV} \leftarrow HashMap(DeviceId, P)$
+\ForAll{$R_{IRS}$ in \{Incoming IRS responses\}}
+\If {$R_{IRS}.availability = low$} 
+   \State continue;
+\Else
+  \State $P_{Info} \leftarrow P2pDevice_{DeviceId} + R_{IRS}.RL$
+  \State $P_{AV}(DeviceId) \leftarrow P_{Info}$
+\EndIf
+\EndFor
+\State \Return $P_{AV}$
+\EndFunction
+\end{algorithmic}
+
+\end{algorithm}
+
 \subsubsection{Job quantitation for peers}\label{ss_jqfp}
 
 The calling peer quantitates the jobs from a task to distribute to the other available devices in the network suitably. To achieve this, the $RL$ parameter will be used as the main coefficient for the split. 
@@ -344,16 +367,37 @@ In a peer-to-peer network comprising of $n$ devices, where $i$-device has respon
 
 $$M_{i} = M\frac{RL_{i}}{\sum_{j = \overline{1,n}}{RL_{j}}}$$
 
-Where $M$ is total size of data in bytes. This below algorithm \ref{alg:select_peer} will represent the procedure that \texttt{DecisionMaker} uses to select and reject peers, as well as assign the appropriate amount of job to them. 
+Where $M$ is total size of data in bytes. This below algorithm \ref{alg:assign_job} will represent the procedure that \texttt{DecisionMaker} uses to select and reject peers, as well as assign the appropriate amount of job to them. 
 
 \begin{algorithm}
-\caption{CH election algorithm}
-\label{alg:select_peer}
+\caption{Assign Job Algorithm}
+\label{alg:assign_job}
 \begin{algorithmic}[1]
-\Procedure{CH\textendash Election}{}
-\State Broadcast HELLO message to its neighbor
-\State MPRSet($i$) = $k$
-\EndProcedure
+\Function{assignJobs()}{}
+\State $M \leftarrow {getDataSize()}$
+\State $RL_{Total} \leftarrow 0$ 
+\For {P in \{$P_{AV}$\}}
+  \State $RL_{Total} \leftarrow RL_{Total} + P._{RL}$
+\EndFor
+\\
+\State $firstOffset, lastOffset \leftarrow 0$
+\State $jobData \leftarrow Null$
+\State $job \leftarrow {readJobFromStorage()}$
+\State $M_{c} \leftarrow 0$
+\\
+\For {$i = 1$ to $P_{AV}.length$}
+  \State $M_{i} \leftarrow M\frac{RL_{i}}{RL_{Total}}$\\
+  \State $firstOffset \leftarrow M_{c} $
+  \State $lastOffset \leftarrow M_{c} + M_{i}$
+  \State $jobData \leftarrow DataParser.getSinglePart($
+  \State                    $firstOffset, lastOffset)$
+  \State $dispatchJob(\{job, jobData\})$\\
+  \State $M_{c} \leftarrow lastOffset$
+  
+\EndFor
+
+
+\EndFunction
 \end{algorithmic}
 \end{algorithm}
 
