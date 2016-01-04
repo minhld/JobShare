@@ -283,7 +283,7 @@ In peer-to-peer network supported by our APIs, the server will distribute jobs t
 \label{fig:checkStatus}
 \end{figure}
 
-\subsubsection{Determine feasible peers}\label{ss_dfp}
+\subsubsection{Detect feasible peers}\label{ss_dfp}
 
 A mobile device at any time maintains a certain number of connection with the others. Before delivering jobs, it dispatches IRS messages to all the peers for acknowledgment of their availability ($RL$ - Level of Responsibility). If a peer receives an IRS, its \texttt{DecisionMaker} will capture its configuration and corresponding usage states to generate a response in JSON format, The code snipe \ref{code:jsonResponse} shows such a typical response.\\
 
