@@ -10,6 +10,8 @@
 \usepackage{indentfirst}
 \usepackage{amsmath}
 \usepackage{fancybox}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
 
 \definecolor{dkgreen}{rgb}{0,0.6,0}
 \definecolor{gray}{rgb}{0.5,0.5,0.5}
@@ -185,13 +187,14 @@ When peers have information of the others, they are ready to connect. We provide
 Both \texttt{ClientSocketHandler} and \texttt{ServerSocket Handler} are constituted by a sub module named \texttt{DataTransmitManager}, which periodically observes input and output streams of parent socket (Can be either server or client socket) to verify checksum, check data consistency, send/receive data from the socket. Inheriting the \texttt{TransmitManager} abstract class, developer can instantiate their own version of \texttt{DataTransmitManager} to customize the data consistency checker or improve security. 
 
 \subsection{Job Definition and Data Parser}
-\subsubsection{Job definition} \label{job-description}
-We give the job definition to developers. To avoid any misconfiguration from remote execution, we provide a common Job definition interface\\
+\subsubsection{Job Definition} \label{job-description}
+
+To avoid any malfunctions and misconfiguration at remote execution, a conventional Job interface is defined like the code snipe below (\ref{code:job_def}) \\
 
 \noindent \shadowbox{%
 \begin{minipage}{239pt}
 	\captionof{lstlisting}{Job Definition}
-	
+	\label{code:job_def}
 	\begin{lstlisting}
 	public class Job {
 		public Object exec(Object partialObject) {
@@ -202,11 +205,70 @@ We give the job definition to developers. To avoid any misconfiguration from rem
 	
 \end{minipage}}	
 
-Since Dalvik VM didn't support loading class the way Java VM does. Instead it will load Dalvik execution ("dex") files from an alternative locations such as internal storage or network. We provide \texttt{DexCreator} tool, the windows application supports compiling the \texttt{Job} java file into the dex job package (a jar file). Dex package and splitted resources in binary format will be added into one \texttt{JobData} object by \texttt{JobDispatcher}, signed with checksum for consistency and dispatched to the other peers.
+Where the body of \texttt{exec()} will contain concrete implementation of the Job.
+
+Since Dalvik VM didn't support loading class the way Java VM does. Instead it will load Dalvik execution ("dex") files from an alternative locations such as internal storage or network. We provide \texttt{DexCreator} tool, the windows commandline application supports compiling the \texttt{Job} java file into the dex job package (a jar file). Dex package and sliced resources in binary format will be added into one \texttt{JobData} object by \texttt{JobDispatcher}, signed with checksum for consistency and dispatched to the other peers.
 
 When client peer receives an object of \texttt{JobData} sent from server, it will firstly check checksum to confirm the consistency, then deserialize it into \texttt{Job} and resources and execute the job with that data.
 
 \subsubsection{Data Parser}
+
+\texttt{DataParser} is a loose coupling interface of the Job component facilitating adaptation with data heterogeneity. It helps determining mechanisms for: (1) serialization/deserialization object into binary format which is compatible for TCP transmission, (2) task partitioning, and (3) placeholder initialization and concatenation. To make the data type comprehensive to system in terms of reading, parsing or memory allocating, developer needs to supply instructions by instantiating an implementation of Data Parser for that type. The code snipe \ref{data_parser} shows the main functionality of the \texttt{DataParser} interface that user needs to comply. Under the first released version, we also support 3 basic Data Parsers for Image, Text and GPS.\\
+
+\noindent \shadowbox{%
+\begin{minipage}{245pt}
+  \captionof{lstlisting}{\texttt{DataParser} interface}
+  \label{data_parser}
+  \begin{lstlisting}
+public interface DataParser {
+  ...
+  
+  public Class getDataClass();
+
+  public byte[] parseObjectToBytes(Object objData);
+
+  public Object parseBytesToObject(byte[] byteData);
+
+  public Object getSinglePart(Object objData, 
+                  int numOfParts, int index);
+    
+  public Object createPlaceholder(String jsonMetadata);
+
+  public Object copyPartToPlaceholder(
+                  Object placeholder, byte[] partObj, 
+                  int index);
+
+  public void destroy(Object data);
+  
+}
+  \end{lstlisting}	
+\end{minipage}}	
+
+To clarify usage of \texttt{DataParser}, we will go through several important abstract methods.
+
+\begin{itemize}
+	\item \texttt{getDataClass()} return data type.
+	\item \texttt{parseObjectToBytes(object)} instructs system to serialize an object to binary array. In Android, not every object can be serialized, for instance Bitmap.  
+	\item \texttt{parseBytesToObject(byte[])} deserialize a binary array back to object.
+	\item \texttt{getSinglePart()} return a data slide bases on number of parts (\texttt{numOfParts}) and its \texttt{index}. Code snipe \ref{code:get_single_part} shows an example getting one slice from a bitmap by \texttt{index}. When app runs, \texttt{JobDispatcher} will use this method to partition the task into slices.
+	\item \texttt{copyPartToPlaceholder()} Once partial result is retrieved from a distant peer, this function will instruct application to merge it to the placeholder.
+\end{itemize}
+
+\noindent \shadowbox{%
+\begin{minipage}{245pt}
+  \captionof{lstlisting}{Example of \texttt{getSinglePart()} for Bitmap}
+  \label{code:get_single_part}
+  \begin{lstlisting}
+@Override
+public Object getSinglePart(data, numOfParts, index) {
+  Bitmap bmpData = (Bitmap) data;
+  int pieceWidth = bmpData.getWidth() / numOfParts;
+  return Bitmap.createBitmap(bmpData, 
+                  (pieceWidth * index), 0, pieceWidth, 
+                  bmpData.getHeight());
+}
+  \end{lstlisting}	
+\end{minipage}}	
 
 \subsection{Job Scheduling and Decision Maker} \label{scheduling}
 
@@ -282,7 +344,18 @@ In a peer-to-peer network comprising of $n$ devices, where $i$-device has respon
 
 $$M_{i} = M\frac{RL_{i}}{\sum_{j = \overline{1,n}}{RL_{j}}}$$
 
-Where $M$ is total size of data in bytes.
+Where $M$ is total size of data in bytes. This below algorithm \ref{alg:select_peer} will represent the procedure that \texttt{DecisionMaker} uses to select and reject peers, as well as assign the appropriate amount of job to them. 
+
+\begin{algorithm}
+\caption{CH election algorithm}
+\label{alg:select_peer}
+\begin{algorithmic}[1]
+\Procedure{CH\textendash Election}{}
+\State Broadcast HELLO message to its neighbor
+\State MPRSet($i$) = $k$
+\EndProcedure
+\end{algorithmic}
+\end{algorithm}
 
 \section{Programming model}
 
