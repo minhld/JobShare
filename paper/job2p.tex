@@ -200,6 +200,7 @@ Both \texttt{ClientSocketHandler} and \texttt{ServerSocket Handler} are constitu
 \subsection{Programming Model of Job2P} 
 \subsubsection{Job Definition}
 To avoid any malfunctions and misconfiguration at remote execution, a conventional Job interface is defined like the code snipe below (\ref{code:job_def}) \\
+
 \noindent \shadowbox{%
 \begin{minipage}{239pt}
 	\captionof{lstlisting}{Job Definition}
@@ -233,21 +234,19 @@ public interface DataParser {
   
   public Class getDataClass();
 
-  public byte[] parseObjectToBytes(Object objData);
+  public byte[] parseObjectToBytes(dataObject);
 
-  public Object parseBytesToObject(byte[] byteData);
+  public Object parseBytesToObject(byteArray);
 
-  public Object getSinglePart(Object objData, 
-                  int numOfParts, int firstOffset, 
-                  int lastOffset);
+  public Object getSinglePart(..., numOfParts, 
+										firstOffset, lastOffset);
     
-  public Object createPlaceholder(String jsonMetadata);
+  public Object createPlaceholder(jsonMetadata);
 
-  public Object copyPartToPlaceholder(
-                  Object placeholder, byte[] partObj, 
-                  int index);
+  public Object copyPartToPlaceholder(... 
+									partDataObject, partIndex);
 
-  public void destroy(Object data);
+  public void destroy(dataObject);
   
 }
   \end{lstlisting}	
@@ -282,37 +281,39 @@ A mobile device at any time maintains a certain number of connection with the ot
 
 \noindent \shadowbox{%
 \begin{minipage}{239pt}
-	\captionof{lstlisting}{JSON response from peer}
-	\label{code:jsonResponse}
+\captionof{lstlisting}{JSON response from peer}
+\label{code:jsonResponse}
 	
-	\begin{lstlisting}
-	{
-	  "device" : "LG-Volt",
-      "RL" : 24.83,
-      "availability" : "low",
-      "cpu" : {
-        "usage" : "0.3",
-      	"speed" : "1.3",
-      	"cores" : 4
-      },
-      "memory" : {
-        "usage" : "0.5",
-        "total" : 2
-      },
-      "battery" : {
-        "usage" : 0.85,
-        "total" : 2800
-      }
-	}
-	\end{lstlisting}
+\begin{lstlisting}
+{
+  "device" : "LG-Volt",
+	"RL" : 24.83,
+  "availability" : "low",
+	"network" : "low",
+	"gps" : "on",
+  "cpu" : {
+		"usage" : "0.3",
+    "speed" : "1.3",
+    "cores" : 4
+	},
+  "memory" : {
+		"usage" : "0.5",
+    "total" : 2
+  },
+  "battery" : {
+		"usage" : 0.85,
+    "total" : 2800
+  }
+}
+\end{lstlisting}
 	
 \end{minipage}}	
 
-Where $RL$ is peer's Level of Responsibility (for estimation of $RL$ as well as the other usage parameters, see \ref{ss_jqfp}), \texttt{availability} indicates whether the peer is feasible for handling job, and \texttt{cpu}, \texttt{memory} and \texttt{battery} are essential status information of the resources accordingly at the time of response. 
+Where $RL$ is peer's Level of Responsibility (for estimation of $RL$ as well as the other usage parameters, see \ref{ss_jqfp}), \texttt{availability} indicates whether the peer is feasible for handling job. \texttt{network} gives the network status, which can be either \texttt{high}, \texttt{low} or \texttt{off} (no connections), \texttt{gps} is information of GPS \texttt{on} or \texttt{off}. Finally \texttt{cpu}, \texttt{memory} and \texttt{battery} are statuses of the essential resources at the time of response. 
 
 In any IRS response, parameter \texttt{availability} can be assigned with value of \texttt{low}, \texttt{medium} or \texttt{high}. The \texttt{low} availability will inform the calling peer that it is not available due to temporary resource limitation, therefore eliminate the caller from sending jobs to. Only the peers with \texttt{availability} higher than \texttt{medium} will accept jobs for execution. The decision is given bases on the thresholds of battery usage which are set by default at value higher than 0.8 (or 80\% overall usage) for the \texttt{low}, 0.5 to 0.8 for the \texttt{medium} and lower than 0.5 for the \texttt{high}. User can override those thresholds by updating the \texttt{availability-thresholds} in the configuration file before app initialization. 
 
-In the above example (code snipe \ref{code:jsonResponse}), the battery usage was 0.85 or 15\% remained, so the \texttt{DecisionMaker} on it stated that its \texttt{availability} is \texttt{low}, in other words it is not able to handle any jobs and should be excluded from the dispatched list.\\
+In the above example (code snipe \ref{code:jsonResponse}), the battery usage was 0.85 or 15\% remained, so the \texttt{DecisionMaker} on it stated that its \texttt{availability} is \texttt{low}, in other words it is not able to handle any jobs and should be excluded from the dispatched list.
 
 \begin{algorithm}
 
@@ -323,12 +324,12 @@ In the above example (code snipe \ref{code:jsonResponse}), the battery usage was
 \Function{selectPeers()}{}
 \State Send IRS requests to all peers 
 \State $P_{AV} \leftarrow HashMap(DeviceId, P)$
-\ForAll{$R_{IRS}$ in \{Incoming IRS responses\}}
-\If {$R_{IRS}.availability = low$} 
+\ForAll{$Resp_{IRS}$ in \{Incoming IRS Responses\}}
+\If {$Resp_{IRS}[availability] = low$} 
    \State continue;
 \Else
-  \State $P_{Info} \leftarrow P2pDevice_{DeviceId} + R_{IRS}.RL$
-  \State $P_{AV}(DeviceId) \leftarrow P_{Info}$
+  \State $P_{Info} \leftarrow P2pDevice[DeviceId] + Resp_{IRS}[RL]$
+  \State $P_{AV}[DeviceId] \leftarrow P_{Info}$
 \EndIf
 \EndFor
 \State \Return $P_{AV}$
@@ -337,6 +338,8 @@ In the above example (code snipe \ref{code:jsonResponse}), the battery usage was
 \end{algorithmic}
 
 \end{algorithm}
+
+The algorithm \ref{alg:select_peers} explains how the caller select the suitable peers from its connection list. Where $P_{AV}$ stands for map of available peers and $P2pDevice$ is the device information list.\\
 
 \subsubsection{Job quantitation for peers}\label{ss_jqfp}
 
@@ -362,7 +365,7 @@ In a peer-to-peer network comprising of $n$ devices, where $i$-device has respon
 
 $$M_{i} = M\frac{RL_{i}}{\sum_{j = \overline{1,n}}{RL_{j}}}$$
 
-Where $M$ is total size of data in bytes. This below algorithm \ref{alg:assign_job} will represent the procedure that \texttt{DecisionMaker} uses to select and reject peers, as well as assign the appropriate amount of job to them. 
+Where $M$ is total size of data in bytes. This below algorithm \ref{alg:assign_job} will represent the procedure that \texttt{DecisionMaker} judge the peer capability to assign the appropriate job. Where $M_{i}$ is quantity of job in binary length, $firstOffset$ and $lastOffset$ indicate the location of the data trunk in the whole.
 
 \begin{algorithm}
 \caption{Assign Job Algorithm}
@@ -372,23 +375,29 @@ Where $M$ is total size of data in bytes. This below algorithm \ref{alg:assign_j
 \Function{assignJobs()}{}
 \State $M \leftarrow {getDataSize()}$
 \State $RL_{Total} \leftarrow 0$ 
-\For {P in \{$P_{AV}$\}}
-  \State $RL_{Total} \leftarrow RL_{Total} + P._{RL}$
+\For {$P$ in \{$P_{AV}$\}}
+  \State $RL_{Total} \leftarrow RL_{Total} + P[RL]$
 \EndFor
 \\
 \State $firstOffset, lastOffset \leftarrow 0$
 \State $jobData \leftarrow Null$
-\State $job \leftarrow {readJobFromStorage()}$
-\State $M_{c} \leftarrow 0$
+\State $job \leftarrow {readJobFile()}$
+\State $M_{C} \leftarrow 0$
 \\
-\For {$i = 1$ to $P_{AV}.length$}
+\For {$i = 1$ to $P_{AV}.length$}\\
   \State $M_{i} \leftarrow M\frac{RL_{i}}{RL_{Total}}$\\
-  \State $firstOffset \leftarrow M_{c} $
-  \State $lastOffset \leftarrow M_{c} + M_{i}$
+  \State $firstOffset \leftarrow M_{C} $
+  \State $lastOffset \leftarrow M_{C} + M_{i}$
   \State $jobData \leftarrow DataParser.getSinglePart($
-  \State                    $firstOffset, lastOffset)$
+  \State 
+		\hspace{\algorithmicindent}
+		\hspace{\algorithmicindent}
+		\hspace{\algorithmicindent}
+		\hspace{\algorithmicindent}
+		\hspace{\algorithmicindent}
+						$firstOffset, lastOffset)$
   \State $dispatchJob(\{job, jobData\})$\\
-  \State $M_{c} \leftarrow lastOffset$
+  \State $M_{C} \leftarrow lastOffset$
   
 \EndFor
 
@@ -462,11 +471,11 @@ Secondly, developer needs to declare \texttt{DataParser} to determine data-type 
   \label{code:get_single_part}
   \begin{lstlisting}
 @Override
-public Object getSinglePart(data, numOfParts, index) {
+public Object getSinglePart(data, partNum, idx){
   Bitmap bmpData = (Bitmap) data;
-  int pieceWidth = bmpData.getWidth() / numOfParts;
+  int pWidth = bmpData.getWidth() / partNum;
   return Bitmap.createBitmap(bmpData, 
-                  (pieceWidth * index), 0, pieceWidth, 
+                  (pWidth * idx), 0, pWidth, 
                   bmpData.getHeight());
 }
   \end{lstlisting}	
@@ -477,7 +486,7 @@ public Object getSinglePart(data, numOfParts, index) {
 When network is formed and connections are held from some of the peers, \texttt{dispatchJob()} will be call to locate the resources and job which predefined in local storage, it then invokes \texttt{DecisionMaker} (sub section \ref{scheduling}) for job splitting and binary serialization. Finally jobs will be dispatched over the socket\\
 
 \noindent \shadowbox{%
-\begin{minipage}{239pt}
+\begin{minipage}{245pt}
 	\captionof{lstlisting}{Declare DataParser and JobHandler}
 
 	\begin{lstlisting}
@@ -489,7 +498,7 @@ When network is formed and connections are held from some of the peers, \texttt{
 	jobHandler.setSocketListener(
 		new JobHandler.JobSocketListener() {
 			@Override
-			public void socketUpdated(... isConnected) {
+			public void socketUpdated(... isConnected){
 					// when socket is updated
 			}
 	});

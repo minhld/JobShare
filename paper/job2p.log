@@ -1,12 +1,10 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015) (preloaded format=pdflatex 2016.1.1)  1 JAN 2016 13:39
+This is pdfTeX, Version 3.14159265-2.6-1.40.16 (MiKTeX 2.9) (preloaded format=pdflatex 2015.12.15)  5 JAN 2016 13:17
 entering extended mode
- restricted \write18 enabled.
- %&-line parsing enabled.
 **job2p.tex
-(./job2p.tex
-LaTeX2e <2015/01/01>
-Babel <3.9l> and hyphenation patterns for 21 languages loaded.
-(./IEEEtran.cls
+(job2p.tex
+LaTeX2e <2015/01/01> patch level 2
+Babel <3.9m> and hyphenation patterns for 69 languages loaded.
+(IEEEtran.cls
 Document Class: IEEEtran 2015/08/26 V1.8b by Michael Shell
 -- See the "IEEEtran_HOWTO" manual for usage information.
 -- http://www.michaelshell.org/tex/ieeetran/
@@ -18,8 +16,7 @@ Document Class: IEEEtran 2015/08/26 V1.8b by Michael Shell
 \@IEEEtrantmpcountC=\count81
 \@IEEEtrantmptoksA=\toks14
 LaTeX Font Info:    Try loading font information for OT1+ptm on input line 503.
-
-(/usr/local/texlive/2015basic/texmf-dist/tex/latex/psnfss/ot1ptm.fd
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\psnfss\ot1ptm.fd"
 File: ot1ptm.fd 2001/06/04 font definitions for OT1/ptm.
 )
 -- Using 8.5in x 11in (letter) paper.
@@ -33,52 +30,42 @@ LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <5> not available
 (Font)              Font shape `OT1/ptm/b/n' tried instead on input line 1090.
 LaTeX Font Info:    Font shape `OT1/ptm/bx/it' in size <5> not available
 (Font)              Font shape `OT1/ptm/b/it' tried instead on input line 1090.
-
 LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <7> not available
 (Font)              Font shape `OT1/ptm/b/n' tried instead on input line 1090.
 LaTeX Font Info:    Font shape `OT1/ptm/bx/it' in size <7> not available
 (Font)              Font shape `OT1/ptm/b/it' tried instead on input line 1090.
-
 LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <8> not available
 (Font)              Font shape `OT1/ptm/b/n' tried instead on input line 1090.
 LaTeX Font Info:    Font shape `OT1/ptm/bx/it' in size <8> not available
 (Font)              Font shape `OT1/ptm/b/it' tried instead on input line 1090.
-
 LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <9> not available
 (Font)              Font shape `OT1/ptm/b/n' tried instead on input line 1090.
 LaTeX Font Info:    Font shape `OT1/ptm/bx/it' in size <9> not available
 (Font)              Font shape `OT1/ptm/b/it' tried instead on input line 1090.
-
 LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <10> not available
 (Font)              Font shape `OT1/ptm/b/n' tried instead on input line 1090.
 LaTeX Font Info:    Font shape `OT1/ptm/bx/it' in size <10> not available
 (Font)              Font shape `OT1/ptm/b/it' tried instead on input line 1090.
-
 LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <11> not available
 (Font)              Font shape `OT1/ptm/b/n' tried instead on input line 1090.
 LaTeX Font Info:    Font shape `OT1/ptm/bx/it' in size <11> not available
 (Font)              Font shape `OT1/ptm/b/it' tried instead on input line 1090.
-
 LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <12> not available
 (Font)              Font shape `OT1/ptm/b/n' tried instead on input line 1090.
 LaTeX Font Info:    Font shape `OT1/ptm/bx/it' in size <12> not available
 (Font)              Font shape `OT1/ptm/b/it' tried instead on input line 1090.
-
 LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <17> not available
 (Font)              Font shape `OT1/ptm/b/n' tried instead on input line 1090.
 LaTeX Font Info:    Font shape `OT1/ptm/bx/it' in size <17> not available
 (Font)              Font shape `OT1/ptm/b/it' tried instead on input line 1090.
-
 LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <20> not available
 (Font)              Font shape `OT1/ptm/b/n' tried instead on input line 1090.
 LaTeX Font Info:    Font shape `OT1/ptm/bx/it' in size <20> not available
 (Font)              Font shape `OT1/ptm/b/it' tried instead on input line 1090.
-
 LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <24> not available
 (Font)              Font shape `OT1/ptm/b/n' tried instead on input line 1090.
 LaTeX Font Info:    Font shape `OT1/ptm/bx/it' in size <24> not available
 (Font)              Font shape `OT1/ptm/b/it' tried instead on input line 1090.
-
 \IEEEquantizedlength=\dimen109
 \IEEEquantizedlengthdiff=\dimen110
 \IEEEquantizedtextheightdiff=\dimen111
@@ -113,31 +100,31 @@ LaTeX Font Info:    Font shape `OT1/ptm/bx/it' in size <24> not available
 \IEEEPARstartletwidth=\dimen125
 \c@IEEEbiography=\count93
 \@IEEEtranrubishbin=\box27
-) (/usr/local/texlive/2015basic/texmf-dist/tex/latex/graphics/graphicx.sty
+) ("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\graphics\graphicx.sty"
 Package: graphicx 2014/10/28 v1.0g Enhanced LaTeX Graphics (DPC,SPQR)
 
-(/usr/local/texlive/2015basic/texmf-dist/tex/latex/graphics/keyval.sty
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\graphics\keyval.sty"
 Package: keyval 2014/10/28 v1.15 key=value parser (DPC)
 \KV@toks@=\toks15
 )
-(/usr/local/texlive/2015basic/texmf-dist/tex/latex/graphics/graphics.sty
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\graphics\graphics.sty"
 Package: graphics 2014/10/28 v1.0p Standard LaTeX Graphics (DPC,SPQR)
 
-(/usr/local/texlive/2015basic/texmf-dist/tex/latex/graphics/trig.sty
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\graphics\trig.sty"
 Package: trig 1999/03/16 v1.09 sin cos tan (DPC)
 )
-(/usr/local/texlive/2015basic/texmf-dist/tex/latex/latexconfig/graphics.cfg
-File: graphics.cfg 2010/04/23 v1.9 graphics configuration of TeX Live
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\00miktex\graphics.cfg"
+File: graphics.cfg 2007/01/18 v1.5 graphics configuration of teTeX/TeXLive
 )
 Package graphics Info: Driver file: pdftex.def on input line 94.
 
-(/usr/local/texlive/2015basic/texmf-dist/tex/latex/pdftex-def/pdftex.def
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\pdftex-def\pdftex.def"
 File: pdftex.def 2011/05/27 v0.06d Graphics/color for pdfTeX
 
-(/usr/local/texlive/2015basic/texmf-dist/tex/generic/oberdiek/infwarerr.sty
+("C:\Program Files (x86)\MiKTeX 2.9\tex\generic\oberdiek\infwarerr.sty"
 Package: infwarerr 2010/04/08 v1.3 Providing info/warning/error messages (HO)
 )
-(/usr/local/texlive/2015basic/texmf-dist/tex/generic/oberdiek/ltxcmds.sty
+("C:\Program Files (x86)\MiKTeX 2.9\tex\generic\oberdiek\ltxcmds.sty"
 Package: ltxcmds 2011/11/09 v1.22 LaTeX kernel commands for general use (HO)
 )
 \Gread@gobject=\count94
@@ -145,7 +132,7 @@ Package: ltxcmds 2011/11/09 v1.22 LaTeX kernel commands for general use (HO)
 \Gin@req@height=\dimen126
 \Gin@req@width=\dimen127
 )
-(/usr/local/texlive/2015basic/texmf-dist/tex/latex/listings/listings.sty
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\listings\listings.sty"
 \lst@mode=\count95
 \lst@gtempboxa=\box28
 \lst@token=\toks16
@@ -159,25 +146,31 @@ Package: ltxcmds 2011/11/09 v1.22 LaTeX kernel commands for general use (HO)
 \lst@lineno=\count100
 \lst@maxwidth=\dimen131
 
-(/usr/local/texlive/2015basic/texmf-dist/tex/latex/listings/lstmisc.sty
-File: lstmisc.sty 2014/09/06 1.5e (Carsten Heinz)
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\listings\lstmisc.sty"
+File: lstmisc.sty 2015/06/04 1.6 (Carsten Heinz)
 \c@lstnumber=\count101
 \lst@skipnumbers=\count102
 \lst@framebox=\box29
 )
-(/usr/local/texlive/2015basic/texmf-dist/tex/latex/listings/listings.cfg
-File: listings.cfg 2014/09/06 1.5e listings configuration
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\listings\listings.cfg"
+File: listings.cfg 2015/06/04 1.6 listings configuration
 ))
-Package: listings 2014/09/06 1.5e (Carsten Heinz)
+Package: listings 2015/06/04 1.6 (Carsten Heinz)
 
-(/usr/local/texlive/2015basic/texmf-dist/tex/generic/babel/babel.sty
-Package: babel 2014/09/25 3.9l The Babel package
+("C:\Program Files (x86)\MiKTeX 2.9\tex\generic\babel\babel.sty"
+Package: babel 2015/08/03 3.9m The Babel package
 
-(/usr/local/texlive/2015basic/texmf-dist/tex/generic/babel-english/english.ldf
+*************************************
+* Local config file bblopts.cfg used
+*
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\00miktex\bblopts.cfg"
+File: bblopts.cfg 2006/07/31 v1.0 MiKTeX 'babel' configuration
+)
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\babel-english\english.ldf"
 Language: english 2012/08/20 v3.3p English support from the babel system
 
-(/usr/local/texlive/2015basic/texmf-dist/tex/generic/babel/babel.def
-File: babel.def 2014/09/25 3.9l Babel common definitions
+("C:\Program Files (x86)\MiKTeX 2.9\tex\generic\babel\babel.def"
+File: babel.def 2015/08/03 3.9m Babel common definitions
 \babel@savecnt=\count103
 \U@D=\dimen132
 )
@@ -185,7 +178,7 @@ File: babel.def 2014/09/25 3.9l Babel common definitions
 \l@australian = a dialect from \language\l@british 
 \l@newzealand = a dialect from \language\l@british 
 ))
-(/usr/local/texlive/2015basic/texmf-dist/tex/latex/float/float.sty
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\float\float.sty"
 Package: float 2001/11/08 v1.3d Float enhancements (AL)
 \c@float@type=\count104
 \float@exts=\toks17
@@ -193,19 +186,19 @@ Package: float 2001/11/08 v1.3d Float enhancements (AL)
 \@float@everytoks=\toks18
 \@floatcapt=\box31
 )
-(/usr/local/texlive/2015basic/texmf-dist/tex/latex/graphics/color.sty
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\graphics\color.sty"
 Package: color 2014/10/28 v1.1a Standard LaTeX Color (DPC)
 
-(/usr/local/texlive/2015basic/texmf-dist/tex/latex/latexconfig/color.cfg
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\00miktex\color.cfg"
 File: color.cfg 2007/01/18 v1.5 color configuration of teTeX/TeXLive
 )
 Package color Info: Driver file: pdftex.def on input line 142.
 )
-(/usr/local/texlive/2015basic/texmf-dist/tex/latex/caption/caption.sty
-Package: caption 2013/05/02 v3.3-89 Customizing captions (AR)
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\caption\caption.sty"
+Package: caption 2015/09/17 v3.3-111 Customizing captions (AR)
 
-(/usr/local/texlive/2015basic/texmf-dist/tex/latex/caption/caption3.sty
-Package: caption3 2013/05/02 v1.6-88 caption3 kernel (AR)
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\caption\caption3.sty"
+Package: caption3 2015/09/17 v1.7-111 caption3 kernel (AR)
 Package caption3 Info: TeX engine: e-TeX on input line 57.
 \captionmargin=\dimen133
 \captionmargin@=\dimen134
@@ -222,41 +215,37 @@ Package caption Warning: Unsupported document class (or package) detected,
 (caption)                usage of the caption package is not recommended.
 See the caption package documentation for explanation.
 
-Package caption Info: \@makecaption = \long macro:#1#2->\ifx \@captype \@IEEEta
-blestring \footnotesize \bgroup \par \centering \@IEEEtabletopskipstrut {\norma
-lfont \footnotesize #1}\\{\normalfont \footnotesize \scshape #2}\par \addvspace
- {0.5\baselineskip }\egroup \@IEEEtablecaptionsepspace \else \@IEEEfigurecaptio
-nsepspace \setbox \@tempboxa \hbox {\normalfont \footnotesize {#1.}\nobreakspac
-e \nobreakspace #2}\ifdim \wd \@tempboxa >\hsize \setbox \@tempboxa \hbox {\nor
-malfont \footnotesize {#1.}\nobreakspace \nobreakspace }\parbox [t]{\hsize }{\n
-ormalfont \footnotesize \noindent \unhbox \@tempboxa #2}\else \ifCLASSOPTIONcon
-ference \hbox to\hsize {\normalfont \footnotesize \hfil \box \@tempboxa \hfil }
-\else \hbox to\hsize {\normalfont \footnotesize \box \@tempboxa \hfil }\fi \fi 
-\fi .
+Package caption Info: \@makecaption = \long macro:#1#2->\ifx \@captype \@IEEEtablestring \footnotesize \bgroup \par \cen
+tering \@IEEEtabletopskipstrut {\normalfont \footnotesize #1}\\{\normalfont \footnotesize \scshape #2}\par \addvspace {0
+.5\baselineskip }\egroup \@IEEEtablecaptionsepspace \else \@IEEEfigurecaptionsepspace \setbox \@tempboxa \hbox {\normalf
+ont \footnotesize {#1.}\nobreakspace \nobreakspace #2}\ifdim \wd \@tempboxa >\hsize \setbox \@tempboxa \hbox {\normalfon
+t \footnotesize {#1.}\nobreakspace \nobreakspace }\parbox [t]{\hsize }{\normalfont \footnotesize \noindent \unhbox \@tem
+pboxa #2}\else \ifCLASSOPTIONconference \hbox to\hsize {\normalfont \footnotesize \hfil \box \@tempboxa \hfil }\else \hb
+ox to\hsize {\normalfont \footnotesize \box \@tempboxa \hfil }\fi \fi \fi .
 \c@ContinuedFloat=\count105
 Package caption Info: float package is loaded.
 Package caption Info: listings package is loaded.
-) (/usr/local/texlive/2015basic/texmf-dist/tex/latex/tools/indentfirst.sty
+) ("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\tools\indentfirst.sty"
 Package: indentfirst 1995/11/23 v1.03 Indent first paragraph (DPC)
 )
-(/usr/local/texlive/2015basic/texmf-dist/tex/latex/amsmath/amsmath.sty
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\amsmath\amsmath.sty"
 Package: amsmath 2013/01/14 v2.14 AMS math features
 \@mathmargin=\skip44
 
 For additional information on amsmath, use the `?' option.
-(/usr/local/texlive/2015basic/texmf-dist/tex/latex/amsmath/amstext.sty
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\amsmath\amstext.sty"
 Package: amstext 2000/06/29 v2.01
 
-(/usr/local/texlive/2015basic/texmf-dist/tex/latex/amsmath/amsgen.sty
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\amsmath\amsgen.sty"
 File: amsgen.sty 1999/11/30 v2.0
 \@emptytoks=\toks19
 \ex@=\dimen140
 ))
-(/usr/local/texlive/2015basic/texmf-dist/tex/latex/amsmath/amsbsy.sty
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\amsmath\amsbsy.sty"
 Package: amsbsy 1999/11/29 v1.2d
 \pmbraise@=\dimen141
 )
-(/usr/local/texlive/2015basic/texmf-dist/tex/latex/amsmath/amsopn.sty
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\amsmath\amsopn.sty"
 Package: amsopn 1999/12/14 v2.01 operator names
 )
 \inf@bad=\count106
@@ -297,7 +286,7 @@ LaTeX Font Info:    Redeclaring font encoding OMS on input line 567.
 LaTeX Info: Redefining \[ on input line 2665.
 LaTeX Info: Redefining \] on input line 2666.
 )
-(/usr/local/texlive/2015basic/texmf-dist/tex/latex/fancybox/fancybox.sty
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\fancybox\fancybox.sty"
 Package: fancybox 2010/05/15 1.4
 
 Style option: `fancybox' v1.4 <2010/05/15> (tvz)
@@ -310,1321 +299,212 @@ Style option: `fancybox' v1.4 <2010/05/15> (tvz)
 \EndVerbatimTokens=\toks27
 \Verbatim@Outfile=\write3
 \Verbatim@Infile=\read1
-) (/usr/local/texlive/2015basic/texmf-dist/tex/latex/listings/lstlang1.sty
-File: lstlang1.sty 2014/09/06 1.5e listings language file
-)
-(./job2p.aux)
-\openout1 = `job2p.aux'.
+) ("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\algorithms\algorithm.sty"
+Package: algorithm 2009/08/24 v0.1 Document Style `algorithm' - floating environment
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 85.
-LaTeX Font Info:    ... okay on input line 85.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 85.
-LaTeX Font Info:    ... okay on input line 85.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 85.
-LaTeX Font Info:    ... okay on input line 85.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 85.
-LaTeX Font Info:    ... okay on input line 85.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 85.
-LaTeX Font Info:    ... okay on input line 85.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 85.
-LaTeX Font Info:    ... okay on input line 85.
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\base\ifthen.sty"
+Package: ifthen 2014/09/29 v1.1c Standard LaTeX ifthen package (DPC)
+)
+\@float@every@algorithm=\toks28
+\c@algorithm=\count118
+)
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\algorithmicx\algpseudocode.sty"
+Package: algpseudocode 
+
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\algorithmicx\algorithmicx.sty"
+Package: algorithmicx 2005/04/27 v1.2 Algorithmicx
+
+Document Style algorithmicx 1.2 - a greatly improved `algorithmic' style
+\c@ALG@line=\count119
+\c@ALG@rem=\count120
+\c@ALG@nested=\count121
+\ALG@tlm=\skip47
+\ALG@thistlm=\skip48
+\c@ALG@Lnr=\count122
+\c@ALG@blocknr=\count123
+\c@ALG@storecount=\count124
+\c@ALG@tmpcounter=\count125
+\ALG@tmplength=\skip49
+)
+Document Style - pseudocode environments for use with the `algorithmicx' style
+) ("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\listings\lstlang1.sty"
+File: lstlang1.sty 2015/06/04 1.6 listings language file
+) (job2p.aux)
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 87.
+LaTeX Font Info:    ... okay on input line 87.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 87.
+LaTeX Font Info:    ... okay on input line 87.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 87.
+LaTeX Font Info:    ... okay on input line 87.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 87.
+LaTeX Font Info:    ... okay on input line 87.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 87.
+LaTeX Font Info:    ... okay on input line 87.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 87.
+LaTeX Font Info:    ... okay on input line 87.
 
 -- Lines per column: 56 (exact).
-(/usr/local/texlive/2015basic/texmf-dist/tex/context/base/supp-pdf.mkii
+("C:\Program Files (x86)\MiKTeX 2.9\tex\context\base\supp-pdf.mkii"
 [Loading MPS to PDF converter (version 2006.09.02).]
-\scratchcounter=\count118
+\scratchcounter=\count126
 \scratchdimen=\dimen150
 \scratchbox=\box36
-\nofMPsegments=\count119
-\nofMParguments=\count120
-\everyMPshowfont=\toks28
-\MPscratchCnt=\count121
+\nofMPsegments=\count127
+\nofMParguments=\count128
+\everyMPshowfont=\toks29
+\MPscratchCnt=\count129
 \MPscratchDim=\dimen151
-\MPnumerator=\count122
-\makeMPintoPDFobject=\count123
-\everyMPtoPDFconversion=\toks29
-) (/usr/local/texlive/2015basic/texmf-dist/tex/generic/oberdiek/pdftexcmds.sty
-Package: pdftexcmds 2011/11/29 v0.20 Utility functions of pdfTeX for LuaTeX (HO
+\MPnumerator=\count130
+\makeMPintoPDFobject=\count131
+\everyMPtoPDFconversion=\toks30
 )
-
-(/usr/local/texlive/2015basic/texmf-dist/tex/generic/oberdiek/ifluatex.sty
-Package: ifluatex 2010/03/01 v1.3 Provides the ifluatex switch (HO)
-Package ifluatex Info: LuaTeX not detected.
-)
-(/usr/local/texlive/2015basic/texmf-dist/tex/generic/oberdiek/ifpdf.sty
-Package: ifpdf 2011/01/30 v2.3 Provides the ifpdf switch (HO)
-Package ifpdf Info: pdfTeX in PDF mode is detected.
-)
-Package pdftexcmds Info: LuaTeX not detected.
-Package pdftexcmds Info: \pdf@primitive is available.
-Package pdftexcmds Info: \pdf@ifprimitive is available.
-Package pdftexcmds Info: \pdfdraftmode found.
-)
-(/usr/local/texlive/2015basic/texmf-dist/tex/latex/oberdiek/epstopdf-base.sty
-Package: epstopdf-base 2010/02/09 v2.5 Base part for package epstopdf
-
-(/usr/local/texlive/2015basic/texmf-dist/tex/latex/oberdiek/grfext.sty
-Package: grfext 2010/08/19 v1.1 Manage graphics extensions (HO)
-
-(/usr/local/texlive/2015basic/texmf-dist/tex/generic/oberdiek/kvdefinekeys.sty
-Package: kvdefinekeys 2011/04/07 v1.3 Define keys (HO)
-)) (/usr/local/texlive/2015basic/texmf-dist/tex/latex/oberdiek/kvoptions.sty
-Package: kvoptions 2011/06/30 v3.11 Key value format for package options (HO)
-
-(/usr/local/texlive/2015basic/texmf-dist/tex/generic/oberdiek/kvsetkeys.sty
-Package: kvsetkeys 2012/04/25 v1.16 Key value parser (HO)
-
-(/usr/local/texlive/2015basic/texmf-dist/tex/generic/oberdiek/etexcmds.sty
-Package: etexcmds 2011/02/16 v1.5 Avoid name clashes with e-TeX commands (HO)
-Package etexcmds Info: Could not find \expanded.
-(etexcmds)             That can mean that you are not using pdfTeX 1.50 or
-(etexcmds)             that some package has redefined \expanded.
-(etexcmds)             In the latter case, load this package earlier.
-)))
-Package grfext Info: Graphics extension search list:
-(grfext)             [.png,.pdf,.jpg,.mps,.jpeg,.jbig2,.jb2,.PNG,.PDF,.JPG,.JPE
-G,.JBIG2,.JB2,.eps]
-(grfext)             \AppendGraphicsExtensions on input line 452.
-
-(/usr/local/texlive/2015basic/texmf-dist/tex/latex/latexconfig/epstopdf-sys.cfg
-File: epstopdf-sys.cfg 2010/07/13 v1.3 Configuration of (r)epstopdf for TeX Liv
-e
-))
-\c@lstlisting=\count124
+\c@lstlisting=\count132
 Package caption Info: Begin \AtBeginDocument code.
 Package caption Info: End \AtBeginDocument code.
- [1{/usr/local/texlive/2015basic/texmf-var/fonts/map/pdftex/updmap/pdftex.map}
+ [1{C:/Users/ASSL-GREEN/AppData/Local/MiKTeX/2.9/pdftex/config/pdftex.map}
 
 
-] <data/jobShareArch.png, id=9, 338.01282pt x 439.6425pt>
+]
+<data/jobShareArch.png, id=8, 338.01282pt x 439.6425pt>
 File: data/jobShareArch.png Graphic file (type png)
-
-<use data/jobShareArch.png>
-Package pdftex.def Info: data/jobShareArch.png used on input line 256.
+ <use data/jobShareArch.png>
+Package pdftex.def Info: data/jobShareArch.png used on input line 169.
 (pdftex.def)             Requested size: 201.23969pt x 261.75488pt.
-LaTeX Font Info:    Try loading font information for OT1+pcr on input line 267.
+LaTeX Font Info:    Try loading font information for OT1+pcr on input line 175.
 
-
-(/usr/local/texlive/2015basic/texmf-dist/tex/latex/psnfss/ot1pcr.fd
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\psnfss\ot1pcr.fd"
 File: ot1pcr.fd 2001/06/04 font definitions for OT1/pcr.
 )
-! Font OT1/pcr/m/n/10=pcrr7t at 10.0pt not loadable: Metric (TFM) file not foun
-d.
-<to be read again> 
-                   relax 
-l.267 .... \texttt{Wi-Fi Peer-to-peer Broadcaster}
-                                                   (WPB) module wrapped up t...
-I wasn't able to read the size data for this font,
-so I will ignore the font specification.
-[Wizards can fix TFM files using TFtoPL/PLtoTF.]
-You might try inserting a different font spec;
-e.g., type `I\font<same font id>=<substitute font name>'.
+Underfull \hbox (badness 1721) in paragraph at lines 180--181
+\OT1/ptm/m/n/10 sub mod-ule in-side the \OT1/pcr/m/n/10 WPB \OT1/ptm/m/n/10 to wrap up the com-plex-
+ []
 
-Missing character: There is no W in font nullfont!
-Missing character: There is no i in font nullfont!
-Missing character: There is no - in font nullfont!
-Missing character: There is no F in font nullfont!
-Missing character: There is no i in font nullfont!
-Missing character: There is no P in font nullfont!
-Missing character: There is no e in font nullfont!
-Missing character: There is no e in font nullfont!
-Missing character: There is no r in font nullfont!
-Missing character: There is no - in font nullfont!
-Missing character: There is no t in font nullfont!
-Missing character: There is no o in font nullfont!
-Missing character: There is no - in font nullfont!
-Missing character: There is no p in font nullfont!
-Missing character: There is no e in font nullfont!
-Missing character: There is no e in font nullfont!
-Missing character: There is no r in font nullfont!
-Missing character: There is no B in font nullfont!
-Missing character: There is no r in font nullfont!
-Missing character: There is no o in font nullfont!
-Missing character: There is no a in font nullfont!
-Missing character: There is no d in font nullfont!
-Missing character: There is no c in font nullfont!
-Missing character: There is no a in font nullfont!
-Missing character: There is no s in font nullfont!
-Missing character: There is no t in font nullfont!
-Missing character: There is no e in font nullfont!
-Missing character: There is no r in font nullfont!
-Missing character: There is no d in font nullfont!
-Missing character: There is no i in font nullfont!
-Missing character: There is no s in font nullfont!
-Missing character: There is no c in font nullfont!
-Missing character: There is no o in font nullfont!
-Missing character: There is no v in font nullfont!
-Missing character: There is no e in font nullfont!
-Missing character: There is no r in font nullfont!
-Missing character: There is no P in font nullfont!
-Missing character: There is no e in font nullfont!
-Missing character: There is no e in font nullfont!
-Missing character: There is no r in font nullfont!
-Missing character: There is no s in font nullfont!
-Missing character: There is no ( in font nullfont!
-Missing character: There is no ) in font nullfont!
-<data/discoverPeers.png, id=10, 848.4197pt x 462.97969pt>
+<data/discoverPeers.png, id=9, 848.4197pt x 462.97969pt>
 File: data/discoverPeers.png Graphic file (type png)
-
-<use data/discoverPeers.png>
-Package pdftex.def Info: data/discoverPeers.png used on input line 274.
+ <use data/discoverPeers.png>
+Package pdftex.def Info: data/discoverPeers.png used on input line 187.
 (pdftex.def)             Requested size: 258.0pt x 140.78825pt.
-Missing character: There is no c in font nullfont!
-Missing character: There is no o in font nullfont!
-Missing character: There is no n in font nullfont!
-Missing character: There is no n in font nullfont!
-Missing character: There is no e in font nullfont!
-Missing character: There is no c in font nullfont!
-Missing character: There is no t in font nullfont!
-Missing character: There is no T in font nullfont!
-Missing character: There is no o in font nullfont!
-Missing character: There is no A in font nullfont!
-Missing character: There is no D in font nullfont!
-Missing character: There is no e in font nullfont!
-Missing character: There is no v in font nullfont!
-Missing character: There is no i in font nullfont!
-Missing character: There is no c in font nullfont!
-Missing character: There is no e in font nullfont!
-Missing character: There is no ( in font nullfont!
-Missing character: There is no ) in font nullfont!
-Missing character: There is no W in font nullfont!
-Missing character: There is no i in font nullfont!
-Missing character: There is no f in font nullfont!
-Missing character: There is no i in font nullfont!
-Missing character: There is no P in font nullfont!
-Missing character: There is no 2 in font nullfont!
-Missing character: There is no p in font nullfont!
-Missing character: There is no D in font nullfont!
-Missing character: There is no e in font nullfont!
-Missing character: There is no v in font nullfont!
-Missing character: There is no i in font nullfont!
-Missing character: There is no c in font nullfont!
-Missing character: There is no e in font nullfont!
-Missing character: There is no C in font nullfont!
-Missing character: There is no l in font nullfont!
-Missing character: There is no i in font nullfont!
-Missing character: There is no e in font nullfont!
-Missing character: There is no n in font nullfont!
-Missing character: There is no t in font nullfont!
-Missing character: There is no S in font nullfont!
-Missing character: There is no o in font nullfont!
-Missing character: There is no c in font nullfont!
-Missing character: There is no k in font nullfont!
-Missing character: There is no e in font nullfont!
-Missing character: There is no t in font nullfont!
-Missing character: There is no H in font nullfont!
-Missing character: There is no a in font nullfont!
-Missing character: There is no n in font nullfont!
-Missing character: There is no d in font nullfont!
-Missing character: There is no l in font nullfont!
-Missing character: There is no e in font nullfont!
-Missing character: There is no r in font nullfont!
-Missing character: There is no S in font nullfont!
-Missing character: There is no e in font nullfont!
-Missing character: There is no r in font nullfont!
-Missing character: There is no v in font nullfont!
-Missing character: There is no e in font nullfont!
-Missing character: There is no r in font nullfont!
-Missing character: There is no S in font nullfont!
-Missing character: There is no o in font nullfont!
-Missing character: There is no c in font nullfont!
-Missing character: There is no k in font nullfont!
-Missing character: There is no e in font nullfont!
-Missing character: There is no t in font nullfont!
-Missing character: There is no H in font nullfont!
-Missing character: There is no a in font nullfont!
-Missing character: There is no n in font nullfont!
-Missing character: There is no d in font nullfont!
-Missing character: There is no l in font nullfont!
-Missing character: There is no e in font nullfont!
-Missing character: There is no r in font nullfont!
+ [2 <./data/jobShareArch.png> <./data/discoverPeers.png>]
+Underfull \hbox (badness 1715) in paragraph at lines 194--195
+[]\OT1/ptm/m/n/10 Both \OT1/pcr/m/n/10 ClientSocketHandler \OT1/ptm/m/n/10 and \OT1/pcr/m/n/10 ServerSocket
+ []
 
-! Font OT1/pcr/m/n/7=pcrr7t at 7.0pt not loadable: Metric (TFM) file not found.
-<to be read again> 
-                   relax 
-l.288 	\begin{lstlisting}
-                         
-I wasn't able to read the size data for this font,
-so I will ignore the font specification.
-[Wizards can fix TFM files using TFtoPL/PLtoTF.]
-You might try inserting a different font spec;
-e.g., type `I\font<same font id>=<substitute font name>'.
 
-LaTeX Font Info:    Font shape `OT1/pcr/bx/n' in size <7> not available
-(Font)              Font shape `OT1/pcr/b/n' tried instead on input line 289.
-! Font OT1/pcr/bx/n/7=pcrb7t at 7.0pt not loadable: Metric (TFM) file not found
-.
-<to be read again> 
-                   relax 
-l.289 	public 
-              class Job {
-I wasn't able to read the size data for this font,
-so I will ignore the font specification.
-[Wizards can fix TFM files using TFtoPL/PLtoTF.]
-You might try inserting a different font spec;
-e.g., type `I\font<same font id>=<substitute font name>'.
+Underfull \hbox (badness 7558) in paragraph at lines 194--195
+\OT1/pcr/m/n/10 Handler \OT1/ptm/m/n/10 are con-sti-tuted by a sub mod-ule named
+ []
 
-! Font \OT1/pcr/b/n/7=nullfont not loadable: Metric (TFM) file not found.
-<to be read again> 
-                   \relax 
-l.289 	public 
-              class Job {
-I wasn't able to read the size data for this font,
-so I will ignore the font specification.
-[Wizards can fix TFM files using TFtoPL/PLtoTF.]
-You might try inserting a different font spec;
-e.g., type `I\font<same font id>=<substitute font name>'.
 
-Missing character: There is no p in font nullfont!
-Missing character: There is no u in font nullfont!
-Missing character: There is no b in font nullfont!
-Missing character: There is no l in font nullfont!
-Missing character: There is no i in font nullfont!
-Missing character: There is no c in font nullfont!
-Missing character: There is no c in font nullfont!
-Missing character: There is no l in font nullfont!
-Missing character: There is no a in font nullfont!
-Missing character: There is no s in font nullfont!
-Missing character: There is no s in font nullfont!
-Missing character: There is no J in font nullfont!
-Missing character: There is no o in font nullfont!
-Missing character: There is no b in font nullfont!
-Missing character: There is no { in font nullfont!
-Missing character: There is no p in font nullfont!
-Missing character: There is no u in font nullfont!
-Missing character: There is no b in font nullfont!
-Missing character: There is no l in font nullfont!
-Missing character: There is no i in font nullfont!
-Missing character: There is no c in font nullfont!
-Missing character: There is no O in font nullfont!
-Missing character: There is no b in font nullfont!
-Missing character: There is no j in font nullfont!
-Missing character: There is no e in font nullfont!
-Missing character: There is no c in font nullfont!
-Missing character: There is no t in font nullfont!
-Missing character: There is no e in font nullfont!
-Missing character: There is no x in font nullfont!
-Missing character: There is no e in font nullfont!
-Missing character: There is no c in font nullfont!
-Missing character: There is no ( in font nullfont!
-Missing character: There is no O in font nullfont!
-Missing character: There is no b in font nullfont!
-Missing character: There is no j in font nullfont!
-Missing character: There is no e in font nullfont!
-Missing character: There is no c in font nullfont!
-Missing character: There is no t in font nullfont!
-Missing character: There is no o in font nullfont!
-Missing character: There is no r in font nullfont!
-Missing character: There is no i in font nullfont!
-Missing character: There is no g in font nullfont!
-Missing character: There is no i in font nullfont!
-Missing character: There is no n in font nullfont!
-Missing character: There is no a in font nullfont!
-Missing character: There is no l in font nullfont!
-Missing character: There is no O in font nullfont!
-Missing character: There is no b in font nullfont!
-Missing character: There is no j in font nullfont!
-Missing character: There is no e in font nullfont!
-Missing character: There is no c in font nullfont!
-Missing character: There is no t in font nullfont!
-Missing character: There is no ) in font nullfont!
-Missing character: There is no { in font nullfont!
-Missing character: There is no } in font nullfont!
-Missing character: There is no } in font nullfont!
+Underfull \hbox (badness 6078) in paragraph at lines 202--203
+ \OT1/ptm/m/it/10 1) Job Def-i-ni-tion: [][] \OT1/ptm/m/n/10 To avoid any mal-func-tions and
+ []
 
-Overfull \hbox (10.79999pt too wide) in paragraph at lines 284--297
+
+Underfull \hbox (badness 10000) in paragraph at lines 202--203
+
+ []
+
+LaTeX Font Info:    Font shape `OT1/pcr/bx/n' in size <8> not available
+(Font)              Font shape `OT1/pcr/b/n' tried instead on input line 209.
+
+Underfull \hbox (badness 1867) in paragraph at lines 225--226
+ \OT1/ptm/m/it/10 2) Data Parser: [][] \OT1/ptm/m/n/10 The code snipe 2[] shows the main
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 225--226
+
+ []
+
+
+Overfull \hbox (3.79999pt too wide) in paragraph at lines 227--254
 [] 
  []
 
-Missing character: There is no D in font nullfont!
-Missing character: There is no e in font nullfont!
-Missing character: There is no x in font nullfont!
-Missing character: There is no C in font nullfont!
-Missing character: There is no r in font nullfont!
-Missing character: There is no e in font nullfont!
-Missing character: There is no a in font nullfont!
-Missing character: There is no t in font nullfont!
-Missing character: There is no o in font nullfont!
-Missing character: There is no r in font nullfont!
-Missing character: There is no J in font nullfont!
-Missing character: There is no o in font nullfont!
-Missing character: There is no b in font nullfont!
-Missing character: There is no J in font nullfont!
-Missing character: There is no o in font nullfont!
-Missing character: There is no b in font nullfont!
-Missing character: There is no D in font nullfont!
-Missing character: There is no a in font nullfont!
-Missing character: There is no t in font nullfont!
-Missing character: There is no a in font nullfont!
-Missing character: There is no J in font nullfont!
-Missing character: There is no o in font nullfont!
-Missing character: There is no b in font nullfont!
-Missing character: There is no D in font nullfont!
-Missing character: There is no i in font nullfont!
-Missing character: There is no s in font nullfont!
-Missing character: There is no p in font nullfont!
-Missing character: There is no a in font nullfont!
-Missing character: There is no t in font nullfont!
-Missing character: There is no c in font nullfont!
-Missing character: There is no h in font nullfont!
-Missing character: There is no e in font nullfont!
-Missing character: There is no r in font nullfont!
-[2 <./data/jobShareArch.png> <./data/discoverPeers.png>]
-Missing character: There is no J in font nullfont!
-Missing character: There is no o in font nullfont!
-Missing character: There is no b in font nullfont!
-Missing character: There is no D in font nullfont!
-Missing character: There is no a in font nullfont!
-Missing character: There is no t in font nullfont!
-Missing character: There is no a in font nullfont!
-Missing character: There is no J in font nullfont!
-Missing character: There is no o in font nullfont!
-Missing character: There is no b in font nullfont!
-Missing character: There is no D in font nullfont!
-Missing character: There is no e in font nullfont!
-Missing character: There is no c in font nullfont!
-Missing character: There is no i in font nullfont!
-Missing character: There is no s in font nullfont!
-Missing character: There is no i in font nullfont!
-Missing character: There is no o in font nullfont!
-Missing character: There is no n in font nullfont!
-Missing character: There is no M in font nullfont!
-Missing character: There is no a in font nullfont!
-Missing character: There is no k in font nullfont!
-Missing character: There is no e in font nullfont!
-Missing character: There is no r in font nullfont!
-Missing character: There is no I in font nullfont!
-Missing character: There is no R in font nullfont!
-Missing character: There is no S in font nullfont!
+
+Underfull \hbox (badness 1400) in paragraph at lines 259--260
+[]\OT1/pcr/m/n/10 parseObjectToBytes(object) \OT1/ptm/m/n/10 in-structs sys-tem
+ []
 
 <data/checkStatusFlow.png, id=18, 413.29407pt x 378.06244pt>
 File: data/checkStatusFlow.png Graphic file (type png)
-
-<use data/checkStatusFlow.png>
-Package pdftex.def Info: data/checkStatusFlow.png used on input line 309.
+ <use data/checkStatusFlow.png>
+Package pdftex.def Info: data/checkStatusFlow.png used on input line 273.
 (pdftex.def)             Requested size: 232.19843pt x 212.40576pt.
-Missing character: There is no { in font nullfont!
-Missing character: There is no " in font nullfont!
-Missing character: There is no d in font nullfont!
-Missing character: There is no e in font nullfont!
-Missing character: There is no v in font nullfont!
-Missing character: There is no i in font nullfont!
-Missing character: There is no c in font nullfont!
-Missing character: There is no e in font nullfont!
-Missing character: There is no " in font nullfont!
-Missing character: There is no : in font nullfont!
-Missing character: There is no " in font nullfont!
-Missing character: There is no L in font nullfont!
-Missing character: There is no G in font nullfont!
-Missing character: There is no - in font nullfont!
-Missing character: There is no V in font nullfont!
-Missing character: There is no o in font nullfont!
-Missing character: There is no l in font nullfont!
-Missing character: There is no t in font nullfont!
-Missing character: There is no " in font nullfont!
-Missing character: There is no , in font nullfont!
-Missing character: There is no " in font nullfont!
-Missing character: There is no R in font nullfont!
-Missing character: There is no L in font nullfont!
-Missing character: There is no " in font nullfont!
-Missing character: There is no : in font nullfont!
-Missing character: There is no 2 in font nullfont!
-Missing character: There is no 4 in font nullfont!
-Missing character: There is no . in font nullfont!
-Missing character: There is no 8 in font nullfont!
-Missing character: There is no 3 in font nullfont!
-Missing character: There is no , in font nullfont!
-Missing character: There is no " in font nullfont!
-Missing character: There is no a in font nullfont!
-Missing character: There is no v in font nullfont!
-Missing character: There is no a in font nullfont!
-Missing character: There is no i in font nullfont!
-Missing character: There is no l in font nullfont!
-Missing character: There is no a in font nullfont!
-Missing character: There is no b in font nullfont!
-Missing character: There is no i in font nullfont!
-Missing character: There is no l in font nullfont!
-Missing character: There is no i in font nullfont!
-Missing character: There is no t in font nullfont!
-Missing character: There is no y in font nullfont!
-Missing character: There is no " in font nullfont!
-Missing character: There is no : in font nullfont!
-Missing character: There is no " in font nullfont!
-Missing character: There is no l in font nullfont!
-Missing character: There is no o in font nullfont!
-Missing character: There is no w in font nullfont!
-Missing character: There is no " in font nullfont!
-Missing character: There is no , in font nullfont!
-Missing character: There is no " in font nullfont!
-Missing character: There is no c in font nullfont!
-Missing character: There is no p in font nullfont!
-Missing character: There is no u in font nullfont!
-Missing character: There is no " in font nullfont!
-Missing character: There is no : in font nullfont!
-Missing character: There is no { in font nullfont!
-Missing character: There is no " in font nullfont!
-Missing character: There is no u in font nullfont!
-Missing character: There is no s in font nullfont!
-Missing character: There is no a in font nullfont!
-Missing character: There is no g in font nullfont!
-Missing character: There is no e in font nullfont!
-Missing character: There is no " in font nullfont!
-Missing character: There is no : in font nullfont!
-Missing character: There is no " in font nullfont!
-Missing character: There is no 0 in font nullfont!
-Missing character: There is no . in font nullfont!
-Missing character: There is no 3 in font nullfont!
-Missing character: There is no " in font nullfont!
-Missing character: There is no , in font nullfont!
-Missing character: There is no " in font nullfont!
-Missing character: There is no s in font nullfont!
-Missing character: There is no p in font nullfont!
-Missing character: There is no e in font nullfont!
-Missing character: There is no e in font nullfont!
-Missing character: There is no d in font nullfont!
-Missing character: There is no " in font nullfont!
-Missing character: There is no : in font nullfont!
-Missing character: There is no " in font nullfont!
-Missing character: There is no 1 in font nullfont!
-Missing character: There is no . in font nullfont!
-Missing character: There is no 3 in font nullfont!
-Missing character: There is no " in font nullfont!
-Missing character: There is no , in font nullfont!
-Missing character: There is no " in font nullfont!
-Missing character: There is no c in font nullfont!
-Missing character: There is no o in font nullfont!
-Missing character: There is no r in font nullfont!
-Missing character: There is no e in font nullfont!
-Missing character: There is no s in font nullfont!
-Missing character: There is no " in font nullfont!
-Missing character: There is no : in font nullfont!
-Missing character: There is no 4 in font nullfont!
-Missing character: There is no } in font nullfont!
-Missing character: There is no , in font nullfont!
-Missing character: There is no " in font nullfont!
-Missing character: There is no m in font nullfont!
-Missing character: There is no e in font nullfont!
-Missing character: There is no m in font nullfont!
-Missing character: There is no o in font nullfont!
-Missing character: There is no r in font nullfont!
-Missing character: There is no y in font nullfont!
-Missing character: There is no " in font nullfont!
-Missing character: There is no : in font nullfont!
-Missing character: There is no { in font nullfont!
-Missing character: There is no " in font nullfont!
-Missing character: There is no u in font nullfont!
-Missing character: There is no s in font nullfont!
-Missing character: There is no a in font nullfont!
-Missing character: There is no g in font nullfont!
-Missing character: There is no e in font nullfont!
-Missing character: There is no " in font nullfont!
-Missing character: There is no : in font nullfont!
-Missing character: There is no " in font nullfont!
-Missing character: There is no 0 in font nullfont!
-Missing character: There is no . in font nullfont!
-Missing character: There is no 5 in font nullfont!
-Missing character: There is no " in font nullfont!
-Missing character: There is no , in font nullfont!
-Missing character: There is no " in font nullfont!
-Missing character: There is no t in font nullfont!
-Missing character: There is no o in font nullfont!
-Missing character: There is no t in font nullfont!
-Missing character: There is no a in font nullfont!
-Missing character: There is no l in font nullfont!
-Missing character: There is no " in font nullfont!
-Missing character: There is no : in font nullfont!
-Missing character: There is no 2 in font nullfont!
-Missing character: There is no } in font nullfont!
-Missing character: There is no , in font nullfont!
-Missing character: There is no " in font nullfont!
-Missing character: There is no b in font nullfont!
-Missing character: There is no a in font nullfont!
-Missing character: There is no t in font nullfont!
-Missing character: There is no t in font nullfont!
-Missing character: There is no e in font nullfont!
-Missing character: There is no r in font nullfont!
-Missing character: There is no y in font nullfont!
-Missing character: There is no " in font nullfont!
-Missing character: There is no : in font nullfont!
-Missing character: There is no { in font nullfont!
-Missing character: There is no " in font nullfont!
-Missing character: There is no u in font nullfont!
-Missing character: There is no s in font nullfont!
-Missing character: There is no a in font nullfont!
-Missing character: There is no g in font nullfont!
-Missing character: There is no e in font nullfont!
-Missing character: There is no " in font nullfont!
-Missing character: There is no : in font nullfont!
-Missing character: There is no 0 in font nullfont!
-Missing character: There is no . in font nullfont!
-Missing character: There is no 8 in font nullfont!
-Missing character: There is no , in font nullfont!
-Missing character: There is no " in font nullfont!
-Missing character: There is no t in font nullfont!
-Missing character: There is no o in font nullfont!
-Missing character: There is no t in font nullfont!
-Missing character: There is no a in font nullfont!
-Missing character: There is no l in font nullfont!
-Missing character: There is no " in font nullfont!
-Missing character: There is no : in font nullfont!
-Missing character: There is no 2 in font nullfont!
-Missing character: There is no 8 in font nullfont!
-Missing character: There is no 0 in font nullfont!
-Missing character: There is no 0 in font nullfont!
-Missing character: There is no } in font nullfont!
-Missing character: There is no } in font nullfont!
-
-Overfull \hbox (10.79999pt too wide) in paragraph at lines 320--347
-[] 
- []
-
-
-Underfull \vbox (badness 3098) has occurred while \output is active []
-
-Missing character: There is no / in font nullfont!
-Missing character: There is no p in font nullfont!
-Missing character: There is no r in font nullfont!
-Missing character: There is no o in font nullfont!
-Missing character: There is no c in font nullfont!
-Missing character: There is no / in font nullfont!
-Missing character: There is no s in font nullfont!
-Missing character: There is no t in font nullfont!
-Missing character: There is no a in font nullfont!
-Missing character: There is no t in font nullfont!
-Missing character: There is no M in font nullfont!
-Missing character: There is no e in font nullfont!
-Missing character: There is no m in font nullfont!
-Missing character: There is no o in font nullfont!
-Missing character: There is no r in font nullfont!
-Missing character: There is no y in font nullfont!
-Missing character: There is no I in font nullfont!
-Missing character: There is no n in font nullfont!
-Missing character: There is no f in font nullfont!
-Missing character: There is no o in font nullfont!
-Missing character: There is no D in font nullfont!
-Missing character: There is no e in font nullfont!
-Missing character: There is no c in font nullfont!
-Missing character: There is no i in font nullfont!
-Missing character: There is no s in font nullfont!
-Missing character: There is no i in font nullfont!
-Missing character: There is no o in font nullfont!
-Missing character: There is no n in font nullfont!
-Missing character: There is no M in font nullfont!
-Missing character: There is no a in font nullfont!
-Missing character: There is no k in font nullfont!
-Missing character: There is no e in font nullfont!
-Missing character: There is no r in font nullfont!
- [3 <./data/checkStatusFlow.png>]
-Missing character: There is no U in font nullfont!
-Missing character: There is no I in font nullfont!
-Missing character: There is no H in font nullfont!
-Missing character: There is no a in font nullfont!
-Missing character: There is no n in font nullfont!
-Missing character: There is no d in font nullfont!
-Missing character: There is no l in font nullfont!
-Missing character: There is no e in font nullfont!
-Missing character: There is no r in font nullfont!
-Missing character: There is no M in font nullfont!
-Missing character: There is no A in font nullfont!
-Missing character: There is no I in font nullfont!
-Missing character: There is no N in font nullfont!
-Missing character: There is no _ in font nullfont!
-Missing character: There is no I in font nullfont!
-Missing character: There is no N in font nullfont!
-Missing character: There is no F in font nullfont!
-Missing character: There is no O in font nullfont!
-Missing character: There is no M in font nullfont!
-Missing character: There is no A in font nullfont!
-Missing character: There is no I in font nullfont!
-Missing character: There is no N in font nullfont!
-Missing character: There is no _ in font nullfont!
-Missing character: There is no J in font nullfont!
-Missing character: There is no O in font nullfont!
-Missing character: There is no B in font nullfont!
-Missing character: There is no _ in font nullfont!
-Missing character: There is no D in font nullfont!
-Missing character: There is no O in font nullfont!
-Missing character: There is no N in font nullfont!
-Missing character: There is no E in font nullfont!
-
-Underfull \hbox (badness 10000) in paragraph at lines 399--400
-
- []
-
-Missing character: There is no H in font nullfont!
-Missing character: There is no a in font nullfont!
-Missing character: There is no n in font nullfont!
-Missing character: There is no d in font nullfont!
-Missing character: There is no l in font nullfont!
-Missing character: There is no e in font nullfont!
-Missing character: There is no r in font nullfont!
-Missing character: There is no m in font nullfont!
-Missing character: There is no a in font nullfont!
-Missing character: There is no i in font nullfont!
-Missing character: There is no n in font nullfont!
-Missing character: There is no U in font nullfont!
-Missing character: There is no i in font nullfont!
-Missing character: There is no H in font nullfont!
-Missing character: There is no a in font nullfont!
-Missing character: There is no n in font nullfont!
-Missing character: There is no d in font nullfont!
-Missing character: There is no l in font nullfont!
-Missing character: There is no e in font nullfont!
-Missing character: There is no r in font nullfont!
-Missing character: There is no = in font nullfont!
-Missing character: There is no n in font nullfont!
-Missing character: There is no e in font nullfont!
-Missing character: There is no w in font nullfont!
-Missing character: There is no H in font nullfont!
-Missing character: There is no a in font nullfont!
-Missing character: There is no n in font nullfont!
-Missing character: There is no d in font nullfont!
-Missing character: There is no l in font nullfont!
-Missing character: There is no e in font nullfont!
-Missing character: There is no r in font nullfont!
-Missing character: There is no ( in font nullfont!
-Missing character: There is no ) in font nullfont!
-Missing character: There is no { in font nullfont!
-Missing character: There is no @ in font nullfont!
-Missing character: There is no O in font nullfont!
-Missing character: There is no v in font nullfont!
-Missing character: There is no e in font nullfont!
-Missing character: There is no r in font nullfont!
-Missing character: There is no r in font nullfont!
-Missing character: There is no i in font nullfont!
-Missing character: There is no d in font nullfont!
-Missing character: There is no e in font nullfont!
-Missing character: There is no p in font nullfont!
-Missing character: There is no u in font nullfont!
-Missing character: There is no b in font nullfont!
-Missing character: There is no l in font nullfont!
-Missing character: There is no i in font nullfont!
-Missing character: There is no c in font nullfont!
-Missing character: There is no v in font nullfont!
-Missing character: There is no o in font nullfont!
-Missing character: There is no i in font nullfont!
-Missing character: There is no d in font nullfont!
-Missing character: There is no h in font nullfont!
-Missing character: There is no a in font nullfont!
-Missing character: There is no n in font nullfont!
-Missing character: There is no d in font nullfont!
-Missing character: There is no l in font nullfont!
-Missing character: There is no e in font nullfont!
-Missing character: There is no M in font nullfont!
-Missing character: There is no e in font nullfont!
-Missing character: There is no s in font nullfont!
-Missing character: There is no s in font nullfont!
-Missing character: There is no a in font nullfont!
-Missing character: There is no g in font nullfont!
-Missing character: There is no e in font nullfont!
-Missing character: There is no ( in font nullfont!
-Missing character: There is no M in font nullfont!
-Missing character: There is no e in font nullfont!
-Missing character: There is no s in font nullfont!
-Missing character: There is no s in font nullfont!
-Missing character: There is no a in font nullfont!
-Missing character: There is no g in font nullfont!
-Missing character: There is no e in font nullfont!
-Missing character: There is no m in font nullfont!
-Missing character: There is no s in font nullfont!
-Missing character: There is no g in font nullfont!
-Missing character: There is no ) in font nullfont!
-Missing character: There is no { in font nullfont!
-Missing character: There is no s in font nullfont!
-Missing character: There is no w in font nullfont!
-Missing character: There is no i in font nullfont!
-Missing character: There is no t in font nullfont!
-Missing character: There is no c in font nullfont!
-Missing character: There is no h in font nullfont!
-Missing character: There is no ( in font nullfont!
-Missing character: There is no m in font nullfont!
-Missing character: There is no s in font nullfont!
-Missing character: There is no g in font nullfont!
-Missing character: There is no . in font nullfont!
-Missing character: There is no w in font nullfont!
-Missing character: There is no h in font nullfont!
-Missing character: There is no a in font nullfont!
-Missing character: There is no t in font nullfont!
-Missing character: There is no ) in font nullfont!
-Missing character: There is no { in font nullfont!
-Missing character: There is no c in font nullfont!
-Missing character: There is no a in font nullfont!
-Missing character: There is no s in font nullfont!
-Missing character: There is no e in font nullfont!
-Missing character: There is no U in font nullfont!
-Missing character: There is no t in font nullfont!
-Missing character: There is no i in font nullfont!
-Missing character: There is no l in font nullfont!
-Missing character: There is no s in font nullfont!
-Missing character: There is no . in font nullfont!
-Missing character: There is no M in font nullfont!
-Missing character: There is no A in font nullfont!
-Missing character: There is no I in font nullfont!
-Missing character: There is no N in font nullfont!
-Missing character: There is no _ in font nullfont!
-Missing character: There is no J in font nullfont!
-Missing character: There is no O in font nullfont!
-Missing character: There is no B in font nullfont!
-Missing character: There is no _ in font nullfont!
-Missing character: There is no D in font nullfont!
-Missing character: There is no O in font nullfont!
-Missing character: There is no N in font nullfont!
-Missing character: There is no E in font nullfont!
-Missing character: There is no : in font nullfont!
-Missing character: There is no { in font nullfont!
-Missing character: There is no } in font nullfont!
-Missing character: There is no c in font nullfont!
-Missing character: There is no a in font nullfont!
-Missing character: There is no s in font nullfont!
-Missing character: There is no e in font nullfont!
-Missing character: There is no U in font nullfont!
-Missing character: There is no t in font nullfont!
-Missing character: There is no i in font nullfont!
-Missing character: There is no l in font nullfont!
-Missing character: There is no s in font nullfont!
-Missing character: There is no . in font nullfont!
-Missing character: There is no M in font nullfont!
-Missing character: There is no A in font nullfont!
-Missing character: There is no I in font nullfont!
-Missing character: There is no N in font nullfont!
-Missing character: There is no _ in font nullfont!
-Missing character: There is no I in font nullfont!
-Missing character: There is no N in font nullfont!
-Missing character: There is no F in font nullfont!
-Missing character: There is no O in font nullfont!
-Missing character: There is no : in font nullfont!
-Missing character: There is no { in font nullfont!
-Missing character: There is no } in font nullfont!
-Missing character: There is no } in font nullfont!
-Missing character: There is no } in font nullfont!
-Missing character: There is no } in font nullfont!
-Missing character: There is no ; in font nullfont!
-
-Overfull \hbox (10.79999pt too wide) in paragraph at lines 402--423
-[] 
- []
-
-Missing character: There is no D in font nullfont!
-Missing character: There is no a in font nullfont!
-Missing character: There is no t in font nullfont!
-Missing character: There is no a in font nullfont!
-Missing character: There is no P in font nullfont!
-Missing character: There is no a in font nullfont!
-Missing character: There is no r in font nullfont!
-Missing character: There is no s in font nullfont!
-Missing character: There is no e in font nullfont!
-Missing character: There is no r in font nullfont!
-Missing character: There is no J in font nullfont!
-Missing character: There is no o in font nullfont!
-Missing character: There is no b in font nullfont!
-Missing character: There is no H in font nullfont!
-Missing character: There is no a in font nullfont!
-Missing character: There is no n in font nullfont!
-Missing character: There is no d in font nullfont!
-Missing character: There is no l in font nullfont!
-Missing character: There is no e in font nullfont!
-Missing character: There is no r in font nullfont!
-Missing character: There is no d in font nullfont!
-Missing character: There is no i in font nullfont!
-Missing character: There is no s in font nullfont!
-Missing character: There is no c in font nullfont!
-Missing character: There is no o in font nullfont!
-Missing character: There is no v in font nullfont!
-Missing character: There is no e in font nullfont!
-Missing character: There is no r in font nullfont!
-Missing character: There is no P in font nullfont!
-Missing character: There is no e in font nullfont!
-Missing character: There is no e in font nullfont!
-Missing character: There is no r in font nullfont!
-Missing character: There is no s in font nullfont!
-Missing character: There is no ( in font nullfont!
-Missing character: There is no ) in font nullfont!
-Missing character: There is no d in font nullfont!
-Missing character: There is no i in font nullfont!
-Missing character: There is no s in font nullfont!
-Missing character: There is no p in font nullfont!
-Missing character: There is no a in font nullfont!
-Missing character: There is no t in font nullfont!
-Missing character: There is no c in font nullfont!
-Missing character: There is no h in font nullfont!
-Missing character: There is no J in font nullfont!
-Missing character: There is no o in font nullfont!
-Missing character: There is no b in font nullfont!
-Missing character: There is no ( in font nullfont!
-Missing character: There is no ) in font nullfont!
-Missing character: There is no d in font nullfont!
-Missing character: There is no i in font nullfont!
-Missing character: There is no s in font nullfont!
-Missing character: There is no c in font nullfont!
-Missing character: There is no o in font nullfont!
-Missing character: There is no v in font nullfont!
-Missing character: There is no e in font nullfont!
-Missing character: There is no r in font nullfont!
-Missing character: There is no P in font nullfont!
-Missing character: There is no e in font nullfont!
-Missing character: There is no e in font nullfont!
-Missing character: There is no r in font nullfont!
-Missing character: There is no s in font nullfont!
-Missing character: There is no ( in font nullfont!
-Missing character: There is no ) in font nullfont!
-Missing character: There is no d in font nullfont!
-Missing character: There is no i in font nullfont!
-Missing character: There is no s in font nullfont!
-Missing character: There is no p in font nullfont!
-Missing character: There is no a in font nullfont!
-Missing character: There is no t in font nullfont!
-Missing character: There is no c in font nullfont!
-Missing character: There is no h in font nullfont!
-Missing character: There is no J in font nullfont!
-Missing character: There is no o in font nullfont!
-Missing character: There is no b in font nullfont!
-Missing character: There is no ( in font nullfont!
-Missing character: There is no ) in font nullfont!
-Missing character: There is no D in font nullfont!
-Missing character: There is no e in font nullfont!
-Missing character: There is no c in font nullfont!
-Missing character: There is no i in font nullfont!
-Missing character: There is no s in font nullfont!
-Missing character: There is no i in font nullfont!
-Missing character: There is no o in font nullfont!
-Missing character: There is no n in font nullfont!
-Missing character: There is no M in font nullfont!
-Missing character: There is no a in font nullfont!
-Missing character: There is no k in font nullfont!
-Missing character: There is no e in font nullfont!
-Missing character: There is no r in font nullfont!
-
-Underfull \hbox (badness 10000) in paragraph at lines 426--427
-
- []
-
-Missing character: There is no d in font nullfont!
-Missing character: There is no a in font nullfont!
-Missing character: There is no t in font nullfont!
-Missing character: There is no a in font nullfont!
-Missing character: There is no P in font nullfont!
-Missing character: There is no a in font nullfont!
-Missing character: There is no r in font nullfont!
-Missing character: There is no s in font nullfont!
-Missing character: There is no e in font nullfont!
-Missing character: There is no r in font nullfont!
-Missing character: There is no = in font nullfont!
-Missing character: There is no n in font nullfont!
-Missing character: There is no e in font nullfont!
-Missing character: There is no w in font nullfont!
-Missing character: There is no B in font nullfont!
-Missing character: There is no i in font nullfont!
-Missing character: There is no t in font nullfont!
-Missing character: There is no m in font nullfont!
-Missing character: There is no a in font nullfont!
-Missing character: There is no p in font nullfont!
-Missing character: There is no J in font nullfont!
-Missing character: There is no o in font nullfont!
-Missing character: There is no b in font nullfont!
-Missing character: There is no D in font nullfont!
-Missing character: There is no a in font nullfont!
-Missing character: There is no t in font nullfont!
-Missing character: There is no a in font nullfont!
-Missing character: There is no P in font nullfont!
-Missing character: There is no a in font nullfont!
-Missing character: There is no r in font nullfont!
-Missing character: There is no s in font nullfont!
-Missing character: There is no e in font nullfont!
-Missing character: There is no r in font nullfont!
-Missing character: There is no ( in font nullfont!
-Missing character: There is no ) in font nullfont!
-Missing character: There is no ; in font nullfont!
-Missing character: There is no . in font nullfont!
-Missing character: There is no . in font nullfont!
-Missing character: There is no . in font nullfont!
-Missing character: There is no j in font nullfont!
-Missing character: There is no o in font nullfont!
-Missing character: There is no b in font nullfont!
-Missing character: There is no H in font nullfont!
-Missing character: There is no a in font nullfont!
-Missing character: There is no n in font nullfont!
-Missing character: There is no d in font nullfont!
-Missing character: There is no l in font nullfont!
-Missing character: There is no e in font nullfont!
-Missing character: There is no r in font nullfont!
-Missing character: There is no = in font nullfont!
-Missing character: There is no n in font nullfont!
-Missing character: There is no e in font nullfont!
-Missing character: There is no w in font nullfont!
-Missing character: There is no J in font nullfont!
-Missing character: There is no o in font nullfont!
-Missing character: There is no b in font nullfont!
-Missing character: There is no H in font nullfont!
-Missing character: There is no a in font nullfont!
-Missing character: There is no n in font nullfont!
-Missing character: There is no d in font nullfont!
-Missing character: There is no l in font nullfont!
-Missing character: There is no e in font nullfont!
-Missing character: There is no r in font nullfont!
-Missing character: There is no ( in font nullfont!
-Missing character: There is no t in font nullfont!
-Missing character: There is no h in font nullfont!
-Missing character: There is no i in font nullfont!
-Missing character: There is no s in font nullfont!
-Missing character: There is no , in font nullfont!
-Missing character: There is no d in font nullfont!
-Missing character: There is no a in font nullfont!
-Missing character: There is no t in font nullfont!
-Missing character: There is no a in font nullfont!
-Missing character: There is no P in font nullfont!
-Missing character: There is no a in font nullfont!
-Missing character: There is no r in font nullfont!
-Missing character: There is no s in font nullfont!
-Missing character: There is no e in font nullfont!
-Missing character: There is no r in font nullfont!
-Missing character: There is no ) in font nullfont!
-Missing character: There is no ; in font nullfont!
-Missing character: There is no j in font nullfont!
-Missing character: There is no o in font nullfont!
-Missing character: There is no b in font nullfont!
-Missing character: There is no H in font nullfont!
-Missing character: There is no a in font nullfont!
-Missing character: There is no n in font nullfont!
-Missing character: There is no d in font nullfont!
-Missing character: There is no l in font nullfont!
-Missing character: There is no e in font nullfont!
-Missing character: There is no r in font nullfont!
-Missing character: There is no . in font nullfont!
-Missing character: There is no s in font nullfont!
-Missing character: There is no e in font nullfont!
-Missing character: There is no t in font nullfont!
-Missing character: There is no S in font nullfont!
-Missing character: There is no o in font nullfont!
-Missing character: There is no c in font nullfont!
-Missing character: There is no k in font nullfont!
-Missing character: There is no e in font nullfont!
-Missing character: There is no t in font nullfont!
-Missing character: There is no L in font nullfont!
-Missing character: There is no i in font nullfont!
-Missing character: There is no s in font nullfont!
-Missing character: There is no t in font nullfont!
-Missing character: There is no e in font nullfont!
-Missing character: There is no n in font nullfont!
-Missing character: There is no e in font nullfont!
-Missing character: There is no r in font nullfont!
-Missing character: There is no ( in font nullfont!
-Missing character: There is no n in font nullfont!
-Missing character: There is no e in font nullfont!
-Missing character: There is no w in font nullfont!
-Missing character: There is no J in font nullfont!
-Missing character: There is no o in font nullfont!
-Missing character: There is no b in font nullfont!
-Missing character: There is no H in font nullfont!
-Missing character: There is no a in font nullfont!
-Missing character: There is no n in font nullfont!
-Missing character: There is no d in font nullfont!
-Missing character: There is no l in font nullfont!
-Missing character: There is no e in font nullfont!
-Missing character: There is no r in font nullfont!
-Missing character: There is no . in font nullfont!
-Missing character: There is no J in font nullfont!
-Missing character: There is no o in font nullfont!
-Missing character: There is no b in font nullfont!
-Missing character: There is no S in font nullfont!
-Missing character: There is no o in font nullfont!
-Missing character: There is no c in font nullfont!
-Missing character: There is no k in font nullfont!
-Missing character: There is no e in font nullfont!
-Missing character: There is no t in font nullfont!
-Missing character: There is no L in font nullfont!
-Missing character: There is no i in font nullfont!
-Missing character: There is no s in font nullfont!
-Missing character: There is no t in font nullfont!
-Missing character: There is no e in font nullfont!
-Missing character: There is no n in font nullfont!
-Missing character: There is no e in font nullfont!
-Missing character: There is no r in font nullfont!
-Missing character: There is no ( in font nullfont!
-Missing character: There is no ) in font nullfont!
-Missing character: There is no { in font nullfont!
-Missing character: There is no @ in font nullfont!
-Missing character: There is no O in font nullfont!
-Missing character: There is no v in font nullfont!
-Missing character: There is no e in font nullfont!
-Missing character: There is no r in font nullfont!
-Missing character: There is no r in font nullfont!
-Missing character: There is no i in font nullfont!
-Missing character: There is no d in font nullfont!
-Missing character: There is no e in font nullfont!
-Missing character: There is no p in font nullfont!
-Missing character: There is no u in font nullfont!
-Missing character: There is no b in font nullfont!
-Missing character: There is no l in font nullfont!
-Missing character: There is no i in font nullfont!
-Missing character: There is no c in font nullfont!
-Missing character: There is no v in font nullfont!
-Missing character: There is no o in font nullfont!
-Missing character: There is no i in font nullfont!
-Missing character: There is no d in font nullfont!
-Missing character: There is no s in font nullfont!
-Missing character: There is no o in font nullfont!
-Missing character: There is no c in font nullfont!
-Missing character: There is no k in font nullfont!
-Missing character: There is no e in font nullfont!
-Missing character: There is no t in font nullfont!
-Missing character: There is no U in font nullfont!
-Missing character: There is no p in font nullfont!
-Missing character: There is no d in font nullfont!
-Missing character: There is no a in font nullfont!
-Missing character: There is no t in font nullfont!
-Missing character: There is no e in font nullfont!
-Missing character: There is no d in font nullfont!
-Missing character: There is no ( in font nullfont!
-Missing character: There is no . in font nullfont!
-Missing character: There is no . in font nullfont!
-Missing character: There is no . in font nullfont!
-Missing character: There is no i in font nullfont!
-Missing character: There is no s in font nullfont!
-Missing character: There is no C in font nullfont!
-Missing character: There is no o in font nullfont!
-Missing character: There is no n in font nullfont!
-Missing character: There is no n in font nullfont!
-Missing character: There is no e in font nullfont!
-Missing character: There is no c in font nullfont!
-Missing character: There is no t in font nullfont!
-Missing character: There is no e in font nullfont!
-Missing character: There is no d in font nullfont!
-Missing character: There is no ) in font nullfont!
-Missing character: There is no { in font nullfont!
-Missing character: There is no } in font nullfont!
-Missing character: There is no } in font nullfont!
-Missing character: There is no ) in font nullfont!
-Missing character: There is no ; in font nullfont!
-Missing character: There is no . in font nullfont!
-Missing character: There is no . in font nullfont!
-Missing character: There is no . in font nullfont!
-Missing character: There is no d in font nullfont!
-Missing character: There is no e in font nullfont!
-Missing character: There is no v in font nullfont!
-Missing character: There is no i in font nullfont!
-Missing character: There is no c in font nullfont!
-Missing character: There is no e in font nullfont!
-Missing character: There is no L in font nullfont!
-Missing character: There is no i in font nullfont!
-Missing character: There is no s in font nullfont!
-Missing character: There is no t in font nullfont!
-Missing character: There is no . in font nullfont!
-Missing character: There is no s in font nullfont!
-Missing character: There is no e in font nullfont!
-Missing character: There is no t in font nullfont!
-Missing character: There is no A in font nullfont!
-Missing character: There is no d in font nullfont!
-Missing character: There is no a in font nullfont!
-Missing character: There is no p in font nullfont!
-Missing character: There is no t in font nullfont!
-Missing character: There is no e in font nullfont!
-Missing character: There is no r in font nullfont!
-Missing character: There is no ( in font nullfont!
-Missing character: There is no j in font nullfont!
-Missing character: There is no o in font nullfont!
-Missing character: There is no b in font nullfont!
-Missing character: There is no H in font nullfont!
-Missing character: There is no a in font nullfont!
-Missing character: There is no n in font nullfont!
-Missing character: There is no d in font nullfont!
-Missing character: There is no l in font nullfont!
-Missing character: There is no e in font nullfont!
-Missing character: There is no r in font nullfont!
-Missing character: There is no . in font nullfont!
-Missing character: There is no g in font nullfont!
-Missing character: There is no e in font nullfont!
-Missing character: There is no t in font nullfont!
-Missing character: There is no D in font nullfont!
-Missing character: There is no e in font nullfont!
-Missing character: There is no v in font nullfont!
-Missing character: There is no i in font nullfont!
-Missing character: There is no c in font nullfont!
-Missing character: There is no e in font nullfont!
-Missing character: There is no L in font nullfont!
-Missing character: There is no i in font nullfont!
-Missing character: There is no s in font nullfont!
-Missing character: There is no t in font nullfont!
-Missing character: There is no A in font nullfont!
-Missing character: There is no d in font nullfont!
-Missing character: There is no a in font nullfont!
-Missing character: There is no p in font nullfont!
-Missing character: There is no t in font nullfont!
-Missing character: There is no e in font nullfont!
-Missing character: There is no r in font nullfont!
-Missing character: There is no ( in font nullfont!
-Missing character: There is no ) in font nullfont!
-Missing character: There is no ) in font nullfont!
-Missing character: There is no ; in font nullfont!
-Missing character: There is no . in font nullfont!
-Missing character: There is no . in font nullfont!
-Missing character: There is no . in font nullfont!
-Missing character: There is no j in font nullfont!
-Missing character: There is no o in font nullfont!
-Missing character: There is no b in font nullfont!
-Missing character: There is no H in font nullfont!
-Missing character: There is no a in font nullfont!
-Missing character: There is no n in font nullfont!
-Missing character: There is no d in font nullfont!
-Missing character: There is no l in font nullfont!
-Missing character: There is no e in font nullfont!
-Missing character: There is no r in font nullfont!
-Missing character: There is no . in font nullfont!
-Missing character: There is no d in font nullfont!
-Missing character: There is no i in font nullfont!
-Missing character: There is no s in font nullfont!
-Missing character: There is no c in font nullfont!
-Missing character: There is no o in font nullfont!
-Missing character: There is no v in font nullfont!
-Missing character: There is no e in font nullfont!
-Missing character: There is no r in font nullfont!
-Missing character: There is no P in font nullfont!
-Missing character: There is no e in font nullfont!
-Missing character: There is no e in font nullfont!
-Missing character: There is no r in font nullfont!
-Missing character: There is no s in font nullfont!
-Missing character: There is no ( in font nullfont!
-Missing character: There is no ) in font nullfont!
-Missing character: There is no ; in font nullfont!
-Missing character: There is no . in font nullfont!
-Missing character: There is no . in font nullfont!
-Missing character: There is no . in font nullfont!
-Missing character: There is no S in font nullfont!
-Missing character: There is no t in font nullfont!
-Missing character: There is no r in font nullfont!
-Missing character: There is no i in font nullfont!
-Missing character: There is no n in font nullfont!
-Missing character: There is no g in font nullfont!
-Missing character: There is no d in font nullfont!
-Missing character: There is no a in font nullfont!
-Missing character: There is no t in font nullfont!
-Missing character: There is no a in font nullfont!
-Missing character: There is no P in font nullfont!
-Missing character: There is no a in font nullfont!
-Missing character: There is no t in font nullfont!
-Missing character: There is no h in font nullfont!
-Missing character: There is no = in font nullfont!
-Missing character: There is no d in font nullfont!
-Missing character: There is no o in font nullfont!
-Missing character: There is no w in font nullfont!
-Missing character: There is no n in font nullfont!
-Missing character: There is no l in font nullfont!
-Missing character: There is no o in font nullfont!
-Missing character: There is no a in font nullfont!
-Missing character: There is no d in font nullfont!
-Missing character: There is no P in font nullfont!
-Missing character: There is no a in font nullfont!
-Missing character: There is no t in font nullfont!
-Missing character: There is no h in font nullfont!
-Missing character: There is no + in font nullfont!
-Missing character: There is no " in font nullfont!
-Missing character: There is no / in font nullfont!
-Missing character: There is no m in font nullfont!
-Missing character: There is no a in font nullfont!
-Missing character: There is no r in font nullfont!
-Missing character: There is no s in font nullfont!
-Missing character: There is no . in font nullfont!
-Missing character: There is no j in font nullfont!
-Missing character: There is no p in font nullfont!
-Missing character: There is no g in font nullfont!
-Missing character: There is no " in font nullfont!
-Missing character: There is no ; in font nullfont!
-Missing character: There is no S in font nullfont!
-Missing character: There is no t in font nullfont!
-Missing character: There is no r in font nullfont!
-Missing character: There is no i in font nullfont!
-Missing character: There is no n in font nullfont!
-Missing character: There is no g in font nullfont!
-Missing character: There is no j in font nullfont!
-Missing character: There is no o in font nullfont!
-Missing character: There is no b in font nullfont!
-Missing character: There is no P in font nullfont!
-Missing character: There is no a in font nullfont!
-Missing character: There is no t in font nullfont!
-Missing character: There is no h in font nullfont!
-Missing character: There is no = in font nullfont!
-Missing character: There is no d in font nullfont!
-Missing character: There is no o in font nullfont!
-Missing character: There is no w in font nullfont!
-Missing character: There is no n in font nullfont!
-Missing character: There is no l in font nullfont!
-Missing character: There is no o in font nullfont!
-Missing character: There is no a in font nullfont!
-Missing character: There is no d in font nullfont!
-Missing character: There is no P in font nullfont!
-Missing character: There is no a in font nullfont!
-Missing character: There is no t in font nullfont!
-Missing character: There is no h in font nullfont!
-Missing character: There is no + in font nullfont!
-Missing character: There is no " in font nullfont!
-Missing character: There is no / in font nullfont!
-Missing character: There is no J in font nullfont!
-Missing character: There is no o in font nullfont!
-Missing character: There is no b in font nullfont!
-Missing character: There is no . in font nullfont!
-Missing character: There is no j in font nullfont!
-Missing character: There is no a in font nullfont!
-Missing character: There is no r in font nullfont!
-Missing character: There is no " in font nullfont!
-Missing character: There is no ; in font nullfont!
-Missing character: There is no j in font nullfont!
-Missing character: There is no o in font nullfont!
-Missing character: There is no b in font nullfont!
-Missing character: There is no H in font nullfont!
-Missing character: There is no a in font nullfont!
-Missing character: There is no n in font nullfont!
-Missing character: There is no d in font nullfont!
-Missing character: There is no l in font nullfont!
-Missing character: There is no e in font nullfont!
-Missing character: There is no r in font nullfont!
-Missing character: There is no . in font nullfont!
-Missing character: There is no d in font nullfont!
-Missing character: There is no i in font nullfont!
-Missing character: There is no s in font nullfont!
-Missing character: There is no p in font nullfont!
-Missing character: There is no a in font nullfont!
-Missing character: There is no t in font nullfont!
-Missing character: There is no c in font nullfont!
-Missing character: There is no h in font nullfont!
-Missing character: There is no J in font nullfont!
-Missing character: There is no o in font nullfont!
-Missing character: There is no b in font nullfont!
-Missing character: There is no ( in font nullfont!
-Missing character: There is no d in font nullfont!
-Missing character: There is no a in font nullfont!
-Missing character: There is no t in font nullfont!
-Missing character: There is no a in font nullfont!
-Missing character: There is no P in font nullfont!
-Missing character: There is no a in font nullfont!
-Missing character: There is no t in font nullfont!
-Missing character: There is no h in font nullfont!
-Missing character: There is no , in font nullfont!
-Missing character: There is no j in font nullfont!
-Missing character: There is no o in font nullfont!
-Missing character: There is no b in font nullfont!
-Missing character: There is no P in font nullfont!
-Missing character: There is no a in font nullfont!
-Missing character: There is no t in font nullfont!
-Missing character: There is no h in font nullfont!
-Missing character: There is no ) in font nullfont!
-Missing character: There is no ; in font nullfont!
-
-Overfull \hbox (10.79999pt too wide) in paragraph at lines 428--461
-[] 
- []
-
 
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
- [4]
-Underfull \hbox (badness 3460) in paragraph at lines 521--522
-[]\OT1/ptm/m/n/8 Fred Chung, \OT1/ptm/m/it/8 Cus-tom Class Load-ing in Dalvik\O
-T1/ptm/m/n/8 , http://android-
+ [3]
+Underfull \hbox (badness 3000) in paragraph at lines 280--281
+\OT1/ptm/m/n/10 Be-fore de-liv-er-ing jobs, it dis-patches IRS mes-sages to
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 521--522
-\OT1/ptm/m/n/8 developers.blogspot.com/2011/07/custom-class-loading-in-dalvik.h
-tml,
+Underfull \hbox (badness 3168) in paragraph at lines 280--281
+\OT1/ptm/m/n/10 all the peers for ac-knowl-edg-ment of their avail-abil-ity
+ []
+
+
+Underfull \hbox (badness 1728) in paragraph at lines 280--281
+\OT1/ptm/m/n/10 ($\OML/cmm/m/it/10 RL$ \OT1/ptm/m/n/10 - Level of Re-spon-si-bil-ity). If a peer re-ceives an
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 280--281
+
+ []
+
+LaTeX Font Info:    Try loading font information for OMS+ptm on input line 327.
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\psnfss\omsptm.fd"
+File: omsptm.fd 
+)
+LaTeX Font Info:    Font shape `OMS/ptm/m/n' in size <8> not available
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 327.
+
+Underfull \hbox (badness 10000) in paragraph at lines 342--343
+
+ []
+
+[4 <./data/checkStatusFlow.png>]
+
+LaTeX Warning: Reference `job-description' on page 5 undefined on input line 432.
+
+[5]
+Underfull \hbox (badness 10000) in paragraph at lines 440--441
+
+ []
+
+
+LaTeX Warning: Reference `job-description' on page 6 undefined on input line 466.
+
+
+Overfull \hbox (3.79999pt too wide) in paragraph at lines 468--483
+[] 
+ []
+
+
+Underfull \hbox (badness 1975) in paragraph at lines 486--487
+\OT1/pcr/m/n/10 dispatchJob() \OT1/ptm/m/n/10 will be call to lo-cate the re-sources
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 486--487
+
+ []
+
+
+Overfull \hbox (3.79999pt too wide) in paragraph at lines 488--521
+[] 
+ []
+
+[6]
+Underfull \hbox (badness 3460) in paragraph at lines 601--602
+[]\OT1/ptm/m/n/8 Fred Chung, \OT1/ptm/m/it/8 Cus-tom Class Load-ing in Dalvik\OT1/ptm/m/n/8 , http://android-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 601--602
+\OT1/ptm/m/n/8 developers.blogspot.com/2011/07/custom-class-loading-in-dalvik.html,
  []
 
 
@@ -1638,34 +518,36 @@ Before submitting the final camera ready copy, remember to:
  uses only Type 1 fonts and that every step in the generation
  process uses the appropriate paper size.
 
-[5
+[7
 
-] (./job2p.aux) ) 
+] (job2p.aux)
+
+LaTeX Warning: There were undefined references.
+
+ ) 
 Here is how much of TeX's memory you used:
- 6011 strings out of 494501
- 93580 string characters out of 6167031
- 214695 words of memory out of 5000000
- 9218 multiletter control sequences out of 15000+600000
- 37918 words of font info for 68 fonts, out of 8000000 for 9000
- 322 hyphenation exceptions out of 8191
- 38i,8n,40p,919b,1068s stack positions out of 5000i,500n,10000p,200000b,80000s
-{/usr/local/texlive/2015basic/texmf-dist/fonts/enc/dvips/base/
-8r.enc}</usr/local/texlive/2015basic/texmf-dist/fonts/type1/public/amsfonts/cm/
-cmex10.pfb></usr/local/texlive/2015basic/texmf-dist/fonts/type1/public/amsfonts
-/cm/cmmi10.pfb></usr/local/texlive/2015basic/texmf-dist/fonts/type1/public/amsf
-onts/cm/cmmi7.pfb></usr/local/texlive/2015basic/texmf-dist/fonts/type1/public/a
-msfonts/cm/cmr10.pfb></usr/local/texlive/2015basic/texmf-dist/fonts/type1/publi
-c/amsfonts/cm/cmr7.pfb></usr/local/texlive/2015basic/texmf-dist/fonts/type1/pub
-lic/amsfonts/cm/cmsy10.pfb></usr/local/texlive/2015basic/texmf-dist/fonts/type1
-/public/amsfonts/cm/cmsy7.pfb></usr/local/texlive/2015basic/texmf-dist/fonts/ty
-pe1/urw/times/utmb8a.pfb></usr/local/texlive/2015basic/texmf-dist/fonts/type1/u
-rw/times/utmbi8a.pfb></usr/local/texlive/2015basic/texmf-dist/fonts/type1/urw/t
-imes/utmr8a.pfb></usr/local/texlive/2015basic/texmf-dist/fonts/type1/urw/times/
-utmri8a.pfb>
-Output written on job2p.pdf (5 pages, 202914 bytes).
+ 6316 strings out of 493673
+ 96121 string characters out of 3141514
+ 237294 words of memory out of 3000000
+ 9592 multiletter control sequences out of 15000+200000
+ 43431 words of font info for 84 fonts, out of 3000000 for 9000
+ 1028 hyphenation exceptions out of 8191
+ 36i,8n,40p,920b,1101s stack positions out of 5000i,500n,10000p,200000b,50000s
+{C:/Program Files (x86)/MiKTeX 2.9/fonts/enc/dvips/fontname/8r.enc}<C:/Program Files (x86)/MiKTeX 2.9/fonts/type1/publ
+ic/amsfonts/cm/cmex10.pfb><C:/Program Files (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmmi10.pfb><C:/Program Files
+ (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmmi5.pfb><C:/Program Files (x86)/MiKTeX 2.9/fonts/type1/public/amsfont
+s/cm/cmmi6.pfb><C:/Program Files (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmmi7.pfb><C:/Program Files (x86)/MiKTe
+X 2.9/fonts/type1/public/amsfonts/cm/cmmi8.pfb><C:/Program Files (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr10.p
+fb><C:/Program Files (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr7.pfb><C:/Program Files (x86)/MiKTeX 2.9/fonts/t
+ype1/public/amsfonts/cm/cmr8.pfb><C:/Program Files (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmsy10.pfb><C:/Progra
+m Files (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmsy7.pfb><C:/Program Files (x86)/MiKTeX 2.9/fonts/type1/public/
+amsfonts/cm/cmsy8.pfb><C:/Program Files (x86)/MiKTeX 2.9/fonts/type1/urw/courier/ucrb8a.pfb><C:/Program Files (x86)/MiKT
+eX 2.9/fonts/type1/urw/courier/ucrr8a.pfb><C:/Program Files (x86)/MiKTeX 2.9/fonts/type1/urw/times/utmb8a.pfb><C:/Progra
+m Files (x86)/MiKTeX 2.9/fonts/type1/urw/times/utmbi8a.pfb><C:/Program Files (x86)/MiKTeX 2.9/fonts/type1/urw/times/utmr
+8a.pfb><C:/Program Files (x86)/MiKTeX 2.9/fonts/type1/urw/times/utmri8a.pfb>
+Output written on job2p.pdf (7 pages, 305666 bytes).
 PDF statistics:
- 71 PDF objects out of 1000 (max. 8388607)
- 47 compressed objects within 1 object stream
+ 105 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 500000)
  16 words of extra memory for PDF output out of 10000 (max. 10000000)
 

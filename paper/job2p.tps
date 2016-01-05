@@ -17,8 +17,8 @@ Class=LaTeXView
 Document=job2p.tex
 
 [Frame0_View0,0]
-TopLine=75
-Cursor=11803
+TopLine=354
+Cursor=18930
 
 [SessionInfo]
 FrameCount=1
