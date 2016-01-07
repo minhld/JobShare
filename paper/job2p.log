@@ -1,10 +1,19 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.16 (MiKTeX 2.9) (preloaded format=pdflatex 2015.12.15)  5 JAN 2016 13:17
+This is pdfTeX, Version 3.1415926-2.5-1.40.14 (MiKTeX 2.9 64-bit) (preloaded format=pdflatex 2014.11.25)  7 JAN 2016 13:06
 entering extended mode
 **job2p.tex
-(job2p.tex
-LaTeX2e <2015/01/01> patch level 2
-Babel <3.9m> and hyphenation patterns for 69 languages loaded.
-(IEEEtran.cls
+(C:\Users\ywkwon\git\JobShare\paper\job2p.tex
+LaTeX2e <2011/06/27>
+Babel <v3.8m> and hyphenation patterns for english, afrikaans, ancientgreek, ar
+abic, armenian, assamese, basque, bengali, bokmal, bulgarian, catalan, coptic, 
+croatian, czech, danish, dutch, esperanto, estonian, farsi, finnish, french, ga
+lician, german, german-x-2013-05-26, greek, gujarati, hindi, hungarian, iceland
+ic, indonesian, interlingua, irish, italian, kannada, kurmanji, latin, latvian,
+ lithuanian, malayalam, marathi, mongolian, mongolianlmc, monogreek, ngerman, n
+german-x-2013-05-26, nynorsk, oriya, panjabi, pinyin, polish, portuguese, roman
+ian, russian, sanskrit, serbian, slovak, slovenian, spanish, swedish, swissgerm
+an, tamil, telugu, turkish, turkmen, ukenglish, ukrainian, uppersorbian, usengl
+ishmax, welsh, loaded.
+(C:\Users\ywkwon\git\JobShare\paper\IEEEtran.cls
 Document Class: IEEEtran 2015/08/26 V1.8b by Michael Shell
 -- See the "IEEEtran_HOWTO" manual for usage information.
 -- http://www.michaelshell.org/tex/ieeetran/
@@ -16,7 +25,8 @@ Document Class: IEEEtran 2015/08/26 V1.8b by Michael Shell
 \@IEEEtrantmpcountC=\count81
 \@IEEEtrantmptoksA=\toks14
 LaTeX Font Info:    Try loading font information for OT1+ptm on input line 503.
-("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\psnfss\ot1ptm.fd"
+
+("C:\Program Files\MiKTeX 2.9\tex\latex\psnfss\ot1ptm.fd"
 File: ot1ptm.fd 2001/06/04 font definitions for OT1/ptm.
 )
 -- Using 8.5in x 11in (letter) paper.
@@ -30,42 +40,52 @@ LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <5> not available
 (Font)              Font shape `OT1/ptm/b/n' tried instead on input line 1090.
 LaTeX Font Info:    Font shape `OT1/ptm/bx/it' in size <5> not available
 (Font)              Font shape `OT1/ptm/b/it' tried instead on input line 1090.
+
 LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <7> not available
 (Font)              Font shape `OT1/ptm/b/n' tried instead on input line 1090.
 LaTeX Font Info:    Font shape `OT1/ptm/bx/it' in size <7> not available
 (Font)              Font shape `OT1/ptm/b/it' tried instead on input line 1090.
+
 LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <8> not available
 (Font)              Font shape `OT1/ptm/b/n' tried instead on input line 1090.
 LaTeX Font Info:    Font shape `OT1/ptm/bx/it' in size <8> not available
 (Font)              Font shape `OT1/ptm/b/it' tried instead on input line 1090.
+
 LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <9> not available
 (Font)              Font shape `OT1/ptm/b/n' tried instead on input line 1090.
 LaTeX Font Info:    Font shape `OT1/ptm/bx/it' in size <9> not available
 (Font)              Font shape `OT1/ptm/b/it' tried instead on input line 1090.
+
 LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <10> not available
 (Font)              Font shape `OT1/ptm/b/n' tried instead on input line 1090.
 LaTeX Font Info:    Font shape `OT1/ptm/bx/it' in size <10> not available
 (Font)              Font shape `OT1/ptm/b/it' tried instead on input line 1090.
+
 LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <11> not available
 (Font)              Font shape `OT1/ptm/b/n' tried instead on input line 1090.
 LaTeX Font Info:    Font shape `OT1/ptm/bx/it' in size <11> not available
 (Font)              Font shape `OT1/ptm/b/it' tried instead on input line 1090.
+
 LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <12> not available
 (Font)              Font shape `OT1/ptm/b/n' tried instead on input line 1090.
 LaTeX Font Info:    Font shape `OT1/ptm/bx/it' in size <12> not available
 (Font)              Font shape `OT1/ptm/b/it' tried instead on input line 1090.
+
 LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <17> not available
 (Font)              Font shape `OT1/ptm/b/n' tried instead on input line 1090.
 LaTeX Font Info:    Font shape `OT1/ptm/bx/it' in size <17> not available
 (Font)              Font shape `OT1/ptm/b/it' tried instead on input line 1090.
+
 LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <20> not available
 (Font)              Font shape `OT1/ptm/b/n' tried instead on input line 1090.
 LaTeX Font Info:    Font shape `OT1/ptm/bx/it' in size <20> not available
 (Font)              Font shape `OT1/ptm/b/it' tried instead on input line 1090.
+
 LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <24> not available
 (Font)              Font shape `OT1/ptm/b/n' tried instead on input line 1090.
 LaTeX Font Info:    Font shape `OT1/ptm/bx/it' in size <24> not available
 (Font)              Font shape `OT1/ptm/b/it' tried instead on input line 1090.
+
 \IEEEquantizedlength=\dimen109
 \IEEEquantizedlengthdiff=\dimen110
 \IEEEquantizedtextheightdiff=\dimen111
@@ -100,31 +120,31 @@ LaTeX Font Info:    Font shape `OT1/ptm/bx/it' in size <24> not available
 \IEEEPARstartletwidth=\dimen125
 \c@IEEEbiography=\count93
 \@IEEEtranrubishbin=\box27
-) ("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\graphics\graphicx.sty"
-Package: graphicx 2014/10/28 v1.0g Enhanced LaTeX Graphics (DPC,SPQR)
+) ("C:\Program Files\MiKTeX 2.9\tex\latex\graphics\graphicx.sty"
+Package: graphicx 1999/02/16 v1.0f Enhanced LaTeX Graphics (DPC,SPQR)
 
-("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\graphics\keyval.sty"
-Package: keyval 2014/10/28 v1.15 key=value parser (DPC)
+("C:\Program Files\MiKTeX 2.9\tex\latex\graphics\keyval.sty"
+Package: keyval 1999/03/16 v1.13 key=value parser (DPC)
 \KV@toks@=\toks15
 )
-("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\graphics\graphics.sty"
-Package: graphics 2014/10/28 v1.0p Standard LaTeX Graphics (DPC,SPQR)
+("C:\Program Files\MiKTeX 2.9\tex\latex\graphics\graphics.sty"
+Package: graphics 2009/02/05 v1.0o Standard LaTeX Graphics (DPC,SPQR)
 
-("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\graphics\trig.sty"
+("C:\Program Files\MiKTeX 2.9\tex\latex\graphics\trig.sty"
 Package: trig 1999/03/16 v1.09 sin cos tan (DPC)
 )
-("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\00miktex\graphics.cfg"
+("C:\Program Files\MiKTeX 2.9\tex\latex\00miktex\graphics.cfg"
 File: graphics.cfg 2007/01/18 v1.5 graphics configuration of teTeX/TeXLive
 )
-Package graphics Info: Driver file: pdftex.def on input line 94.
+Package graphics Info: Driver file: pdftex.def on input line 91.
 
-("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\pdftex-def\pdftex.def"
+("C:\Program Files\MiKTeX 2.9\tex\latex\pdftex-def\pdftex.def"
 File: pdftex.def 2011/05/27 v0.06d Graphics/color for pdfTeX
 
-("C:\Program Files (x86)\MiKTeX 2.9\tex\generic\oberdiek\infwarerr.sty"
+("C:\Program Files\MiKTeX 2.9\tex\generic\oberdiek\infwarerr.sty"
 Package: infwarerr 2010/04/08 v1.3 Providing info/warning/error messages (HO)
 )
-("C:\Program Files (x86)\MiKTeX 2.9\tex\generic\oberdiek\ltxcmds.sty"
+("C:\Program Files\MiKTeX 2.9\tex\generic\oberdiek\ltxcmds.sty"
 Package: ltxcmds 2011/11/09 v1.22 LaTeX kernel commands for general use (HO)
 )
 \Gread@gobject=\count94
@@ -132,7 +152,7 @@ Package: ltxcmds 2011/11/09 v1.22 LaTeX kernel commands for general use (HO)
 \Gin@req@height=\dimen126
 \Gin@req@width=\dimen127
 )
-("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\listings\listings.sty"
+(C:\Users\ywkwon\AppData\Roaming\MiKTeX\2.9\tex\latex\listings\listings.sty
 \lst@mode=\count95
 \lst@gtempboxa=\box28
 \lst@token=\toks16
@@ -146,31 +166,31 @@ Package: ltxcmds 2011/11/09 v1.22 LaTeX kernel commands for general use (HO)
 \lst@lineno=\count100
 \lst@maxwidth=\dimen131
 
-("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\listings\lstmisc.sty"
-File: lstmisc.sty 2015/06/04 1.6 (Carsten Heinz)
+(C:\Users\ywkwon\AppData\Roaming\MiKTeX\2.9\tex\latex\listings\lstmisc.sty
+File: lstmisc.sty 2014/09/06 1.5e (Carsten Heinz)
 \c@lstnumber=\count101
 \lst@skipnumbers=\count102
 \lst@framebox=\box29
 )
-("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\listings\listings.cfg"
-File: listings.cfg 2015/06/04 1.6 listings configuration
+(C:\Users\ywkwon\AppData\Roaming\MiKTeX\2.9\tex\latex\listings\listings.cfg
+File: listings.cfg 2014/09/06 1.5e listings configuration
 ))
-Package: listings 2015/06/04 1.6 (Carsten Heinz)
+Package: listings 2014/09/06 1.5e (Carsten Heinz)
 
-("C:\Program Files (x86)\MiKTeX 2.9\tex\generic\babel\babel.sty"
-Package: babel 2015/08/03 3.9m The Babel package
+("C:\Program Files\MiKTeX 2.9\tex\generic\babel\babel.sty"
+Package: babel 2008/07/08 v3.8m The Babel package
 
 *************************************
 * Local config file bblopts.cfg used
 *
-("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\00miktex\bblopts.cfg"
+("C:\Program Files\MiKTeX 2.9\tex\latex\00miktex\bblopts.cfg"
 File: bblopts.cfg 2006/07/31 v1.0 MiKTeX 'babel' configuration
 )
-("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\babel-english\english.ldf"
-Language: english 2012/08/20 v3.3p English support from the babel system
+("C:\Program Files\MiKTeX 2.9\tex\generic\babel\english.ldf"
+Language: english 2005/03/30 v3.3o English support from the babel system
 
-("C:\Program Files (x86)\MiKTeX 2.9\tex\generic\babel\babel.def"
-File: babel.def 2015/08/03 3.9m Babel common definitions
+("C:\Program Files\MiKTeX 2.9\tex\generic\babel\babel.def"
+File: babel.def 2008/07/08 v3.8m Babel common definitions
 \babel@savecnt=\count103
 \U@D=\dimen132
 )
@@ -178,7 +198,7 @@ File: babel.def 2015/08/03 3.9m Babel common definitions
 \l@australian = a dialect from \language\l@british 
 \l@newzealand = a dialect from \language\l@british 
 ))
-("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\float\float.sty"
+("C:\Program Files\MiKTeX 2.9\tex\latex\float\float.sty"
 Package: float 2001/11/08 v1.3d Float enhancements (AL)
 \c@float@type=\count104
 \float@exts=\toks17
@@ -186,19 +206,19 @@ Package: float 2001/11/08 v1.3d Float enhancements (AL)
 \@float@everytoks=\toks18
 \@floatcapt=\box31
 )
-("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\graphics\color.sty"
-Package: color 2014/10/28 v1.1a Standard LaTeX Color (DPC)
+("C:\Program Files\MiKTeX 2.9\tex\latex\graphics\color.sty"
+Package: color 2005/11/14 v1.0j Standard LaTeX Color (DPC)
 
-("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\00miktex\color.cfg"
+("C:\Program Files\MiKTeX 2.9\tex\latex\00miktex\color.cfg"
 File: color.cfg 2007/01/18 v1.5 color configuration of teTeX/TeXLive
 )
-Package color Info: Driver file: pdftex.def on input line 142.
+Package color Info: Driver file: pdftex.def on input line 130.
 )
-("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\caption\caption.sty"
-Package: caption 2015/09/17 v3.3-111 Customizing captions (AR)
+(C:\Users\ywkwon\AppData\Roaming\MiKTeX\2.9\tex\latex\caption\caption.sty
+Package: caption 2013/05/02 v3.3-89 Customizing captions (AR)
 
-("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\caption\caption3.sty"
-Package: caption3 2015/09/17 v1.7-111 caption3 kernel (AR)
+(C:\Users\ywkwon\AppData\Roaming\MiKTeX\2.9\tex\latex\caption\caption3.sty
+Package: caption3 2013/05/02 v1.6-88 caption3 kernel (AR)
 Package caption3 Info: TeX engine: e-TeX on input line 57.
 \captionmargin=\dimen133
 \captionmargin@=\dimen134
@@ -215,37 +235,41 @@ Package caption Warning: Unsupported document class (or package) detected,
 (caption)                usage of the caption package is not recommended.
 See the caption package documentation for explanation.
 
-Package caption Info: \@makecaption = \long macro:#1#2->\ifx \@captype \@IEEEtablestring \footnotesize \bgroup \par \cen
-tering \@IEEEtabletopskipstrut {\normalfont \footnotesize #1}\\{\normalfont \footnotesize \scshape #2}\par \addvspace {0
-.5\baselineskip }\egroup \@IEEEtablecaptionsepspace \else \@IEEEfigurecaptionsepspace \setbox \@tempboxa \hbox {\normalf
-ont \footnotesize {#1.}\nobreakspace \nobreakspace #2}\ifdim \wd \@tempboxa >\hsize \setbox \@tempboxa \hbox {\normalfon
-t \footnotesize {#1.}\nobreakspace \nobreakspace }\parbox [t]{\hsize }{\normalfont \footnotesize \noindent \unhbox \@tem
-pboxa #2}\else \ifCLASSOPTIONconference \hbox to\hsize {\normalfont \footnotesize \hfil \box \@tempboxa \hfil }\else \hb
-ox to\hsize {\normalfont \footnotesize \box \@tempboxa \hfil }\fi \fi \fi .
+Package caption Info: \@makecaption = \long macro:#1#2->\ifx \@captype \@IEEEta
+blestring \footnotesize \bgroup \par \centering \@IEEEtabletopskipstrut {\norma
+lfont \footnotesize #1}\\{\normalfont \footnotesize \scshape #2}\par \addvspace
+ {0.5\baselineskip }\egroup \@IEEEtablecaptionsepspace \else \@IEEEfigurecaptio
+nsepspace \setbox \@tempboxa \hbox {\normalfont \footnotesize {#1.}\nobreakspac
+e \nobreakspace #2}\ifdim \wd \@tempboxa >\hsize \setbox \@tempboxa \hbox {\nor
+malfont \footnotesize {#1.}\nobreakspace \nobreakspace }\parbox [t]{\hsize }{\n
+ormalfont \footnotesize \noindent \unhbox \@tempboxa #2}\else \ifCLASSOPTIONcon
+ference \hbox to\hsize {\normalfont \footnotesize \hfil \box \@tempboxa \hfil }
+\else \hbox to\hsize {\normalfont \footnotesize \box \@tempboxa \hfil }\fi \fi 
+\fi .
 \c@ContinuedFloat=\count105
 Package caption Info: float package is loaded.
 Package caption Info: listings package is loaded.
-) ("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\tools\indentfirst.sty"
+) ("C:\Program Files\MiKTeX 2.9\tex\latex\tools\indentfirst.sty"
 Package: indentfirst 1995/11/23 v1.03 Indent first paragraph (DPC)
 )
-("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\amsmath\amsmath.sty"
+("C:\Program Files\MiKTeX 2.9\tex\latex\amsmath\amsmath.sty"
 Package: amsmath 2013/01/14 v2.14 AMS math features
 \@mathmargin=\skip44
 
 For additional information on amsmath, use the `?' option.
-("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\amsmath\amstext.sty"
+("C:\Program Files\MiKTeX 2.9\tex\latex\amsmath\amstext.sty"
 Package: amstext 2000/06/29 v2.01
 
-("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\amsmath\amsgen.sty"
+("C:\Program Files\MiKTeX 2.9\tex\latex\amsmath\amsgen.sty"
 File: amsgen.sty 1999/11/30 v2.0
 \@emptytoks=\toks19
 \ex@=\dimen140
 ))
-("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\amsmath\amsbsy.sty"
+("C:\Program Files\MiKTeX 2.9\tex\latex\amsmath\amsbsy.sty"
 Package: amsbsy 1999/11/29 v1.2d
 \pmbraise@=\dimen141
 )
-("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\amsmath\amsopn.sty"
+("C:\Program Files\MiKTeX 2.9\tex\latex\amsmath\amsopn.sty"
 Package: amsopn 1999/12/14 v2.01 operator names
 )
 \inf@bad=\count106
@@ -286,7 +310,7 @@ LaTeX Font Info:    Redeclaring font encoding OMS on input line 567.
 LaTeX Info: Redefining \[ on input line 2665.
 LaTeX Info: Redefining \] on input line 2666.
 )
-("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\fancybox\fancybox.sty"
+(C:\Users\ywkwon\AppData\Roaming\MiKTeX\2.9\tex\latex\fancybox\fancybox.sty
 Package: fancybox 2010/05/15 1.4
 
 Style option: `fancybox' v1.4 <2010/05/15> (tvz)
@@ -299,19 +323,23 @@ Style option: `fancybox' v1.4 <2010/05/15> (tvz)
 \EndVerbatimTokens=\toks27
 \Verbatim@Outfile=\write3
 \Verbatim@Infile=\read1
-) ("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\algorithms\algorithm.sty"
-Package: algorithm 2009/08/24 v0.1 Document Style `algorithm' - floating environment
+)
+(C:\Users\ywkwon\AppData\Roaming\MiKTeX\2.9\tex\latex\algorithms\algorithm.sty
+Package: algorithm 2009/08/24 v0.1 Document Style `algorithm' - floating enviro
+nment
 
-("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\base\ifthen.sty"
-Package: ifthen 2014/09/29 v1.1c Standard LaTeX ifthen package (DPC)
+("C:\Program Files\MiKTeX 2.9\tex\latex\base\ifthen.sty"
+Package: ifthen 2001/05/26 v1.1c Standard LaTeX ifthen package (DPC)
 )
 \@float@every@algorithm=\toks28
 \c@algorithm=\count118
 )
-("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\algorithmicx\algpseudocode.sty"
+(C:\Users\ywkwon\AppData\Roaming\MiKTeX\2.9\tex\latex\algorithmicx\algpseudocod
+e.sty
 Package: algpseudocode 
 
-("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\algorithmicx\algorithmicx.sty"
+(C:\Users\ywkwon\AppData\Roaming\MiKTeX\2.9\tex\latex\algorithmicx\algorithmicx
+.sty
 Package: algorithmicx 2005/04/27 v1.2 Algorithmicx
 
 Document Style algorithmicx 1.2 - a greatly improved `algorithmic' style
@@ -327,9 +355,10 @@ Document Style algorithmicx 1.2 - a greatly improved `algorithmic' style
 \ALG@tmplength=\skip49
 )
 Document Style - pseudocode environments for use with the `algorithmicx' style
-) ("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\listings\lstlang1.sty"
-File: lstlang1.sty 2015/06/04 1.6 listings language file
-) (job2p.aux)
+) (C:\Users\ywkwon\AppData\Roaming\MiKTeX\2.9\tex\latex\listings\lstlang1.sty
+File: lstlang1.sty 2014/09/06 1.5e listings language file
+)
+No file job2p.aux.
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 87.
 LaTeX Font Info:    ... okay on input line 87.
 LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 87.
@@ -342,9 +371,8 @@ LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 87.
 LaTeX Font Info:    ... okay on input line 87.
 LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 87.
 LaTeX Font Info:    ... okay on input line 87.
-
 -- Lines per column: 56 (exact).
-("C:\Program Files (x86)\MiKTeX 2.9\tex\context\base\supp-pdf.mkii"
+(C:\Users\ywkwon\AppData\Roaming\MiKTeX\2.9\tex\context\base\supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
 \scratchcounter=\count126
 \scratchdimen=\dimen150
@@ -361,42 +389,71 @@ LaTeX Font Info:    ... okay on input line 87.
 \c@lstlisting=\count132
 Package caption Info: Begin \AtBeginDocument code.
 Package caption Info: End \AtBeginDocument code.
- [1{C:/Users/ASSL-GREEN/AppData/Local/MiKTeX/2.9/pdftex/config/pdftex.map}
+
+
+LaTeX Warning: Citation `rbnb' on page 1 undefined on input line 139.
+
+
+LaTeX Warning: Citation `rabbitmq' on page 1 undefined on input line 139.
+
+
+LaTeX Warning: Citation `naradabrokering' on page 1 undefined on input line 139
+.
+
+[1{C:/Users/ywkwon/AppData/Local/MiKTeX/2.9/pdftex/config/pdftex.map}
 
 
 ]
+
+LaTeX Warning: Reference `fig:architecture' on page 2 undefined on input line 1
+64.
+
 <data/jobShareArch.png, id=8, 338.01282pt x 439.6425pt>
 File: data/jobShareArch.png Graphic file (type png)
- <use data/jobShareArch.png>
+
+<use data/jobShareArch.png>
 Package pdftex.def Info: data/jobShareArch.png used on input line 169.
 (pdftex.def)             Requested size: 201.23969pt x 261.75488pt.
 LaTeX Font Info:    Try loading font information for OT1+pcr on input line 175.
 
-("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\psnfss\ot1pcr.fd"
+
+("C:\Program Files\MiKTeX 2.9\tex\latex\psnfss\ot1pcr.fd"
 File: ot1pcr.fd 2001/06/04 font definitions for OT1/pcr.
 )
 Underfull \hbox (badness 1721) in paragraph at lines 180--181
-\OT1/ptm/m/n/10 sub mod-ule in-side the \OT1/pcr/m/n/10 WPB \OT1/ptm/m/n/10 to wrap up the com-plex-
+\OT1/ptm/m/n/10 sub mod-ule in-side the \OT1/pcr/m/n/10 WPB \OT1/ptm/m/n/10 to 
+wrap up the com-plex-
  []
+
+
+LaTeX Warning: Reference `fig:forming' on page 2 undefined on input line 182.
 
 <data/discoverPeers.png, id=9, 848.4197pt x 462.97969pt>
 File: data/discoverPeers.png Graphic file (type png)
- <use data/discoverPeers.png>
+
+<use data/discoverPeers.png>
 Package pdftex.def Info: data/discoverPeers.png used on input line 187.
 (pdftex.def)             Requested size: 258.0pt x 140.78825pt.
- [2 <./data/jobShareArch.png> <./data/discoverPeers.png>]
+ [2 <C:/Users/ywkwon/git/JobShare/paper/data/jobShareArch.png> <C:/Users/ywkwon
+/git/JobShare/paper/data/discoverPeers.png>]
 Underfull \hbox (badness 1715) in paragraph at lines 194--195
-[]\OT1/ptm/m/n/10 Both \OT1/pcr/m/n/10 ClientSocketHandler \OT1/ptm/m/n/10 and \OT1/pcr/m/n/10 ServerSocket
+[]\OT1/ptm/m/n/10 Both \OT1/pcr/m/n/10 ClientSocketHandler \OT1/ptm/m/n/10 and 
+\OT1/pcr/m/n/10 ServerSocket
  []
 
 
 Underfull \hbox (badness 7558) in paragraph at lines 194--195
-\OT1/pcr/m/n/10 Handler \OT1/ptm/m/n/10 are con-sti-tuted by a sub mod-ule named
+\OT1/pcr/m/n/10 Handler \OT1/ptm/m/n/10 are con-sti-tuted by a sub mod-ule name
+d
  []
 
 
+LaTeX Warning: Reference `code:job_def' on page 3 undefined on input line 202.
+
+
 Underfull \hbox (badness 6078) in paragraph at lines 202--203
- \OT1/ptm/m/it/10 1) Job Def-i-ni-tion: [][] \OT1/ptm/m/n/10 To avoid any mal-func-tions and
+ \OT1/ptm/m/it/10 1) Job Def-i-ni-tion: [][] \OT1/ptm/m/n/10 To avoid any mal-f
+unc-tions and
  []
 
 
@@ -407,9 +464,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 202--203
 LaTeX Font Info:    Font shape `OT1/pcr/bx/n' in size <8> not available
 (Font)              Font shape `OT1/pcr/b/n' tried instead on input line 209.
 
-Underfull \hbox (badness 1867) in paragraph at lines 225--226
- \OT1/ptm/m/it/10 2) Data Parser: [][] \OT1/ptm/m/n/10 The code snipe 2[] shows the main
- []
+LaTeX Warning: Reference `data_parser' on page 3 undefined on input line 225.
 
 
 Underfull \hbox (badness 10000) in paragraph at lines 225--226
@@ -424,29 +479,40 @@ Overfull \hbox (3.79999pt too wide) in paragraph at lines 227--254
 
 Underfull \hbox (badness 1400) in paragraph at lines 259--260
 []\OT1/pcr/m/n/10 parseObjectToBytes(object) \OT1/ptm/m/n/10 in-structs sys-tem
+
  []
+
+
+LaTeX Warning: Reference `code:get_single_part' on page 3 undefined on input li
+ne 261.
+
+
+LaTeX Warning: Reference `fig:checkStatus' on page 3 undefined on input line 26
+8.
 
 <data/checkStatusFlow.png, id=18, 413.29407pt x 378.06244pt>
 File: data/checkStatusFlow.png Graphic file (type png)
- <use data/checkStatusFlow.png>
+
+<use data/checkStatusFlow.png>
 Package pdftex.def Info: data/checkStatusFlow.png used on input line 273.
 (pdftex.def)             Requested size: 232.19843pt x 212.40576pt.
 
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
  [3]
-Underfull \hbox (badness 3000) in paragraph at lines 280--281
-\OT1/ptm/m/n/10 Be-fore de-liv-er-ing jobs, it dis-patches IRS mes-sages to
+
+LaTeX Warning: Reference `code:jsonResponse' on page 4 undefined on input line 
+280.
+
+
+Underfull \hbox (badness 1418) in paragraph at lines 280--281
+\OT1/ptm/m/n/10 the peers for ac-knowl-edg-ment of their avail-abil-ity ($\OML/
+cmm/m/it/10 RL$
  []
 
 
-Underfull \hbox (badness 3168) in paragraph at lines 280--281
-\OT1/ptm/m/n/10 all the peers for ac-knowl-edg-ment of their avail-abil-ity
- []
-
-
-Underfull \hbox (badness 1728) in paragraph at lines 280--281
-\OT1/ptm/m/n/10 ($\OML/cmm/m/it/10 RL$ \OT1/ptm/m/n/10 - Level of Re-spon-si-bil-ity). If a peer re-ceives an
+Underfull \hbox (badness 1694) in paragraph at lines 280--281
+\OT1/ptm/m/n/10 - Level of Re-spon-si-bil-ity). If a peer re-ceives an IRS,
  []
 
 
@@ -454,28 +520,65 @@ Underfull \hbox (badness 10000) in paragraph at lines 280--281
 
  []
 
+
+LaTeX Warning: Reference `ss_jqfp' on page 4 undefined on input line 312.
+
+
+LaTeX Warning: Reference `code:jsonResponse' on page 4 undefined on input line 
+316.
+
 LaTeX Font Info:    Try loading font information for OMS+ptm on input line 327.
-("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\psnfss\omsptm.fd"
+
+("C:\Program Files\MiKTeX 2.9\tex\latex\psnfss\omsptm.fd"
 File: omsptm.fd 
 )
 LaTeX Font Info:    Font shape `OMS/ptm/m/n' in size <8> not available
 (Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 327.
 
+
+LaTeX Warning: Reference `alg:select_peers' on page 4 undefined on input line 3
+42.
+
+
 Underfull \hbox (badness 10000) in paragraph at lines 342--343
 
  []
 
-[4 <./data/checkStatusFlow.png>]
 
-LaTeX Warning: Reference `job-description' on page 5 undefined on input line 432.
+LaTeX Warning: Citation `stat_explain' on page 4 undefined on input line 348.
+
+[4 <C:/Users/ywkwon/git/JobShare/paper/data/checkStatusFlow.png>]
+
+LaTeX Warning: Reference `alg:assign_job' on page 5 undefined on input line 368
+.
+
+
+LaTeX Warning: Reference `scheduling' on page 5 undefined on input line 410.
+
+
+LaTeX Warning: Citation `wifi_energy' on page 5 undefined on input line 424.
+
+
+LaTeX Warning: Reference `job-description' on page 5 undefined on input line 43
+2.
 
 [5]
+
+LaTeX Warning: Reference `ui_handler' on page 6 undefined on input line 440.
+
+
 Underfull \hbox (badness 10000) in paragraph at lines 440--441
 
  []
 
 
-LaTeX Warning: Reference `job-description' on page 6 undefined on input line 466.
+LaTeX Warning: Reference `job-description' on page 6 undefined on input line 46
+6.
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 466--467
+
+ []
 
 
 Overfull \hbox (3.79999pt too wide) in paragraph at lines 468--483
@@ -483,8 +586,12 @@ Overfull \hbox (3.79999pt too wide) in paragraph at lines 468--483
  []
 
 
+LaTeX Warning: Reference `scheduling' on page 6 undefined on input line 486.
+
+
 Underfull \hbox (badness 1975) in paragraph at lines 486--487
-\OT1/pcr/m/n/10 dispatchJob() \OT1/ptm/m/n/10 will be call to lo-cate the re-sources
+\OT1/pcr/m/n/10 dispatchJob() \OT1/ptm/m/n/10 will be call to lo-cate the re-so
+urces
  []
 
 
@@ -498,13 +605,15 @@ Overfull \hbox (3.79999pt too wide) in paragraph at lines 488--521
  []
 
 [6]
-Underfull \hbox (badness 3460) in paragraph at lines 601--602
-[]\OT1/ptm/m/n/8 Fred Chung, \OT1/ptm/m/it/8 Cus-tom Class Load-ing in Dalvik\OT1/ptm/m/n/8 , http://android-
+Underfull \hbox (badness 3460) in paragraph at lines 621--622
+[]\OT1/ptm/m/n/8 Fred Chung, \OT1/ptm/m/it/8 Cus-tom Class Load-ing in Dalvik\O
+T1/ptm/m/n/8 , http://android-
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 601--602
-\OT1/ptm/m/n/8 developers.blogspot.com/2011/07/custom-class-loading-in-dalvik.html,
+Underfull \hbox (badness 10000) in paragraph at lines 621--622
+\OT1/ptm/m/n/8 developers.blogspot.com/2011/07/custom-class-loading-in-dalvik.h
+tml,
  []
 
 
@@ -520,32 +629,40 @@ Before submitting the final camera ready copy, remember to:
 
 [7
 
-] (job2p.aux)
+] (C:\Users\ywkwon\git\JobShare\paper\job2p.aux)
 
 LaTeX Warning: There were undefined references.
 
+
+LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
+
  ) 
 Here is how much of TeX's memory you used:
- 6316 strings out of 493673
- 96121 string characters out of 3141514
- 237294 words of memory out of 3000000
- 9592 multiletter control sequences out of 15000+200000
+ 6206 strings out of 493921
+ 94534 string characters out of 3147278
+ 222332 words of memory out of 3000000
+ 9431 multiletter control sequences out of 15000+200000
  43431 words of font info for 84 fonts, out of 3000000 for 9000
- 1028 hyphenation exceptions out of 8191
+ 844 hyphenation exceptions out of 8191
  36i,8n,40p,920b,1101s stack positions out of 5000i,500n,10000p,200000b,50000s
-{C:/Program Files (x86)/MiKTeX 2.9/fonts/enc/dvips/fontname/8r.enc}<C:/Program Files (x86)/MiKTeX 2.9/fonts/type1/publ
-ic/amsfonts/cm/cmex10.pfb><C:/Program Files (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmmi10.pfb><C:/Program Files
- (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmmi5.pfb><C:/Program Files (x86)/MiKTeX 2.9/fonts/type1/public/amsfont
-s/cm/cmmi6.pfb><C:/Program Files (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmmi7.pfb><C:/Program Files (x86)/MiKTe
-X 2.9/fonts/type1/public/amsfonts/cm/cmmi8.pfb><C:/Program Files (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr10.p
-fb><C:/Program Files (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr7.pfb><C:/Program Files (x86)/MiKTeX 2.9/fonts/t
-ype1/public/amsfonts/cm/cmr8.pfb><C:/Program Files (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmsy10.pfb><C:/Progra
-m Files (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmsy7.pfb><C:/Program Files (x86)/MiKTeX 2.9/fonts/type1/public/
-amsfonts/cm/cmsy8.pfb><C:/Program Files (x86)/MiKTeX 2.9/fonts/type1/urw/courier/ucrb8a.pfb><C:/Program Files (x86)/MiKT
-eX 2.9/fonts/type1/urw/courier/ucrr8a.pfb><C:/Program Files (x86)/MiKTeX 2.9/fonts/type1/urw/times/utmb8a.pfb><C:/Progra
-m Files (x86)/MiKTeX 2.9/fonts/type1/urw/times/utmbi8a.pfb><C:/Program Files (x86)/MiKTeX 2.9/fonts/type1/urw/times/utmr
-8a.pfb><C:/Program Files (x86)/MiKTeX 2.9/fonts/type1/urw/times/utmri8a.pfb>
-Output written on job2p.pdf (7 pages, 305666 bytes).
+{C:/Program Files/MiKTeX 2.9/fonts/enc/dvips/fontname/8r.enc}<C:/Program File
+s/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmex10.pfb><C:/Program Files/MiKTeX
+ 2.9/fonts/type1/public/amsfonts/cm/cmmi10.pfb><C:/Program Files/MiKTeX 2.9/fon
+ts/type1/public/amsfonts/cm/cmmi5.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/
+public/amsfonts/cm/cmmi6.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/public/am
+sfonts/cm/cmmi7.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm
+/cmmi8.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr10.pf
+b><C:/Program Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr7.pfb><C:/Prog
+ram Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr8.pfb><C:/Program Files/
+MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmsy10.pfb><C:/Program Files/MiKTeX 2
+.9/fonts/type1/public/amsfonts/cm/cmsy7.pfb><C:/Program Files/MiKTeX 2.9/fonts/
+type1/public/amsfonts/cm/cmsy8.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/urw
+/courier/ucrb8a.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/urw/courier/ucrr8a
+.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/urw/times/utmb8a.pfb><C:/Program 
+Files/MiKTeX 2.9/fonts/type1/urw/times/utmbi8a.pfb><C:/Program Files/MiKTeX 2.9
+/fonts/type1/urw/times/utmr8a.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/urw/
+times/utmri8a.pfb>
+Output written on job2p.pdf (7 pages, 307618 bytes).
 PDF statistics:
  105 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 500000)

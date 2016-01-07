@@ -10,15 +10,15 @@ MinPos.y=-1
 MaxPos.x=-1
 MaxPos.y=-1
 NormalPos.left=4
-NormalPos.top=26
-NormalPos.right=1110
-NormalPos.bottom=378
+NormalPos.top=36
+NormalPos.right=1562
+NormalPos.bottom=541
 Class=LaTeXView
 Document=job2p.tex
 
 [Frame0_View0,0]
-TopLine=354
-Cursor=18930
+TopLine=0
+Cursor=113
 
 [SessionInfo]
 FrameCount=1
