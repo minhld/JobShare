@@ -7,48 +7,63 @@
 \@writefile{lof}{\select@language{english}}
 \@writefile{lot}{\select@language{english}}
 \@writefile{toc}{\contentsline {section}{\numberline {I}Introduction}{1}}
-\@writefile{toc}{\contentsline {section}{\numberline {II}Related Works}{2}}
-\@writefile{toc}{\contentsline {section}{\numberline {III}Approach}{2}}
-\@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces Architecture of a typical application implementing Job2P\relax }}{2}}
+\@writefile{toc}{\contentsline {section}{\numberline {II}Motivation and Technical Background}{2}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {II-A}}Motivation}{2}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {II-B}}Technical Background}{2}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {II-B}1}Machine-to-Machine Communication}{2}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {II-B}2}Remote Execution}{2}}
+\@writefile{toc}{\contentsline {section}{\numberline {III}Proposed Approach: \emph  {Job2P}}{2}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {III-A}}Approach Overview}{2}}
+\@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces Job2P Architecture\relax }}{2}}
 \providecommand*\caption@xref[2]{\@setref\relax\@undefined{#1}}
 \newlabel{fig:architecture}{{1}{2}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {III-A}}Wi-Fi Peer-to-peer Broadcaster}{2}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {III-A}1}Wi-Fi Peer-to-peer Broadcaster}{2}}
 \@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces Forming peer-to-peer network\relax }}{2}}
 \newlabel{fig:forming}{{2}{2}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {III-B}}Job Definition and Data Parser}{3}}
-\newlabel{job-description}{{\unhbox \voidb@x \hbox {III-B}1}{3}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {III-A}2}Job Handler}{3}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {III-B}}Programming Model of Job2P}{3}}
 \@writefile{toc}{\contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {III-B}1}Job Definition}{3}}
 \@writefile{lol}{\contentsline {lstlisting}{\numberline {1}{\ignorespaces Job Definition\relax }}{3}}
 \newlabel{code:job_def}{{1}{3}}
 \@writefile{toc}{\contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {III-B}2}Data Parser}{3}}
 \@writefile{lol}{\contentsline {lstlisting}{\numberline {2}{\ignorespaces \texttt  {DataParser} interface\relax }}{3}}
 \newlabel{data_parser}{{2}{3}}
-\@writefile{lol}{\contentsline {lstlisting}{\numberline {3}{\ignorespaces Example of \texttt  {getSinglePart()} for Bitmap\relax }}{3}}
-\newlabel{code:get_single_part}{{3}{3}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {III-C}}Job Scheduling and Decision Maker}{3}}
 \newlabel{scheduling}{{\unhbox \voidb@x \hbox {III-C}}{3}}
 \citation{stat_explain}
 \@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces Decision making workflow\relax }}{4}}
 \newlabel{fig:checkStatus}{{3}{4}}
 \newlabel{ss_dfp}{{\unhbox \voidb@x \hbox {III-C}1}{4}}
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {III-C}1}Determine feasible peers}{4}}
-\@writefile{lol}{\contentsline {lstlisting}{\numberline {4}{\ignorespaces JSON response from peer\relax }}{4}}
-\newlabel{code:jsonResponse}{{4}{4}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {III-C}1}Detect feasible peers}{4}}
+\@writefile{lol}{\contentsline {lstlisting}{\numberline {3}{\ignorespaces JSON response from peer\relax }}{4}}
+\newlabel{code:jsonResponse}{{3}{4}}
 \@writefile{loa}{\contentsline {algorithm}{\numberline {1}{\ignorespaces Select Available Peers Algorithm\relax }}{4}}
 \newlabel{alg:select_peers}{{1}{4}}
 \newlabel{ss_jqfp}{{\unhbox \voidb@x \hbox {III-C}2}{4}}
 \@writefile{toc}{\contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {III-C}2}Job quantitation for peers}{4}}
+\citation{wifi_energy}
 \@writefile{loa}{\contentsline {algorithm}{\numberline {2}{\ignorespaces Assign Job Algorithm\relax }}{5}}
 \newlabel{alg:assign_job}{{2}{5}}
-\@writefile{toc}{\contentsline {section}{\numberline {IV}Programming model}{5}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {IV-A}}Define Job}{5}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {IV-B}}APIs for Android applications}{5}}
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {IV-B}1}Message Handler}{5}}
-\@writefile{lol}{\contentsline {lstlisting}{\numberline {5}{\ignorespaces UI handler\relax }}{5}}
-\newlabel{ui_handler}{{5}{5}}
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {IV-B}2}Data Parser}{5}}
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {IV-B}3}Discovery Peer and Dispatching Jobs}{5}}
-\citation{wifi_energy}
+\@writefile{toc}{\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {III-D}}Estimating Energy Consumption in WiFi Environment}{5}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {III-E}}API Usage Scenario}{5}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {III-E}1}Defining a Job}{5}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {III-E}2}Implementing an Application Using APIs}{6}}
+\@writefile{toc}{\contentsline {paragraph}{\numberline {\unhbox \voidb@x \hbox {III-E}2a}Message Handler}{6}}
+\@writefile{lol}{\contentsline {lstlisting}{\numberline {4}{\ignorespaces UI handler\relax }}{6}}
+\newlabel{ui_handler}{{4}{6}}
+\@writefile{toc}{\contentsline {paragraph}{\numberline {\unhbox \voidb@x \hbox {III-E}2b}Data Parser}{6}}
+\@writefile{lol}{\contentsline {lstlisting}{\numberline {5}{\ignorespaces Example of \texttt  {getSinglePart()} for Bitmap\relax }}{6}}
+\newlabel{code:get_single_part}{{5}{6}}
+\@writefile{toc}{\contentsline {paragraph}{\numberline {\unhbox \voidb@x \hbox {III-E}2c}Discovery Peer and Dispatching Jobs}{6}}
+\@writefile{lol}{\contentsline {lstlisting}{\numberline {6}{\ignorespaces Declare DataParser and JobHandler\relax }}{6}}
+\@writefile{toc}{\contentsline {section}{\numberline {IV}Evaluation}{6}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {IV-A}}Micro Benchmark}{6}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {IV-B}}Case Study}{6}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {IV-C}}Case Study Implementations}{6}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {IV-C}1}Image Processing}{6}}
+\@writefile{toc}{\contentsline {paragraph}{\numberline {\unhbox \voidb@x \hbox {IV-C}1a}Design}{6}}
+\@writefile{toc}{\contentsline {paragraph}{\numberline {\unhbox \voidb@x \hbox {IV-C}1b}Performance}{6}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {IV-C}2}Internet Remote Access}{6}}
 \bibcite{rbnb}{1}
 \bibcite{rabbitmq}{2}
 \bibcite{naradabrokering}{3}
@@ -58,11 +73,14 @@
 \bibcite{live_video_collaboration}{7}
 \bibcite{coast}{8}
 \bibcite{rio}{9}
-\@writefile{lol}{\contentsline {lstlisting}{\numberline {6}{\ignorespaces Declare DataParser and JobHandler\relax }}{6}}
-\@writefile{toc}{\contentsline {section}{\numberline {V}Experiments and Results}{6}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {V-A}}Preliminary Estimations}{6}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {V-B}}Results}{6}}
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {V-B}1}Applying Job2P to an Android project}{6}}
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {V-B}2}Performances}{6}}
-\@writefile{toc}{\contentsline {section}{\numberline {VI}Conclusions}{6}}
-\@writefile{toc}{\contentsline {section}{References}{6}}
+\@writefile{toc}{\contentsline {paragraph}{\numberline {\unhbox \voidb@x \hbox {IV-C}2a}Design}{7}}
+\@writefile{toc}{\contentsline {paragraph}{\numberline {\unhbox \voidb@x \hbox {IV-C}2b}Performance}{7}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {IV-C}3}GPS Sharing}{7}}
+\@writefile{toc}{\contentsline {paragraph}{\numberline {\unhbox \voidb@x \hbox {IV-C}3a}Design}{7}}
+\@writefile{toc}{\contentsline {paragraph}{\numberline {\unhbox \voidb@x \hbox {IV-C}3b}Performance}{7}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {IV-D}}Discussion}{7}}
+\@writefile{toc}{\contentsline {section}{\numberline {V}Related Work}{7}}
+\newlabel{sec:related}{{V}{7}}
+\@writefile{toc}{\contentsline {section}{\numberline {VI}Conclusions}{7}}
+\newlabel{sec:conc}{{VI}{7}}
+\@writefile{toc}{\contentsline {section}{References}{7}}

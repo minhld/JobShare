@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.16 (MiKTeX 2.9) (preloaded format=pdflatex 2015.12.15)  5 JAN 2016 13:17
+This is pdfTeX, Version 3.14159265-2.6-1.40.16 (MiKTeX 2.9) (preloaded format=pdflatex 2015.12.15)  7 JAN 2016 15:54
 entering extended mode
 **job2p.tex
 (job2p.tex
@@ -395,115 +395,161 @@ Underfull \hbox (badness 7558) in paragraph at lines 194--195
  []
 
 
-Underfull \hbox (badness 6078) in paragraph at lines 202--203
+Underfull \hbox (badness 6078) in paragraph at lines 204--205
  \OT1/ptm/m/it/10 1) Job Def-i-ni-tion: [][] \OT1/ptm/m/n/10 To avoid any mal-func-tions and
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 202--203
+Underfull \hbox (badness 10000) in paragraph at lines 204--205
 
  []
 
 LaTeX Font Info:    Font shape `OT1/pcr/bx/n' in size <8> not available
-(Font)              Font shape `OT1/pcr/b/n' tried instead on input line 209.
+(Font)              Font shape `OT1/pcr/b/n' tried instead on input line 211.
 
-Underfull \hbox (badness 1867) in paragraph at lines 225--226
+Underfull \hbox (badness 1867) in paragraph at lines 227--228
  \OT1/ptm/m/it/10 2) Data Parser: [][] \OT1/ptm/m/n/10 The code snipe 2[] shows the main
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 225--226
+Underfull \hbox (badness 10000) in paragraph at lines 227--228
 
  []
 
 
-Overfull \hbox (3.79999pt too wide) in paragraph at lines 227--254
+Overfull \hbox (3.79999pt too wide) in paragraph at lines 229--257
 [] 
  []
 
 
-Underfull \hbox (badness 1400) in paragraph at lines 259--260
+Underfull \hbox (badness 1400) in paragraph at lines 262--263
 []\OT1/pcr/m/n/10 parseObjectToBytes(object) \OT1/ptm/m/n/10 in-structs sys-tem
  []
 
 <data/checkStatusFlow.png, id=18, 413.29407pt x 378.06244pt>
 File: data/checkStatusFlow.png Graphic file (type png)
  <use data/checkStatusFlow.png>
-Package pdftex.def Info: data/checkStatusFlow.png used on input line 273.
+Package pdftex.def Info: data/checkStatusFlow.png used on input line 276.
 (pdftex.def)             Requested size: 232.19843pt x 212.40576pt.
 
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
  [3]
-Underfull \hbox (badness 3000) in paragraph at lines 280--281
+Underfull \hbox (badness 3000) in paragraph at lines 283--284
 \OT1/ptm/m/n/10 Be-fore de-liv-er-ing jobs, it dis-patches IRS mes-sages to
  []
 
 
-Underfull \hbox (badness 3168) in paragraph at lines 280--281
+Underfull \hbox (badness 3168) in paragraph at lines 283--284
 \OT1/ptm/m/n/10 all the peers for ac-knowl-edg-ment of their avail-abil-ity
  []
 
 
-Underfull \hbox (badness 1728) in paragraph at lines 280--281
+Underfull \hbox (badness 1728) in paragraph at lines 283--284
 \OT1/ptm/m/n/10 ($\OML/cmm/m/it/10 RL$ \OT1/ptm/m/n/10 - Level of Re-spon-si-bil-ity). If a peer re-ceives an
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 280--281
+Underfull \hbox (badness 10000) in paragraph at lines 283--284
 
  []
 
-LaTeX Font Info:    Try loading font information for OMS+ptm on input line 327.
+LaTeX Font Info:    Try loading font information for OMS+ptm on input line 330.
 ("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\psnfss\omsptm.fd"
 File: omsptm.fd 
 )
 LaTeX Font Info:    Font shape `OMS/ptm/m/n' in size <8> not available
-(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 327.
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 330.
 
-Underfull \hbox (badness 10000) in paragraph at lines 342--343
+Underfull \hbox (badness 10000) in paragraph at lines 345--346
 
  []
 
 [4 <./data/checkStatusFlow.png>]
+Underfull \hbox (badness 10000) in paragraph at lines 443--444
 
-LaTeX Warning: Reference `job-description' on page 5 undefined on input line 432.
+ []
 
 [5]
-Underfull \hbox (badness 10000) in paragraph at lines 440--441
+Underfull \hbox (badness 10000) in paragraph at lines 469--470
 
  []
 
 
-LaTeX Warning: Reference `job-description' on page 6 undefined on input line 466.
+Overfull \hbox (7.6001pt too wide) in paragraph at lines 481--482
+[][][][][][][][][][][][][][][][] 
+ []
 
 
-Overfull \hbox (3.79999pt too wide) in paragraph at lines 468--483
+Overfull \hbox (3.79999pt too wide) in paragraph at lines 471--486
 [] 
  []
 
 
-Underfull \hbox (badness 1975) in paragraph at lines 486--487
+Underfull \hbox (badness 1975) in paragraph at lines 489--490
 \OT1/pcr/m/n/10 dispatchJob() \OT1/ptm/m/n/10 will be call to lo-cate the re-sources
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 486--487
+Underfull \hbox (badness 10000) in paragraph at lines 489--490
 
  []
 
 
-Overfull \hbox (3.79999pt too wide) in paragraph at lines 488--521
+Overfull \hbox (3.79999pt too wide) in paragraph at lines 491--524
 [] 
  []
 
+
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 543--544
+
+ []
+
 [6]
-Underfull \hbox (badness 3460) in paragraph at lines 601--602
+Overfull \hbox (3.79999pt too wide) in paragraph at lines 545--555
+[] 
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 556--557
+[]\OT1/ptm/m/n/10 The method \OT1/pcr/m/n/10 createPlaceholder() \OT1/ptm/m/n/10 will parse
+ []
+
+
+Underfull \hbox (badness 1845) in paragraph at lines 556--557
+\OT1/ptm/m/n/10 in-puts to ini-ti-ate an empty place-holder bitmap. Fi-nally
+ []
+
+
+Underfull \hbox (badness 4353) in paragraph at lines 556--557
+\OT1/pcr/m/n/10 copyPartToPlaceholder() \OT1/ptm/m/n/10 method will place the
+ []
+
+
+Underfull \hbox (badness 4048) in paragraph at lines 556--557
+\OT1/ptm/m/n/10 par-tial re-sult bitmap into its cor-rect lo-ca-tion on the
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 556--557
+
+ []
+
+
+Overfull \hbox (3.79999pt too wide) in paragraph at lines 558--573
+[] 
+ []
+
+
+Underfull \hbox (badness 3460) in paragraph at lines 661--662
 []\OT1/ptm/m/n/8 Fred Chung, \OT1/ptm/m/it/8 Cus-tom Class Load-ing in Dalvik\OT1/ptm/m/n/8 , http://android-
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 601--602
+Underfull \hbox (badness 10000) in paragraph at lines 661--662
 \OT1/ptm/m/n/8 developers.blogspot.com/2011/07/custom-class-loading-in-dalvik.html,
  []
 
@@ -518,34 +564,28 @@ Before submitting the final camera ready copy, remember to:
  uses only Type 1 fonts and that every step in the generation
  process uses the appropriate paper size.
 
-[7
-
-] (job2p.aux)
-
-LaTeX Warning: There were undefined references.
-
- ) 
+[7] (job2p.aux) ) 
 Here is how much of TeX's memory you used:
- 6316 strings out of 493673
- 96121 string characters out of 3141514
- 237294 words of memory out of 3000000
- 9592 multiletter control sequences out of 15000+200000
+ 6324 strings out of 493673
+ 96237 string characters out of 3141514
+ 236294 words of memory out of 3000000
+ 9600 multiletter control sequences out of 15000+200000
  43431 words of font info for 84 fonts, out of 3000000 for 9000
  1028 hyphenation exceptions out of 8191
  36i,8n,40p,920b,1101s stack positions out of 5000i,500n,10000p,200000b,50000s
-{C:/Program Files (x86)/MiKTeX 2.9/fonts/enc/dvips/fontname/8r.enc}<C:/Program Files (x86)/MiKTeX 2.9/fonts/type1/publ
-ic/amsfonts/cm/cmex10.pfb><C:/Program Files (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmmi10.pfb><C:/Program Files
- (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmmi5.pfb><C:/Program Files (x86)/MiKTeX 2.9/fonts/type1/public/amsfont
-s/cm/cmmi6.pfb><C:/Program Files (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmmi7.pfb><C:/Program Files (x86)/MiKTe
-X 2.9/fonts/type1/public/amsfonts/cm/cmmi8.pfb><C:/Program Files (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr10.p
-fb><C:/Program Files (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr7.pfb><C:/Program Files (x86)/MiKTeX 2.9/fonts/t
-ype1/public/amsfonts/cm/cmr8.pfb><C:/Program Files (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmsy10.pfb><C:/Progra
-m Files (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmsy7.pfb><C:/Program Files (x86)/MiKTeX 2.9/fonts/type1/public/
-amsfonts/cm/cmsy8.pfb><C:/Program Files (x86)/MiKTeX 2.9/fonts/type1/urw/courier/ucrb8a.pfb><C:/Program Files (x86)/MiKT
-eX 2.9/fonts/type1/urw/courier/ucrr8a.pfb><C:/Program Files (x86)/MiKTeX 2.9/fonts/type1/urw/times/utmb8a.pfb><C:/Progra
-m Files (x86)/MiKTeX 2.9/fonts/type1/urw/times/utmbi8a.pfb><C:/Program Files (x86)/MiKTeX 2.9/fonts/type1/urw/times/utmr
-8a.pfb><C:/Program Files (x86)/MiKTeX 2.9/fonts/type1/urw/times/utmri8a.pfb>
-Output written on job2p.pdf (7 pages, 305666 bytes).
+{C:/Program Files (x86)/MiKTeX 2.9/fonts/enc/dvips/fontname/8r.enc}<C:/Program Files (x86)/MiKTeX 2.9/f
+onts/type1/public/amsfonts/cm/cmex10.pfb><C:/Program Files (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmmi10.pfb><C
+:/Program Files (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmmi5.pfb><C:/Program Files (x86)/MiKTeX 2.9/fonts/type1
+/public/amsfonts/cm/cmmi6.pfb><C:/Program Files (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmmi7.pfb><C:/Program Fi
+les (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmmi8.pfb><C:/Program Files (x86)/MiKTeX 2.9/fonts/type1/public/amsf
+onts/cm/cmr10.pfb><C:/Program Files (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr7.pfb><C:/Program Files (x86)/MiK
+TeX 2.9/fonts/type1/public/amsfonts/cm/cmr8.pfb><C:/Program Files (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmsy10
+.pfb><C:/Program Files (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmsy7.pfb><C:/Program Files (x86)/MiKTeX 2.9/font
+s/type1/public/amsfonts/cm/cmsy8.pfb><C:/Program Files (x86)/MiKTeX 2.9/fonts/type1/urw/courier/ucrb8a.pfb><C:/Program F
+iles (x86)/MiKTeX 2.9/fonts/type1/urw/courier/ucrr8a.pfb><C:/Program Files (x86)/MiKTeX 2.9/fonts/type1/urw/times/utmb8a
+.pfb><C:/Program Files (x86)/MiKTeX 2.9/fonts/type1/urw/times/utmbi8a.pfb><C:/Program Files (x86)/MiKTeX 2.9/fonts/type1
+/urw/times/utmr8a.pfb><C:/Program Files (x86)/MiKTeX 2.9/fonts/type1/urw/times/utmri8a.pfb>
+Output written on job2p.pdf (7 pages, 309568 bytes).
 PDF statistics:
  105 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 500000)

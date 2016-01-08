@@ -198,7 +198,9 @@ Both \texttt{ClientSocketHandler} and \texttt{ServerSocket Handler} are constitu
 \texttt{DataParser} is a loose coupling interface of the Job component facilitating adaptation with data heterogeneity. It helps determining mechanisms for: (1) serialization/deserialization object into binary format which is compatible for TCP transmission, (2) task partitioning, and (3) placeholder initialization and concatenation. To make the data type comprehensive to system in terms of reading, parsing or memory allocating, developer needs to supply instructions by instantiating an implementation of Data Parser for that type. 
 
 \subsection{Programming Model of Job2P} 
-\subsubsection{Job Definition}
+
+\subsubsection{Job Definition}\label{job-description}
+
 To avoid any malfunctions and misconfiguration at remote execution, a conventional Job interface is defined like the code snipe below (\ref{code:job_def}) \\
 
 \noindent \shadowbox{%
@@ -244,7 +246,8 @@ public interface DataParser {
   public Object createPlaceholder(jsonMetadata);
 
   public Object copyPartToPlaceholder(... 
-									partDataObject, partIndex);
+									partDataObject, 
+									firstOffset, lastOffset);
 
   public void destroy(dataObject);
   
@@ -463,7 +466,7 @@ The Message Handler is required to instantiate at the beginning. In particular, 
 
 \paragraph{Data Parser}
 
-Secondly, developer needs to declare \texttt{DataParser} to determine data-type and parser to equip for manipulating data at run-time (see sub section \ref{job-description}). \texttt{JobHandler} is the main component which wraps up the complexity , and exposes only the necessary functions like \texttt{discoverPeers()} and \texttt{dispatchJob()}. To send ACK messages to other peers for exchanging acknowledgments and reforming network, we need to call \texttt{discoverPeers()} function on the program, this work should be done as soon as application starts. 
+Secondly, developer needs to declare \texttt{DataParser} to determine data-type and parser to equip for manipulating data at run-time (see sub section \ref{job-description}). \texttt{JobHandler} is the main component which wraps up the complexity , and exposes only the necessary functions like \texttt{discoverPeers()} and \texttt{dispatchJob()}. To send ACK messages to other peers for exchanging acknowledgments and reforming network, we need to call \texttt{discoverPeers()} function on the program, this work should be done as soon as application starts.\\
 
 \noindent \shadowbox{%
 \begin{minipage}{245pt}
@@ -471,12 +474,12 @@ Secondly, developer needs to declare \texttt{DataParser} to determine data-type 
   \label{code:get_single_part}
   \begin{lstlisting}
 @Override
-public Object getSinglePart(data, partNum, idx){
+public Object getSinglePart(object, firstOffset, 
+																		lastOffset) {
   Bitmap bmpData = (Bitmap) data;
-  int pWidth = bmpData.getWidth() / partNum;
-  return Bitmap.createBitmap(bmpData, 
-                  (pWidth * idx), 0, pWidth, 
-                  bmpData.getHeight());
+  int pWidth = lastOffset - firstOffset;
+  return Bitmap.createBitmap(bmpData, firstOffset, 
+									0, pWidth, bmpData.getHeight());
 }
   \end{lstlisting}	
 \end{minipage}}	
@@ -526,16 +529,73 @@ When network is formed and connections are held from some of the peers, \texttt{
 \subsection{Case Study}
 To measure the performance of the system equipped with our APIs, we decorated a small testbed with collaboration of 5 different Android devices to perform our 3 test cases:
 \begin{itemize}
-	\item \textbf{Image Processing} we will initiate the peer-to-peer network test to perform blurring a large scale image which is unable to process at any of our devices. Particularly, to process an image with size $4000 \times 4000$ and 4 bytes to express each pixel color, application must spare the amount of memory equivalent to 64MB which is too expensive for the system, occasionally this kind of image would be refused to load. 
-	\item \textbf{Text analysis} another proof of performance on text processing. Our APIs will yield the data parser to developer for data heterogeneous adaptation.
-	\item \textbf{GPS} establishing a GPS connection is proof of high energy consuming. It would be impossible for a device with low battery to keep update with GPS frequently. We will base on Job2P to build a simple system so that one device can benefit GPS locations from the healthier devices.
+	\item \textbf{Image Processing} we will initiate the peer-to-peer network test to perform blurring a large scale image which is unable to process at any of our devices. Particularly, to process an image with size $4000 \times 4000$ and 4 bytes to express each pixel color, application must spare the amount of memory equivalent to 64MB which is way too much for a device, which occasionally returns out of memory exception. 
+	\item \textbf{Internet Remote Access} brings the Internet access capability to a device without connections or limited bandwidth by utilizing the other Internet-featured peers.
+	\item \textbf{GPS Sharing} establishing a GPS connection is proof of high energy consuming. It would be impossible for a device with low battery to keep update with GPS frequently. We will base on Job2P to build a simple system so that one device can benefit GPS locations from the healthier devices.
 \end{itemize}
 
-\subsection{Results}
+\subsection{Case Study Implementations}
 
-\subsubsection{Performances}
+\subsubsection{Image Processing}
+We applied blur effect, one of the energy consuming process on image. The image to blur has size $4326 \times 2856$, with 4 bytes per pixel, device must allocate around $50MB$ of heap to open, and hold another $50MB$ for the result. Therefore a collaboration system for image processing helps solving overload in terms of memory and energy consumption.
+
+\paragraph{Design}
+The most important part when applying APIs for image processing is defining the \texttt{BitmapDataParser} (See code snipe \ref{data_parser}) with a divide strategy in vertical cut. For an input image, the \texttt{firstOffset} and \texttt{lastOffset} will decide the first and last offsets of the vertical cut correspondingly throughout the width, from the top to the bottom edges. The algorithm of the vertical cut is described in the code snipe (\ref{code:get_single_part}). Regarding the placeholder, we override the \texttt{getJsonMetadata()} method to return a simple JSON string like below\\
+
+\noindent \shadowbox{%
+\begin{minipage}{245pt}
+	\captionof{lstlisting}{JSON for initiating placeholder}
+	\begin{lstlisting}
+{ 
+	"width": 4326, 
+	"height": 2856 
+} 
+	\end{lstlisting}
+\end{minipage}}
+
+The method \texttt{createPlaceholder()} will parse this JSON object to obtain \texttt{width} and \texttt{height} as the inputs to initiate an empty placeholder bitmap. Finally \texttt{copyPartToPlaceholder()} method will place the partial result bitmap into its correct location on the placeholder defined by \texttt{firstOffset} and \texttt{lastOffset}.\\
+
+\noindent \shadowbox{%
+\begin{minipage}{245pt}
+	\captionof{lstlisting}{Copy part to placeholder}
+	\begin{lstlisting}
+public Object copyPartToPlaceholder(placeholder, 
+										part, firstOffset, lastOffset){
+	Bitmap bmpPart = BitmapFactory.
+									decodeByteArray(part...);
+	int pieceWidth = partBmp.getWidth();
+	Canvas canvas = new Canvas(placeholder);
+	canvas.drawBitmap(bmpPart, firstOffset, 0...);
+	return null;
+}
+	\end{lstlisting}
+\end{minipage}}
+
+When all the partial bitmaps received, system throws a message titled \texttt{MAIN\_JOB\_DONE} to the UI which \texttt{msg.obj} contains a final bitmap.
+
+\paragraph{Performance}
+
+Running the test case throughout 50 tests by increasing number of devices from 1 to 5 within the network, we found that the test case doesn't work if there is only one device standing desolately. By utilizing 2 threads for the image process on that single device, we realized that only 1 thread works, the another does not due to out of memory exception, and the processing time to complete half of the task is $12,581ms$. 
+
+By increase the number of devices from 2 to 5, 
+
+\subsubsection{Internet Remote Access} 
+Theoretically, remote accessibility won't help reducing the amount of bytes downloading, but the speed is guaranteed to be ameliorative since the downloading process is scattered over a number of devices, therefore energy will be consumed less. 
+
+\paragraph{Design}
+
+To apply APIs for this application, from the caller we dispatch job requests, which contains information of job with resources are URL, number of parts and index, to the peers having \texttt{IRS[network]} at \texttt{high} or \texttt{low} (See ). At each peer, when request is received, it executes job to load URL to achieve page in HTML code. Then it will parse the HTML to detect resource links including multimedia resources (images, audio, videos), CSS, and JS. Depend on the number of parts and index, it narrows down the amount of resources and attempt downloading and put into a ZIP file before throw back to the caller.
+
+According to our system architecture, the caller needs to prepare a placeholder to hold every incoming results. For this test case, the placeholder is designated as a sub folder in the \texttt{Download} folder. When result comes as a ZIP file, contents will be extracted and filled into the placeholder folder. The final HTML file will contain all the modified resource links which locate at the same folder.
+
+\paragraph{Performance}
 Diagrams go here
 
+\subsubsection{GPS Sharing}
+
+\paragraph{Design}
+
+\paragraph{Performance}
 
 \subsection{Discussion}
 
