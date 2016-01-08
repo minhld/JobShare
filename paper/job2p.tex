@@ -577,7 +577,7 @@ When all the partial bitmaps received, system throws a message titled \texttt{MA
 
 Running the test case throughout 50 tests by increasing number of devices from 1 to 5 within the network, we found that the test case doesn't work if there is only one device standing desolately. By utilizing 2 threads for the image process on that single device, we realized that only 1 thread works, the another does not due to out of memory exception, and the processing time to complete half of the task is $12,581ms$. 
 
-By increase the number of devices from 2 to 5,  
+By increasing the number of devices in network from 2 to 5 and sharing the task with the other peers, we gathered statistic data like below
 
 \subsubsection{Internet Remote Access} 
 Theoretically, remote accessibility won't help reducing the amount of bytes downloading, but the speed is guaranteed to be ameliorative since the downloading process is scattered over a number of devices, therefore energy will be consumed less. 
