@@ -139,21 +139,37 @@ Unlike the other PCs or wired devices, the mobile devices have their own advanta
 
 To address those limitations with heavy software on mobile devices, we proposed Job2P as the Job Scheduling APIs for Android development that leverages Wi-Fi Direct to support sharing workloads and resources over peer-to-peer mobile device network, which doesn't require any Internet connections. Job2P provides a simple and straightforward API interface to get rid of sophistication of network implementation, letting developers easily create their distributed mobile applications with capability of forming closed range network. In term of workload distribution, Job2P splits task and resource into the smaller units called jobs, and dispatch to the peers. To distributed jobs equitably among the peers, a decision making module is added to decide the amount of resource the peer has to handle bases on its percentage of availability. Moreover, our APIs can handle fault tolerant for network malfunctions.
 
-Based on our experiments and results, our contributions are as follow
+Based on our experiments and results, our contributions are as follow:
 \begin{itemize}
-	\item \textbf{Simple programming model} a library for developers facilitates establishing mobile peer-to-peer network.
-	\item \textbf{Job Scheduler} for scheduling job execution and resource heterogeneity adaptation
-	\item \textbf{Runtime system} determines the number of devices with according appropriate jobs for the remote execution bases on applied algorithm on level of availability.  
-	\item \textbf{Systematic evaluation} our test case experiments will give the proof of APIs productivity
+	\item \textbf{Simple programming model} provides simple APIs for programmers who can facilitate the development of mobile, distributed execution model.
+	\item \textbf{Runtime system} determines the number of devices with appropriate jobs for the distributed execution based on a novel job distribution algorithm.  
+	%job execution and resource heterogeneity adaptation 
+	\item \textbf{Systematic evaluation:} 
+	 We have applied our approach to share smartphone resources by a set of benchmarks and real-world mobile applications, with the resulting energy savings approaching 30\%, performance, etc.
+
 \end{itemize}
  
 
 \section{Motivation and Technical Background}
+In this section, we present real world scenarios that motivate our approach and the major technologies we used.
 
-\subsection{Motivation} %or {Motivating Examples}
+\subsection{Motivating Examples}
+Consider the following three scenarios:
+\begin{enumerate}
+\item \emph{sharing computing power} 
+\item \emph{sharing a network connection}
+\item \emph{sharing sensors}
+\end{enumerate}
+
 \subsection{Technical Background}
-\subsubsection{Machine-to-Machine Communication}
+The major technologies used in this work are middleware, remote execution, and machine-to-machine communication. We describe them in turn next.
+
+\subsubsection{Middleware}
+Our approach uses features from mainstream middleware mechanisms for distributed execution as building blocks. 
+
+
 \subsubsection{Remote Execution}
+\subsubsection{Machine-to-Machine Communication}
 
 \section{Proposed Approach: \emph{Job2P}}
 
