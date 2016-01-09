@@ -1,0 +1,40 @@
+# set terminal png transparent nocrop enhanced size 450,320 font "arial,8" 
+# set output 'datastrings.5.png'
+set boxwidth 0.5 absolute
+set style fill   solid 1.00 border lt -1
+set grid nopolar
+set grid noxtics nomxtics ytics nomytics noztics nomztics \
+ nox2tics nomx2tics noy2tics nomy2tics nocbtics nomcbtics
+set grid layerdefault   lt 0 linewidth 0.500,  lt 0 linewidth 0.500
+set key inside right top vertical Right noreverse enhanced autotitle columnhead nobox
+set pointsize 2
+set xtics border in scale 0,0 mirror norotate  autojustify
+set xtics  norangelimit
+set xtics   ()
+set ytics border in scale 0,0 mirror norotate  autojustify
+set ztics border in scale 0,0 nomirror norotate  autojustify
+set cbtics border in scale 0,0 mirror norotate  autojustify
+set rtics axis in scale 0,0 nomirror norotate  autojustify
+set paxis 1 tics border in scale 0,0 nomirror norotate  autojustify
+set paxis 1 tics autofreq  rangelimit
+set paxis 2 tics border in scale 0,0 nomirror norotate  autojustify
+set paxis 2 tics autofreq  rangelimit
+set paxis 3 tics border in scale 0,0 nomirror norotate  autojustify
+set paxis 3 tics autofreq  rangelimit
+set paxis 4 tics border in scale 0,0 nomirror norotate  autojustify
+set paxis 4 tics autofreq  rangelimit
+set paxis 5 tics border in scale 0,0 nomirror norotate  autojustify
+set paxis 5 tics autofreq  rangelimit
+set paxis 6 tics border in scale 0,0 nomirror norotate  autojustify
+set paxis 6 tics autofreq  rangelimit
+set paxis 7 tics border in scale 0,0 nomirror norotate  autojustify
+set paxis 7 tics autofreq  rangelimit
+#set title "Cluster with 2 peers" 
+set xrange [ -0.500000 : 11.5000 ] noreverse nowriteback
+set ylabel "Execution Time" 
+set yrange [ 0 : 15000 ] noreverse nowriteback
+set bmargin  3
+x = 0.0
+## Last datafile plotted: "table.dat"
+plot 'D:/temp/c_5.dat' using 0:2:xtic(1) notitle columnhead with boxes, \
+'' using 0:2:2 with labels center offset 0,1 notitle

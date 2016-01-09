@@ -12,6 +12,7 @@
 \usepackage{fancybox}
 \usepackage{algorithm}
 \usepackage{algpseudocode}
+\usepackage{multicol}
 
 \definecolor{dkgreen}{rgb}{0,0.6,0}
 \definecolor{gray}{rgb}{0.5,0.5,0.5}
@@ -37,11 +38,7 @@
 \fi
 
 \lstset{%
-  numberstyle=\scriptsize\color[gray]{0.3},
-  numbersep=5pt,
-  stepnumber=1,
-  numbers=left,
-  xleftmargin=15pt,
+  xleftmargin=5pt,
   belowcaptionskip=\bigskipamount,
   captionpos=b,
   escapeinside={*'}{'*},
@@ -49,7 +46,7 @@
   tabsize=2,
   emphstyle={\bf},
   commentstyle=\it,
-  stringstyle=\mdseries\ttfamily,
+  stringstyle=\small\ttfamily,
   showspaces=false,
   keywordstyle=\bfseries,
   morekeywords={then,end},
@@ -447,19 +444,19 @@ The Message Handler is required to instantiate at the beginning. In particular, 
 	\captionof{lstlisting}{UI handler}
     \label{ui_handler}
 	\begin{lstlisting}
-	Handler mainUiHandler = new Handler() {
-		@Override
-		public void handleMessage(Message msg) {
-			switch (msg.what) {
-				case Utils.MAIN_JOB_DONE: {
-					// when job is completely finished
-				}
-				case Utils.MAIN_INFO: {
-					// to receive messages from the processor
-				}
+Handler mainUiHandler = new Handler() {
+	@Override
+	public void handleMessage(Message msg) {
+		switch (msg.what) {
+			case Utils.MAIN_JOB_DONE: {
+				...
+			}
+			case Utils.MAIN_INFO: {
+				...
 			}
 		}
-	};
+	}
+};
 	\end{lstlisting}
 
 \end{minipage}}
@@ -493,33 +490,27 @@ When network is formed and connections are held from some of the peers, \texttt{
 	\captionof{lstlisting}{Declare DataParser and JobHandler}
 
 	\begin{lstlisting}
-	// data parser: to determine datatype how to split the data 
-	dataParser = new BitmapJobDataParser();
-	...
-	// handlers registration
-	jobHandler = new JobHandler(this, dataParser);
-	jobHandler.setSocketListener(
-		new JobHandler.JobSocketListener() {
-			@Override
-			public void socketUpdated(... isConnected){
-					// when socket is updated
-			}
-	});
-	...
-	// update the device list
-	deviceList.setAdapter(
-		jobHandler.getDeviceListAdapter());
-	...
-	// send ACK to other members to reconstruct network
-	jobHandler.discoverPeers();
-	...
-	// address resources and job to execute
-	String dataPath = downloadPath + "/mars.jpg";
-  String jobPath = downloadPath + "/Job.jar";
-  jobHandler.dispatchJob(dataPath, jobPath);
+dataParser = new BitmapJobDataParser();
+...
+jobHandler = new JobHandler(this, dataParser);
+jobHandler.setSocketListener(
+	new JobHandler.JobSocketListener() {
+		@Override
+		public void socketUpdated(... isConnected){
+			...
+		}
+});
+...
+deviceList.setAdapter(
+	jobHandler.getDeviceListAdapter());
+...
+jobHandler.discoverPeers();
+...
+String dataPath = downloadPath + "/mars.jpg";
+String jobPath = downloadPath + "/Job.jar";
+jobHandler.dispatchJob(dataPath, jobPath);
 
 	\end{lstlisting}
-
 \end{minipage}}
 
 \section{Evaluation}
@@ -578,6 +569,42 @@ When all the partial bitmaps received, system throws a message titled \texttt{MA
 Running the test case throughout 50 tests by increasing number of devices from 1 to 5 within the network, we found that the test case doesn't work if there is only one device standing desolately. By utilizing 2 threads for the image process on that single device, we realized that only 1 thread works, the another does not due to out of memory exception, and the processing time to complete half of the task is $12,581ms$. 
 
 By increasing the number of devices in network from 2 to 5 and sharing the task with the other peers, we gathered statistic data like below
+
+\begin{multicols}{2}
+\end{multicols}
+\begin{figure*}[h]
+  \includegraphics[width=1\textwidth, natwidth=918, natheight=239]{data/c_all}
+  \caption{Image Processing in clusters with 2, 3 and 4 peers.}
+	\label{fig:cluster_234}
+\end{figure*}
+\begin{multicols}{2}
+
+\end{multicols}
+
+\begin{figure}[H]
+\centerline {
+\includegraphics[width=0.5\textwidth, natwidth=599, natheight=245]{data/c_5}
+}
+\caption{Image Processing in cluster with 4 peers and extra}
+\label{fig:cluster_4m}
+\end{figure}
+
+\begin{figure}[H]
+\centerline {
+\includegraphics[width=0.5\textwidth, natwidth=552, natheight=273]{data/c_all_2}
+}
+\caption{Performance of clusters}
+\label{fig:cluster_performance}
+\end{figure}
+
+\begin{figure}[H]
+\centerline {
+\includegraphics[width=0.5\textwidth, natwidth=552, natheight=273]{data/c_all_2}
+}
+\caption{Forming peer-to-peer network}
+\label{fig:forming}
+\end{figure}
+
 
 \subsubsection{Internet Remote Access} 
 Theoretically, remote accessibility won't help reducing the amount of bytes downloading, but the speed is guaranteed to be ameliorative since the downloading process is scattered over a number of devices, therefore energy will be consumed less. 
