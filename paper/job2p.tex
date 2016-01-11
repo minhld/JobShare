@@ -13,6 +13,8 @@
 \usepackage{algorithm}
 \usepackage{algpseudocode}
 \usepackage{multicol}
+%\usepackage{svg}
+\usepackage{pdfpages}
 
 \definecolor{dkgreen}{rgb}{0,0.6,0}
 \definecolor{gray}{rgb}{0.5,0.5,0.5}
@@ -51,7 +53,7 @@
   keywordstyle=\bfseries,
   morekeywords={then,end},
   columns=flexible,
-  basicstyle=\footnotesize\ttfamily,
+  basicstyle=\scriptsize\ttfamily,
   showstringspaces=false,
   morecomment=[l]\%,
 }
@@ -421,7 +423,7 @@ In this estimation we skipped considering $E_{w}$ since it will depend on appear
 
 $$E_{Diff} = E_{0} - E_{p2p}$$ or $$E_{Diff} = E(1 - \frac{RL_{0}}{\sum_{i=1}^{n}{RL_{i}}}) - E_{WiFi}$$
 
-According to \cite{wifi_energy}, Wi-Fi caused battery drained linearly by time during the transmission, particularly the drain can be represented by $y = 17.01x - 0.93$ for downloading and $y = 17.31x - 2.28$ for uploading. Therefore, it is inferred that in a mobile system with a certain number of devices in different levels of responsibility, if E is big enough, in other words, if the task to perform is big enough, then $E_{Diff} > 0$ will happen, thus deploying a peer-to-peer cluster will give the great benefit in term of energy efficiency. The bigger value of $E_{Diff}$, the more benefit we will archive.
+According to \cite{wifi_energy}, Wi-Fi caused battery drained linearly by time during the transmission, particularly the drain can be represented by $y = 17.01x - 0.93$ for downloading and $y = 17.31x - 2.28$ for uploading. Therefore, under non-adventitious circumstances, it infers that in a mobile system with a certain number of devices in different levels of responsibility, if E is big enough, or in the other words, if the task to perform is big enough, then $E_{Diff} > 0$ will happen, thus deploying a peer-to-peer cluster will give the great benefit in term of energy efficiency. The bigger value of $E_{Diff}$, the more benefit we will archive.
 
 \subsection{API Usage Scenario}
 
@@ -472,7 +474,7 @@ Secondly, developer needs to declare \texttt{DataParser} to determine data-type 
   \begin{lstlisting}
 @Override
 public Object getSinglePart(object, firstOffset, 
-																		lastOffset) {
+                                      lastOffset) {
   Bitmap bmpData = (Bitmap) data;
   int pWidth = lastOffset - firstOffset;
   return Bitmap.createBitmap(bmpData, firstOffset, 
@@ -516,6 +518,17 @@ jobHandler.dispatchJob(dataPath, jobPath);
 \section{Evaluation}
 
 \subsection{Micro Benchmark}
+We started the evaluation with Micro benchmarking energy consumption of the system when mobile devices maintain connections in idle state, to figure out the cost of network maintenance overhead. Using Moosoon Power Monitor device \cite{moosoon} to replace battery and measure on one caller, we evaluated overhead bases on cumulation of energy consumption. The Figure (\ref{fig:microb_24}) shows the outcome of the caller measuring from 0 to 100 seconds when preserving connections with 1, 2 and 3 other peers. 
+
+\begin{figure}[H]
+\centerline {
+\includegraphics[width=0.5\textwidth, natwidth=939, natheight=564]{data/micro_01}
+}
+\caption{Energy consumption cumulation on caller within multiple clusters}
+\label{fig:microb_24}
+\end{figure}
+
+According to the figure, it is revealed that in idle conditions without transmitting any data, the energy consuming variability on each device within the P2P network is linear and mostly identical at any time, regardless of number of devices to which it connects. This result is completely harmonized with \cite{wifi_energy} especially we transmit the same amount of data regularly over Wi-Fi connection.
 
 \subsection{Case Study}
 To measure the performance of the system equipped with our APIs, we decorated a small testbed with collaboration of 5 different Android devices to perform our 3 test cases:
@@ -568,8 +581,8 @@ When all the partial bitmaps received, system throws a message titled \texttt{MA
 
 Running the test case throughout 50 tests by increasing number of devices from 1 to 5 within the network, we found that the test case doesn't work if there is only one device standing desolately. By utilizing 2 threads for the image process on that single device, we realized that only 1 thread works, the another does not due to out of memory exception, and the processing time to complete half of the task is $12,581ms$. 
 
-By increasing the number of devices in network from 2 to 5 and sharing the task with the other peers, we gathered statistic data like below
-
+By increasing the number of devices in network from 2 to 5 and sharing the task by sending jobs to the other peers, we gathered statistic data as in the Figure \ref{fig:cluster_234} (in cluster with 2, 3 and 4 peers) and Figure \ref{fig:cluster_4m} (4 peers cluster, one peer has 4 extra threads). In Figure \ref{fig:cluster_234} the first graph, $12,187$ is the time in millisecond the caller received response from device \#1, and $1354ms$ later it received response from the second. In the other words, the caller accomplished the task within $13,541ms$. The same behaviors happened in the other graphs in Figure \ref{fig:cluster_234} and \ref{fig:cluster_4m}.  
+ 
 \begin{multicols}{2}
 \end{multicols}
 \begin{figure*}[h]
@@ -585,9 +598,12 @@ By increasing the number of devices in network from 2 to 5 and sharing the task 
 \centerline {
 \includegraphics[width=0.5\textwidth, natwidth=599, natheight=245]{data/c_5}
 }
-\caption{Image Processing in cluster with 4 peers and extra}
+\caption{Image Processing in cluster with 4 peers and 1 peers has 4 extra threads}
 \label{fig:cluster_4m}
 \end{figure}
+
+The Figure \ref{fig:cluster_performance} summarized performance in terms of time consuming between multiple clusters. 
+ 
 
 \begin{figure}[H]
 \centerline {
@@ -690,6 +706,9 @@ Fred Chung, \emph{Custom Class Loading in Dalvik}, http://android-developers.blo
 \bibitem{stat_explain}
 \emph{/proc/stat Explained}, http://www.linuxhowtos.org/System/procstat.htm
 
+\bibitem{moosoon}
+\emph{Moosoon Power Monitor}, https://www.msoon.com/LabEquipment/PowerMonitor
+
 \bibitem{wifi_energy}
 Kalic, G., Bojic, I., Kusek, M., \emph{Energy consumption in android phones when using wireless communication technologies}, p754-759, MIPRO May 2012
 
@@ -701,6 +720,7 @@ Cong Shi, Kaustubh Joshi, Rajesh K. Panta, Mostafa H. Ammar, Ellen W. Zegura, \e
 
 \bibitem{rio}
 Ardalan Amiri Sani, Kevin Boos, Min Hong Yun, and Lin Zhong, \emph{Rio: a system solution for sharing i/o between mobile systems}, p259-272, MobiSys 2014
+
 
 
 \end{thebibliography}
