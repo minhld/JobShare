@@ -14,7 +14,7 @@
 \usepackage{algpseudocode}
 \usepackage{multicol}
 %\usepackage{svg}
-\usepackage{pdfpages}
+%\usepackage{pdfpages}
 
 \definecolor{dkgreen}{rgb}{0,0.6,0}
 \definecolor{gray}{rgb}{0.5,0.5,0.5}
@@ -48,12 +48,12 @@
   tabsize=2,
   emphstyle={\bf},
   commentstyle=\it,
-  stringstyle=\small\ttfamily,
+  stringstyle=\footnotesize\ttfamily,
   showspaces=false,
   keywordstyle=\bfseries,
   morekeywords={then,end},
   columns=flexible,
-  basicstyle=\scriptsize\ttfamily,
+  basicstyle=\footnotesize\ttfamily,
   showstringspaces=false,
   morecomment=[l]\%,
 }
@@ -602,8 +602,7 @@ By increasing the number of devices in network from 2 to 5 and sharing the task 
 \label{fig:cluster_4m}
 \end{figure}
 
-The Figure \ref{fig:cluster_performance} summarized performance in terms of time consuming between multiple clusters. 
- 
+The Figure \ref{fig:cluster_performance} summarized performance in terms of time consuming between multiple clusters. Noticed that system didn't fully work with only one device, and the one feasibly working thread in that single device took $12,581ms$ to complete, similar speed with 2-peer system. However speed is rapidly increased when more peers joined the network, especially with 4 devices, it is twice as fast as having 2 devices. Multiple threading is applied on the 4th device but did not sanitize very much the performance. 
 
 \begin{figure}[H]
 \centerline {
@@ -613,12 +612,14 @@ The Figure \ref{fig:cluster_performance} summarized performance in terms of time
 \label{fig:cluster_performance}
 \end{figure}
 
+To perform energy consumption on each cluster, we used Moosoon Power Monitor and measure the velocity of energy drained on a single mobile device.  
+
 \begin{figure}[H]
 \centerline {
-\includegraphics[width=0.5\textwidth, natwidth=552, natheight=273]{data/c_all_2}
+\includegraphics[width=0.5\textwidth, natwidth=645, natheight=355]{data/energy_1}
 }
-\caption{Forming peer-to-peer network}
-\label{fig:forming}
+\caption{Performance of clusters}
+\label{fig:cluster_performance}
 \end{figure}
 
 
@@ -707,7 +708,7 @@ Fred Chung, \emph{Custom Class Loading in Dalvik}, http://android-developers.blo
 \emph{/proc/stat Explained}, http://www.linuxhowtos.org/System/procstat.htm
 
 \bibitem{moosoon}
-\emph{Moosoon Power Monitor}, https://www.msoon.com/LabEquipment/PowerMonitor
+\emph{Moosoon Power Monitor}, https://www.msoon.com/LabEquipment/Pow-erMonitor
 
 \bibitem{wifi_energy}
 Kalic, G., Bojic, I., Kusek, M., \emph{Energy consumption in android phones when using wireless communication technologies}, p754-759, MIPRO May 2012
