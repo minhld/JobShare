@@ -528,7 +528,10 @@ We started the evaluation with Micro benchmarking energy consumption of the syst
 \label{fig:microb_24}
 \end{figure}
 
-According to the figure, it is revealed that in idle conditions without transmitting any data, the energy consuming variability on each device within the P2P network is linear and mostly identical at any time, regardless of number of devices to which it connects. This result is completely harmonized with \cite{wifi_energy} especially we transmit the same amount of data regularly over Wi-Fi connection.
+According to the figure \ref{fig:microb_24}, it is revealed that in idle conditions without transmitting any data, the energy consuming variability on each device within the P2P network is linear and mostly identical at any time, regardless of number of devices to which it connects. This result is completely harmonized with results from \cite{wifi_energy}, especially since we transmit the same amount of data regularly over Wi-Fi connection. From the statistic information we collected, the energy variability of one device within P2P network in idle condition can be represented by the below linear formula
+
+$$E_{WiFi} = t \times 50$$
+
 
 \subsection{Case Study}
 To measure the performance of the system equipped with our APIs, we decorated a small testbed with collaboration of 5 different Android devices to perform our 3 test cases:
@@ -612,13 +615,13 @@ The Figure \ref{fig:cluster_performance} summarized performance in terms of time
 \label{fig:cluster_performance}
 \end{figure}
 
-To perform energy consumption on each cluster, we used Moosoon Power Monitor and measure the velocity of energy drained on a single mobile device.  
+To perform energy consumption on each cluster, we used Moosoon Power Monitor and measure the velocity of energy drained on a single mobile device when utilizing power from the other peers.  
 
 \begin{figure}[H]
 \centerline {
 \includegraphics[width=0.5\textwidth, natwidth=645, natheight=355]{data/energy_1}
 }
-\caption{Performance of clusters}
+\caption{Energy consumption of clusters}
 \label{fig:cluster_performance}
 \end{figure}
 
