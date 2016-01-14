@@ -596,24 +596,25 @@ public Object copyPartToPlaceholder(placeholder,
 
 When all the partial bitmaps received, system throws a message titled \texttt{MAIN\_JOB\_DONE} to the UI which \texttt{msg.obj} contains a final bitmap.
 
+\begin{figure*}[!hbt]
+  \includegraphics[width=1\textwidth, natwidth=918, natheight=239]{data/c_all}
+  \caption{Image Processing in clusters with 2, 3 and 4 peers.}
+	\label{fig:cluster_234}
+\end{figure*}
+
 \paragraph{Performance}
 
 Running the test case throughout 50 tests by increasing number of devices from 1 to 5 within the network, we found that the test case doesn't work if there is only one device standing desolately. By utilizing 2 threads for the image process on that single device, we realized that only 1 thread works, the another does not due to out of memory exception, and the processing time to complete half of the task is $12,581ms$. 
 
 By increasing the number of devices in network from 2 to 5 and sharing the task by sending jobs to the other peers, we gathered statistic data as in the Figure \ref{fig:cluster_234} (in cluster with 2, 3 and 4 peers) and Figure \ref{fig:cluster_4m} (4 peers cluster, one peer has 4 extra threads). In Figure \ref{fig:cluster_234} the first graph, $12,187$ is the time in millisecond the caller received response from device \#1, and $1354ms$ later it received response from the second. In the other words, the caller accomplished the task within $13,541ms$. The same behaviors happened in the other graphs in Figure \ref{fig:cluster_234} and \ref{fig:cluster_4m}.  
  
-\begin{multicols}{2}
-\end{multicols}
-\begin{figure*}[h]
-  \includegraphics[width=1\textwidth, natwidth=918, natheight=239]{data/c_all}
-  \caption{Image Processing in clusters with 2, 3 and 4 peers.}
-	\label{fig:cluster_234}
-\end{figure*}
-\begin{multicols}{2}
+%\begin{multicols}{2}
+%\end{multicols}
 
-\end{multicols}
+%\begin{multicols}{2}
+%\end{multicols}
 
-\begin{figure}[H]
+\begin{figure}[!hbt]
 \centerline {
 \includegraphics[width=0.5\textwidth, natwidth=599, natheight=245]{data/c_5}
 }
