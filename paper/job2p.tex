@@ -652,14 +652,14 @@ To apply APIs for this application, from the caller we dispatch job requests, wh
 According to our system architecture, the caller needs to prepare a placeholder to hold every incoming results. For this test case, the placeholder is designated as a sub folder in the \texttt{Download} folder. When result comes as a ZIP file, contents will be extracted and filled into the placeholder folder. The final HTML file will contain all the modified resource links which locate at the same folder. Finally, the local HTML file can be open by Android Web browser using a local web server, for instance TinyHTTPd \cite{tinyhttpd}.
 
 \paragraph{Performance}
-According to our experiments, executing Internet Remote access brings the higher benefit in compare with Image processing.
+According to our experiments, executing Internet Remote access brings the higher benefit in compare with Image processing. Figure \ref{fig:net_cluster_perf} describes performance of , we didn't use 2 device cluster because it 
 
 \begin{figure}[H]
 \centerline {
 \includegraphics[width=0.55\textwidth, natwidth=443, natheight=272]{data/c_all_int}
 }
 \caption{Energy consumption of clusters}
-\label{fig:cluster_performance}
+\label{fig:net_cluster_perf}
 \end{figure}
 
 \begin{figure}[H]
