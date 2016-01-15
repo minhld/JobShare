@@ -14,7 +14,7 @@
 \usepackage{algpseudocode}
 \usepackage{multicol}
 %\usepackage{svg}
-%\usepackage{pdfpages}
+\usepackage{pdfpages}
 
 \definecolor{dkgreen}{rgb}{0,0.6,0}
 \definecolor{gray}{rgb}{0.5,0.5,0.5}
@@ -650,25 +650,27 @@ Theoretically, remote accessibility won't help reducing the amount of bytes down
 
 To apply APIs for this application, from the caller we dispatch job requests, which contains information of job with resources are URL, number of parts and index, to the peers having \texttt{IRS[network]} at \texttt{high} or \texttt{low} (See ). At each peer, when request is received, it executes job to load URL to achieve page in HTML code. Then it will parse the HTML to detect resource links including multimedia resources (images, audio, videos), CSS, and JS. Depend on the number of parts and index, it narrows down the amount of resources and attempt downloading and put into a ZIP file before throw back to the caller.
 
-According to our system architecture, the caller needs to prepare a placeholder to hold every incoming results. For this test case, the placeholder is designated as a sub folder in the \texttt{Download} folder. When result comes as a ZIP file, contents will be extracted and filled into the placeholder folder. The final HTML file will contain all the modified resource links which locate at the same folder. Finally, the local HTML file can be open by Android Web browser using a local web server, for instance TinyHTTPd \cite{tinyhttpd}.
+According to our system architecture, the caller needs to prepare a placeholder to hold every incoming results. For this test case, the placeholder is designated as a sub folder in the \texttt{Download} folder. When result comes as a ZIP file, contents will be extracted and filled into the placeholder folder. The final HTML file will contain all the modified resource links which locate at the same folder. Finally, the local HTML file can be open by Android Web browser component using a local web server, for instance TinyHTTPd \cite{tinyhttpd}.
 
 \paragraph{Performance}
-According to our experiments, executing Internet Remote access brings the higher benefit in compare with Image processing. Figure \ref{fig:net_cluster_perf} describes performance of , we didn't use 2 device cluster because it 
+According to our experiments with CNN URLs, executing Internet Remote access brings the higher benefit in compare with Image processing. Figure \ref{fig:net_clusters_perf} describes performance of , we didn't use 2 device cluster because it 
 
 \begin{figure}[H]
-\centerline {
-\includegraphics[width=0.55\textwidth, natwidth=443, natheight=272]{data/c_all_int}
-}
-\caption{Energy consumption of clusters}
-\label{fig:net_cluster_perf}
+	\hspace*{-0.6cm}
+	\resizebox{0.55\textwidth}{!}{
+		\includegraphics{data/net_perf_01.pdf}
+	}
+	\caption{Performance of multiple clusters for Internet sharing}
+	\label{fig:net_clusters_perf}
 \end{figure}
 
 \begin{figure}[H]
-\centerline {
-\includegraphics[width=0.55\textwidth, natwidth=443, natheight=272]{data/c_all_int}
-}
-\caption{Energy consumption of clusters}
-\label{fig:cluster_performance}
+	\hspace*{-0.6cm}
+	\resizebox{0.55\textwidth}{!}{
+		\includegraphics{data/net_energy.pdf}
+	}
+	\caption{Energy consumption of clusters for Internet sharing}
+	\label{fig:net_cluster_energy}
 \end{figure}
 
 
