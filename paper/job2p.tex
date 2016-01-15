@@ -653,7 +653,7 @@ To apply APIs for this application, from the caller we dispatch job requests, wh
 According to our system architecture, the caller needs to prepare a placeholder to hold every incoming results. For this test case, the placeholder is designated as a sub folder in the \texttt{Download} folder. When result comes as a ZIP file, contents will be extracted and filled into the placeholder folder. The final HTML file will contain all the modified resource links which locate at the same folder. Finally, the local HTML file can be open by Android Web browser component using a local web server, for instance TinyHTTPd \cite{tinyhttpd}.
 
 \paragraph{Performance}
-According to our experiments with CNN URLs, executing Internet Remote access brings the higher benefit in compare with Image processing. Figure \ref{fig:net_clusters_perf} describes performance of , we didn't use 2 device cluster because it 
+Figure \ref{fig:net_clusters_perf} describes performance of multiple clusters from 1 to 4 peers and one peer has a few threads (for simulating high performance) when remotely rendering web pages from CNN URLs. The figure describes the execution time of each peer in each cluster after being assigned job, and the peak is reached when the last peer completed. In the cluster with only one device, that device works desolately without any peer contacts; it will download web pages from the internet by opening Wi-Fi connection. It is obvious that executing Internet Remote access brings the high benefit in terms of performance that rendering time reduced almost half when at least 3 peers participating the network. 
 
 \begin{figure}[H]
 	\hspace*{-0.6cm}
@@ -663,6 +663,8 @@ According to our experiments with CNN URLs, executing Internet Remote access bri
 	\caption{Performance of multiple clusters for Internet sharing}
 	\label{fig:net_clusters_perf}
 \end{figure}
+
+To evaluate energy consumption, we performed the same tests like the first test case by measuring in multiple clusters with overheads and when remotely rendering web pages. From the outcome of energy test (Figure \ref{fig:net_cluster_energy}), we realized that by handing over computation utilizing system resources (Here is Internet accessibility) over peer-to-peer network with multiple peers will help reducing significantly energy consumed, particularly more than a half in compare with a solo device. The differences between the total energy and overheads are not fluctuated much between the multiple clusters, this can be easily explained by \cite{wifi_energy}.
 
 \begin{figure}[H]
 	\hspace*{-0.6cm}
