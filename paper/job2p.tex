@@ -537,11 +537,12 @@ jobHandler.dispatchJob(dataPath, jobPath);
 We started the evaluation with Micro benchmarking energy consumption of the system when mobile devices maintain connections in idle state, to figure out the cost of network maintenance overhead. Using Moosoon Power Monitor device \cite{moosoon} to replace battery and measure on one caller, we evaluated overhead bases on cumulation of energy consumption. The Figure (\ref{fig:microb_24}) shows the outcome of the caller measuring from 0 to 100 seconds when preserving connections with 1, 2 and 3 other peers. 
 
 \begin{figure}[H]
-\centerline {
-\includegraphics[width=0.5\textwidth, natwidth=939, natheight=564]{data/micro_01}
-}
-\caption{Energy consumption cumulation on caller within multiple clusters}
-\label{fig:microb_24}
+	\hspace*{-0.35cm}
+	\resizebox{0.52\textwidth}{!}{
+		\includegraphics{data/ovh.pdf}
+	}
+	\caption{Energy consumption cumulation on caller within multiple clusters}
+	\label{fig:microb_24}
 \end{figure}
 
 According to the figure \ref{fig:microb_24}, it is revealed that in idle conditions without transmitting any data, the energy consuming variability on each device within the P2P network is linear and mostly identical at any time, regardless of number of devices to which it connects. This result is completely harmonized with results from \cite{wifi_energy}, especially since we transmit the same amount of data regularly over Wi-Fi connection. From the statistic information we collected, the energy variability of one device within P2P network in idle condition can be represented by the below linear formula
@@ -622,26 +623,28 @@ By increasing the number of devices in network from 2 to 5 and sharing the task 
 \label{fig:cluster_4m}
 \end{figure}
 
+
 The Figure \ref{fig:cluster_performance} summarized performance in terms of time consuming between multiple clusters. Noticed that system didn't fully work with only one device, and the one feasibly working thread in that single device took $12,581ms$ to complete, similar speed with 2-peer system. However speed is rapidly increased when more peers joined the network, especially with 4 devices, it is twice as fast as having 2 devices. Multiple threading is applied on the 4th device but did not sanitize very much the performance. 
 
 \begin{figure}[H]
-\centerline {
-\includegraphics[width=0.5\textwidth, natwidth=552, natheight=273]{data/c_all_2}
-}
-\caption{Performance of clusters}
-\label{fig:cluster_performance}
+	\hspace*{-0.35cm}
+	\resizebox{0.52\textwidth}{!}{
+		\includegraphics{data/img_perf.pdf}
+	}
+	\caption{Performance of multiple clusters for Image Processing}
+	\label{fig:cluster_performance}
 \end{figure}
 
 To perform energy consumption on each cluster, we used Moosoon Power Monitor and measure the velocity of energy drained on a single mobile device when utilizing power from the other peers. Figure \ref{fig:cluster_performance} shows the energy measurement results from the two consecutive tests, although the two tests gave the big gap when executing 2 device cluster, in general the variability of energy consumption within multiple clusters matches with time consumption one. By running the two consecutive tests with the same input for 20 times, we realized that the results didn't change, and by utilizing 3 or more devices, we can significantly reduce the amount of energy required for the task, sometimes up to 25\%. However when we increased the number of devices in cluster, we didn't get the performance raised up at corresponding value linearly, this can be explained by Amdahl's law \cite{amdahl}. Throughout our experiments, the number of devices at 3 to 5 will give the maximum benefit in terms of energy saving and device usage productivity.
 
 \begin{figure}[H]
-\centerline {
-\includegraphics[width=0.5\textwidth, natwidth=645, natheight=355]{data/energy_1}
-}
-\caption{Energy consumption of clusters}
-\label{fig:cluster_performance}
+	\hspace*{-0.15cm}
+	\resizebox{0.5\textwidth}{!}{
+		\includegraphics{data/img_energy.pdf}
+	}
+	\caption{Energy consumption of clusters}
+	\label{fig:cluster_performance}
 \end{figure}
-
 
 \subsubsection{Internet Remote Access} 
 Theoretically, remote accessibility won't help reducing the amount of bytes downloading, but the speed is guaranteed to be ameliorative since the downloading process is scattered over a number of devices, therefore energy will be consumed less. 
@@ -656,8 +659,8 @@ According to our system architecture, the caller needs to prepare a placeholder 
 Figure \ref{fig:net_clusters_perf} describes performance of multiple clusters from 1 to 4 peers and one peer has a few threads (for simulating high performance) when remotely rendering web pages from CNN URLs. The figure describes the execution time of each peer in each cluster after being assigned job, and the peak is reached when the last peer completed. In the cluster with only one device, that device works desolately without any peer contacts; it will download web pages from the internet by opening Wi-Fi connection. It is obvious that executing Internet Remote access brings the high benefit in terms of performance that rendering time reduced almost half when at least 3 peers participating the network. 
 
 \begin{figure}[H]
-	\hspace*{-0.6cm}
-	\resizebox{0.55\textwidth}{!}{
+	\hspace*{0cm}
+	\resizebox{0.5\textwidth}{!}{
 		\includegraphics{data/net_perf_01.pdf}
 	}
 	\caption{Performance of multiple clusters for Internet sharing}
@@ -667,8 +670,8 @@ Figure \ref{fig:net_clusters_perf} describes performance of multiple clusters fr
 To evaluate energy consumption, we performed the same tests like the first test case by measuring in multiple clusters with overheads and when remotely rendering web pages. From the outcome of energy test (Figure \ref{fig:net_cluster_energy}), we realized that by handing over computation utilizing system resources (Here is Internet accessibility) over peer-to-peer network with multiple peers will help reducing significantly energy consumed, particularly more than a half in compare with a solo device. The differences between the total energy and overheads are not fluctuated much between the multiple clusters, this can be easily explained by \cite{wifi_energy}.
 
 \begin{figure}[H]
-	\hspace*{-0.6cm}
-	\resizebox{0.55\textwidth}{!}{
+	\hspace*{0cm}
+	\resizebox{0.5\textwidth}{!}{
 		\includegraphics{data/net_energy.pdf}
 	}
 	\caption{Energy consumption of clusters for Internet sharing}
@@ -676,16 +679,17 @@ To evaluate energy consumption, we performed the same tests like the first test 
 \end{figure}
 
 
-\subsubsection{GPS Sharing}
-
-\paragraph{Design}
-
-\paragraph{Performance}
-
 \subsection{Discussion}
 
-
 \section{Related Work}
+These days, there are several similar approaches facilitating peer-to-peer wireless connection and multiple devices collaboration. 
+
+Alljoyn Framework \cite{alljoyn} is an open source software framework making transparent of complexity of discover and communication to the developers. Providing interoperability functionality without any transport layer , Alljoyn make it easy to integrate and initiate. However since they tried to address multiple platforms: Android, iOS, Linux, Windows and even the other lightweight real-time operating systems, their package became huge and APIs is complicated to use. 
+
+Before the Wi-Fi Direct available in software industry, many efforts to address Wi-Fi P2P networks, Frank H. P. Fitzek et al. \cite{m_p2p_tutor} summarized the relevant papers focusing on this topic to demonstrate the initiative steps to establish the point-to-point collaborative Wi-Fi networks. 
+
+Since the modern mobile devices (phones and tablets) are featured with multiple network capability, the chance of collaboration between them 
+
 \label{sec:related}
 
 \section{Conclusions}
@@ -772,6 +776,19 @@ Nairan Zhang, Youngki Lee, Meera Radhakrishnan, Rajesh Krishna Balan, \emph{Game
 
 \bibitem{amdahl}
 Mark D. Hill, Michael R. Marty, \emph{Amdahl's Law in the Multicore Era}, Computer Journal p33-38, 2008
+
+\bibitem{alljoyn}
+AllSeen Alliance, \emph{Alljoyn Framework}, https://allseenalliance.org/frame-work
+
+\bibitem{m_p2p_tutor}
+Frank H. P. Fitzek, Hassan Charaf, \emph{Mobile Peer-to-peer (P2P): A Tutorial Guide}, Wiley, 2009
+
+\bibitem{alljoyn}
+AllSeen Alliance, \emph{Alljoyn Framework}, https://allseenalliance.org/frame-work
+
+\bibitem{alljoyn}
+AllSeen Alliance, \emph{Alljoyn Framework}, https://allseenalliance.org/frame-work
+
 
 \end{thebibliography}
 
