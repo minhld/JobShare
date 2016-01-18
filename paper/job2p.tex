@@ -179,18 +179,20 @@ Thus, by eliminating the need for low-level network programming (e.g., managing 
 \subsection{Approach Overview}
 To achieve the above mentioned goals, as well as making our APIs widely adaptive to different context and usages, our consistent idea of design is hiding the complexity of system implementation and open to the developers the capability of customization. This below figure describes the internal architecture of a typical application utilizing our APIs to form a distributed mobile peer-to-peer system (Figure \ref{fig:architecture}). Basically, our system comprises of two main components:
 
-\begin{figure}[H]
+\begin{itemize}
+	\item \textbf{Wi-Fi Peer-to-peer Broadcaster} (\texttt{WPB}) wraps up Wi-Fi Direct implementation, socket management and connection establishment. Moreover the \texttt{WiFiBroadcaster} provides simple API interfaces to construct a peer-to-peer network.
+	\item \textbf{Job Handler} is in charge of selecting available peers and distributing the job to other peers. Specifically, the \texttt{JobDispatcher} which is the submodule of \texttt{JobHandler} dispatches a job and \texttt{JobExecutor} executes a job on each peer. Then, \texttt{JobHandler} merges the scattered incoming results into the final placeholder and relay information messages to the main application.
+\end{itemize}
+
+In the following discussion, we detail our system architecture.
+
+\begin{figure}
 \centerline {
 \includegraphics[width=0.39\textwidth, natwidth=643, natheight=559]{data/jobShareArch}
 }
-\caption{Job2P Architecture}
+\caption{System architecture.}
 \label{fig:architecture}
 \end{figure}
-
-\begin{itemize}
-	\item \textbf{Wi-Fi Peer-to-peer Broadcaster} (\texttt{WPB}) wraps up Wi-Fi Direct implementation, socket management and connection establishment. Moreover the \texttt{WiFiBroadcaster} provides a simplified API interface to form peer-to-peer network.
-	\item \textbf{Job Handler} in charge of making decision on selecting available peers, determining and splitting the appropriate amount of jobs from the assigned task. The \texttt{JobDispatcher} sub module dispatches job and \texttt{JobExecutor} perform job execution at a single peer. Besides, \texttt{JobHandler} merges the scattered incoming results into the final placeholder and relay information messages to the main application.
-\end{itemize}
 
 \subsubsection{Wi-Fi Peer-to-peer Broadcaster}
 To easily form up multiple pair connections between devices in the network, we utilized Wi-Fi Direct, the new feature available from Android APIs 4.0. We developed the \texttt{WiFiDirectManager} sub module inside the \texttt{WPB} to wrap up the complexity of Wi-Fi Direct implementation. Holding an instance of \texttt{WifiP2pManager}, \texttt{WiFiDirectManager} maintains connectivity over peer-to-peer network, discover available peers and setup the connections. 
