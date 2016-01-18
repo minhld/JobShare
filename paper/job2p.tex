@@ -91,7 +91,8 @@
 % not capitalized unless they are the first or last word of the title.
 % Linebreaks \\ can be used within to get better formatting as desired.
 % Do not put math or special symbols in the title.
-\title{Expanding Limited Mobile Resources for Performance, Energy-Efficiency, and Privacy}
+%\title{Expanding Limited Mobile Resources for Performance, Energy-Efficiency, and Privacy}
+\title{Extending Resource-Constrained Mobile Devices for Performance, Energy-Efficiency, and Privacy}
 
 
 % author names and affiliations
@@ -110,9 +111,7 @@ young.kwon@usu.edu}}
 \maketitle
 
 \begin{abstract}
-These days, along with the rapid revolution of mobile device industry, software is also being built heavier and consumes more CPU performance and energy than they were in the past few years. Since the modern mobile devices support multiple connection methods like Wi-Fi, Bluetooth or NFC, the requirements of sharing the workloads and resources among the devices within a network to reduce full workload on an arbitrary device are being considered, especially in the areas Internet is not available, which can be found anywhere.
-
-To address those limitations on mobile devices, we proposed Job2P as the Job Scheduling APIs for Android development that leverages Wi-Fi Direct to support sharing workloads and resources over peer-to-peer mobile device network, which doesn't require any Internet connections. Job2P provides a simple and straightforward API interface to get rid of sophistication of network implementation, letting developers easily create their distributed mobile applications with capability of forming closed range network. In term of workload distribution, Job2P splits task and resource into parts and packs them into the smaller units called jobs and dispatch to the peers. To distributed jobs equitably among the peers, a Decision Maker is added to decide the amount of resource the peer has to handle bases on its percentage of availability. Moreover, our APIs can handle fault tolerant for network malfunctions. 
+These days, along with the rapid revolution of mobile device industry, software is also being built heavier and consumes more CPU performance and energy than they were in the past few years. Since the modern mobile devices support multiple connection methods like Wi-Fi, Bluetooth or NFC, the requirements of sharing the workloads and resources among the devices within a network to reduce full workload on an arbitrary device are being considered, especially in the areas Internet is not available, which can be found anywhere. To address those limitations on mobile devices, we introduce Job2P as Job scheduling APIs for Android development that leverages Wi-Fi Direct to support sharing workloads and resources over peer-to-peer mobile device network, which doesn't require any Internet connections. Job2P provides a simple and straightforward API interface to get rid of sophistication of network implementation, letting developers easily create their distributed mobile applications with capability of forming closed range network. In term of workload distribution, Job2P splits task and resource into parts and packs them into the smaller units called jobs and dispatch to the peers. To distributed jobs equitably among the peers, a Decision Maker is added to decide the amount of resource the peer has to handle bases on its percentage of availability. Moreover, our APIs can handle fault tolerant for network malfunctions. 
 
 Through our experiments with image processing, text processing and GPS location, we realized that Job2P improves significant productivity in term of performance and energy consumption. 
 \end{abstract}
@@ -131,7 +130,7 @@ Through our experiments with image processing, text processing and GPS location,
 
 
 \section{Introduction}
-These days, mobile phones have been playing a very important role in human society. People need their cellphone everyday for surfing Internet, searching for information, online shopping, communicating with friends, taking and sharing photos etc. As a result of highly intensive completions between the global mobile phone manufactures like Samsung and Apple, the cellphones are more and more equipped themselves with high specifications (CPU, RAM and built-in storage) and top functionality so that they are powerful enough in compare with those in the past or even with a desktop. 
+These days, smartphones have been playing a important role in our daily life. People need their cellphone everyday for surfing Internet, searching for information, online shopping, communicating with friends, taking and sharing photos etc. As a result of highly intensive completions between the global mobile phone manufactures like Samsung and Apple, the cellphones are more and more equipped themselves with high specifications (CPU, RAM and built-in storage) and top functionality so that they are powerful enough in compare with those in the past or even with a desktop. 
 
 With the hardware rapid development, software is also being built more and more sophisticated in many aspects. They may occupy more space on local storage, use more memory, and thus consume more energy. Even though the software is designed to run on mobile device, its size may vary up to 1GB (like image processing or image recognizing) and memory consumption can be up to 1GB as well. Since there are possibly many heavy workloads running on a device at some points, the needs of sharing workloads among the mobile devices is really necessary with respect to performance and energy efficiency. 
 
@@ -143,16 +142,18 @@ To address those limitations with heavy software on mobile devices, we proposed 
 
 Based on our experiments and results, our contributions are as follow:
 \begin{itemize}
-	\item \textbf{Simple programming model} provides simple APIs for programmers who can facilitate the development of mobile, distributed execution model.
-	\item \textbf{Runtime system} determines the number of devices with appropriate jobs for the distributed execution based on a novel job distribution algorithm.  
+	\item \textbf{Simple programming model:} We provide simple APIs for programmers who can easily facilitate the development of mobile, distributed execution model.
+	\item \textbf{Lightweight runtime system:} Our runtime system distributes jobs to available peers based on a job distribution algorithm amd merges the completed jobs. 
 	%job execution and resource heterogeneity adaptation 
-	\item \textbf{Systematic evaluation:} 
-	 We have applied our approach to share smartphone resources by a set of benchmarks and real-world mobile applications, with the resulting energy savings approaching 30\%, performance, etc.
-
+	\item \textbf{Systematic evaluation:} We have applied our approach to real-world scenarios.
 \end{itemize}
+
+The rest of this paper is structured as follows. Section \ref{sec:background} introduces a technological background for the main technologies used in this work. Section \ref{sec:approach} details our technical approach and Section \ref{sec:eval} discuss how we evaluated our approach. Section \ref{sec:related} compares our approach to the related state of the art. Section \ref{sec:conc} concludes this paper.
+
  
 
 \section{Motivation and Technical Background}
+\label{sec:background}
 In this section, we present real world scenarios that motivate our approach and the major technologies we used.
 
 \subsection{Motivating Examples}
@@ -166,17 +167,17 @@ Consider the following three scenarios:
 \subsection{Technical Background}
 The major technologies used in this work are middleware, remote execution, and machine-to-machine communication. We describe them in turn next.
 
-\subsubsection{Middleware}
-Our approach uses features from mainstream middleware mechanisms for distributed execution as building blocks. 
+\subsubsection{Middleware and Remote Executions}
+Our approach uses features from mainstream middleware mechanisms for distributed execution as building blocks. Middleware systmes provide programming and runtime support to coordinates the execution of multiple remote processes. 
+Thus, by eliminating the need for low-level network programming (e.g., managing sockets, marshaling/unmarshaling data, keeping track of processes) middleware systems offer convenient building blocks for constructing distributed systems. 
 
-
-\subsubsection{Remote Execution}
 \subsubsection{Machine-to-Machine Communication}
 
 \section{Proposed Approach: \emph{Job2P}}
+\label{sec:approach}
 
 \subsection{Approach Overview}
-To retrieve the goals, as well as making our APIs widely adaptive to different context and usages, our consistent idea of design is hiding the complexity of system implementation and open to the developers the capability of customization. This below figure describes the internal architecture of a typical application utilizing our APIs to form a distributed mobile peer-to-peer system (Figure \ref{fig:architecture}). Basically, our system comprises of two main components:
+To achieve the above mentioned goals, as well as making our APIs widely adaptive to different context and usages, our consistent idea of design is hiding the complexity of system implementation and open to the developers the capability of customization. This below figure describes the internal architecture of a typical application utilizing our APIs to form a distributed mobile peer-to-peer system (Figure \ref{fig:architecture}). Basically, our system comprises of two main components:
 
 \begin{figure}[H]
 \centerline {
@@ -532,6 +533,7 @@ jobHandler.dispatchJob(dataPath, jobPath);
 \end{minipage}}
 
 \section{Evaluation}
+\label{sec:eval}
 
 \subsection{Micro Benchmark}
 We started the evaluation with Micro benchmarking energy consumption of the system when mobile devices maintain connections in idle state, to figure out the cost of network maintenance overhead. Using Moosoon Power Monitor device \cite{moosoon} to replace battery and measure on one caller, we evaluated overhead bases on cumulation of energy consumption. The Figure (\ref{fig:microb_24}) shows the outcome of the caller measuring from 0 to 100 seconds when preserving connections with 1, 2 and 3 other peers. 
@@ -682,6 +684,7 @@ To evaluate energy consumption, we performed the same tests like the first test 
 \subsection{Discussion}
 
 \section{Related Work}
+\label{sec:related}
 These days, there are several similar approaches facilitating peer-to-peer wireless connection and multiple devices collaboration. 
 
 Alljoyn Framework \cite{alljoyn} is an open source software framework making transparent of complexity of discover and communication to the developers. Providing interoperability functionality without any transport layer , Alljoyn make it easy to integrate and initiate. However since they tried to address multiple platforms: Android, iOS, Linux, Windows and even the other lightweight real-time operating systems, their package became huge and APIs is complicated to use. 
@@ -690,26 +693,16 @@ Before the Wi-Fi Direct available in software industry, many efforts to address 
 
 Since the modern mobile devices (phones and tablets) are featured with multiple network capability, the chance of collaboration between them 
 
-\label{sec:related}
+
+
 
 \section{Conclusions}
 \label{sec:conc}
-The conclusion goes here.
-
-
-
-
-% conference papers do not normally have an appendix
-
+In this research, we presented a framework that can BLAH BLAH
 
 % use section* for acknowledgment
 \section*{Acknowledgment}
-
-
-The authors would like to thank...
-
-
-
+This research is supported by the Utah State University through the RC Grant.
 
 
 % trigger a \newpage just before the given reference
