@@ -111,9 +111,7 @@ young.kwon@usu.edu}}
 \maketitle
 
 \begin{abstract}
-These days, along with the rapid revolution of mobile device industry, software is also being built heavier and consumes more CPU performance and energy than they were in the past few years. Since the modern mobile devices support multiple connection methods like Wi-Fi, Bluetooth or NFC, the requirements of sharing the workloads and resources among the devices within a network to reduce full workload on an arbitrary device are being considered, especially in the areas Internet is not available, which can be found anywhere. To address those limitations on mobile devices, we introduce Job2P as Job scheduling APIs for Android development that leverages Wi-Fi Direct to support sharing workloads and resources over peer-to-peer mobile device network, which doesn't require any Internet connections. Job2P provides a simple and straightforward API interface to get rid of sophistication of network implementation, letting developers easily create their distributed mobile applications with capability of forming closed range network. In term of workload distribution, Job2P splits task and resource into parts and packs them into the smaller units called jobs and dispatch to the peers. To distributed jobs equitably among the peers, a Decision Maker is added to decide the amount of resource the peer has to handle bases on its percentage of availability. Moreover, our APIs can handle fault tolerant for network malfunctions. 
-
-Through our experiments with image processing, text processing and GPS location, we realized that Job2P improves significant productivity in term of performance and energy consumption. 
+These days, along with the rapid revolution of mobile device industry, software is also being built heavier and consumes more CPU performance and energy than they were in the past few years. Since the modern mobile devices support multiple connection methods like Wi-Fi, Bluetooth or NFC, the requirements of sharing the workloads and resources among the devices within a network to reduce full workload on an arbitrary device are being considered, especially in the areas Internet is not available, which can be found anywhere. To address those limitations on mobile devices, we introduce Job2P as Job scheduling APIs for Android development that leverages Wi-Fi Direct to support sharing workloads and resources over peer-to-peer mobile device network, which doesn't require any Internet connections. Job2P provides a simple and straightforward API interface to get rid of sophistication of network implementation, letting developers easily create their distributed mobile applications with capability of forming closed range network. In term of workload distribution, Job2P splits task and resource into parts and packs them into the smaller units called jobs and dispatch to the peers. To distributed jobs equitably among the peers, a Decision Maker is added to decide the amount of resource the peer has to handle bases on its percentage of availability. Moreover, our APIs can handle fault tolerant for network malfunctions. Our case studies demonstrate that our system can extend the resource-constraint mobile devices as well as improving performance and energy efficiency. 
 \end{abstract}
 
 
@@ -130,7 +128,7 @@ Through our experiments with image processing, text processing and GPS location,
 
 
 \section{Introduction}
-These days, smartphones have been playing a important role in our daily life. People need their cellphone everyday for surfing Internet, searching for information, online shopping, communicating with friends, taking and sharing photos etc. As a result of highly intensive completions between the global mobile phone manufactures like Samsung and Apple, the cellphones are more and more equipped themselves with high specifications (CPU, RAM and built-in storage) and top functionality so that they are powerful enough in compare with those in the past or even with a desktop. 
+Smartphones have been playing a important role in our daily life as a primary means of accessing computing resources. As a result of highly intensive completions between the global mobile phone manufactures like Samsung and Apple, the cellphones are more and more equipped themselves with high specifications (CPU, RAM and built-in storage) and top functionality so that they are powerful enough in compare with those in the past or even with a desktop. 
 
 With the hardware rapid development, software is also being built more and more sophisticated in many aspects. They may occupy more space on local storage, use more memory, and thus consume more energy. Even though the software is designed to run on mobile device, its size may vary up to 1GB (like image processing or image recognizing) and memory consumption can be up to 1GB as well. Since there are possibly many heavy workloads running on a device at some points, the needs of sharing workloads among the mobile devices is really necessary with respect to performance and energy efficiency. 
 
@@ -142,16 +140,13 @@ To address those limitations with heavy software on mobile devices, we proposed 
 
 Based on our experiments and results, our contributions are as follow:
 \begin{itemize}
-	\item \textbf{Simple programming model:} We provide simple APIs for programmers who can easily facilitate the development of mobile, distributed execution model.
-	\item \textbf{Lightweight runtime system:} Our runtime system distributes jobs to available peers based on a job distribution algorithm amd merges the completed jobs. 
-	%job execution and resource heterogeneity adaptation 
-	\item \textbf{Systematic evaluation:} We have applied our approach to real-world scenarios.
+	\item \textbf{Simple programming model:} We provide simple APIs for programmers, who can easily facilitate the development of mobile using the provided distributed execution model.
+	\item \textbf{Lightweight runtime system:} Our runtime system can distribute jobs to available peers based on a novel job distribution algorithm and merge the completed jobs. 	
+	\item \textbf{Systematic evaluation:} We have applied our approach to real-world applications and systematically evaluated the experimental results.
 \end{itemize}
 
 The rest of this paper is structured as follows. Section \ref{sec:background} introduces a technological background for the main technologies used in this work. Section \ref{sec:approach} details our technical approach and Section \ref{sec:eval} discuss how we evaluated our approach. Section \ref{sec:related} compares our approach to the related state of the art. Section \ref{sec:conc} concludes this paper.
-
  
-
 \section{Motivation and Technical Background}
 \label{sec:background}
 In this section, we present real world scenarios that motivate our approach and the major technologies we used.
@@ -177,7 +172,7 @@ Thus, by eliminating the need for low-level network programming (e.g., managing 
 \label{sec:approach}
 
 \subsection{Approach Overview}
-To achieve the above mentioned goals, as well as making our APIs widely adaptive to different context and usages, our consistent idea of design is hiding the complexity of system implementation and open to the developers the capability of customization. This below figure describes the internal architecture of a typical application utilizing our APIs to form a distributed mobile peer-to-peer system (Figure \ref{fig:architecture}). Basically, our system comprises of two main components:
+To achieve the above mentioned goals, as well as making our APIs widely adaptive to different context and usages, our consistent idea of design is hiding the complexity of system implementation and open to the developers the capability of customization. This below figure describes the internal architecture of a typical application utilizing our APIs to form a distributed mobile peer-to-peer system (Figure \ref{fig:architecture}). Our system comprises of two main components:
 
 \begin{itemize}
 	\item \textbf{Wi-Fi Peer-to-peer Broadcaster} (\texttt{WPB}) wraps up Wi-Fi Direct implementation, socket management and connection establishment. Moreover the \texttt{WiFiBroadcaster} provides simple API interfaces to construct a peer-to-peer network.
@@ -221,57 +216,50 @@ Both \texttt{ClientSocketHandler} and \texttt{ServerSocket Handler} are constitu
 
 To avoid any malfunctions and misconfiguration at remote execution, a conventional Job interface is defined like the code snipe below (\ref{code:job_def}) \\
 
+\begin{figure}
 \noindent \shadowbox{%
 \begin{minipage}{239pt}
-	\captionof{lstlisting}{Job Definition}
-	\label{code:job_def}
 	\begin{lstlisting}
 	public class Job {
 		public Object exec(Object partialObject) {
 			// job implementation
 		}
 	}
-	\end{lstlisting}
-	
+	\end{lstlisting}	
 \end{minipage}}	
+	\captionof{lstlisting}{Job Definition}
+	\label{code:job_def}
+\end{figure}
 
 Where the body of \texttt{exec()} will contain concrete implementation of the Job.
 
-Since Dalvik VM didn't support loading class the way Java VM does. Instead it will load Dalvik execution ("dex") files from an alternative locations such as internal storage or network. We provide \texttt{DexCreator} tool, the windows commandline application supports compiling the \texttt{Job} java file into the dex job package (a jar file). Dex package and sliced resources in binary format will be added into one \texttt{JobData} object by \texttt{JobDispatcher}, signed with checksum for consistency and dispatched to the other peers.
+Since Dalvik VM does not support dynamic class loading, it will load Dalvik execution ("dex") files from an alternative locations such as internal storage or network. We provide \texttt{DexCreator} tool, the windows commandline application supports compiling the \texttt{Job} java file into the dex job package (a jar file). Dex package and sliced resources in binary format will be added into one \texttt{JobData} object by \texttt{JobDispatcher}, signed with checksum for consistency and dispatched to the other peers.
 
 When client peer receives an object of \texttt{JobData} sent from server, it will firstly check checksum to confirm the consistency, then deserialize it into \texttt{Job} and resources and execute the job with that data.
 
 \subsubsection{Data Parser}
 The code snipe \ref{data_parser} shows the main functionality of the \texttt{DataParser} interface that user needs to comply. Under the first released version, we also support 3 basic Data Parsers for Image, Text and GPS.\\
 
+\begin{figure}
 \noindent \shadowbox{%
 \begin{minipage}{245pt}
-  \captionof{lstlisting}{\texttt{DataParser} interface}
-  \label{data_parser}
   \begin{lstlisting}
-public interface DataParser {
-  ...
-  
+public interface DataParser {  
   public Class getDataClass();
-
   public byte[] parseObjectToBytes(dataObject);
-
   public Object parseBytesToObject(byteArray);
-
-  public Object getSinglePart(..., numOfParts, 
-										firstOffset, lastOffset);
-    
+  public Object getSinglePart(..., 
+		numOfParts, firstOffset, lastOffset);    
   public Object createPlaceholder(jsonMetadata);
-
   public Object copyPartToPlaceholder(... 
-									partDataObject, 
-									firstOffset, lastOffset);
-
-  public void destroy(dataObject);
-  
+					partDataObject, firstOffset, lastOffset);
+  public void destroy(dataObject);  
 }
   \end{lstlisting}	
 \end{minipage}}	
+  \captionof{lstlisting}{\texttt{DataParser} interface.}
+  \label{data_parser}
+\end{figure}
 
 To clarify usage of \texttt{DataParser}, we will go through several important abstract methods.
 
@@ -300,11 +288,9 @@ In peer-to-peer network supported by our APIs, the server will distribute jobs t
 
 A mobile device at any time maintains a certain number of connection with the others. Before delivering jobs, it dispatches IRS messages to all the peers for acknowledgment of their availability ($RL$ - Level of Responsibility). If a peer receives an IRS, its \texttt{DecisionMaker} will capture its configuration and corresponding usage states to generate a response in JSON format, The code snipe \ref{code:jsonResponse} shows such a typical response.\\
 
+\begin{figure}
 \noindent \shadowbox{%
-\begin{minipage}{239pt}
-\captionof{lstlisting}{JSON response from peer}
-\label{code:jsonResponse}
-	
+\begin{minipage}{.43\linewidth}	
 \begin{lstlisting}
 {
   "device" : "LG-Volt",
@@ -327,8 +313,37 @@ A mobile device at any time maintains a certain number of connection with the ot
   }
 }
 \end{lstlisting}
-	
 \end{minipage}}	
+\noindent \shadowbox{
+\begin{minipage}{.43\linewidth}	
+\begin{lstlisting}
+{
+  "device" : "LG-Volt",
+	"RL" : 24.83,
+  "availability" : "low",
+	"network" : "low",
+	"gps" : "on",
+  "cpu" : {
+		"usage" : "0.3",
+    "speed" : "1.3",
+    "cores" : 4
+	},
+  "memory" : {
+		"usage" : "0.5",
+    "total" : 2
+  },
+  "battery" : {
+		"usage" : 0.85,
+    "total" : 2800
+  }
+}
+\end{lstlisting}	
+\end{minipage}}	
+
+\captionof{lstlisting}{JSON response from peer}
+\label{code:jsonResponse}
+
+\end{figure}
 
 Where $RL$ is peer's Level of Responsibility (for estimation of $RL$ as well as the other usage parameters, see \ref{ss_jqfp}), \texttt{availability} indicates whether the peer is feasible for handling job. \texttt{network} gives the network status, which can be either \texttt{high}, \texttt{low} or \texttt{off} (no connections), \texttt{gps} is information of GPS \texttt{on} or \texttt{off}. Finally \texttt{cpu}, \texttt{memory} and \texttt{battery} are statuses of the essential resources at the time of response. 
 
@@ -485,14 +500,9 @@ Handler mainUiHandler = new Handler() {
 	@Override
 	public void handleMessage(Message msg) {
 		switch (msg.what) {
-			case Utils.MAIN_JOB_DONE: {
-				...
-			}
-			case Utils.MAIN_INFO: {
-				...
-			}
-		}
-	}
+			case Utils.MAIN_JOB_DONE: { ... }
+			case Utils.MAIN_INFO: { ... }
+		}	}
 };
 	\end{lstlisting}
 
