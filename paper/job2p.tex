@@ -368,13 +368,19 @@ The calling peer quantitates the jobs from a task to distribute to the other ava
  
 To calculate $RL$ as well as the other parameters in IRS, retrieved from \texttt{/proc/stat} system file \cite{stat_explain}, the percentage of CPU usage is expressed by this following expression in two short consecutive times
 
-$$Usage_{CPU} = \frac{(\sum{T_{CPU2}} - T_{Idle2}) - (\sum{T_{CPU1}} - T_{Idle1})}{(\sum{T_{CPU2}} - \sum{T_{CPU1}})}$$
+\begin{equation}
+\label{eq:cpu_usage}
+Usage_{CPU} = \frac{(\sum{T_{CPU2}} - T_{Idle2}) - (\sum{T_{CPU1}} - T_{Idle1})}{(\sum{T_{CPU2}} - \sum{T_{CPU1}})}
+\end{equation}
 
 When $\sum{T_{CPU}}$ is total time of running CPU and $T_{Idle}$ is idle time correspondingly in hertz. In term of memory usage, the $Usage_{Mem}$ can be determined by using \texttt{MemoryInfo} from Android API to retrieve $Mem_{Avail}$ and $Mem_{Total}$, so the $Usage_{Battery}$.
 
 Since in the mobile device, the lower resource usage state states the higher availability, and the higher specifications represents the better responsibility. Then the level of responsibility of device can be simply summarized by the below expression
 
-$$RL = \frac{CPU_{Spec}}{Usage_{CPU}} + \frac{Mem_{Spec}}{Usage_{Mem}} + \frac{Battery_{Spec}}{Usage_{Battery \times 1000}}$$
+\begin{equation}
+\label{eq:res_level}
+RL = \frac{CPU_{Spec}}{Usage_{CPU}} + \frac{Mem_{Spec}}{Usage_{Mem}} + \frac{Battery_{Spec}}{Usage_{Battery \times 1000}}
+\end{equation}
 
 Where $CPU_{Spec}$ has GHz unit, $Mem_{Spec}$ has GB unit and $Battery_{Spec}$ has uAh unit. Especially $CPU_{Spec}$ is determined by number of its core. For example, a quad-core CPU at speed of 1.3GHz can be counted as $1.3 \times 4$ or 5.2. At a certain time of that device, if $Usage_{CPU}$ is 0.3, $Usage_{Mem}$ is 0.5 (half of 1GB memory consumed), $Usage_{Battery}$ is 0.7 or 70\% used over a 2800uAh capacity battery, the value of $RL$ will be
 
@@ -382,9 +388,12 @@ $$RL = \frac{5.2}{0.3} + \frac{1}{0.5} + \frac{2800}{0.7 \times 1000} = 23.33$$
 
 To reduce the latency and to avoid miscalculation at the calling peer, $RL$ is prematurely calculated by each available called peer and wrapped up in the IRS response sending back to the caller. 
 
-In a peer-to-peer network comprising of $n$ devices, where $i$-device has responsibility level $RL_{i}$, the \texttt{DecisionMaker} will assign the job with carrying amount of data ($M_{i}$) which is equivalent to
+In a P2P network comprising of $n$ devices, where $i$-device has responsibility level $RL_{i}$, the \texttt{DecisionMaker} will assign the job with carrying amount of data ($M_{i}$) which is equivalent to
 
-$$M_{i} = M\frac{RL_{i}}{\sum_{j = \overline{1,n}}{RL_{j}}}$$
+\begin{equation}
+\label{eq:data_amount}
+M_{i} = M\frac{RL_{i}}{\sum_{j = \overline{1,n}}{RL_{j}}}
+\end{equation}
 
 Where $M$ is total size of data in bytes. This below algorithm \ref{alg:assign_job} will represent the procedure that \texttt{DecisionMaker} judge the peer capability to assign the appropriate job. Where $M_{i}$ is quantity of job in binary length, $firstOffset$ and $lastOffset$ indicate the location of the data trunk in the whole.
 
@@ -440,9 +449,16 @@ Where $E_{WiFi}$ is energy consumed by Wi-Fi for sending jobs to other peers.
 
 In this estimation we skipped considering $E_{w}$ since it will depend on appearance of applications. If application have no GUI like system background services, $E_{w}$ will cause very little effect. From the two above equations, we can get the difference energy consumption between the two job processing mechanisms $E_{Diff}$ 
 
-$$E_{Diff} = E_{0} - E_{p2p}$$ or $$E_{Diff} = E(1 - \frac{RL_{0}}{\sum_{i=1}^{n}{RL_{i}}}) - E_{WiFi}$$
+$$E_{Diff} = E_{0} - E_{p2p}$$ 
 
-According to \cite{wifi_energy}, Wi-Fi caused battery drained linearly by time during the transmission, particularly the drain can be represented by $y = 17.01x - 0.93$ for downloading and $y = 17.31x - 2.28$ for uploading. Therefore, under non-adventitious circumstances, it infers that in a mobile system with a certain number of devices in different levels of responsibility, if E is big enough, or in the other words, if the task to perform is big enough, then $E_{Diff} > 0$ will happen, thus deploying a peer-to-peer cluster will give the great benefit in term of energy efficiency. The bigger value of $E_{Diff}$, the more benefit we will archive.
+or 
+
+\begin{equation}
+\label{eq:energy_diff}
+E_{Diff} = E(1 - \frac{RL_{0}}{\sum_{i=1}^{n}{RL_{i}}}) - E_{WiFi}
+\end{equation}
+
+According to \cite{wifi_energy}, Wi-Fi caused battery drained linearly by time during the transmission, particularly the drain can be represented by $y = 17.01x - 0.93$ for downloading and $y = 17.31x - 2.28$ for uploading, where $y$ stands for percentage of battery consumed when using Wi-Fi for a period of $x$ hours. Therefore, under non-adventitious circumstances, equation (\ref{eq:energy_diff}) infers that in a mobile system with a certain number of devices in different levels of responsibility, if E is big enough, or in the other words, if the task to perform is big enough, then $E_{Diff} > 0$ will happen, thus deploying a peer-to-peer cluster will give the great benefit in term of energy efficiency. The bigger value of $E_{Diff}$, the more benefit we will archive.
 
 \subsection{API Usage Scenario}
 
@@ -538,7 +554,7 @@ jobHandler.dispatchJob(dataPath, jobPath);
 \label{sec:eval}
 
 \subsection{Micro Benchmark}
-We started the evaluation with Micro benchmarking energy consumption of the system when mobile devices maintain connections in idle state, to figure out the cost of network maintenance overhead. Using Moosoon Power Monitor device \cite{moosoon} to replace battery and measure on one caller, we evaluated overhead bases on cumulation of energy consumption. The Figure (\ref{fig:microb_24}) shows the outcome of the caller measuring from 0 to 100 seconds when preserving connections with 1, 2 and 3 other peers. 
+We started the evaluation with micro benchmarking energy consumption of the system when mobile devices maintain connections in idle state, to figure out the cost of network maintenance overhead. Using Moosoon Power Monitor device \cite{moosoon} to replace battery and measure on one caller, we evaluated overhead bases on cumulation of energy consumption by time. The Figure (\ref{fig:microb_24}) shows the outcome of the caller measuring from 0 to 100 seconds when preserving connections with 1, 2 and 3 other peers. 
 
 \begin{figure}[H]
 	\hspace*{-0.15cm}
@@ -549,23 +565,27 @@ We started the evaluation with Micro benchmarking energy consumption of the syst
 	\label{fig:microb_24}
 \end{figure}
 
-According to the figure \ref{fig:microb_24}, it is revealed that in idle conditions without transmitting any data, the energy consuming variability on each device within the P2P network is linear and mostly identical at any time, regardless of number of devices to which it connects. This result is completely harmonized with results from \cite{wifi_energy}, especially since we transmit the same amount of data regularly over Wi-Fi connection. From the statistic information we collected, the energy variability of one device within P2P network in idle condition can be represented by the below linear formula
+According to the figure \ref{fig:microb_24}, it is revealed that in idle condition without transmitting any data, the energy consuming variability on each device within the P2P network is linear and mostly identical at any time, regardless of number of devices to which it connects. This result is completely harmonized with results from \cite{wifi_energy}, especially since we transmit the same amount of data regularly over Wi-Fi connection. From the statistic information we collected, the energy variability of one device within P2P network in idle condition can be represented by the below linear formula
 
-$$E_{WiFi} = t \times 50$$
+\begin{equation}
+\label{eq:wifi_overload}
+E_{WiFi} = t \times 50
+\end{equation}
 
+Where $t$ is accumulated time in milliseconds and $E_{WiFi}$ is energy used by system in uAh (micro ampere hour) unit.
 
 \subsection{Case Study}
 To measure the performance of the system equipped with our APIs, we decorated a small testbed with collaboration of 5 different Android devices to perform our 3 test cases:
 \begin{itemize}
-	\item \textbf{Image Processing} we will initiate the peer-to-peer network test to perform blurring a large scale image which is unable to process at any of our devices. Particularly, to process an image with size $4000 \times 4000$ and 4 bytes to express each pixel color, application must spare the amount of memory equivalent to 64MB which is way too much for a device, which occasionally returns out of memory exception. 
-	\item \textbf{Internet Remote Access} brings the Internet access capability to a device without connections or limited bandwidth by utilizing the other Internet-featured peers.
+	\item \textbf{Image Processing} we will initiate the P2P network test to perform blurring a large scale image which is unable to process at any of our devices. Particularly, to process an image with size $4000 \times 4000$ and 4 bytes to express each pixel color, application must spare the amount of memory equivalent to 64MB which is way too much for a device, which occasionally returns out of memory exception.
+	\item \textbf{Internet Remote Access} brings the Internet access capability to a device having no Internet connection or limited bandwidth by relying on other Internet-featured peers.
 	\item \textbf{GPS Sharing} establishing a GPS connection is proof of high energy consuming. It would be impossible for a device with low battery to keep update with GPS frequently. We will base on Job2P to build a simple system so that one device can benefit GPS locations from the healthier devices.
 \end{itemize}
 
 \subsection{Case Study Implementations}
 
 \subsubsection{Image Processing}
-We applied blur effect, one of the energy consuming process on image. The image to blur has size $4326 \times 2856$, with 4 bytes per pixel, device must allocate around $50MB$ of heap to open, and hold another $50MB$ for the result. Therefore a collaboration system for image processing helps solving overload in terms of memory and energy consumption.
+We applied blur effect, one of the energy consuming process on images. We run the test repeatedly on two image inputs, the first image has size $2500 \times 1405$ and the second size is $4326 \times 2856$. For the second image, with 4 bytes allocated for each pixel, device must allocate around $50MB$ of heap to open and hold another $50MB$ for the result, thus leading to app crash all the time. The problem will only be solved by other collaborative peers to solve overload in terms of memory and energy consumption.
 
 \paragraph{Design}
 The most important part when applying APIs for image processing is defining the \texttt{BitmapDataParser} (See code snipe \ref{data_parser}) with a divide strategy in vertical cut. For an input image, the \texttt{firstOffset} and \texttt{lastOffset} will decide the first and last offsets of the vertical cut correspondingly throughout the width, from the top to the bottom edges. The algorithm of the vertical cut is described in the code snipe (\ref{code:get_single_part}). Regarding the placeholder, we override the \texttt{getJsonMetadata()} method to return a simple JSON string like below\\
@@ -607,26 +627,12 @@ When all the partial bitmaps received, system throws a message titled \texttt{MA
 	\label{fig:cluster_234}
 \end{figure*}
 
-\paragraph{Performance}
+\paragraph{Performance with large scale image}
 
-Running the test case throughout 50 tests by increasing number of devices from 1 to 5 within the network, we found that the test case doesn't work if there is only one device standing desolately. By utilizing 2 threads for the image process on that single device, we realized that only 1 thread works, the another does not due to out of memory exception, and the processing time to complete half of the task is $12,581ms$. 
+Running the large scale image test case throughout 50 tests by increasing number of devices from 1 to 5 within the network, we found that the test case doesn't work if there is only one device standing desolately. By utilizing 2 threads for the image process on that single device, we realized that only 1 thread works, the another does not due to out of memory exception, and the processing time to complete half of the task is $12,581ms$. 
 
-By increasing the number of devices in network from 2 to 5 and sharing the task by sending jobs to the other peers, we gathered statistic data as in the Figure \ref{fig:cluster_234} (in cluster with 2, 3 and 4 peers) and Figure \ref{fig:cluster_4m} (4 peers cluster, one peer has 4 extra threads). In Figure \ref{fig:cluster_234} the first graph, $12,187$ is the time in millisecond the caller received response from device \#1, and $1354ms$ later it received response from the second. In the other words, the caller accomplished the task within $13,541ms$. The same behaviors happened in the other graphs in Figure \ref{fig:cluster_234} and \ref{fig:cluster_4m}.  
+By increasing the number of devices in network from 2 to 5 and sharing the task by sending jobs to the other peers, we gathered statistic data as in the Figure \ref{fig:cluster_234} (in cluster with 2, 3 and 4 peers) and Figure \ref{fig:cluster_4m} (4 peers cluster, one peer has 4 extra threads). In Figure \ref{fig:cluster_234} the first graph, $12,187$ is the time in millisecond the caller received response from device \#1, and $1354ms$ later it received response from the second. In other words, the caller accomplished the task within $13,541ms$. The same behaviors happened in the other graphs in Figure \ref{fig:cluster_234}.  
  
-%\begin{multicols}{2}
-%\end{multicols}
-
-%\begin{multicols}{2}
-%\end{multicols}
-
-\begin{figure}[!hbt]
-\centerline {
-\includegraphics[width=0.5\textwidth, natwidth=599, natheight=245]{data/c_5}
-}
-\caption{Image Processing in cluster with 4 peers and 1 peers has 4 extra threads}
-\label{fig:cluster_4m}
-\end{figure}
-
 
 The Figure \ref{fig:cluster_performance} summarized performance in terms of time consuming between multiple clusters. Noticed that system didn't fully work with only one device, and the one feasibly working thread in that single device took $12,581ms$ to complete, similar speed with 2-peer system. However speed is rapidly increased when more peers joined the network, especially with 4 devices, it is twice as fast as having 2 devices. Multiple threading is applied on the 4th device but did not sanitize very much the performance. 
 
@@ -639,7 +645,7 @@ The Figure \ref{fig:cluster_performance} summarized performance in terms of time
 	\label{fig:cluster_performance}
 \end{figure}
 
-To perform energy consumption on each cluster, we used Moosoon Power Monitor and measure the velocity of energy drained on a single mobile device when utilizing power from the other peers. Figure \ref{fig:cluster_performance} shows the energy measurement results from the two consecutive tests, although the two tests gave the big gap when executing 2 device cluster, in general the variability of energy consumption within multiple clusters matches with time consumption one. By running the two consecutive tests with the same input for 20 times, we realized that the results didn't change, and by utilizing 3 or more devices, we can significantly reduce the amount of energy required for the task, sometimes up to 25\%. However when we increased the number of devices in cluster, we didn't get the performance raised up at corresponding value linearly, this can be explained by Amdahl's law \cite{amdahl}. Throughout our experiments, the number of devices at 3 to 5 will give the maximum benefit in terms of energy saving and device usage productivity.
+To perform energy consumption on each cluster, we used Moosoon Power Monitor and measure the velocity of energy drained on a single mobile device when utilizing power from the other peers. Figure \ref{fig:cluster_img_energy} shows the energy measurement results from the two consecutive tests, although the two tests gave the big gap when executing 2 device cluster, in general the variability of energy consumption within multiple clusters matches with time consumption one. By running the two consecutive tests with the same input for 20 times, we realized that the results didn't change, and by utilizing 3 or more devices, we can significantly reduce the amount of energy required for the task, sometimes up to 25\%. However when we increased the number of devices in cluster, we didn't get the performance raised up at corresponding value linearly, this can be explained by Amdahl's law \cite{amdahl}. Throughout our experiments, the number of devices at 3 to 5 will give the maximum benefit in terms of energy saving and device usage productivity.
 
 \begin{figure}[H]
 	\hspace*{-0.15cm}
@@ -647,8 +653,13 @@ To perform energy consumption on each cluster, we used Moosoon Power Monitor and
 		\includegraphics{data/img_energy.pdf}
 	}
 	\caption{Energy consumption of clusters}
-	\label{fig:cluster_performance}
+	\label{fig:cluster_img_energy}
 \end{figure}
+
+\paragraph{Performance with normal scale image}
+With normal scale images, when 1 device can process individually by its own device resources, the statistic data revealed the better performance when there are a few peers joined the cluster.
+
+(TO BE CONTINUED)
 
 \subsubsection{Internet Remote Access} 
 Theoretically, remote accessibility won't help reducing the amount of bytes downloading, but the speed is guaranteed to be ameliorative since the downloading process is scattered over a number of devices, therefore energy will be consumed less. 
@@ -682,6 +693,14 @@ To evaluate energy consumption, we performed the same tests like the first test 
 	\label{fig:net_cluster_energy}
 \end{figure}
 
+\subsubsection{GPS Share}
+Retrieving GPS locations is really an energy consuming task. 
+
+\paragraph{Design}
+\paragraph{Performance}
+
+\paragraph{Applications}
+According to \cite{rio}, to utilize GPS
 
 \subsection{Discussion}
 
