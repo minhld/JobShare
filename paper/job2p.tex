@@ -51,7 +51,7 @@
   stringstyle=\footnotesize\ttfamily,
   showspaces=false,
   keywordstyle=\bfseries,
-  morekeywords={then,end,String},
+  morekeywords={then,end,String, Class, Object},
   columns=flexible,
   basicstyle=\footnotesize\ttfamily,
   showstringspaces=false,
@@ -128,16 +128,9 @@ These days, along with the rapid revolution of mobile device industry, software 
 
 
 \section{Introduction}
-Mobile devices have been steadily overtaking the personal computer as a primary means of accessing computing resource. Mobile hardware has been evolving at a lightning pace, with new devices introduced to the market at ever decreasing intervals and prices. 
+Mobile devices have been evolving at a lightning pace with powerful hardware facilities such as multicore CPUs, large and fast memory, fast network, high resolution displays, etc. As a result, mobile devices often overtake the personal computer as a primary means of accessing computing resource. Despite the development of mobile hardware, today's mobile applications are becoming more complicated, thereby requiring more computing resources. 
 
-%As a result, mobile software written yesterday may need to run on mobile devices to be designed tomorrow. In addition, the landscape of mobile devices is highly heterogeneous, with a panoply of devices having divergent hardware capacities. The same mobile application can be executed on mobile devices with different hardware configurations, varying in terms of their respective CPU, memory, and communication characteristics \cite{kwon+:infsof2013}. Another source of heterogeneity comes from mobile operating systems, whose implementation policies can affect the performance/energy profiles of the executed applications \cite{vahdat2000every}. Finally, mobile devices use a great variety of network types with divergent characteristics, including latency, bandwidth, congestion, packet loss, and interference. How can the programmer effectively improve the quality of service of a mobile application, executed on a variety of mobile devices across networks with divergent characteristics? Static, fixed adaptation strategies for mobile applications are unlikely to yield across-the-board benefits, and may even turn detrimental in some cases. 
-
-
-%ensuring their quality of service remains a major challenge of mobile software development. The mobile applications' energy demands are outpacing the devices' battery capacities. In other words, rapid growth in application functionality requires ever greater energy budgets, thus subsuming any advances in battery capacities. Thus, energy efficiency (i.e., fitting an energy budget and maximizing the utility of applications under given battery constraints) has become an important software design consideration.
-
-Smartphones are playing an important role in our daily life as a primary means of accessing computing resources. As a result of highly intensive completions between the global mobile phone manufactures like Samsung and Apple, the cellphones are more and more equipped themselves with high specifications (CPU, RAM and built-in storage) and top functionality so that they are powerful enough in compare with those in the past or even with a desktop. 
-
-With the hardware rapid development, software is also being built more and more sophisticated in many aspects. They may occupy more space on local storage, use more memory, and thus consume more energy. Even though the software is designed to run on mobile device, its size may vary up to 1GB (like image processing or image recognizing) and memory consumption can be up to 1GB as well. Since there are possibly many heavy workloads running on a device at some points, the needs of sharing workloads among the mobile devices is really necessary with respect to performance and energy efficiency. 
+%With the hardware rapid development, software is also being built more and more sophisticated in many aspects. They may occupy more space on local storage, use more memory, and thus consume more energy. Even though the software is designed to run on mobile device, its size may vary up to 1GB (like image processing or image recognizing) and memory consumption can be up to 1GB as well. Since there are possibly many heavy workloads running on a device at some points, the needs of sharing workloads among the mobile devices is really necessary with respect to performance and energy efficiency. 
 
 Distributed computing are so far well-developed in PC or embedded networks, bringing the synthesized power of computation from multiple computers to solve a problem. Up to now, there are thousands of solutions for the developers to create a distributed computing system. For instance, the emergency of a number of message-oriented middleware like DataTurbine \cite{rbnb}, RabbitMQ \cite{rabbitmq} or NaradaBrokering \cite{naradabrokering} lessened the effort of development for distributed applications to the minimum but still maintained all equipped functionality like data mirroring, dynamic network topology or fault tolerant. However, despite of stunning equipments, it is revealed that the most disadvantage of this kind of applications is the dependence of network connection or wireless access point. Without a network established, nothing happens.
 
@@ -240,7 +233,7 @@ To avoid any malfunctions and misconfiguration at remote execution, a convention
 
 Where the body of \texttt{exec()} will contain concrete implementation of the Job.
 
-Since Dalvik VM does not support dynamic class loading, it will load Dalvik execution ("dex") files from an alternative locations such as internal storage or network. We provide \texttt{DexCreator} tool, the windows commandline application supports compiling the \texttt{Job} java file into the dex job package (a jar file). Dex package and sliced resources in binary format will be added into one \texttt{JobData} object by \texttt{JobDispatcher}, signed with checksum for consistency and dispatched to the other peers.
+Since Dalvik VM does not support dynamic class loading, it will load Dalvik execution (``dex'') files from an alternative locations such as internal storage or network. We provide \texttt{DexCreator} tool, the windows commandline application supports compiling the \texttt{Job} java file into the dex job package (a jar file). Dex package and sliced resources in binary format will be added into one \texttt{JobData} object by \texttt{JobDispatcher}, signed with checksum for consistency and dispatched to the other peers.
 
 When client peer receives an object of \texttt{JobData} sent from server, it will firstly check checksum to confirm the consistency, then deserialize it into \texttt{Job} and resources and execute the job with that data.
 
