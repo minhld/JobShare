@@ -638,18 +638,20 @@ public Object copyPartToPlaceholder(placeholder,
 
 When all the partial bitmaps received, system throws a message titled \texttt{MAIN\_JOB\_DONE} to the UI which \texttt{msg.obj} contains a final bitmap.
 
-\begin{figure*}[!hbt]
-  \includegraphics[width=1\textwidth, natwidth=918, natheight=239]{data/c_all}
-  \caption{Image Processing in clusters with 2, 3 and 4 peers.}
-	\label{fig:cluster_234}
-\end{figure*}
-
 \paragraph{Performance with large scale image}
 
 Running the large scale image test case throughout 50 tests by increasing number of devices from 1 to 5 within the network, we found that the test case doesn't work if there is only one device standing desolately. By utilizing 2 threads for the image process on that single device, we realized that only 1 thread works, the another does not due to out of memory exception, and the processing time to complete half of the task is $12,581ms$. 
 
-By increasing the number of devices in network from 2 to 5 and sharing the task by sending jobs to the other peers, we gathered statistic data as in the Figure \ref{fig:cluster_234} (in cluster with 2, 3 and 4 peers) and Figure \ref{fig:cluster_4m} (4 peers cluster, one peer has 4 extra threads). In Figure \ref{fig:cluster_234} the first graph, $12,187$ is the time in millisecond the caller received response from device \#1, and $1354ms$ later it received response from the second. In other words, the caller accomplished the task within $13,541ms$. The same behaviors happened in the other graphs in Figure \ref{fig:cluster_234}.  
- 
+\begin{figure}[H]
+	\hspace*{-0.35cm}
+	\resizebox{0.52\textwidth}{!}{
+		\includegraphics{data/img_large_perf_full.pdf}
+	}
+	\caption{Image Processing in multiple clusters.}
+	\label{fig:cluster_234}
+\end{figure}
+
+By increasing the number of devices in network from 2 to 5 and sharing the task by sending jobs to the other peers, we gathered statistic data as in the Figure \ref{fig:cluster_234} (in cluster with 2, 3, 4 and more). In the Figure, the grey line shows that $12,187$ is the time in millisecond the caller received response from device \#1, and $1354ms$ later it received response from the second device. In other words, the caller accomplished the task within $13,541ms$. The same behaviors happened in the other lines, and it is seen the blue line which 4 more devices get involved will complete the task in the shortest time ($7387ms$), also each device finished its assigned job earlier in compare with them in the other clusters. 
 
 The Figure \ref{fig:cluster_performance} summarized performance in terms of time consuming between multiple clusters. Noticed that system didn't fully work with only one device, and the one feasibly working thread in that single device took $12,581ms$ to complete, similar speed with 2-peer system. However speed is rapidly increased when more peers joined the network, especially with 4 devices, it is twice as fast as having 2 devices. Multiple threading is applied on the 4th device but did not sanitize very much the performance. 
 
@@ -674,7 +676,7 @@ To perform energy consumption on each cluster, we used Moosoon Power Monitor and
 \end{figure}
 
 \paragraph{Performance with normal scale image}
-With normal scale images, when 1 device can process individually by its own device resources, the statistic data revealed the better performance when there are a few peers joined the cluster.
+With normal scale images, when 1 device can process individually by its own device resources, the statistic data revealed the better performance when there are a few peers joined the cluster. 
 
 (TO BE CONTINUED)
 
