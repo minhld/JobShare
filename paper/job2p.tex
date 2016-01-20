@@ -669,7 +669,7 @@ To perform energy consumption on each cluster, we used Moosoon Power Monitor and
 \end{figure}
 
 \paragraph{Performance with normal scale image}
-With normal scale images, when 1 device can process individually by its own device resources, the statistic data revealed the better performance when there are a few peers joined the cluster. 
+To make any device in the network to be feasible for image processing, we reduced the input image size to $2500 \times 1405$. By reconfigure the cluster from 1 to 4 devices and measure total execution time on the callers, we gathered performance data between them like in the Figure \ref{fig:small_img_perf}. From our statistic data, the total time consumed by one device to run on itself is slightly fluctuated around $5400ms$ between multiple measurements, but if one more device join the network the time consuming is decreased to $3500ms$ which is 35\% faster. When more devices (3rd and 4th) participated, performance will continuously increase although their finishing time is largely varied. Especially 4 devices will collaboratively execute twice as fast as one device, or 50\% faster in all of our measurements.
 
 \begin{figure}[H]
 	\hspace*{0cm}
@@ -680,13 +680,15 @@ With normal scale images, when 1 device can process individually by its own devi
 	\label{fig:small_img_perf}
 \end{figure}
 
+Basically variability of energy consumption will reflect the performance, Figure \ref{fig:small_img_energy} displays the details. Through our experiments, running the cluster with 2 devices will preserve 20\% energy compare with 1 device, the number is better with 3 devices at 34\% and 4 devices at37.5\% respectively.
+
 \begin{figure}[H]
 	\hspace*{-0.35cm}
 	\resizebox{0.52\textwidth}{!}{
 		\includegraphics{data/img_small_energy.pdf}
 	}
 	\caption{Energy consumption from the image processing tests in multiple clusters.}
-	\label{fig:small_img_perf}
+	\label{fig:small_img_energy}
 \end{figure}
 
 
