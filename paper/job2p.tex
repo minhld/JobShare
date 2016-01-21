@@ -680,7 +680,7 @@ To make any device in the network to be feasible for image processing, we reduce
 	\label{fig:small_img_perf}
 \end{figure}
 
-Basically variability of energy consumption will reflect the performance, Figure \ref{fig:small_img_energy} displays the details. Through our experiments, running the cluster with 2 devices will preserve 20\% energy compare with 1 device, the number is better with 3 devices at 34\% and 4 devices at37.5\% respectively.
+Basically the variability and fluctuation of energy consumption will reflect the performance, Figure \ref{fig:small_img_energy} displays the details. Through our experiments, running the cluster with 2 devices will preserve 20\% energy compare with 1 device, the number is better with 3 devices at 34\% and 4 devices at37.5\% respectively.
 
 \begin{figure}[H]
 	\hspace*{-0.35cm}
@@ -743,10 +743,10 @@ Alljoyn Framework \cite{alljoyn} is an open source software framework making tra
 
 Before the Wi-Fi Direct available in software industry, many efforts to address Wi-Fi P2P networks, Frank H. P. Fitzek et al. \cite{m_p2p_tutor} summarized the relevant papers focusing on this topic to demonstrate the initiative steps to establish the point-to-point collaborative Wi-Fi networks. 
 
-Since the modern mobile devices (phones and tablets) are featured with multiple network capability, the chance of collaboration between them 
+Since the modern mobile devices (phones and tablets) are featured with multiple network capabilities, many researches relied on these features to exchange resources and computations. Ardalan et al. designed Rio \cite{rio} bases on I/O device files to share contents and resources among the applications in different devices without having to modify them. Their use-cases addressed multi-system photography and gaming, singular SIM card for multi-devices, music and video sharing. Nairan Zhang et al. developed GameOn \cite{gameon} to utilize Wi-Fi P2P to establish non-Internet connection between the gamers, which majorly focuses on closed range network like in public transportation, bus or train. Liam McNamara et al. published \cite{media_share}
 
 
-
+\cite{shi+:mobisys14}
 
 \section{Conclusions}
 \label{sec:conc}
@@ -779,64 +779,72 @@ This research is supported by the Utah State University through the RC Grant.
 % <OR> manually copy in the resultant .bbl file
 % set second argument of \begin to the number of references
 % (used to reserve space for the reference number labels box)
-\begin{thebibliography}{100}
 
-\bibitem{rbnb}
-Sameer Tilak, Paul Hubbard, Matt Miller, and Tony Fountain, \emph{The Ring Buffer Network Bus (RBNB) DataTurbine Streaming Data Middleware for Environmental Observing Systems}, p125-133, e-Science and Grid Computing, Bangalore 2007.
+\bibliographystyle{plain}
+\bibliography{references}
 
-\bibitem{rabbitmq}
-Maciej Rostanski, Krzysztof Grochla, Aleksander Seman, \emph{Evaluation of highly available and fault-tolerant
-middleware clustered architectures using RabbitMQ}, p879-884, FedCSIS 2014.
-
-\bibitem{naradabrokering}
-Gadgil, H.; Fox, G.; Pallickara, S.; Pierce, M. \emph{Managing grid messaging middleware}, Challenges of Large Applications in Distributed Environments, p83-91, 2006 IEEE
-
-\bibitem{classloader}
-Fred Chung, \emph{Custom Class Loading in Dalvik}, http://android-developers.blogspot.com/2011/07/custom-class-loading-in-dalvik.html, July 2011
-
-\bibitem{stat_explain}
-\emph{/proc/stat Explained}, http://www.linuxhowtos.org/System/procstat.htm
-
-\bibitem{moosoon}
-\emph{Moosoon Power Monitor}, https://www.msoon.com/LabEquipment/Pow-erMonitor
-
-\bibitem{tinyhttpd}
-\emph{TinyHTTPd}, http://sourceforge.net/projects/tinyhttpd/
-
-
-\bibitem{wifi_energy}
-Kalic, G., Bojic, I., Kusek, M., \emph{Energy consumption in android phones when using wireless communication technologies}, p754-759, MIPRO May 2012
-
-\bibitem{live_video_collaboration}
-Marco de Sa, David A. Shamma, Elizabeth F. Churchill, \emph{Live mobile collaboration for video production: design, guidelines, and requirements}, p693-707, Journal of Personal and Ubiquitous Computing, Volume 18 Issue 3, March 2014
-
-\bibitem{coast}
-Cong Shi, Kaustubh Joshi, Rajesh K. Panta, Mostafa H. Ammar, Ellen W. Zegura, \emph{CoAST: collaborative application-aware scheduling of last-mile cellular traffic}, p245-258, MobiSys 2014
-
-\bibitem{rio}
-Ardalan Amiri Sani, Kevin Boos, Min Hong Yun, and Lin Zhong, \emph{Rio: a system solution for sharing i/o between mobile systems}, p259-272, MobiSys 2014
-
-\bibitem{gameon}
-Nairan Zhang, Youngki Lee, Meera Radhakrishnan, Rajesh Krishna Balan, \emph{GameOn: p2p Gaming On Public Transport}, p105-119, MobiSys 2015
-
-\bibitem{amdahl}
-Mark D. Hill, Michael R. Marty, \emph{Amdahl's Law in the Multicore Era}, Computer Journal p33-38, 2008
-
-\bibitem{alljoyn}
-AllSeen Alliance, \emph{Alljoyn Framework}, https://allseenalliance.org/frame-work
-
-\bibitem{m_p2p_tutor}
-Frank H. P. Fitzek, Hassan Charaf, \emph{Mobile Peer-to-peer (P2P): A Tutorial Guide}, Wiley, 2009
-
-\bibitem{alljoyn}
-AllSeen Alliance, \emph{Alljoyn Framework}, https://allseenalliance.org/frame-work
-
-\bibitem{alljoyn}
-AllSeen Alliance, \emph{Alljoyn Framework}, https://allseenalliance.org/frame-work
-
-
-\end{thebibliography}
+%\begin{thebibliography}{100}
+%
+%
+%
+%\bibitem{rbnb}
+%Sameer Tilak, Paul Hubbard, Matt Miller, and Tony Fountain, \emph{The Ring Buffer Network Bus (RBNB) DataTurbine Streaming Data Middleware for Environmental Observing Systems}, p125-133, e-Science and Grid Computing, Bangalore 2007.
+%
+%\bibitem{rabbitmq}
+%Maciej Rostanski, Krzysztof Grochla, Aleksander Seman, \emph{Evaluation of highly available and fault-tolerant
+%middleware clustered architectures using RabbitMQ}, p879-884, FedCSIS 2014.
+%
+%\bibitem{naradabrokering}
+%Gadgil, H.; Fox, G.; Pallickara, S.; Pierce, M. \emph{Managing grid messaging middleware}, Challenges of Large Applications in Distributed Environments, p83-91, 2006 IEEE
+%
+%\bibitem{classloader}
+%Fred Chung, \emph{Custom Class Loading in Dalvik}, http://android-developers.blogspot.com/2011/07/custom-class-loading-in-dalvik.html, July 2011
+%
+%\bibitem{stat_explain}
+%\emph{/proc/stat Explained}, http://www.linuxhowtos.org/System/procstat.htm
+%
+%\bibitem{moosoon}
+%\emph{Moosoon Power Monitor}, https://www.msoon.com/LabEquipment/Pow-erMonitor
+%
+%\bibitem{tinyhttpd}
+%\emph{TinyHTTPd}, http://sourceforge.net/projects/tinyhttpd/
+%
+%
+%\bibitem{wifi_energy}
+%Kalic, G., Bojic, I., Kusek, M., \emph{Energy consumption in android phones when using wireless communication technologies}, p754-759, MIPRO May 2012
+%
+%\bibitem{live_video_collaboration}
+%Marco de Sa, David A. Shamma, Elizabeth F. Churchill, \emph{Live mobile collaboration for video production: design, guidelines, and requirements}, p693-707, Journal of Personal and Ubiquitous Computing, Volume 18 Issue 3, March 2014
+%
+%\bibitem{coast}
+%Cong Shi, Kaustubh Joshi, Rajesh K. Panta, Mostafa H. Ammar, Ellen W. Zegura, \emph{CoAST: collaborative application-aware scheduling of last-mile cellular traffic}, p245-258, MobiSys 2014
+%
+%\bibitem{rio}
+%Ardalan Amiri Sani, Kevin Boos, Min Hong Yun, and Lin Zhong, \emph{Rio: a system solution for sharing i/o between mobile systems}, p259-272, MobiSys 2014
+%
+%\bibitem{gameon}
+%Nairan Zhang, Youngki Lee, Meera Radhakrishnan, Rajesh Krishna Balan, \emph{GameOn: p2p Gaming On Public Transport}, p105-119, MobiSys 2015
+%
+%\bibitem{amdahl}
+%Mark D. Hill, Michael R. Marty, \emph{Amdahl's Law in the Multicore Era}, Computer Journal p33-38, 2008
+%
+%\bibitem{alljoyn}
+%AllSeen Alliance, \emph{Alljoyn Framework}, https://allseenalliance.org/frame-work
+%
+%\bibitem{m_p2p_tutor}
+%Frank H. P. Fitzek, Hassan Charaf, \emph{Mobile Peer-to-peer (P2P): A Tutorial Guide}, Wiley, 2009
+%
+%\bibitem{media_share}
+%Liam McNamara, Cecilia Mascolo, Licia Capra, \emph{Media Sharing based on Colocation Prediction in Urban Transport}, p58-69, MobiCom 2008
+%
+%\bibitem{cameo}
+%Azeem J. Khan, Kasthuri Jayarajah, Dongsu Han, Archan Misra, Rajesh Balan, Srinivasan Seshan, \emph{CAMEO: A Middleware for Mobile Advertisement Delivery}, p125-138, MobiSys 2013 
+%
+%\bibitem{cameo}
+%Azeem J. Khan, Kasthuri Jayarajah, Dongsu Han, Archan Misra, Rajesh Balan, Srinivasan Seshan, \emph{CAMEO: A Middleware for Mobile Advertisement Delivery}, p125-138, MobiSys 2013 
+%
+%
+%\end{thebibliography}
 
 \end{document}
-
 
