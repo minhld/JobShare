@@ -153,41 +153,39 @@ Our experiments have demonstrated the effectiveness of BLAH BLAH, to extend limi
 
 The rest of this paper is structured as follows. Section \ref{sec:background} introduces a technological background for the main technologies used in this work. Section \ref{sec:approach} details our technical approach and Section \ref{sec:eval} discuss how we evaluated our approach. Section \ref{sec:related} compares our approach to the related state of the art. Section \ref{sec:conc} concludes this paper.
  
-\section{Motivation and Technical Background}
+\section{Challenges and Background}
 \label{sec:background}
-In this section, we present real world scenarios that motivate our approach and the major technologies we used.
-
-\subsection{Motivating Examples}
-Consider the following three scenarios:
-\begin{enumerate}
-\item \emph{sharing computing power} 
-\item \emph{sharing a network connection}
-\item \emph{sharing sensors}
-\end{enumerate}
+In this section, we present the challenges we addressed and the major technologies we used.
+%
+\subsection{Challenges}
+%Consider the following three scenarios:
+%\begin{enumerate}
+%\item \emph{sharing computing power} 
+%\item \emph{sharing a network connection}
+%\item \emph{sharing sensors}
+%\end{enumerate}
 
 \subsection{Technical Background}
 The major technologies used in this work are middleware, remote execution, and machine-to-machine communication. We describe them in turn next.
 
+\subsubsection{Computational Offloading}   %%%%Should be edited (I copied the exactly same text from my paper)
+Cloud offloading has become a popular optimization technique for mobile applications. It leverages the resources of cloud-based remote servers to execute portions of a mobile application’s functionality. By executing
+some of the application’s functionality in the cloud, offloading reduces the amount of energy consumed by the mobile device, thus saving its battery power. An additional benefit of cloud offloading is improved performance efficiency, as cloud servers have hardware resource more powerful that those available on mobile devices. Application-level cloud offloading optimizations are typically implemented by partitioning the application into the client and server parts communicating across the network.
+
+In our prior work in cloud offloading, we introduced a novel partitioning mechanism that leverages static program analysis and program transformation techniques to optimize a transferred program state \cite{kwon+:icdcs12}. In addition, we introduced an adaptive offloading mechanism, in which the local/remote application parts are determined at runtime, as driven by the execution environment in place \cite{kwon+:icsm13}.
+
+
 \subsubsection{Middleware and Remote Executions}
-Our approach uses features from mainstream middleware mechanisms for distributed execution as building blocks. Middleware systmes provide programming and runtime support to coordinates the execution of multiple remote processes. 
-Thus, by eliminating the need for low-level network programming (e.g., managing sockets, marshaling/unmarshaling data, keeping track of processes) middleware systems offer convenient building blocks for constructing distributed systems. 
+Our approach uses features from mainstream middleware mechanisms for distributed execution as building blocks. Middleware systmes provide programming and runtime support to coordinates the execution of multiple remote processes. By eliminating the need for low-level network programming (e.g., managing sockets, marshaling/unmarshaling data, keeping track of processes) middleware systems offer convenient building blocks for constructing distributed systems. 
 
 \subsubsection{Machine-to-Machine Communication}
 
-\section{Proposed Approach: \emph{Job2P}}
+%other name?
+\section{Proposed Approach: \emph{N-DEX}}
 \label{sec:approach}
+In this section, we present BLAH BLAH BLAH, a distributed mobile execution model to expand resource-limited mobile devices. Then, Section \ref{sec:eval} presents the evaluation results of applying our approach to three case studies.
 
-\subsection{Approach Overview}
-To achieve the above mentioned goals, as well as making our APIs widely adaptive to different context and usages, our consistent idea of design is hiding the complexity of system implementation and open to the developers the capability of customization. This below figure describes the internal architecture of a typical application utilizing our APIs to form a distributed mobile peer-to-peer system (Figure \ref{fig:architecture}). Our system comprises of two main components:
-
-\begin{itemize}
-	\item \textbf{Wi-Fi Peer-to-peer Broadcaster} (\texttt{WPB}) wraps up Wi-Fi Direct implementation, socket management and connection establishment. Moreover the \texttt{WiFiBroadcaster} provides simple API interfaces to construct a peer-to-peer network.
-	\item \textbf{Job Handler} is in charge of selecting available peers and distributing the job to other peers. Specifically, the \texttt{JobDispatcher} which is the submodule of \texttt{JobHandler} dispatches a job and \texttt{JobExecutor} executes a job on each peer. Then, \texttt{JobHandler} merges the scattered incoming results into the final placeholder and relay information messages to the main application.
-\end{itemize}
-
-In the following discussion, we detail our system architecture.
-
-\begin{figure}
+\begin{figure} 
 \centerline {
 \includegraphics[width=0.39\textwidth, natwidth=643, natheight=559]{data/jobShareArch}
 }
@@ -195,8 +193,14 @@ In the following discussion, we detail our system architecture.
 \label{fig:architecture}
 \end{figure}
 
-\subsubsection{Wi-Fi Peer-to-peer Broadcaster}
-To easily form up multiple pair connections between devices in the network, we utilized Wi-Fi Direct, the new feature available from Android APIs 4.0. We developed the \texttt{WiFiDirectManager} sub module inside the \texttt{WPB} to wrap up the complexity of Wi-Fi Direct implementation. Holding an instance of \texttt{WifiP2pManager}, \texttt{WiFiDirectManager} maintains connectivity over peer-to-peer network, discover available peers and setup the connections. 
+\subsection{Approach Overview}
+%need a general description
+%need to edit more
+To achieve our goals---BLAH BLAH---our system design choice is hiding the complexity of implementation details and open to the developers the capability of customization. Figure \ref{fig:architecture} describes the internal architecture of a typical application using our APIs to form a distributed mobile peer-to-peer system. Our system comprises of two main components: (1) \emph{Wi-Fi Peer-to-peer Broadcaster} (\texttt{WPB}) wraps up Wi-Fi Direct implementation, socket management and connection establishment. Moreover the \texttt{WiFiBroadcaster} provides simple API interfaces to construct a peer-to-peer network; (2) \emph{Job Handler} is in charge of selecting available peers and distributing the job to other peers. Specifically, the \texttt{JobDispatcher} which is the submodule of \texttt{JobHandler} dispatches a job and \texttt{JobExecutor} executes a job on each peer. Then, \texttt{JobHandler} merges the scattered incoming results into the final placeholder and relay information messages to the main application. In the following discussion, we present our system architecture.
+
+
+\subsubsection{WiFi Direct Broadcaster}
+To easily form up multiple pair connections between mobile devices over the WiFi network, we utilized the Wi-Fi Direct technology, the new feature available from Android APIs 4.0. We developed the \texttt{WiFiDirectManager} sub module inside the \texttt{WPB} to wrap up the complexity of Wi-Fi Direct implementation. Holding an instance of \texttt{WifiP2pManager}, \texttt{WiFiDirectManager} maintains connectivity over peer-to-peer network, discover available peers and setup the connections. 
 
 When the app starts up, \texttt{WPB} from a peer will spread acknowledgments by calling \texttt{discoverPeers()} to inform its availability to the other peers. If a peer receives such message, its \texttt{WPB} module will collect information from the new comer and update the list of devices. When all the peers are updated with their new device list, the network will be reformed. See figure \ref{fig:forming}
 
@@ -204,23 +208,20 @@ When the app starts up, \texttt{WPB} from a peer will spread acknowledgments by 
 \centerline {
 \includegraphics[width=0.5\textwidth, natwidth=1127, natheight=615]{data/discoverPeers}
 }
-\caption{Forming peer-to-peer network}
+\caption{Establishing a network connection among nearby mobile devices.}
 \label{fig:forming}
 \end{figure}
 
-When peers have information of the others, they are ready to connect. We provide function \texttt{connectToADevice()} holding \texttt{WifiP2pDevice} as one input parameter to invoke the handshake with another device. Once connection established, the device actively invoked will be assigned as client, which utilize the \texttt{ClientSocketHandler} to listen to a client socket. The device passively received the invocation will be promoted as server and use the \texttt{ServerSocketHandler} to initiate server socket with an random port. If the invoked device is already a server, it will maintain its current state and continuously accept the new client. Moreover, since a device can either be a server to some peers, or serve as client to the others, this method is able to build up a close range peer-to-peer network.
+Once each mobile device receives all the required information from other mobile devices, they can be connected. We provide the method \texttt{connectToADevice()} holding \texttt{WifiP2pDevice} as one input parameter to invoke the handshake with another device. Once connection established, the device actively invoked will be assigned as client, which utilize the \texttt{ClientSocketHandler} to listen to a client socket. The device passively received the invocation will be promoted as server and use the \texttt{ServerSocketHandler} to initiate server socket with an random port. If the invoked device is already a server, it will maintain its current state and continuously accept the new client. Moreover, since a device can either be a server to some peers, or serve as client to the others, this method is able to build up a close range peer-to-peer network.
 
 Both \texttt{ClientSocketHandler} and \texttt{ServerSocket Handler} are constituted by a sub module named \texttt{DataTransmitManager}, which periodically observes input and output streams of parent socket (Can be either server or client socket) to verify checksum, check data consistency, send/receive data from the socket. Inheriting the \texttt{TransmitManager} abstract class, developer can instantiate their own version of \texttt{DataTransmitManager} to customize the data consistency checker or improve security. 
 
-\subsubsection{Job Handler}
+\subsubsection{Execution Handler}
 \texttt{Job} is defined BLAH BLAH BLAH
 \texttt{DataParser} is a loosely coupled interface of the Job component facilitating adaptation with data heterogeneity. It helps determine mechanisms for: (1) serialization/deserialization object into binary format which is compatible for TCP transmission, (2) task partitioning, and (3) placeholder initialization and concatenation. To make the data type comprehensive to system in terms of reading, parsing or memory allocating, developer needs to supply instructions by instantiating an implementation of Data Parser for that type. 
 
-\subsection{Programming Model of Job2P} 
-
-\subsubsection{Job Definition}\label{job-description}
-
-To avoid any malfunctions and misconfiguration at remote execution, a conventional Job interface is defined like the code snipe below (\ref{code:job_def}) \\
+\subsection{Programming Model} 
+Our system has a simple programming model that enables the programmer can easily define any remote execution. To avoid any malfunctions and misconfiguration at remote execution, a conventional Job interface is defined like the code snipe below (\ref{code:job_def}) \\
 
 \begin{figure}
 \noindent \shadowbox{%
@@ -228,7 +229,7 @@ To avoid any malfunctions and misconfiguration at remote execution, a convention
 	\begin{lstlisting}
 	public class Job {
 		public Object exec(Object partialObject) {
-			// job implementation
+			// user-define execution 
 		}
 	}
 	\end{lstlisting}	
@@ -237,11 +238,9 @@ To avoid any malfunctions and misconfiguration at remote execution, a convention
 	\label{code:job_def}
 \end{figure}
 
-Where the body of \texttt{exec()} will contain concrete implementation of the Job.
+%Where the body of \texttt{exec()} will contain concrete implementation of the Job.
 
-Since Dalvik VM does not support dynamic class loading, it will load Dalvik execution (``dex'') files from an alternative locations such as internal storage or network. We provide \texttt{DexCreator} tool, the windows commandline application supports compiling the \texttt{Job} java file into the dex job package (a jar file). Dex package and sliced resources in binary format will be added into one \texttt{JobData} object by \texttt{JobDispatcher}, signed with checksum for consistency and dispatched to the other peers.
-
-When client peer receives an object of \texttt{JobData} sent from server, it will firstly check checksum to confirm the consistency, then deserialize it into \texttt{Job} and resources and execute the job with that data.
+Since Dalvik VM does not support dynamic class loading, it will load Dalvik execution (``dex'') files from an alternative locations such as internal storage or network. We provide \texttt{DexCreator} tool, the windows commandline application supports compiling the \texttt{Job} java file into the dex job package (a jar file). Dex package and sliced resources in binary format will be added into one \texttt{JobData} object by \texttt{JobDispatcher}, signed with checksum for consistency and dispatched to the other peers. When client peer receives an object of \texttt{JobData} sent from server, it will firstly check checksum to confirm the consistency, then deserialize it into \texttt{Job} and resources and execute the job with that data.
 
 \subsubsection{Data Parser}
 The code snipe \ref{data_parser} shows the main functionality of the \texttt{DataParser} interface that user needs to comply. Under the first released version, we also support 3 basic Data Parsers for Image, Text and GPS.\\
@@ -759,7 +758,7 @@ In this research, we presented a framework that can BLAH BLAH
 
 % use section* for acknowledgment
 \section*{Acknowledgment}
-This research is supported by the Utah State University through the RC Grant.
+This research is supported by Utah State University through the RC Grant.
 
 
 % trigger a \newpage just before the given reference% number - used to balance the columns on the last page
