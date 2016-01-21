@@ -93,7 +93,7 @@
 % Do not put math or special symbols in the title.
 %\title{Expanding Limited Mobile Resources for Performance, Energy-Efficiency, and Privacy}
 %\title{Extending Resource-Constrained Mobile Devices for Performance, Energy-Efficiency, and Privacy}
-\title{Leveraging Nearby or Remote Computing Resources for Resource-Limited Mobile Devices}
+\title{Utilizing Nearby, Distributed Computing Resources for Resource-Limited Mobile Devices}
 %Resource-Constrained Mobile Devices}
 
 %%%N-REX (Nearby-Remote Executor similar to T-Rex)
@@ -137,9 +137,7 @@ Although computational offloading has been widely enjoyed in the research litera
 
 Nevertheless, computational offloading is still considered an important optimization mechanism for mobile applications as one of distributed execution models. Thus, in order to optimize mobile applications' executions and extend mobile devices' hardware capacities through distributed executions, we solve the following research problems: (1) how can mobile applications utilize remote computing resources at low cost? (2) how can the application programmer express the desired mobile hardware resources? (3) how can mobile devices allow using their resources without affecting the existing applications' executions? Solving these problems requires innovations in programming model and middleware design spaces. 
 
-In this paper, we present a novel distributed execution model that not only optimizes mobile application's executions in terms of performance and energy efficiency, but also extends mobile device's hardware capacities. In other words, mobile devices will be able to virtually add more hardware resources including computation, networking, memory, and sensors to the existing hardware capacities. Our approach is realized as the following two major technical solutions: (1) a straight programming model that enables the programmer to write any execution task and (2) a runtime system that determines an execution strategy and distributes the requested execution task over the nearby network or remote network.
-%uses the WiFi direct technology \cite{} to utilize nearby or remote computing resources over the network. The WiFi direct technology makes it possible to communicate mobile devices with each other in any short distance less than 200 meters without any Internet connection or wireless access point. 
-
+In this paper, we present a novel distributed execution model that not only optimizes mobile application's executions in terms of performance and energy efficiency, but also extends mobile device's hardware capacities. In other words, mobile devices will be able to virtually add more hardware resources including computation, networking, memory, and sensors to the existing hardware capacities. Our approach is realized as the following two major technical solutions: (1) a straight programming model that enables the programmer to write any execution task and (2) a runtime system that determines an execution strategy and distributes the requested execution task over the nearby or remote network. In particular, our approach uses the WiFi direct technology \cite{} to utilize nearby computing resources over the WiFi network, which makes it possible to communicate between mobile devices without any Internet connection or wireless access point. Our runtime system employs a dynamic, adaptive mechanism to determine the best distribution strategy under the different execution environments including diverse network conditions and heterogeneous mobile hardware capacities.
 
 Our experiments have demonstrated the effectiveness of BLAH BLAH, to extend limited mobile hardware resources, thereby improving performance and energy efficiency as well as bringing new hardware capabilities. By presenting BLAH BLAH, this paper makes the following technical contributions:
 \begin{itemize}
