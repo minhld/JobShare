@@ -92,8 +92,11 @@
 % Linebreaks \\ can be used within to get better formatting as desired.
 % Do not put math or special symbols in the title.
 %\title{Expanding Limited Mobile Resources for Performance, Energy-Efficiency, and Privacy}
-\title{Extending Resource-Constrained Mobile Devices for Performance, Energy-Efficiency, and Privacy}
+%\title{Extending Resource-Constrained Mobile Devices for Performance, Energy-Efficiency, and Privacy}
+\title{Leveraging Nearby or Remote Computing Resources for Resource-Limited Mobile Devices}
+%Resource-Constrained Mobile Devices}
 
+%%%N-REX (Nearby-Remote Executor similar to T-Rex)
 
 % author names and affiliations
 % use a multiple column layout for up to three different
@@ -128,20 +131,15 @@ These days, along with the rapid revolution of mobile device industry, software 
 
 
 \section{Introduction}
-Mobile devices have been evolving at a lightning pace with powerful hardware facilities such as multicore CPUs, large and fast memory, fast network, high resolution displays, etc. Due to the significant development of mobile hardware, today's mobile applications are becoming more complex with a increasingly feature-rich nature. As a result, mobile devices often overtake the personal computer as a primary means of accessing computing resource. However, the resource demands (e.g., computation, memory, battery, etc.) of mobile applications often outstrip the hardware capacities of mobile devices. A particularly popular technique to extend limited mobile hardware is \emph{computation offloading}---executing CPU-intensive functionality at a powerful cloud-based server with the parameters and results transferred across a mobile network, thereby improving both performance and energy efficiency. 
+Mobile devices have been evolving at a lightning pace with powerful hardware facilities such as multicore CPUs, large and fast memory, fast network, high resolution displays, etc. Due to the significant development of mobile hardware, today's mobile applications are becoming more complex with a increasingly feature-rich nature. As a result, mobile devices often overtake the personal computer as a primary means of accessing computing resource. However, the resource demands (e.g., computation, memory, battery, etc.) of mobile applications often outstrip the hardware capacities of mobile devices. A particularly popular technique to extend limited mobile hardware is \emph{computational offloading}---executing CPU-intensive functionality at a powerful cloud-based server with the parameters and results transferred across a mobile network, thereby improving both performance and energy efficiency. 
 
-Although computation offloading has been widely enjoyed in the research literature as an optimization mechanism that can utilize remote CPU resources, a majority of feature-rich mobile applications still suffer from resource constraints to provide quality user experiences. In addition, because computation offloading mechanisms have been developed by leveraging cloud computing technologies, in spite of their great advantages, the high operational cost of cloud infrastructures and the implementation difficulties of computation offloading have deterred programmers from actively applying computation offloading in their mobile applications. In particular, performance or energy benefits gained through computation offloading would be considerably low when comparing to the operational costs of cloud-based offloading server. Moreover, mobile devices can only executes computation-intensive functionality by accessing the CPU resources of the cloud-based server. Finally, implementing effective computation offloading optimizations often requires highly experienced programming skills and efforts \cite{}.
+Although computational offloading has been widely enjoyed in the research literature as an optimization mechanism that can utilize remote CPU resources, a majority of feature-rich mobile applications still suffer from resource constraints to provide quality user experiences. In addition, because computational offloading mechanisms have been developed by leveraging cloud computing technologies, in spite of their great advantages, the high operational cost of cloud infrastructures and the implementation difficulties of computational offloading have deterred programmers from actively applying computational offloading in their mobile applications. In particular, performance or energy benefits gained through computational offloading would be considerably low when comparing to the operational costs of cloud-based offloading server. Moreover, mobile devices can only executes computation-intensive functionality by accessing the CPU resources of the cloud-based server. Finally, implementing effective computational offloading optimizations often requires highly experienced programming skills and efforts \cite{kwon+:mobilesoft15}.
 
-Nevertheless, as one of distributed execution models, computation offloading is still considered an important optimization mechanism for mobile applications. Thus, in this paper, we address the following challenges of engineering distributed executions for optimizing and extending mobile applications' executions: (1) how can mobile devices utilize remote computing resources at low cost? (2) how can the application programmer express the desired mobile hardware resources? (3) how can BLAH BLAH BLAH (we need three challenges). Thus, in this paper, we present a novel approach for a distributed execution model that not only optimizes mobile application's executions in terms of performance and energy efficiency, but also extends mobile device's hardware capacities. In other words, mobile devices can virtually add more hardware resources including computation, networking, memory, and sensors.
+Nevertheless, computational offloading is still considered an important optimization mechanism for mobile applications as one of distributed execution models. Thus, in order to optimize mobile applications' executions and extend mobile devices' hardware capacities through distributed executions, we solve the following research problems: (1) how can mobile applications utilize remote computing resources at low cost? (2) how can the application programmer express the desired mobile hardware resources? (3) how can mobile devices allow using their resources without affecting the existing applications' executions? Solving these problems requires innovations in programming model and middleware design spaces. 
 
+In this paper, we present a novel distributed execution model that not only optimizes mobile application's executions in terms of performance and energy efficiency, but also extends mobile device's hardware capacities. In other words, mobile devices will be able to virtually add more hardware resources including computation, networking, memory, and sensors to the existing hardware capacities. Our approach is realized as the following two major technical solutions: (1) a straight programming model that enables the programmer to write any execution task and (2) a runtime system that determines an execution strategy and distributes the requested execution task over the nearby network or remote network.
+%uses the WiFi direct technology \cite{} to utilize nearby or remote computing resources over the network. The WiFi direct technology makes it possible to communicate mobile devices with each other in any short distance less than 200 meters without any Internet connection or wireless access point. 
 
-%With the hardware rapid development, software is also being built more and more sophisticated in many aspects. They may occupy more space on local storage, use more memory, and thus consume more energy. Even though the software is designed to run on mobile device, its size may vary up to 1GB (like image processing or image recognizing) and memory consumption can be up to 1GB as well. Since there are possibly many heavy workloads running on a device at some points, the needs of sharing workloads among the mobile devices is really necessary with respect to performance and energy efficiency. 
-
-%Distributed computing are so far well-developed in PC or embedded networks, bringing the synthesized power of computation from multiple computers to solve a problem. Up to now, there are thousands of solutions for the developers to create a distributed computing system. For instance, the emergency of a number of message-oriented middleware like DataTurbine \cite{rbnb}, RabbitMQ \cite{rabbitmq} or NaradaBrokering \cite{naradabrokering} lessened the effort of development for distributed applications to the minimum but still maintained all equipped functionality like data mirroring, dynamic network topology or fault tolerant. However, despite of stunning equipments, it is revealed that the most disadvantage of this kind of applications is the dependence of network connection or wireless access point. Without a network established, nothing happens.
-
-%Unlike the other PCs or wired devices, the mobile devices have their own advantage of multiple non-equivalent network capability. One of the remarkable network capability is installed on modern mobile devices are Wi-Fi Direct, which allows them to discover the others in any short distance less than 200 meters without utilizing Internet and wireless access point. No internet connections are required, and it will help the owner to connect to the devices within a closed distance. By establishing connection between the two devices to form a pair, Wi-Fi Direct can provide the simple way to dynamically initiate a peer-to-peer network. Available on Android devices from version 4.0 (which more than 96\% of devices are using these days), as well as a number of Intel-featured laptops and game consoles, there is the high possibility of discovering the other mobile devices at anywhere.
-
-To address those limitations with heavy software on mobile devices, we proposed Job2P as the Job Scheduling APIs for Android development that leverages Wi-Fi Direct to support sharing workloads and resources over peer-to-peer mobile device network, which doesn't require any Internet connections. Job2P provides a simple and straightforward API interface to get rid of sophistication of network implementation, letting developers easily create their distributed mobile applications with capability of forming closed range network. In term of workload distribution, Job2P splits task and resource into the smaller units called jobs, and dispatch to the peers. To distributed jobs equitably among the peers, a decision making module is added to decide the amount of resource the peer has to handle bases on its percentage of availability. Moreover, our APIs can handle fault tolerant for network malfunctions.
 
 Our experiments have demonstrated the effectiveness of BLAH BLAH, to extend limited mobile hardware resources, thereby improving performance and energy efficiency as well as bringing new hardware capabilities. By presenting BLAH BLAH, this paper makes the following technical contributions:
 \begin{itemize}
@@ -149,6 +147,11 @@ Our experiments have demonstrated the effectiveness of BLAH BLAH, to extend limi
 	\item \textbf{Lightweight runtime system:} Our runtime system can distribute jobs to available peers based on a novel job distribution algorithm and merge the completed jobs. 	
 	\item \textbf{Systematic evaluation:} We have applied our approach to real-world applications and systematically evaluated the experimental results.
 \end{itemize}
+
+%should go to the later part
+%No internet connections are required, and it will help the owner to connect to the devices within a closed distance. By establishing connection between the two devices to form a pair, Wi-Fi Direct can provide the simple way to dynamically initiate a peer-to-peer network. Available on Android devices from version 4.0 (which more than 96\% of devices are using these days), as well as a number of Intel-featured laptops and game consoles, there is the high possibility of discovering the other mobile devices at anywhere.
+
+%Job2P provides a simple and straightforward API interface to get rid of sophistication of network implementation, letting developers easily create their distributed mobile applications with capability of forming closed range network. In term of workload distribution, Job2P splits task and resource into the smaller units called jobs, and dispatch to the peers. To distributed jobs equitably among the peers, a decision making module is added to decide the amount of resource the peer has to handle bases on its percentage of availability. Moreover, our APIs can handle fault tolerant for network malfunctions.
 
 The rest of this paper is structured as follows. Section \ref{sec:background} introduces a technological background for the main technologies used in this work. Section \ref{sec:approach} details our technical approach and Section \ref{sec:eval} discuss how we evaluated our approach. Section \ref{sec:related} compares our approach to the related state of the art. Section \ref{sec:conc} concludes this paper.
  
@@ -783,89 +786,93 @@ This research is supported by the Utah State University through the RC Grant.
 % set second argument of \begin to the number of references
 % (used to reserve space for the reference number labels box)
 
-\begin{thebibliography}{100}
-
-\bibitem{rbnb}
-Sameer Tilak, Paul Hubbard, Matt Miller, and Tony Fountain, \emph{The Ring Buffer Network Bus (RBNB) DataTurbine Streaming Data Middleware for Environmental Observing Systems}, p125-133, e-Science and Grid Computing, Bangalore 2007.
-
-\bibitem{rabbitmq}
-Maciej Rostanski, Krzysztof Grochla, Aleksander Seman, \emph{Evaluation of highly available and fault-tolerant
-middleware clustered architectures using RabbitMQ}, p879-884, FedCSIS 2014.
-
-\bibitem{naradabrokering}
-Gadgil, H.; Fox, G.; Pallickara, S.; Pierce, M. \emph{Managing grid messaging middleware}, Challenges of Large Applications in Distributed Environments, p83-91, 2006 IEEE
-
-\bibitem{classloader}
-Fred Chung, \emph{Custom Class Loading in Dalvik}, http://android-developers.blogspot.com/2011/07/custom-class-loading-in-dalvik.html, July 2011
-
-\bibitem{stat_explain}
-\emph{/proc/stat Explained}, http://www.linuxhowtos.org/System/procstat.htm
-
-\bibitem{moosoon}
-\emph{Moosoon Power Monitor}, https://www.msoon.com/LabEquipment/Pow-erMonitor
-
-\bibitem{tinyhttpd}
-\emph{TinyHTTPd}, http://sourceforge.net/projects/tinyhttpd/
-
-\bibitem{live_video_collaboration}
-Marco de Sa, David A. Shamma, Elizabeth F. Churchill, \emph{Live mobile collaboration for video production: design, guidelines, and requirements}, p693-707, Journal of Personal and Ubiquitous Computing, Volume 18 Issue 3, March 2014
-
-\bibitem{coast}
-Cong Shi, Kaustubh Joshi, Rajesh K. Panta, Mostafa H. Ammar, Ellen W. Zegura, \emph{CoAST: collaborative application-aware scheduling of last-mile cellular traffic}, p245-258, MobiSys 2014
-
-\bibitem{rio}
-Ardalan Amiri Sani, Kevin Boos, Min Hong Yun, and Lin Zhong, \emph{Rio: a system solution for sharing i/o between mobile systems}, p259-272, MobiSys 2014
-
-\bibitem{gameon}
-Nairan Zhang, Youngki Lee, Meera Radhakrishnan, Rajesh Krishna Balan, \emph{GameOn: p2p Gaming On Public Transport}, p105-119, MobiSys 2015
-
-\bibitem{alljoyn}
-AllSeen Alliance, \emph{Alljoyn Framework}, https://allseenalliance.org/frame-work
-
-\bibitem{m_p2p_tutor}
-Frank H. P. Fitzek, Hassan Charaf, \emph{Mobile Peer-to-peer (P2P): A Tutorial Guide}, Wiley, 2009
-
-\bibitem{media_share}
-Liam McNamara, Cecilia Mascolo, Licia Capra, \emph{Media Sharing based on Colocation Prediction in Urban Transport}, p58-69, MobiCom 2008
-
-\bibitem{cameo}
-Azeem J. Khan, Kasthuri Jayarajah, Dongsu Han, Archan Misra, Rajesh Balan, Srinivasan Seshan, \emph{CAMEO: A Middleware for Mobile Advertisement Delivery}, p125-138, MobiSys 2013 
-
-\bibitem{amdahl}
-Mark D. Hill, Michael R. Marty, \emph{Amdahl's Law in the Multicore Era}, Computer Journal p33-38, 2008
-
-\bibitem{crowd-sourcing}
-Pieter Simoens, Yu Xiao, Padmanabhan Pillai, Zhuo Chen, Kiryong Ha, Mahadev Satyanarayanan, \emph{Scalable crowd-sourcing of video from mobile devices}, p139-152, MobiSys 2013 
-
-\bibitem{crowd-sourcing}
-Feng Qian, Subhabrata Sen, Oliver Spatscheck, \emph{Characterizing resource usage for mobile web browsing}, p218-231, MobiSys '14
-
-\bibitem{wifi_energy}
-Kalic, G., Bojic, I., Kusek, M., \emph{Energy consumption in android phones when using wireless communication technologies}, p754-759, MIPRO May 2012
-
-\bibitem{spartacus}
-Zheng Sun, Aveek Purohit, Raja Bose, Pei Zhang, \emph{Spartacus: spatially-aware interaction for mobile devices through energy-efficient audio sensing}, p263-276, MobiSys 2013  
-
-\bibitem{cloud-offload}
-Young-Woo Kwon, Tilevich, E., \emph{Facilitating the Implementation of Adaptive Cloud Offloading to Improve the Energy Efficiency of Mobile Applications}, p94-104, MOBILESoft 2015
-
-\bibitem{maui}
-Eduardo Cuervo, Aruna Balasubramanian, Dae-ki Cho, Alec Wolman, Stefan Saroiu, Ranveer Chandra, Paramvir Bahl, \emph{MAUI: making smartphones last longer with code offload}, p49-62, MobiSys 2010  
-
-\bibitem{comet}
-Mark S. Gordon, D. Anoushe Jamshidi, Scott Mahlke, and Z. Morley Mao, \emph{MAUI: makiCOMET: Code Offload by Migrating Execution Transparently}, p93-106, OSDI'12  
-
-\bibitem{mobile-cloud-middleware}
-Bo Yin, Wenlong Shen, Lin X. Cai, Yu Cheng, \emph{A Mobile Cloud Computing Middleware for Low Latency Offloading of Big Data}, p31-35, Mobidata '15
-
-\bibitem{fuzzy-engine}
-Huber Flores, Satish Srirama, \emph{Adaptive code offloading for mobile cloud applications: exploiting fuzzy sets and evidence-based learning}, p9-16, MCS '13
-
-\bibitem{retro-skel}
-Benjamin Davis, Hao Chen, \emph{RetroSkeleton: Retrofitting Android Apps}, p181-192, MobiSys '13
+\bibliographystyle{abbrv}
+\bibliography{references}
 
 
-\end{thebibliography}
+%\begin{thebibliography}{100}
+%
+%\bibitem{rbnb}
+%Sameer Tilak, Paul Hubbard, Matt Miller, and Tony Fountain, \emph{The Ring Buffer Network Bus (RBNB) DataTurbine Streaming Data Middleware for Environmental Observing Systems}, p125-133, e-Science and Grid Computing, Bangalore 2007.
+%
+%\bibitem{rabbitmq}
+%Maciej Rostanski, Krzysztof Grochla, Aleksander Seman, \emph{Evaluation of highly available and fault-tolerant
+%middleware clustered architectures using RabbitMQ}, p879-884, FedCSIS 2014.
+%
+%\bibitem{naradabrokering}
+%Gadgil, H.; Fox, G.; Pallickara, S.; Pierce, M. \emph{Managing grid messaging middleware}, Challenges of Large Applications in Distributed Environments, p83-91, 2006 IEEE
+%
+%\bibitem{classloader}
+%Fred Chung, \emph{Custom Class Loading in Dalvik}, http://android-developers.blogspot.com/2011/07/custom-class-loading-in-dalvik.html, July 2011
+%
+%\bibitem{stat_explain}
+%\emph{/proc/stat Explained}, http://www.linuxhowtos.org/System/procstat.htm
+%
+%\bibitem{moosoon}
+%\emph{Moosoon Power Monitor}, https://www.msoon.com/LabEquipment/Pow-erMonitor
+%
+%\bibitem{tinyhttpd}
+%\emph{TinyHTTPd}, http://sourceforge.net/projects/tinyhttpd/
+%
+%\bibitem{live_video_collaboration}
+%Marco de Sa, David A. Shamma, Elizabeth F. Churchill, \emph{Live mobile collaboration for video production: design, guidelines, and requirements}, p693-707, Journal of Personal and Ubiquitous Computing, Volume 18 Issue 3, March 2014
+%
+%\bibitem{coast}
+%Cong Shi, Kaustubh Joshi, Rajesh K. Panta, Mostafa H. Ammar, Ellen W. Zegura, \emph{CoAST: collaborative application-aware scheduling of last-mile cellular traffic}, p245-258, MobiSys 2014
+%
+%\bibitem{rio}
+%Ardalan Amiri Sani, Kevin Boos, Min Hong Yun, and Lin Zhong, \emph{Rio: a system solution for sharing i/o between mobile systems}, p259-272, MobiSys 2014
+%
+%\bibitem{gameon}
+%Nairan Zhang, Youngki Lee, Meera Radhakrishnan, Rajesh Krishna Balan, \emph{GameOn: p2p Gaming On Public Transport}, p105-119, MobiSys 2015
+%
+%\bibitem{alljoyn}
+%AllSeen Alliance, \emph{Alljoyn Framework}, https://allseenalliance.org/frame-work
+%
+%\bibitem{m_p2p_tutor}
+%Frank H. P. Fitzek, Hassan Charaf, \emph{Mobile Peer-to-peer (P2P): A Tutorial Guide}, Wiley, 2009
+%
+%\bibitem{media_share}
+%Liam McNamara, Cecilia Mascolo, Licia Capra, \emph{Media Sharing based on Colocation Prediction in Urban Transport}, p58-69, MobiCom 2008
+%
+%\bibitem{cameo}
+%Azeem J. Khan, Kasthuri Jayarajah, Dongsu Han, Archan Misra, Rajesh Balan, Srinivasan Seshan, \emph{CAMEO: A Middleware for Mobile Advertisement Delivery}, p125-138, MobiSys 2013 
+%
+%\bibitem{amdahl}
+%Mark D. Hill, Michael R. Marty, \emph{Amdahl's Law in the Multicore Era}, Computer Journal p33-38, 2008
+%
+%\bibitem{crowd-sourcing}
+%Pieter Simoens, Yu Xiao, Padmanabhan Pillai, Zhuo Chen, Kiryong Ha, Mahadev Satyanarayanan, \emph{Scalable crowd-sourcing of video from mobile devices}, p139-152, MobiSys 2013 
+%
+%\bibitem{crowd-sourcing}
+%Feng Qian, Subhabrata Sen, Oliver Spatscheck, \emph{Characterizing resource usage for mobile web browsing}, p218-231, MobiSys '14
+%
+%\bibitem{wifi_energy}
+%Kalic, G., Bojic, I., Kusek, M., \emph{Energy consumption in android phones when using wireless communication technologies}, p754-759, MIPRO May 2012
+%
+%\bibitem{spartacus}
+%Zheng Sun, Aveek Purohit, Raja Bose, Pei Zhang, \emph{Spartacus: spatially-aware interaction for mobile devices through energy-efficient audio sensing}, p263-276, MobiSys 2013  
+%
+%\bibitem{cloud-offload}
+%Young-Woo Kwon, Tilevich, E., \emph{Facilitating the Implementation of Adaptive Cloud Offloading to Improve the Energy Efficiency of Mobile Applications}, p94-104, MOBILESoft 2015
+%
+%\bibitem{maui}
+%Eduardo Cuervo, Aruna Balasubramanian, Dae-ki Cho, Alec Wolman, Stefan Saroiu, Ranveer Chandra, Paramvir Bahl, \emph{MAUI: making smartphones last longer with code offload}, p49-62, MobiSys 2010  
+%
+%\bibitem{comet}
+%Mark S. Gordon, D. Anoushe Jamshidi, Scott Mahlke, and Z. Morley Mao, \emph{MAUI: makiCOMET: Code Offload by Migrating Execution Transparently}, p93-106, OSDI'12  
+%
+%\bibitem{mobile-cloud-middleware}
+%Bo Yin, Wenlong Shen, Lin X. Cai, Yu Cheng, \emph{A Mobile Cloud Computing Middleware for Low Latency Offloading of Big Data}, p31-35, Mobidata '15
+%
+%\bibitem{fuzzy-engine}
+%Huber Flores, Satish Srirama, \emph{Adaptive code offloading for mobile cloud applications: exploiting fuzzy sets and evidence-based learning}, p9-16, MCS '13
+%
+%\bibitem{retro-skel}
+%Benjamin Davis, Hao Chen, \emph{RetroSkeleton: Retrofitting Android Apps}, p181-192, MobiSys '13
+%
+%
+%\end{thebibliography}
 
 \end{document}
 
