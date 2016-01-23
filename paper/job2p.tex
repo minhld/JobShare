@@ -114,7 +114,10 @@ young.kwon@usu.edu}}
 \maketitle
 
 \begin{abstract}
-These days, along with the rapid revolution of mobile device industry, software is also being built heavier and consumes more CPU performance and energy than they were in the past few years. Since the modern mobile devices support multiple connection methods like Wi-Fi, Bluetooth or NFC, the requirements of sharing the workloads and resources among the devices within a network to reduce full workload on an arbitrary device are being considered, especially in the areas Internet is not available, which can be found anywhere. To address those limitations on mobile devices, we introduce Job2P as Job scheduling APIs for Android development that leverages Wi-Fi Direct to support sharing workloads and resources over peer-to-peer mobile device network, which doesn't require any Internet connections. Job2P provides a simple and straightforward API interface to get rid of sophistication of network implementation, letting developers easily create their distributed mobile applications with capability of forming closed range network. In term of workload distribution, Job2P splits task and resource into parts and packs them into the smaller units called jobs and dispatch to the peers. To distributed jobs equitably among the peers, a Decision Maker is added to decide the amount of resource the peer has to handle bases on its percentage of availability. Moreover, our APIs can handle fault tolerant for network malfunctions. Our case studies demonstrate that our system can extend the resource-constraint mobile devices as well as improving performance and energy efficiency. 
+As mobile applications deliver increasingly complex functionality, ensuring their quality of service remains a major challenge of mobile software development. Rapid growth in application functionality requires ever greater hardware capacities.
+%, thus subsuming any advances in battery capacities. Thus, energy efficiency (i.e., fitting an energy budget and maximizing the utility of applications under given battery constraints) has become an important software design consideration.
+%These days, along with the rapid revolution of mobile device industry, software is also being built heavier and consumes more CPU performance and energy than they were in the past few years. 
+Since the modern mobile devices support multiple connection methods like Wi-Fi, Bluetooth or NFC, the requirements of sharing the workloads and resources among the devices within a network to reduce full workload on an arbitrary device are being considered, especially in the areas Internet is not available, which can be found anywhere. To address those limitations on mobile devices, we introduce Job2P as Job scheduling APIs for Android development that leverages Wi-Fi Direct to support sharing workloads and resources over peer-to-peer mobile device network, which doesn't require any Internet connections. Job2P provides a simple and straightforward API interface to get rid of sophistication of network implementation, letting developers easily create their distributed mobile applications with capability of forming closed range network. In term of workload distribution, Job2P splits task and resource into parts and packs them into the smaller units called jobs and dispatch to the peers. To distributed jobs equitably among the peers, a Decision Maker is added to decide the amount of resource the peer has to handle bases on its percentage of availability. Moreover, our APIs can handle fault tolerant for network malfunctions. Our case studies demonstrate that our system can extend the resource-constraint mobile devices as well as improving performance and energy efficiency. 
 \end{abstract}
 
 
@@ -127,7 +130,6 @@ These days, along with the rapid revolution of mobile device industry, software 
 % For peerreview papers, this IEEEtran command inserts a page break and
 % creates the second title. It will be ignored for other modes.
 \IEEEpeerreviewmaketitle
-
 
 
 \section{Introduction}
@@ -153,11 +155,11 @@ Our experiments have demonstrated the effectiveness of BLAH BLAH, to extend limi
 
 The rest of this paper is structured as follows. Section \ref{sec:background} introduces a technological background for the main technologies used in this work. Section \ref{sec:approach} details our technical approach and Section \ref{sec:eval} discuss how we evaluated our approach. Section \ref{sec:related} compares our approach to the related state of the art. Section \ref{sec:conc} concludes this paper.
  
-\section{Challenges and Background}
+\section{Motivation and Background}
 \label{sec:background}
-In this section, we present the challenges we addressed and the major technologies we used.
+In this section, we present the motivation and the major technologies we used.
 %
-\subsection{Challenges}
+\subsection{Motivation}
 %Consider the following three scenarios:
 %\begin{enumerate}
 %\item \emph{sharing computing power} 
@@ -166,19 +168,18 @@ In this section, we present the challenges we addressed and the major technologi
 %\end{enumerate}
 
 \subsection{Technical Background}
-The major technologies used in this work are middleware, remote execution, and machine-to-machine communication. We describe them in turn next.
+The major technologies used in this work computation offloading, machine-to-machine communication, remote execution, and middleware. We describe them in turn next.
 
-\subsubsection{Computational Offloading}   %%%%Should be edited (I copied the exactly same text from my paper)
-Cloud offloading has become a popular optimization technique for mobile applications. It leverages the resources of cloud-based remote servers to execute portions of a mobile application’s functionality. By executing
-some of the application’s functionality in the cloud, offloading reduces the amount of energy consumed by the mobile device, thus saving its battery power. An additional benefit of cloud offloading is improved performance efficiency, as cloud servers have hardware resource more powerful that those available on mobile devices. Application-level cloud offloading optimizations are typically implemented by partitioning the application into the client and server parts communicating across the network.
-
-In our prior work in cloud offloading, we introduced a novel partitioning mechanism that leverages static program analysis and program transformation techniques to optimize a transferred program state \cite{kwon+:icdcs12}. In addition, we introduced an adaptive offloading mechanism, in which the local/remote application parts are determined at runtime, as driven by the execution environment in place \cite{kwon+:icsm13}.
-
-
-\subsubsection{Middleware and Remote Executions}
-Our approach uses features from mainstream middleware mechanisms for distributed execution as building blocks. Middleware systmes provide programming and runtime support to coordinates the execution of multiple remote processes. By eliminating the need for low-level network programming (e.g., managing sockets, marshaling/unmarshaling data, keeping track of processes) middleware systems offer convenient building blocks for constructing distributed systems. 
+\subsubsection{Computational Offloading}   
+Computation offloading has become a popular optimization technique for mobile applications \cite{cuervo+:mobisys10,chun+:eurosys11,cloudlet09,wen2012energy}. It leverages the resources of cloud-based remote servers to execute portions of a mobile application's functionality. By executing some of the application's functionality in the cloud, offloading reduces the amount of energy consumed by the mobile device, thus saving its battery power. An additional benefit of computation offloading is improved performance efficiency, as cloud servers have hardware resource more powerful that those available on mobile devices. Application-level computation offloading optimization is typically implemented by partitioning the application into the client and server parts communicating across the network. In our prior work, we introduced a novel offloading mechanism that leverages static program analysis and program transformation techniques to optimize a transferred program state \cite{kwon+:icdcs12}, and then our offloading mechanism was enhanced by adaptation and runtime support, in which the local/remote application parts are dynamically determined, as driven by the execution environment in place \cite{kwon+:icsm13}. This computation offloading technique has been used as one of the distributed execution model in this study.
 
 \subsubsection{Machine-to-Machine Communication}
+
+\subsubsection{Remote Execution and Middleware}
+Our approach uses features from mainstream middleware mechanisms for distributed execution as building blocks. Middleware systmes provide programming and runtime support to coordinates the execution of multiple remote processes. By eliminating the need for low-level network programming (e.g., managing sockets, marshaling/unmarshaling data, keeping track of processes) middleware systems offer convenient building blocks for constructing distributed systems. 
+
+Because network communication incurs high energy costs in mobile applications, middleware presents a promising target for energy optimization. Unfortunately, mainstream middleware mechanisms are oblivious to the highly volatile nature of mobile networks, operating over which energy efficiently requires aligning the middleware communication patterns with the network conditions in place. In our prior work \cite{kwon+:mobicase14-middleware}, we introduced a novel middleware architecture that optimizes energy consumption by adapting various facets of middleware functionality (e.g., data communication, encoding, and compression) dynamically in response to fluctuations in network conditions. As compared to mainstream middleware mechanisms, our middleware improved the energy efficiency of mobile applications. By means of a simple configuration file, the programmer can specify the policies to follow for various parts of the communication functionality and how policies should be triggered by changes in network conditions.
+
 
 %other name?
 \section{Proposed Approach: \emph{N-DEX}}
@@ -763,116 +764,8 @@ In this research, we presented a framework that can BLAH BLAH
 \section*{Acknowledgment}
 This research is supported by Utah State University through the RC Grant.
 
-
-% trigger a \newpage just before the given reference% number - used to balance the columns on the last page
-% adjust value as needed - may need to be readjusted if
-% the document is modified later
-%\IEEEtriggeratref{8}
-% The "triggered" command can be changed if desired:
-%\IEEEtriggercmd{\enlargethispage{-5in}}
-
-% references section
-
-% can use a bibliography generated by BibTeX as a .bbl file
-% BibTeX documentation can be easily obtained at:
-% http://mirror.ctan.org/biblio/bibtex/contrib/doc/
-% The IEEEtran BibTeX style support page is at:
-% http://www.michaelshell.org/tex/ieeetran/bibtex/
-%\bibliographystyle{IEEEtran}
-% argument is your BibTeX string definitions and bibliography database(s)
-%\bibliography{IEEEabrv,../bib/paper}
-%
-% <OR> manually copy in the resultant .bbl file
-% set second argument of \begin to the number of references
-% (used to reserve space for the reference number labels box)
-
 \bibliographystyle{abbrv}
 \bibliography{references}
-
-
-%\begin{thebibliography}{100}
-%
-%\bibitem{rbnb}
-%Sameer Tilak, Paul Hubbard, Matt Miller, and Tony Fountain, \emph{The Ring Buffer Network Bus (RBNB) DataTurbine Streaming Data Middleware for Environmental Observing Systems}, p125-133, e-Science and Grid Computing, Bangalore 2007.
-%
-%\bibitem{rabbitmq}
-%Maciej Rostanski, Krzysztof Grochla, Aleksander Seman, \emph{Evaluation of highly available and fault-tolerant
-%middleware clustered architectures using RabbitMQ}, p879-884, FedCSIS 2014.
-%
-%\bibitem{naradabrokering}
-%Gadgil, H.; Fox, G.; Pallickara, S.; Pierce, M. \emph{Managing grid messaging middleware}, Challenges of Large Applications in Distributed Environments, p83-91, 2006 IEEE
-%
-%\bibitem{classloader}
-%Fred Chung, \emph{Custom Class Loading in Dalvik}, http://android-developers.blogspot.com/2011/07/custom-class-loading-in-dalvik.html, July 2011
-%
-%\bibitem{stat_explain}
-%\emph{/proc/stat Explained}, http://www.linuxhowtos.org/System/procstat.htm
-%
-%\bibitem{moosoon}
-%\emph{Moosoon Power Monitor}, https://www.msoon.com/LabEquipment/Pow-erMonitor
-%
-%\bibitem{tinyhttpd}
-%\emph{TinyHTTPd}, http://sourceforge.net/projects/tinyhttpd/
-%
-%\bibitem{live_video_collaboration}
-%Marco de Sa, David A. Shamma, Elizabeth F. Churchill, \emph{Live mobile collaboration for video production: design, guidelines, and requirements}, p693-707, Journal of Personal and Ubiquitous Computing, Volume 18 Issue 3, March 2014
-%
-%\bibitem{coast}
-%Cong Shi, Kaustubh Joshi, Rajesh K. Panta, Mostafa H. Ammar, Ellen W. Zegura, \emph{CoAST: collaborative application-aware scheduling of last-mile cellular traffic}, p245-258, MobiSys 2014
-%
-%\bibitem{rio}
-%Ardalan Amiri Sani, Kevin Boos, Min Hong Yun, and Lin Zhong, \emph{Rio: a system solution for sharing i/o between mobile systems}, p259-272, MobiSys 2014
-%
-%\bibitem{gameon}
-%Nairan Zhang, Youngki Lee, Meera Radhakrishnan, Rajesh Krishna Balan, \emph{GameOn: p2p Gaming On Public Transport}, p105-119, MobiSys 2015
-%
-%\bibitem{alljoyn}
-%AllSeen Alliance, \emph{Alljoyn Framework}, https://allseenalliance.org/frame-work
-%
-%\bibitem{m_p2p_tutor}
-%Frank H. P. Fitzek, Hassan Charaf, \emph{Mobile Peer-to-peer (P2P): A Tutorial Guide}, Wiley, 2009
-%
-%\bibitem{media_share}
-%Liam McNamara, Cecilia Mascolo, Licia Capra, \emph{Media Sharing based on Colocation Prediction in Urban Transport}, p58-69, MobiCom 2008
-%
-%\bibitem{cameo}
-%Azeem J. Khan, Kasthuri Jayarajah, Dongsu Han, Archan Misra, Rajesh Balan, Srinivasan Seshan, \emph{CAMEO: A Middleware for Mobile Advertisement Delivery}, p125-138, MobiSys 2013 
-%
-%\bibitem{amdahl}
-%Mark D. Hill, Michael R. Marty, \emph{Amdahl's Law in the Multicore Era}, Computer Journal p33-38, 2008
-%
-%\bibitem{crowd-sourcing}
-%Pieter Simoens, Yu Xiao, Padmanabhan Pillai, Zhuo Chen, Kiryong Ha, Mahadev Satyanarayanan, \emph{Scalable crowd-sourcing of video from mobile devices}, p139-152, MobiSys 2013 
-%
-%\bibitem{crowd-sourcing}
-%Feng Qian, Subhabrata Sen, Oliver Spatscheck, \emph{Characterizing resource usage for mobile web browsing}, p218-231, MobiSys '14
-%
-%\bibitem{wifi_energy}
-%Kalic, G., Bojic, I., Kusek, M., \emph{Energy consumption in android phones when using wireless communication technologies}, p754-759, MIPRO May 2012
-%
-%\bibitem{spartacus}
-%Zheng Sun, Aveek Purohit, Raja Bose, Pei Zhang, \emph{Spartacus: spatially-aware interaction for mobile devices through energy-efficient audio sensing}, p263-276, MobiSys 2013  
-%
-%\bibitem{cloud-offload}
-%Young-Woo Kwon, Tilevich, E., \emph{Facilitating the Implementation of Adaptive Cloud Offloading to Improve the Energy Efficiency of Mobile Applications}, p94-104, MOBILESoft 2015
-%
-%\bibitem{maui}
-%Eduardo Cuervo, Aruna Balasubramanian, Dae-ki Cho, Alec Wolman, Stefan Saroiu, Ranveer Chandra, Paramvir Bahl, \emph{MAUI: making smartphones last longer with code offload}, p49-62, MobiSys 2010  
-%
-%\bibitem{comet}
-%Mark S. Gordon, D. Anoushe Jamshidi, Scott Mahlke, and Z. Morley Mao, \emph{MAUI: makiCOMET: Code Offload by Migrating Execution Transparently}, p93-106, OSDI'12  
-%
-%\bibitem{mobile-cloud-middleware}
-%Bo Yin, Wenlong Shen, Lin X. Cai, Yu Cheng, \emph{A Mobile Cloud Computing Middleware for Low Latency Offloading of Big Data}, p31-35, Mobidata '15
-%
-%\bibitem{fuzzy-engine}
-%Huber Flores, Satish Srirama, \emph{Adaptive code offloading for mobile cloud applications: exploiting fuzzy sets and evidence-based learning}, p9-16, MCS '13
-%
-%\bibitem{retro-skel}
-%Benjamin Davis, Hao Chen, \emph{RetroSkeleton: Retrofitting Android Apps}, p181-192, MobiSys '13
-%
-%
-%\end{thebibliography}
 
 \end{document}
 
