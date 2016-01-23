@@ -1,0 +1,15 @@
+y(x)=m*x+b
+set fit logfile 'D:/android/JobShare/paper/data/gnuplot/null'
+fit y(x) "D:/android/JobShare/paper/data/gnuplot/data_gps_energy_1.dat" via m,b
+set xlabel "stress"
+set ylabel "strain (N/m^2)"
+set nokey
+plot y(x), "D:/android/JobShare/paper/data/gnuplot/data_gps_energy_1.dat"
+
+z(x)=n*x+c
+fit z(x) "D:/android/JobShare/paper/data/gnuplot/data_gps_energy_2.dat" via n,c
+plot z(x), "D:/android/JobShare/paper/data/gnuplot/data_gps_energy_2.dat"
+
+r(x)=p*x+q
+fit r(x) "D:/android/JobShare/paper/data/gnuplot/data_gps_energy_3.dat" via p,q
+plot r(x), "D:/android/JobShare/paper/data/gnuplot/data_gps_energy_3.dat"

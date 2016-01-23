@@ -723,8 +723,8 @@ Figure \ref{fig:net_clusters_perf} describes performance of multiple clusters fr
 To evaluate energy consumption, we performed the same tests like the first test case by measuring in multiple clusters with overheads and when remotely rendering web pages. From the outcome of energy test (Figure \ref{fig:net_cluster_energy}), we realized that by handing over computation utilizing system resources (Here is Internet accessibility) over peer-to-peer network with multiple peers will help reducing significantly energy consumed, particularly more than a half in compare with a solo device. The differences between the total energy and overheads are not fluctuated much between the multiple clusters, this can be easily explained by \cite{wifi_energy}.
 
 \begin{figure}[H]
-	\hspace*{0cm}
-	\resizebox{0.5\textwidth}{!}{
+	\hspace*{0.25cm}
+	\resizebox{0.45\textwidth}{!}{
 		\includegraphics{data/net_energy.pdf}
 	}
 	\caption{Energy consumption of clusters for Internet sharing}
@@ -732,15 +732,40 @@ To evaluate energy consumption, we performed the same tests like the first test 
 \end{figure}
 
 \subsubsection{GPS Share}
-Connecting and retrieving GPS location is really energy consuming. Generally the smartphone will enable and contact at least 3 satellites through radio signals in order to retrieve GPS location (4 satellites to get more information like altitude). Therefore, it would be helpful if we can relay the GPS request to another device in the network which is healthier (higher remain battery, in idle state etc.) or better specifications.
+Connecting and retrieving GPS location is really energy consuming. Generally the smartphone will enable and contact at least 3 satellites through radio signals in order to start retrieving GPS location (4 satellites to get more information like altitude). Therefore, energy can be saved if GPS requests are relayed to another device in the network which is healthier (higher remain battery, in idle state etc.) or better specifications.
+
 
 \paragraph{Design}
+With GPS Share, only one peer is entrusted. Our strategy is letting the caller to select the peer having GPS enabled and maximum value of $RL$ (at the best conditions) by configure the caller with initiative criteria including $RL$ is \texttt{max} and \texttt{GPS} is \texttt{on}. Regarding job definition, we utilize the \texttt{LocationManager} to get a single location result per each request and store the result to a simple string. For remote GPS request, we have to avoid callback functions from \texttt{LocationManager}, therefore retrieving multiple requests periodically is not effective.
 
 
 \paragraph{Performance}
+We performed 3 GPS Share test cases, 2 for remote GPS requests and 1 for local GPS (Using GPS on it own). For each case we execute $10$ times on two devices having same specifications and assign roles to them as a caller and a receiver to minimize the overloads throughout the system. Figure \ref{fig:gps_perf} interprets that GPS Share mechanism doesn't give any benefit in terms of performance, since the remote device has the same resource specs and remote GPS may require more time including time for GPS plus time for data transmission back to the caller (However it is too short for the consideration).
+
+\begin{figure}[H]
+	\hspace*{0.7cm}
+	\resizebox{0.42\textwidth}{!}{
+		\includegraphics{data/gps_perf.pdf}
+	}
+	\caption{Performance of GPS Share between remote and local executions}
+	\label{fig:gps_perf}
+\end{figure}
+
+Extracted from the above tests, the Figure \ref{fig:gps_total_energy} describes the distribution of energy consumptions among the 3 case tests. 
+
+\begin{figure}[H]
+	\hspace*{0cm}
+	\resizebox{0.5\textwidth}{!}{
+		\includegraphics{data/gps_energy_full.pdf}
+	}
+	\caption{Energy consumption of GPS Share between remote and local executions}
+	\label{fig:gps_total_energy}
+\end{figure}
+
+By applying interpolation to find trend lines for these energy distributions, we got $y = 0.0528388 \times x + 7.31948$ formula for test 1, $y = 0.0547221 \times x + 7.42138$ for test 2 and $y = 0.0575331 \times x - 12.9403$ for test 3. The trend line 3 has the biggest slope, or at the same amount of time it consumed more energy than the first two cases. As we might see, the difference between the slopes of line 3 and line 1, 2 are very slim, however due to our later tests on the weak caller (low battery), the difference will highly increase. 
 
 \paragraph{Applications}
-According to \cite{retro-skel} and \cite{rio}, to utilize GPS
+By integrating our system with either RetroSkeleton \cite{retro-skel} or Rio \cite{rio}, we can provide remote or local GPS location data without having to modify the current installed applications. Those systems provide interference methods to capture requests for system resources and instead inject their customized responses. 
 
 \subsection{Discussion}
 
