@@ -171,7 +171,9 @@ In this section, we present the motivation and the major technologies we used.
 The major technologies used in this work computation offloading, machine-to-machine communication, remote execution, and middleware. We describe them in turn next.
 
 \subsubsection{Computational Offloading}   
-Computation offloading has become a popular optimization technique for mobile applications \cite{cuervo+:mobisys10,chun+:eurosys11,cloudlet09,wen2012energy}. It leverages the resources of cloud-based remote servers to execute portions of a mobile application's functionality. By executing some of the application's functionality in the cloud, offloading reduces the amount of energy consumed by the mobile device, thus saving its battery power. An additional benefit of computation offloading is improved performance efficiency, as cloud servers have hardware resource more powerful that those available on mobile devices. Application-level computation offloading optimization is typically implemented by partitioning the application into the client and server parts communicating across the network. In our prior work, we introduced a novel offloading mechanism that leverages static program analysis and program transformation techniques to optimize a transferred program state \cite{kwon+:icdcs12}, and then our offloading mechanism was enhanced by adaptation and runtime support, in which the local/remote application parts are dynamically determined, as driven by the execution environment in place \cite{kwon+:icsm13}. This computation offloading technique has been used as one of the distributed execution model in this study.
+Computation offloading has become a popular optimization technique for mobile applications \cite{cuervo+:mobisys10,chun+:eurosys11,kwon+:icdcs12,wen2012energy}. It leverages the resources of cloud-based remote servers to execute portions of a mobile application's functionality. By executing some of the application's functionality in the cloud, offloading reduces the amount of energy consumed by the mobile device, thus saving its battery power. An additional benefit of computation offloading is improved performance efficiency, as cloud servers have hardware resource more powerful that those available on mobile devices. This computation offloading technique is used as one of the distributed execution model in this paper.
+
+%In our prior work, we introduced a novel offloading mechanism that leverages static program analysis and program transformation techniques to optimize a transferred program state \cite{kwon+:icdcs12}, and then our offloading mechanism was enhanced by adaptation and runtime support, in which the local/remote application parts are dynamically determined, as driven by the execution environment in place \cite{kwon+:icsm13}. 
 
 \subsubsection{Machine-to-Machine Communication}
 
@@ -229,10 +231,7 @@ Our system has a simple programming model that enables the programmer can easily
 \begin{minipage}{239pt}
 	\begin{lstlisting}
 	public class Job {
-		public Object exec(Object partialObject) {
-			// user-define execution 
-		}
-	}
+		public Object exec(Object param) { ... } }
 	\end{lstlisting}	
 \end{minipage}}	
 	\captionof{lstlisting}{Job Definition}
@@ -278,7 +277,7 @@ To clarify usage of \texttt{DataParser}, we will go through several important ab
 \end{itemize}
 
 
-\subsection{Job Scheduling and Decision Maker} \label{scheduling}
+\subsection{Runtime System} \label{scheduling}
 
 In peer-to-peer network supported by our APIs, the server will distribute jobs to peers bases on investigating their availability by \texttt{DecisionMaker} (Figure \ref{fig:checkStatus}). At the early stage before the transmission, the \texttt{DecisionMaker} of the calling device sends inquiring request for status (\texttt{IRS}) to some of selected peers in the network. If one receives this IRS request, its \texttt{DecisionMaker} will estimate its capability of response using the measurements of CPU, memory and battery usage at that time. 
 
@@ -290,7 +289,7 @@ In peer-to-peer network supported by our APIs, the server will distribute jobs t
 \label{fig:checkStatus}
 \end{figure}
 
-\subsubsection{Detect feasible peers}\label{ss_dfp}
+\subsubsection{Finding available peers}\label{ss_dfp}
 
 A mobile device at any time maintains a certain number of connection with the others. Before delivering jobs, it dispatches IRS messages to all the peers for acknowledgment of their availability ($RL$ - Level of Responsibility). If a peer receives an IRS, its \texttt{DecisionMaker} will capture its configuration and corresponding usage states to generate a response in JSON format, The code snippet (\ref{code:jsonResponse}) shows such a typical response.\\
 
@@ -307,17 +306,13 @@ JSON {
   "cpu": {
 		"usage": double,
     "speed": double,
-    "cores": int
-	},
+    "cores": int },
   "memory": {
 		"usage": double,
-    "total": int
-  },
+    "total": int },
   "battery": {
 		"usage": double,
-    "total": int
-  }
-}
+    "total": int } }
 \end{lstlisting}
 \end{minipage}}	
 \noindent \shadowbox{
@@ -332,17 +327,13 @@ JSON {
   "cpu": {
 		"usage": "0.3",
     "speed": "1.3",
-    "cores": 4
-	},
+    "cores": 4 },
   "memory": {
 		"usage": "0.5",
-    "total": 2
-  },
+    "total": 2 },
   "battery": {
 		"usage": 0.85,
-    "total": 2800
-  }
-}
+    "total": 2800 } }
 \end{lstlisting}	
 \end{minipage}}	
 
@@ -400,19 +391,19 @@ Since in the mobile device, the lower resource usage state states the higher ava
 
 \begin{equation}
 \label{eq:res_level}
-\small
+%\begin{\footnotesize}
 RL = \frac{N_{Cores} \times CPU_{Speed}}{Usage_{CPU}} + \frac{Mem_{Spec}}{Usage_{Mem}} + \frac{Battery_{Spec}}{Usage_{Battery \times 1000}}
+%\end{\footnotesize}
 \end{equation}
 
 Where $N_{Cores}$ is number of CPU cores and $CPU_{Speed}$ is speed of single core in GHz unit, $Mem_{Spec}$ has GB unit and $Battery_{Spec}$ has uAh unit. At a certain time of that device, if $Usage_{CPU}$ is 0.3, $Usage_{Mem}$ is 0.5 (half of 1GB memory consumed), $Usage_{Battery}$ is 0.7 or 70\% used over a 2800uAh capacity battery, the value of $RL$ will be
-
 $$RL = \frac{5.2}{0.3} + \frac{1}{0.5} + \frac{2800}{0.7 \times 1000} = 23.33$$
 
 To reduce the latency and to avoid miscalculation at the calling peer, $RL$ is prematurely calculated by each available called peer and wrapped up in the IRS response sending back to the caller. 
 
 In a P2P network comprising of $n$ devices, where $i$-device has responsibility level $RL_{i}$, the \texttt{DecisionMaker} will assign the job with carrying amount of data ($M_{i}$) which is equivalent to
 
-\begin{equation}
+\begin{equation} 
 \label{eq:data_amount}
 M_{i} = M\frac{RL_{i}}{\sum_{j = \overline{1,n}}{RL_{j}}}
 \end{equation}
@@ -611,10 +602,7 @@ The most important part when applying APIs for image processing is defining the 
 \begin{minipage}{245pt}
 	\captionof{lstlisting}{JSON for initiating placeholder}
 	\begin{lstlisting}
-	JSON { 
-		"width": 4326, 
-		"height": 2856 
-	} 
+	JSON { "width": 4326, "height": 2856 } 
 	\end{lstlisting}
 \end{minipage}}
 
