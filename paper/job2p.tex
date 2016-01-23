@@ -643,8 +643,8 @@ When all the partial bitmaps received, system throws a message titled \texttt{MA
 Running the large scale image test case throughout 50 tests by increasing number of devices from 1 to 5 within the network, we found that the test case doesn't work if there is only one device standing desolately. By utilizing 2 threads for the image process on that single device, we realized that only 1 thread works, the another does not due to out of memory exception, and the processing time to complete half of the task is $12,581ms$. 
 
 \begin{figure}[H]
-	\hspace*{-0.35cm}
-	\resizebox{0.52\textwidth}{!}{
+	\hspace*{0.25cm}
+	\resizebox{0.46\textwidth}{!}{
 		\includegraphics{data/img_large_perf_full.pdf}
 	}
 	\caption{Image Processing in multiple clusters.}
@@ -656,8 +656,8 @@ By increasing the number of devices in network from 2 to 5 and sharing the task 
 The Figure \ref{fig:cluster_performance} summarized performance in terms of time consuming between multiple clusters. Noticed that system didn't fully work with only one device, and the one feasibly working thread in that single device took $12,581ms$ to complete, similar speed with 2-peer system. However speed is rapidly increased when more peers joined the network, especially with 4 devices, it is twice as fast as having 2 devices. Multiple threading is applied on the 4th device but did not sanitize very much the performance. 
 
 \begin{figure}[H]
-	\hspace*{-0.35cm}
-	\resizebox{0.52\textwidth}{!}{
+	\hspace*{0.25cm}
+	\resizebox{0.45\textwidth}{!}{
 		\includegraphics{data/img_perf.pdf}
 	}
 	\caption{Performance of multiple clusters for Image Processing}
@@ -679,8 +679,8 @@ To perform energy consumption on each cluster, we used Moosoon Power Monitor and
 To make any device in the network to be feasible for image processing, we reduced the input image size to $2500 \times 1405$. By reconfigure the cluster from 1 to 4 devices and measure total execution time on the callers, we gathered performance data between them like in the Figure \ref{fig:small_img_perf}. From our statistic data, the total time consumed by one device to run on itself is slightly fluctuated around $5400ms$ between multiple measurements, but if one more device join the network the time consuming is decreased to $3500ms$ which is 35\% faster. When more devices (3rd and 4th) participated, performance will continuously increase although their finishing time is largely varied. Especially 4 devices will collaboratively execute twice as fast as one device, or 50\% faster in all of our measurements.
 
 \begin{figure}[H]
-	\hspace*{0cm}
-	\resizebox{0.5\textwidth}{!}{
+	\hspace*{0.25cm}
+	\resizebox{0.45\textwidth}{!}{
 		\includegraphics{data/img_small_perf_full.pdf}
 	}
 	\caption{Performance from the image processing tests with normal size image in multiple clusters.}
@@ -690,8 +690,8 @@ To make any device in the network to be feasible for image processing, we reduce
 Basically the variability and fluctuation of energy consumption will reflect the performance, Figure \ref{fig:small_img_energy} displays the details. Through our experiments, running the cluster with 2 devices will preserve 20\% energy compare with 1 device, the number is better with 3 devices at 34\% and 4 devices at37.5\% respectively.
 
 \begin{figure}[H]
-	\hspace*{-0.35cm}
-	\resizebox{0.52\textwidth}{!}{
+	\hspace*{0.25cm}
+	\resizebox{0.45\textwidth}{!}{
 		\includegraphics{data/img_small_energy.pdf}
 	}
 	\caption{Energy consumption from the image processing tests in multiple clusters.}
@@ -712,8 +712,8 @@ According to our system architecture, the caller needs to prepare a placeholder 
 Figure \ref{fig:net_clusters_perf} describes performance of multiple clusters from 1 to 4 peers and one peer has a few threads (for simulating high performance) when remotely rendering web pages from CNN URLs. The figure describes the execution time of each peer in each cluster after being assigned job, and the peak is reached when the last peer completed. In the cluster with only one device, that device works desolately without any peer contacts; it will download web pages from the internet by opening Wi-Fi connection. It is obvious that executing Internet Remote access brings the high benefit in terms of performance that rendering time reduced almost half when at least 3 peers participating the network. 
 
 \begin{figure}[H]
-	\hspace*{0cm}
-	\resizebox{0.5\textwidth}{!}{
+	\hspace*{0.25cm}
+	\resizebox{0.45\textwidth}{!}{
 		\includegraphics{data/net_perf_01.pdf}
 	}
 	\caption{Performance of multiple clusters for Internet sharing}
