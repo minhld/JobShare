@@ -20,24 +20,24 @@
 \definecolor{gray}{rgb}{0.5,0.5,0.5}
 \definecolor{mauve}{rgb}{0.58,0,0.82}
 
-\iffalse
-\lstset{frame=tb,
-  language=Java,
-  aboveskip=3mm,
-  belowskip=3mm,
-  showstringspaces=false,
-  columns=flexible,
-  basicstyle={\footnotesize\ttfamily},
-  numbers=none,
-  numberstyle=\tiny\color{gray},
-  keywordstyle=\color{blue},
-  commentstyle=\color{dkgreen},
-  stringstyle=\color{mauve},
-  breaklines=true,
-  breakatwhitespace=true,
-  tabsize=3
-}
-\fi
+%\iffalse
+%\lstset{frame=tb,
+  %language=Java,
+  %aboveskip=3mm,
+  %belowskip=3mm,
+  %showstringspaces=false,
+  %columns=flexible,
+  %basicstyle={\footnotesize\ttfamily},
+  %numbers=none,
+  %numberstyle=\tiny\color{gray},
+  %keywordstyle=\color{blue},
+  %commentstyle=\color{dkgreen},
+  %stringstyle=\color{mauve},
+  %breaklines=true,
+  %breakatwhitespace=true,
+  %tabsize=3
+%}
+%\fi
 
 \lstset{%
   xleftmargin=0pt,
@@ -48,12 +48,12 @@
   tabsize=2,
   emphstyle={\bf},
   commentstyle=\it,
-  stringstyle=\footnotesize\ttfamily,
+  stringstyle=\scriptsize\ttfamily,
   showspaces=false,
   keywordstyle=\bfseries,
   morekeywords={then,end,String, Class, Object},
   columns=flexible,
-  basicstyle=\footnotesize\ttfamily,
+  basicstyle=\scriptsize\ttfamily,
   showstringspaces=false,
   morecomment=[l]\%,
 }
@@ -353,7 +353,7 @@ In the above example (Code snippet \ref{code:jsonResponse}), the battery usage w
 \caption{Select Available Peers Algorithm}
 \label{alg:select_peers}
 \begin{algorithmic}[1] 
-\begin{footnotesize}
+\begin{scriptsize}
 \Function{selectPeers()}{}
 \State Send IRS requests to all peers 
 \State $P_{AV} \leftarrow HashMap(DeviceId, P)$
@@ -367,7 +367,7 @@ In the above example (Code snippet \ref{code:jsonResponse}), the battery usage w
 \EndFor
 \State \Return $P_{AV}$
 \EndFunction
-\end{footnotesize}
+\end{scriptsize}
 \end{algorithmic}
 
 \end{algorithm}
@@ -414,7 +414,7 @@ Where $M$ is total size of data in bytes. This below algorithm \ref{alg:assign_j
 \caption{Assign Job Algorithm}
 \label{alg:assign_job}
 \begin{algorithmic}[1]
-\begin{footnotesize}
+\begin{scriptsize}
 \Function{assignJobs()}{}
 \State $M \leftarrow {getDataSize()}$
 \State $RL_{Total} \leftarrow 0$ 
@@ -445,7 +445,7 @@ Where $M$ is total size of data in bytes. This below algorithm \ref{alg:assign_j
 \EndFor
 
 \EndFunction
-\end{footnotesize}
+\end{scriptsize}
 \end{algorithmic}
 \end{algorithm}
 
@@ -700,12 +700,13 @@ According to our system architecture, the caller needs to prepare a placeholder 
 Figure \ref{fig:net_clusters_perf} describes performance of multiple clusters from 1 to 4 peers and one peer has a few threads (for simulating high performance) when remotely rendering web pages from CNN URLs. The figure describes the execution time of each peer in each cluster after being assigned job, and the peak is reached when the last peer completed. In the cluster with only one device, that device works desolately without any peer contacts; it will download web pages from the internet by opening Wi-Fi connection. It is obvious that executing Internet Remote access brings the high benefit in terms of performance that rendering time reduced almost half when at least 3 peers participating the network. 
 
 \begin{figure}[H]
-	\hspace*{0.25cm}
+	\centering
 	\resizebox{0.45\textwidth}{!}{
 		\includegraphics{data/net_perf_01.pdf}
 	}
-	\caption{Performance of multiple clusters for Internet sharing}
+	\caption{Performance comparision for Internet sharing}
 	\label{fig:net_clusters_perf}
+	\vspace{-2mm}
 \end{figure}
 
 To evaluate energy consumption, we performed the same tests like the first test case by measuring in multiple clusters with overheads and when remotely rendering web pages. From the outcome of energy test (Figure \ref{fig:net_cluster_energy}), we realized that by handing over computation utilizing system resources (Here is Internet accessibility) over peer-to-peer network with multiple peers will help reducing significantly energy consumed, particularly more than a half in compare with a solo device. The differences between the total energy and overheads are not fluctuated much between the multiple clusters, this can be easily explained by \cite{wifi_energy}.
