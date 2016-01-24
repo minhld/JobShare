@@ -4,7 +4,7 @@ set xtics font "Verdana,13"
 set ytics font "Verdana,12"
 set grid nopolar
 set style fill solid 1
-set ylabel "Execution Time" 
+set ylabel "Execution Time (ms)" 
 set yrange [ 0.00000 : 15000 ]
 plot 'D:\android\JobShare\paper\data\gnuplot\c_5_all_img_perf.dat' using 2:xticlabels(1) title 'Device 1' with boxes lt rgb "#666" fillstyle pattern 3, \
 	'' using 3 title 'Device 2' with boxes lt rgb "#666" fillstyle pattern 5,\
