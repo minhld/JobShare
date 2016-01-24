@@ -13,6 +13,7 @@
 \usepackage{algorithm}
 \usepackage{algpseudocode}
 \usepackage{multicol}
+\usepackage{balance}
 %\usepackage{svg}
 \usepackage{pdfpages}
 
@@ -93,7 +94,7 @@
 % Do not put math or special symbols in the title.
 %\title{Expanding Limited Mobile Resources for Performance, Energy-Efficiency, and Privacy}
 %\title{Extending Resource-Constrained Mobile Devices for Performance, Energy-Efficiency, and Privacy}
-\title{Utilizing Nearby, Distributed Computing Resources for Resource-Limited Mobile Devices}
+\title{Utilizing Nearby Distributed Computing Resources for Resource-Limited Mobile Devices}
 %Resource-Constrained Mobile Devices}
 
 %%%N-REX (Nearby-Remote Executor similar to T-Rex)
@@ -114,10 +115,7 @@ young.kwon@usu.edu}}
 \maketitle
 
 \begin{abstract}
-As mobile applications deliver increasingly complex functionality, ensuring their quality of service remains a major challenge of mobile software development. Rapid growth in application functionality requires ever greater hardware capacities.
-%, thus subsuming any advances in battery capacities. Thus, energy efficiency (i.e., fitting an energy budget and maximizing the utility of applications under given battery constraints) has become an important software design consideration.
-%These days, along with the rapid revolution of mobile device industry, software is also being built heavier and consumes more CPU performance and energy than they were in the past few years. 
-Since the modern mobile devices support multiple connection methods like Wi-Fi, Bluetooth or NFC, the requirements of sharing the workloads and resources among the devices within a network to reduce full workload on an arbitrary device are being considered, especially in the areas Internet is not available, which can be found anywhere. To address those limitations on mobile devices, we introduce Job2P as Job scheduling APIs for Android development that leverages Wi-Fi Direct to support sharing workloads and resources over peer-to-peer mobile device network, which doesn't require any Internet connections. Job2P provides a simple and straightforward API interface to get rid of sophistication of network implementation, letting developers easily create their distributed mobile applications with capability of forming closed range network. In term of workload distribution, Job2P splits task and resource into parts and packs them into the smaller units called jobs and dispatch to the peers. To distributed jobs equitably among the peers, a Decision Maker is added to decide the amount of resource the peer has to handle bases on its percentage of availability. Moreover, our APIs can handle fault tolerant for network malfunctions. Our case studies demonstrate that our system can extend the resource-constraint mobile devices as well as improving performance and energy efficiency. 
+For the last decade, mobile devices have been significantly developed with powerful hardware facilities such as multicore CPUs, large and fast memory, fast network, high resolution displays, etc. As a result, mobile applications deliver increasingly complex functionality from the recent past. Furthermore, rapid growth in application functionality requires ever greater hardware capacities. Thus ensuring the quality of service in resources-limited execution environments remains a major challenge of mobile software development. To reduce execution time and save battery power, some functionality of mobile applications is often executed at a remote server. However, such an optimization mechanism (i.e., computational offloading) has only received much attention in the research literature due to difficult implementation, limited applicability, cost of the cloud, etc. In this paper, we present a novel distribution infrastructure that executes any functionality at a powerful remote server or nearby mobile devices using two distributed execution models---client/server and peer to peer. By means of a simple programming model, the programmer can easily adopt two distributed execution models in their applications. Our benchmarks and case studies demonstrate that the new distribution infrastructure can increase both performance and energy efficiency of mobile applications as well as introducing new feature (i.e., GPS, sensors) to the existing mobile devices.
 \end{abstract}
 
 
@@ -145,7 +143,7 @@ Our experiments have demonstrated the effectiveness of BLAH BLAH, to extend limi
 \begin{itemize}
 	\item \textbf{Simple programming model:} We provide simple APIs for programmers, who can easily facilitate the development of mobile applications using the provided distributed execution model.
 	\item \textbf{Lightweight runtime system:} Our runtime system can efficiently distribute executions to available peers based on a peer selection algorithm and merge the results. 	
-	\item \textbf{A proof of concept infrastructure implementation:} Through three case studies, we have demonstrated that our system can effectively share mobile hardware resources.
+	\item \textbf{A proof of concept infrastructure implementation:} Through three case studies, our system demonstrated how mobile hardware resources can be effectively shared.
 \end{itemize}
 
 %should go to the later part
@@ -155,33 +153,17 @@ Our experiments have demonstrated the effectiveness of BLAH BLAH, to extend limi
 
 The rest of this paper is structured as follows. Section \ref{sec:background} introduces a technological background for the main technologies used in this work. Section \ref{sec:approach} details our technical approach and Section \ref{sec:eval} discuss how we evaluated our approach. Section \ref{sec:related} compares our approach to the related state of the art. Section \ref{sec:conc} concludes this paper.
  
-\section{Motivation and Background}
+\section{Technical Background}
 \label{sec:background}
-In this section, we present the motivation and the major technologies we used.
-%
-\subsection{Motivation}
-%Consider the following three scenarios:
-%\begin{enumerate}
-%\item \emph{sharing computing power} 
-%\item \emph{sharing a network connection}
-%\item \emph{sharing sensors}
-%\end{enumerate}
+In this section, we present the major technologies we used in this paper. The major technologies used in this work computation offloading, machine-to-machine communication, remote execution, and middleware. We describe them in turn next.
 
-\subsection{Technical Background}
-The major technologies used in this work computation offloading, machine-to-machine communication, remote execution, and middleware. We describe them in turn next.
+\subsection{Computational Offloading}   
+Computation offloading has become a popular optimization technique for mobile applications \cite{maui,chun+:eurosys11,kwon+:icdcs12,wen2012energy}. It leverages the resources of cloud-based remote servers to execute portions of a mobile application's functionality. By executing some of the application's functionality in the cloud, offloading reduces the amount of energy consumed by the mobile device, thus saving its battery power. An additional benefit of computation offloading is improved performance efficiency, as cloud servers have hardware resource more powerful that those available on mobile devices. This computation offloading technique is used as one of the distributed execution model in this paper.
 
-\subsubsection{Computational Offloading}   
-Computation offloading has become a popular optimization technique for mobile applications \cite{cuervo+:mobisys10,chun+:eurosys11,kwon+:icdcs12,wen2012energy}. It leverages the resources of cloud-based remote servers to execute portions of a mobile application's functionality. By executing some of the application's functionality in the cloud, offloading reduces the amount of energy consumed by the mobile device, thus saving its battery power. An additional benefit of computation offloading is improved performance efficiency, as cloud servers have hardware resource more powerful that those available on mobile devices. This computation offloading technique is used as one of the distributed execution model in this paper.
+\subsection{Machine-to-Machine Communication}
 
-%In our prior work, we introduced a novel offloading mechanism that leverages static program analysis and program transformation techniques to optimize a transferred program state \cite{kwon+:icdcs12}, and then our offloading mechanism was enhanced by adaptation and runtime support, in which the local/remote application parts are dynamically determined, as driven by the execution environment in place \cite{kwon+:icsm13}. 
-
-\subsubsection{Machine-to-Machine Communication}
-
-\subsubsection{Remote Execution and Middleware}
-Our approach uses features from mainstream middleware mechanisms for distributed execution as building blocks. Middleware systmes provide programming and runtime support to coordinates the execution of multiple remote processes. By eliminating the need for low-level network programming (e.g., managing sockets, marshaling/unmarshaling data, keeping track of processes) middleware systems offer convenient building blocks for constructing distributed systems. 
-
-Because network communication incurs high energy costs in mobile applications, middleware presents a promising target for energy optimization. Unfortunately, mainstream middleware mechanisms are oblivious to the highly volatile nature of mobile networks, operating over which energy efficiently requires aligning the middleware communication patterns with the network conditions in place. In our prior work \cite{kwon+:mobicase14-middleware}, we introduced a novel middleware architecture that optimizes energy consumption by adapting various facets of middleware functionality (e.g., data communication, encoding, and compression) dynamically in response to fluctuations in network conditions. As compared to mainstream middleware mechanisms, our middleware improved the energy efficiency of mobile applications. By means of a simple configuration file, the programmer can specify the policies to follow for various parts of the communication functionality and how policies should be triggered by changes in network conditions.
-
+\subsection{Remote Execution and Middleware}
+Our approach uses features from mainstream middleware mechanisms for distributed execution as building blocks. Middleware systmes provide programming and runtime support to coordinates the execution of multiple remote processes. By eliminating the need for low-level network programming (e.g., managing sockets, marshaling/unmarshaling data, keeping track of processes) middleware systems offer convenient building blocks for constructing distributed systems. In our prior work \cite{kwon+:mobicase14-middleware}, we introduced a novel middleware architecture that optimizes performance and energy consumption by adapting various facets of middleware functionality dynamically in response to fluctuations in network conditions because network communication incurs high energy costs in mobile applications. The runtime system developed in this paper is derived from our prior middleware design.
 
 %other name?
 \section{Proposed Approach: \emph{N-DEX}}
@@ -213,7 +195,7 @@ If any of offloading servers or devices receives such message, its \texttt{WNB} 
 	\resizebox{0.5\textwidth}{!}{
 		\includegraphics{data/discoverPeers.pdf}
 	}
-	\caption{Establishing a network connection among nearby mobile devices}
+	\caption{Establishing a network connection between devices}
 	\label{fig:forming}
 \end{figure}
 
@@ -227,7 +209,10 @@ Both \texttt{ClientSocketHandler} and \texttt{ServerSocket Handler} are constitu
 \texttt{DataParser} is a loosely coupled interface of the Job component facilitating adaptation with data heterogeneity. It helps determine mechanisms for: (1) serialization/deserialization object into binary format which is compatible for TCP transmission, (2) task partitioning, and (3) placeholder initialization and concatenation. To make the data type comprehensive to system in terms of reading, parsing or memory allocating, developer needs to supply instructions by instantiating an implementation of Data Parser for that type. 
 
 \subsection{Programming Model} 
-Our system has a simple programming model that enables the programmer can easily define any remote execution. To avoid any malfunctions and misconfiguration at remote execution, a conventional Job interface is defined like the code snipe below (\ref{code:job_def}).
+Our system has a simple programming model that enables the programmer can easily write remote functionality. First, as described in \ref{code:job_def}, we first provide a conventional interface that should be implemented by the programmer to specify what kinds of functionality should be executed remotely. Then, the implementation of \texttt{Job} is sent to a remote server or nearby devices along with data.
+
+To support dynamic class loading in Dalvik VM, we provide the \texttt{DexCreator} tool that compiles the \texttt{Job} Java file into a Dex package. The Dex package and sliced resources are packed as a \texttt{JobData} object by \texttt{JobDispatcher} and then dispatched to the available peers. Once a peer receives a \texttt{JobData} object, it first checks the checksum field to confirm the consistency, and then deserializes the object into \texttt{Job} and resources for the execution.
+
 
 \begin{figure}
 \noindent \shadowbox{%
@@ -249,8 +234,7 @@ public interface DataParser {
   public Object createPlaceholder(jsonMetadata);
   public Object copyPartToPlaceholder(... 
 					partDataObject, sOffset, eOffset);
-  public void destroy(dataObject);  
-}
+  public void destroy(dataObject);  }
   \end{lstlisting}	
 \end{minipage}
 }	
@@ -258,15 +242,9 @@ public interface DataParser {
 \label{code:job_def}
 \end{figure}
 
-%Where the body of \texttt{exec()} will contain concrete implementation of the Job.
-
-Since Dalvik VM does not support dynamic class loading, it will load Dalvik execution (``dex'') files from an alternative locations such as internal storage or network. We provide \texttt{DexCreator} tool, the windows commandline application supports compiling the \texttt{Job} java file into the dex job package (a jar file). Dex package and sliced resources in binary format will be added into one \texttt{JobData} object by \texttt{JobDispatcher}, signed with checksum for consistency and dispatched to the other peers. When client peer receives an object of \texttt{JobData} sent from server, it will firstly check checksum to confirm the consistency, then deserialize it into \texttt{Job} and resources and execute the job with that data.
 
 \subsubsection{Data Parser}
-The code snippet (\ref{data_parser}) shows the main functionality of the \texttt{DataParser} interface that user needs to comply. Under the first released version, we also support 3 basic Data Parsers for Image, Text and GPS.\\
-
-To clarify usage of \texttt{DataParser}, we will go through several important abstract methods.
-
+The code snippet in Listing \ref{code:job_def} shows the main functionality of the \texttt{DataParser} interface that user needs to implement. The \texttt{DataParser} interfaces have the following abstract methods:
 \begin{itemize}
 	\item \texttt{getDataClass()} return data type.
 	\item \texttt{parseObjectToBytes(object)} instructs system to serialize an object to binary array. In Android, not every object can be serialized, for instance Bitmap.  
@@ -275,6 +253,7 @@ To clarify usage of \texttt{DataParser}, we will go through several important ab
 	\item \texttt{copyPartToPlaceholder()} Once partial result is retrieved from a distant peer, this function will instruct application to merge it to the placeholder.
 \end{itemize}
 
+In our initial prototype implementation, we provide three default parsers for bitmap images, texts, and GPS, respectively. 
 
 \subsection{Runtime System} \label{scheduling}
 In peer-to-peer network supported by our APIs, the server will distribute jobs to peers bases on investigating their availability by \texttt{DecisionMaker} (Figure \ref{fig:forming}). At the early stage before the transmission, the \texttt{DecisionMaker} of the calling device sends inquiring request for status (\texttt{IRS}) to some of selected peers in the network. If one receives this IRS request, its \texttt{DecisionMaker} will estimate its capability of response using the measurements of CPU, memory and battery usage at that time. 
@@ -293,37 +272,23 @@ A mobile device at any time maintains a certain number of connection with the ot
 
 \begin{figure}
 \noindent \shadowbox{
-\begin{minipage}{.43\linewidth}	
+\begin{minipage}{.91\linewidth}	
 \begin{lstlisting}
 JSON : DeviceInfo {
-  "device": "LG-Volt",
-	"RL": 24.83,
-  "availability": "off",
-	"network": "low",
-	"gps": "on",
-  "cpu": {
-		"usage": "0.3",
-    "speed": "1.3",
-    "cores": 4 },
-  "memory": {
-		"usage": "0.5",
-    "total": 2 },
-  "battery": {
-		"usage": 0.85,
-    "total": 2800 } }
-\end{lstlisting}	
-\end{minipage}}	
+  "device": "LG-Volt", "RL": 24.83,
+  "availability": "off", "network": "low", "gps": "on",	
+  "cpu": {"usage": "0.3", "speed": "1.3", "cores": 4},
+  "memory": {"usage": "0.5", "total": 2},
+  "battery": {"usage": 0.85, "total": 2800}}
+\end{lstlisting}			
+\end{minipage}}	\\
 \noindent \shadowbox{%
-\begin{minipage}{.45\linewidth}	
+\begin{minipage}{.93\linewidth}	
 \begin{lstlisting}
-JSON : Condition {
-  "RL": "max",
-  "gps": "on"
-}
-\end{lstlisting}
-\end{minipage}}	
+JSON : Condition {"RL": "max", "gps": "on"}
+\end{lstlisting}\end{minipage}}	
 
-\captionof{lstlisting}{A typical JSON response and initiative condition.}
+\captionof{lstlisting}{A JSON response format and initiative condition.}
 \label{code:jsonResponse}
 
 \end{figure}
@@ -633,22 +598,6 @@ public Object copyPartToPlaceholder(placeholder,
 
 When all the partial bitmaps received, system throws a message titled \texttt{MAIN\_JOB\_DONE} to the UI which \texttt{msg.obj} contains a final bitmap.
 
-\paragraph{Performance with large scale image}
-Running the large scale image test case throughout 50 tests by increasing number of devices from 1 to 5 within the network, we found that the test case doesn't work if there is only one device standing desolately. By utilizing 2 threads for the image process on that single device, we realized that only 1 thread works, the another does not due to out of memory exception, and the processing time to complete half of the task is $12,581ms$. 
-%
-%\begin{figure}
-	%\hspace*{0.25cm}
-	%\resizebox{0.46\textwidth}{!}{
-		%\includegraphics{data/img_large_perf_full.pdf}
-	%}
-	%\caption{Image processing through multiple devices.}
-	%\label{fig:cluster_234}
-%\end{figure}
-
-By increasing the number of devices in network from 2 to 5 and sharing the task by sending jobs to the other peers, we gathered average statistic data in 20 tests as in the Figure \ref{fig:cluster_234} (in cluster with 2, 3, 4 and more). In the Figure, the grey line shows that $12,187$ is the time in millisecond the caller received response from device \#1, and $1354ms$ later it received response from the second device. In other words, the caller accomplished the task within $13,541ms$. The same behaviors happened in the other lines, and it is seen the blue line which 4 more devices get involved will complete the task in the shortest time ($7387ms$), also each device finished its assigned job earlier in compare with them in the other clusters. 
-
-The Figure \ref{fig:cluster_performance} summarized performance in terms of time consuming between multiple clusters. Noticed that system didn't fully work with only one device, and the one feasibly working thread in that single device took $12,581ms$ to complete, similar speed with 2-peer system. However speed is rapidly increased when more peers joined the network, especially with 4 devices, it is twice as fast as having 2 devices. Multiple threading is applied on the 4th device but did not sanitize very much the performance. 
-
 \begin{figure*}
 	\centering
 	%\resizebox{0.39\textwidth}{!}{
@@ -660,16 +609,14 @@ The Figure \ref{fig:cluster_performance} summarized performance in terms of time
 	\label{fig:cluster_performance}
 \end{figure*}
 
-To perform energy consumption on each cluster, we used Moosoon Power Monitor and measure the velocity of energy drained on a single mobile device when utilizing power from the other peers. Figure \ref{fig:cluster_img_energy} shows the energy measurement results from the two consecutive tests, although the two tests gave the big gap when executing 2 device cluster, in general the variability of energy consumption within multiple clusters matches with time consumption one. By running the two consecutive tests with the same input for 20 times, we realized that the results didn't change, and by utilizing 3 or more devices, we can significantly reduce the amount of energy required for the task, sometimes up to 25\%. However when we increased the number of devices in cluster, we didn't get the performance raised up at corresponding value linearly, this can be explained by Amdahl's law \cite{amdahl}. Throughout our experiments, the number of devices at 3 to 5 will give the maximum benefit in terms of energy saving and device usage productivity.
+\paragraph{Performance with large scale image}
+Running the large scale image test case throughout 50 tests by increasing number of devices from 1 to 5 within the network, we found that the test case doesn't work if there is only one device standing desolately. By utilizing 2 threads for the image process on that single device, we realized that only 1 thread works, the another does not due to out of memory exception, and the processing time to complete half of the task is $12,581ms$. 
 
-%\begin{figure}
-	%\centering
-	%\resizebox{0.45\textwidth}{!}{
-		%\includegraphics{data/img_energy.pdf}
-	%}
-	%\caption{Energy consumption of clusters}
-	%\label{fig:cluster_img_energy}
-%\end{figure}
+By increasing the number of devices in network from 2 to 5 and sharing the task by sending jobs to the other peers, we gathered average statistic data in 20 tests as in the Figure \ref{fig:cluster_234} (in cluster with 2, 3, 4 and more). In the Figure, the grey line shows that $12,187$ is the time in millisecond the caller received response from device \#1, and $1354ms$ later it received response from the second device. In other words, the caller accomplished the task within $13,541ms$. The same behaviors happened in the other lines, and it is seen the blue line which 4 more devices get involved will complete the task in the shortest time ($7387ms$), also each device finished its assigned job earlier in compare with them in the other clusters. 
+
+The Figure \ref{fig:cluster_performance} summarized performance in terms of time consuming between multiple clusters. Noticed that system didn't fully work with only one device, and the one feasibly working thread in that single device took $12,581ms$ to complete, similar speed with 2-peer system. However speed is rapidly increased when more peers joined the network, especially with 4 devices, it is twice as fast as having 2 devices. Multiple threading is applied on the 4th device but did not sanitize very much the performance. 
+
+To perform energy consumption on each cluster, we used Moosoon Power Monitor and measure the velocity of energy drained on a single mobile device when utilizing power from the other peers. Figure \ref{fig:cluster_img_energy} shows the energy measurement results from the two consecutive tests, although the two tests gave the big gap when executing 2 device cluster, in general the variability of energy consumption within multiple clusters matches with time consumption one. By running the two consecutive tests with the same input for 20 times, we realized that the results didn't change, and by utilizing 3 or more devices, we can significantly reduce the amount of energy required for the task, sometimes up to 25\%. However when we increased the number of devices in cluster, we didn't get the performance raised up at corresponding value linearly, this can be explained by Amdahl's law \cite{amdahl}. Throughout our experiments, the number of devices at 3 to 5 will give the maximum benefit in terms of energy saving and device usage productivity.
 
 \paragraph{Performance with normal scale image}
 To make any device in the network to be feasible for image processing, we reduced the input image size to $2500 \times 1405$. By reconfigure the cluster from 1 to 4 devices and measure total execution time on the callers, we gathered performance data between them like in the Figure \ref{fig:small_img_perf}. From our statistic data, the total time consumed by one device to run on itself is slightly fluctuated around $5400ms$ between multiple measurements, but if one more device join the network the time consuming is decreased to $3500ms$ which is 35\% faster. When more devices (3rd and 4th) participated, performance will continuously increase although their finishing time is largely varied. Especially 4 devices will collaboratively execute twice as fast as one device, or 50\% faster in all of our measurements.
@@ -780,14 +727,16 @@ Since the modern mobile devices (phones and tablets) are featured with multiple 
 
 In terms of improving energy consumption, offloading-featured systems like MAUI \cite{maui}, COMET \cite{comet}, \cite{cloud-offload}, \cite{mobile-cloud-middleware} or \cite{fuzzy-engine} address the heavy computations by offloading source code or execution module to server following multiple constraints and policies to release workload and energy consumed at client which is either mobile device or low computation capacity computer. 
 
-\section{Conclusions}
+\section{Future Work and Conclusions}
 \label{sec:conc}
-In this research, we presented a framework that can BLAH BLAH
+Our future research direction will 
 
-% use section* for acknowledgment
-\section*{Acknowledgment}
-This research is supported by Utah State University through the RC Grant.
+In this paper, we have presented XXXXX, an extended distribution framework for resource-constraint mobile devices. 
 
+%\section*{Acknowledgment}
+%This research is supported by Utah State University through the RC Grant.
+
+\balance
 \bibliographystyle{abbrv}
 \bibliography{references}
 
