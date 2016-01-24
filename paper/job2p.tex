@@ -254,10 +254,10 @@ public interface DataParser {
   public byte[] parseObjectToBytes(dataObject);
   public Object parseBytesToObject(byteArray);
   public Object getSinglePart(..., 
-		numOfParts, firstOffset, lastOffset);    
+		numOfParts, sOffset, eOffset);    
   public Object createPlaceholder(jsonMetadata);
   public Object copyPartToPlaceholder(... 
-					partDataObject, firstOffset, lastOffset);
+					partDataObject, sOffset, eOffset);
   public void destroy(dataObject);  
 }
   \end{lstlisting}	
@@ -278,10 +278,9 @@ To clarify usage of \texttt{DataParser}, we will go through several important ab
 
 
 \subsection{Runtime System} \label{scheduling}
-
 In peer-to-peer network supported by our APIs, the server will distribute jobs to peers bases on investigating their availability by \texttt{DecisionMaker} (Figure \ref{fig:checkStatus}). At the early stage before the transmission, the \texttt{DecisionMaker} of the calling device sends inquiring request for status (\texttt{IRS}) to some of selected peers in the network. If one receives this IRS request, its \texttt{DecisionMaker} will estimate its capability of response using the measurements of CPU, memory and battery usage at that time. 
 
-\begin{figure}[H]
+\begin{figure}
 \centerline {
 \includegraphics[width=0.45\textwidth, natwidth=915, natheight=837]{data/checkStatusFlow}
 }
@@ -495,13 +494,10 @@ The Message Handler is required to instantiate at the beginning. In particular, 
     \label{ui_handler}
 	\begin{lstlisting}
 Handler mainUiHandler = new Handler() {
-	@Override
 	public void handleMessage(Message msg) {
 		switch (msg.what) {
 			case Utils.MAIN_JOB_DONE: { ... }
-			case Utils.MAIN_INFO: { ... }
-		}	}
-};
+			case Utils.MAIN_INFO: { ... } }	} };
 	\end{lstlisting}
 
 \end{minipage}}
@@ -515,14 +511,11 @@ Secondly, developer needs to declare \texttt{DataParser} to determine data-type 
   \captionof{lstlisting}{Example of \texttt{getSinglePart()} for Bitmap}
   \label{code:get_single_part}
   \begin{lstlisting}
-@Override
-public Object getSinglePart(object, firstOffset, 
-                                      lastOffset) {
+public Object getSinglePart(object, sOffset, eOffset) {
   Bitmap bmpData = (Bitmap) data;
-  int pWidth = lastOffset - firstOffset;
-  return Bitmap.createBitmap(bmpData, firstOffset, 
-									0, pWidth, bmpData.getHeight());
-}
+  int pWidth = eOffset - sOffset;
+  return Bitmap.createBitmap(bmpData, sOffset, 
+									0, pWidth, bmpData.getHeight()); }
   \end{lstlisting}	
 \end{minipage}}	
 
@@ -533,24 +526,19 @@ When network is formed and connections are held from some of the peers, \texttt{
 \noindent \shadowbox{%
 \begin{minipage}{245pt}
 	\captionof{lstlisting}{Declare DataParser and JobHandler}
-
 	\begin{lstlisting}
 dataParser = new BitmapJobDataParser();
-...
 jobHandler = new JobHandler(this, dataParser);
+
 jobHandler.setSocketListener(
 	new JobHandler.JobSocketListener() {
 		@Override
 		public void socketUpdated(... isConnected){
 			...
-		}
-});
-...
-deviceList.setAdapter(
-	jobHandler.getDeviceListAdapter());
-...
+		}});
+deviceList.setAdapter(jobHandler.getDeviceListAdapter());
 jobHandler.discoverPeers();
-...
+
 String dataPath = downloadPath + "/mars.jpg";
 String jobPath = downloadPath + "/Job.jar";
 jobHandler.dispatchJob(dataPath, jobPath);
@@ -613,12 +601,11 @@ The method \texttt{createPlaceholder()} will parse this JSON object to obtain \t
 	\captionof{lstlisting}{Copy part to placeholder}
 	\begin{lstlisting}
 public Object copyPartToPlaceholder(placeholder, 
-										part, firstOffset, lastOffset){
-	Bitmap bmpPart = BitmapFactory.
-									decodeByteArray(part...);
+										part, sOffset, eOffset){
+	Bitmap bmpPart = BitmapFactory.decodeByteArray(part...);
 	int pieceWidth = partBmp.getWidth();
 	Canvas canvas = new Canvas(placeholder);
-	canvas.drawBitmap(bmpPart, firstOffset, 0...);
+	canvas.drawBitmap(bmpPart, sOffset, 0...);
 	return null;
 }
 	\end{lstlisting}
