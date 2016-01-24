@@ -199,13 +199,14 @@ In this section, we present BLAH BLAH BLAH, a distributed mobile execution model
 \subsection{Approach Overview}
 %need a general description
 %need to edit more
-To achieve our goals---BLAH BLAH---our system design choice is hiding the complexity of implementation details and open to the developers the capability of customization. Figure \ref{fig:architecture} describes the internal architecture of a typical application using our APIs to form a distributed mobile peer-to-peer system. Our system comprises of two main components: (1) \emph{Wi-Fi Peer-to-peer Broadcaster} (\texttt{WPB}) wraps up Wi-Fi Direct implementation, socket management and connection establishment. Moreover the \texttt{WiFiBroadcaster} provides simple API interfaces to construct a peer-to-peer network; (2) \emph{Job Handler} is in charge of selecting available peers and distributing the job to other peers. Specifically, the \texttt{JobDispatcher} which is the submodule of \texttt{JobHandler} dispatches a job and \texttt{JobExecutor} executes a job on each peer. Then, \texttt{JobHandler} merges the scattered incoming results into the final placeholder and relay information messages to the main application. In the following discussion, we present our system architecture.
+To achieve our goals---BLAH BLAH---our system design choice is hiding the complexity of implementation details and open to the developers the capability of customization. Figure \ref{fig:architecture} describes the internal architecture of a typical application using our APIs to form a distributed mobile peer-to-peer system. Our system comprises of two main components: (1) \emph{Wi-Fi Network Broadcaster} (\emph{WNB}) wrapping up Wi-Fi Direct implementation, socket management and connection establishment. To developers,  the \texttt{WiFiBroadcaster} interface of \emph{WNB} provides simple API interfaces to construct a peer-to-peer network; (2) \emph{Job Handler} is in charge of selecting available peers and distributing the job to other peers. Specifically, the \texttt{JobDispatcher} which is the submodule of \texttt{JobHandler} dispatches a job and \texttt{JobExecutor} executes a job on each peer. Then, \texttt{JobHandler} merges the scattered incoming results into the final placeholder and relay information messages to the main application. In the following discussion, we present our system architecture.
 
+\subsubsection{WiFi Network Broadcaster}
+To easily form up multiple pair connections between mobile devices over the WiFi network, we utilized the Wi-Fi Direct technology, the new feature available from Android APIs 4.0. We developed the \texttt{WiFiDirectManager} sub module inside the \texttt{WNB} to wrap up the complexity of Wi-Fi Direct implementation. Holding an instance of \texttt{WifiP2pManager}, \texttt{WiFiDirectManager} maintains connectivity over peer-to-peer network, discover available peers and setup the connections. As aforementioned in previous section, to leverage cloud offloading when Wi-Fi access point (AP) is available, we implemented \texttt{WiFiOffloadManager} module to handle connection with our cloud-based offloading server \ref{kwon+:mobilesoft15} to offload the jobs to available server instead of looking for the other devices. \texttt{WiFiOffloadManger} will make transparent of the offload server and consider it as a typical device.
 
-\subsubsection{WiFi Direct Broadcaster}
-To easily form up multiple pair connections between mobile devices over the WiFi network, we utilized the Wi-Fi Direct technology, the new feature available from Android APIs 4.0. We developed the \texttt{WiFiDirectManager} sub module inside the \texttt{WPB} to wrap up the complexity of Wi-Fi Direct implementation. Holding an instance of \texttt{WifiP2pManager}, \texttt{WiFiDirectManager} maintains connectivity over peer-to-peer network, discover available peers and setup the connections. 
+When the app starts up, \texttt{WNB} calls \texttt{discoverPeers()} to simultaneously search for available offloading server registered in its configuration file, as well as spread acknowledgments to inform its availability to the other peers. 
 
-When the app starts up, \texttt{WPB} from a peer will spread acknowledgments by calling \texttt{discoverPeers()} to inform its availability to the other peers. If a peer receives such message, its \texttt{WPB} module will collect information from the new comer and update the list of devices. When all the peers are updated with their new device list, the network will be reformed. See figure \ref{fig:forming}
+If any of offloading servers or devices receives such message, its \texttt{WNB} module will collect information from the new caller and update the list of devices, then send back their information in JSON object \ref{ss_dfp} to the caller. When all the devices are updated with their new device list, the network will be reformed. See figure \ref{fig:forming}
 
 \begin{figure}[H]
 \centerline {
@@ -215,12 +216,12 @@ When the app starts up, \texttt{WPB} from a peer will spread acknowledgments by 
 \label{fig:forming}
 \end{figure}
 
-Once each mobile device receives all the required information from other mobile devices, they can be connected. We provide the method \texttt{connectToADevice()} holding \texttt{WifiP2pDevice} as one input parameter to invoke the handshake with another device. Once connection established, the device actively invoked will be assigned as client, which utilize the \texttt{ClientSocketHandler} to listen to a client socket. The device passively received the invocation will be promoted as server and use the \texttt{ServerSocketHandler} to initiate server socket with an random port. If the invoked device is already a server, it will maintain its current state and continuously accept the new client. Moreover, since a device can either be a server to some peers, or serve as client to the others, this method is able to build up a close range peer-to-peer network.
+Once each mobile device receives all the required information from other mobile devices, they can be connected. We provide the method \texttt{connectToADevice()} holding \texttt{WiFiDeviceInfo} as one input parameter to invoke the handshake with another device. Once connection established, the device actively invoked will be assigned as client, which utilize the \texttt{ClientSocketHandler} to listen to a client socket. The device passively received the invocation will be promoted as server and use the \texttt{ServerSocketHandler} to initiate server socket with an random port. If the invoked device is already a server, it will maintain its current state and continuously accept the new client. Moreover, since a device can either be a server to some peers, or serve as client to the others, this method is able to build up a close range peer-to-peer network.
 
 Both \texttt{ClientSocketHandler} and \texttt{ServerSocket Handler} are constituted by a sub module named \texttt{DataTransmitManager}, which periodically observes input and output streams of parent socket (Can be either server or client socket) to verify checksum, check data consistency, send/receive data from the socket. Inheriting the \texttt{TransmitManager} abstract class, developer can instantiate their own version of \texttt{DataTransmitManager} to customize the data consistency checker or improve security. 
 
-\subsubsection{Execution Handler}
-\texttt{Job} is defined BLAH BLAH BLAH
+\subsubsection{Job Handler}
+\texttt{Job} is united execution unit 
 \texttt{DataParser} is a loosely coupled interface of the Job component facilitating adaptation with data heterogeneity. It helps determine mechanisms for: (1) serialization/deserialization object into binary format which is compatible for TCP transmission, (2) task partitioning, and (3) placeholder initialization and concatenation. To make the data type comprehensive to system in terms of reading, parsing or memory allocating, developer needs to supply instructions by instantiating an implementation of Data Parser for that type. 
 
 \subsection{Programming Model} 
@@ -288,39 +289,18 @@ In peer-to-peer network supported by our APIs, the server will distribute jobs t
 \label{fig:checkStatus}
 \end{figure}
 
-\subsubsection{Finding available peers}\label{ss_dfp}
+\subsubsection{Finding available devices}\label{ss_dfp}
 
 A mobile device at any time maintains a certain number of connection with the others. Before delivering jobs, it dispatches IRS messages to all the peers for acknowledgment of their availability ($RL$ - Level of Responsibility). If a peer receives an IRS, its \texttt{DecisionMaker} will capture its configuration and corresponding usage states to generate a response in JSON format, The code snippet (\ref{code:jsonResponse}) shows such a typical response.\\
 
 \begin{figure}
-\noindent \shadowbox{%
-\begin{minipage}{.45\linewidth}	
-\begin{lstlisting}
-JSON {
-  "device": String,
-	"RL": double,
-  "availability": String,
-	"network": String,
-	"gps": String,
-  "cpu": {
-		"usage": double,
-    "speed": double,
-    "cores": int },
-  "memory": {
-		"usage": double,
-    "total": int },
-  "battery": {
-		"usage": double,
-    "total": int } }
-\end{lstlisting}
-\end{minipage}}	
 \noindent \shadowbox{
 \begin{minipage}{.43\linewidth}	
 \begin{lstlisting}
-JSON {
+JSON : DeviceInfo {
   "device": "LG-Volt",
 	"RL": 24.83,
-  "availability": "low",
+  "availability": "off",
 	"network": "low",
 	"gps": "on",
   "cpu": {
@@ -335,17 +315,34 @@ JSON {
     "total": 2800 } }
 \end{lstlisting}	
 \end{minipage}}	
+\noindent \shadowbox{%
+\begin{minipage}{.45\linewidth}	
+\begin{lstlisting}
+JSON : Condition {
+  "RL": "max",
+  "gps": "on"
+}
+\end{lstlisting}
+\end{minipage}}	
 
-\captionof{lstlisting}{JSON response structure and an example.}
+\captionof{lstlisting}{A typical JSON response and initiative condition.}
 \label{code:jsonResponse}
 
 \end{figure}
 
-Where $RL$ is peer's Level of Responsibility (for estimation of $RL$ as well as the other usage parameters, see \ref{ss_jqfp}), \texttt{availability} indicates whether the peer is feasible for handling job. \texttt{network} gives the network status, which can be either \texttt{high}, \texttt{low} or \texttt{off} (no connections), \texttt{gps} is information of GPS \texttt{on} or \texttt{off}. Finally \texttt{cpu}, \texttt{memory} and \texttt{battery} are statuses of the essential resources at the time of response. 
+Where \texttt{device} can be either device name (if it is device) or \texttt{server} (if it is offloading server), $RL$ is device's Level of Responsibility (for estimation of $RL$ and the other parameters, see \ref{ss_jqfp}), \texttt{availability} indicates whether device is feasible for handling job. \texttt{network} gives the network status, which can be either \texttt{high}, \texttt{low} or \texttt{off} (no connections), \texttt{gps} is information of GPS \texttt{on} or \texttt{off}. Finally \texttt{cpu}, \texttt{memory} and \texttt{battery} are statuses of the essential resources at the time of response. 
 
-In any IRS response, parameter \texttt{availability} is determined by the remote peer which value can be assigned by \texttt{on} or \texttt{off}. The \texttt{off} availability will inform the caller that it is not available due to temporary resource limitation, therefore eliminate the caller from sending jobs to. Only the peers with \texttt{availability} with \texttt{on} will accept jobs for execution. The decision is given bases on the thresholds of battery usage which are set by default at value higher than 0.8 (or 80\% overall usage). User can override those thresholds by updating the \texttt{availability-thresholds} in the configuration file before app initialization. 
+In any IRS response, \texttt{availability} is determined by the remote device which value can be assigned by \texttt{on} or \texttt{off}. The \texttt{off} value informs the caller that it is not available due to temporary lacking of resource, therefore eliminates the caller from sending jobs. Only the devices with \texttt{availability} is \texttt{on} will accept jobs for the execution. The value is given bases on whether device has bypassed the threshold of battery usage which is set by default at 0.8 (or 80\% overall usage). User can override those thresholds by updating the \texttt{availability-thresholds} in the configuration file before app initialization. 
 
-In the above example (Code snippet \ref{code:jsonResponse}), the battery usage was 0.85 or 15\% remained, so the \texttt{DecisionMaker} on it stated that its \texttt{availability} is \texttt{low}, in other words it is not able to handle any jobs and should be excluded from the dispatched list.
+In the above example (Code snippet \ref{code:jsonResponse}), the battery usage was 0.85 or 15\% remained, so the \texttt{DecisionMaker} on it stated that its \texttt{availability} is \texttt{off}, it won't be able to handle any jobs.
+
+To make the system adjustable to wide range of resource usages with regard to energy and performance efficiency, the IRS criteria (Example in \ref{code:jsonResponse}) is added to the app configuration so that \texttt{DecisionMaker} can check by going through 3 below steps
+\begin{itemize}
+	\item \emph{If $RL$ is max}: Select one device having max $RL$ and match the other criteria, then finish.
+	\item \emph{If offloading server available}: Select the first available server, then finish.
+	\item \emph{If other criteria are matched}: Select a list of available devices having matched conditions.
+\end{itemize}
+The algorithm \ref{alg:select_peers} describes detailed the three above steps.
 
 \begin{algorithm}
 
@@ -355,15 +352,30 @@ In the above example (Code snippet \ref{code:jsonResponse}), the battery usage w
 \begin{scriptsize}
 \Function{selectPeers()}{}
 \State Send IRS requests to all peers 
+\State $CriteriaList \leftarrow IRSCriteria$
 \State $P_{AV} \leftarrow HashMap(DeviceId, P)$
-\ForAll{$Resp_{IRS}$ in \{Incoming IRS Responses\}}
-\If {$Resp_{IRS}[availability] = low$} 
-   \State continue;
-\Else
-  \State $P_{Info} \leftarrow P2pDevice[DeviceId] + Resp_{IRS}[RL]$
-  \State $P_{AV}[DeviceId] \leftarrow P_{Info}$
+
+\If {$CriteriaList.RL = max$}
+  \ForAll{$Resp_{IRS}$ in \{Incoming IRS Responses\}}
+  	\State Find max $RL$ with other criteria in $CriteriaList$
+  	\State \Return $P_{AV}$
+  \EndFor
 \EndIf
+
+\ForAll{$Resp_{IRS}$ in \{Incoming IRS Responses\}}
+  \If {$Resp_{IRS}[device] = server$}
+  	\State Reset $P_{AV}$ 
+  	\State $P_{Info} \leftarrow WiFiDeviceInfo[DeviceId]$
+  	\State $P_{AV}[DeviceId] \leftarrow P_{Info}$
+  	\State \Return $P_{AV}$
+  \EndIf
+
+  \If {All condition statements are satisfied} 
+  	\State $P_{Info} \leftarrow WiFiDeviceInfo[DeviceId] + Resp_{IRS}[RL]$
+  	\State $P_{AV}[DeviceId] \leftarrow P_{Info}$
+  \EndIf
 \EndFor
+
 \State \Return $P_{AV}$
 \EndFunction
 \end{scriptsize}
