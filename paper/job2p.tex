@@ -201,20 +201,22 @@ In this section, we present BLAH BLAH BLAH, a distributed mobile execution model
 %need to edit more
 To achieve our goals---BLAH BLAH---, our system design choice is hiding the complexity of implementation details and open to the developers the capability of customization. Figure \ref{fig:architecture} describes the internal architecture of a typical application using our programming model. Our system comprises of two main components: (1) \emph{Network Management} (\emph{WNB}) manages a connection between mobile devices by, socket management, and connection establishment. For application programmers, the \texttt{WiFiBroadcaster} interface of \emph{WNB} provides simple interfaces to establish a connection; (2) \emph{Execution Handler} is in charge of selecting available peers and distributing the job to other peers. Specifically, the \texttt{JobDispatcher} which is the submodule of \texttt{JobHandler} dispatches a job and \texttt{JobExecutor} executes a job on each mobile device. Then, \texttt{JobHandler} merges the scattered incoming results into the final placeholder and relay information messages to the main application. In the following discussion, we present our system architecture.
 
-\subsubsection{WiFi Network Broadcaster}
-To easily establish multiple connections between mobile devices over the WiFi network, we utilized the WiFi Direct technology, the new feature available from Android APIs 4.0. We developed the \texttt{WiFiDirectManager} sub module inside the \texttt{WNB} to wrap up the complexity of Wi-Fi Direct implementation. Holding an instance of \texttt{WifiP2pManager}, \texttt{WiFiDirectManager} maintains connectivity over peer-to-peer network, discover available peers and setup the connections. As aforementioned in previous section, to leverage cloud offloading when Wi-Fi access point (AP) is available, we implemented \texttt{WiFiOffloadManager} module to handle connection with our cloud-based offloading server \ref{kwon+:mobilesoft15} to offload the jobs to available server instead of looking for the other devices. \texttt{WiFiOffloadManger} will make transparent of the offload server and consider it as a typical device.
+\subsubsection{WiFi Network Manager}
+To easily establish multiple connections between mobile devices over the WiFi network, we utilized the WiFi Direct technology, the new feature available from Android APIs 4.0. We developed the \texttt{WiFiDirectAdapter} sub module inside the \texttt{WNB} to wrap up the complexity of Wi-Fi Direct implementation. Holding an instance of \texttt{WifiP2pManager}, \texttt{WiFiDirectAdapter} maintains connectivity over peer-to-peer network, discover available peers and setup the connections. As aforementioned in previous section, to leverage cloud offloading when Wi-Fi access point (AP) is available, we implemented \texttt{WiFiOffloadAdapter} module to handle connection with our cloud-based offloading server \ref{kwon+:mobilesoft15} to offload the jobs to available server instead of looking for the other devices. \texttt{WiFiOffloadAdapter} will make transparent of the offload server and consider it as a typical device.
 
 When the app starts up, \texttt{WNB} calls \texttt{discoverPeers()} to simultaneously search for available offloading server registered in its configuration file, as well as spread acknowledgments to inform its availability to the other peers. 
 
-If any of offloading servers or devices receives such message, its \texttt{WNB} module will collect information from the new caller and update the list of devices, then send back their information in JSON object \ref{ss_dfp} to the caller. When all the devices are updated with their new device list, the network will be reformed. See figure \ref{fig:forming}
+If any of offloading servers or devices receives such message, its \texttt{WNB} module will collect information from the new caller and update the list of devices, then send back their information in JSON object \ref{ss_dfp} to the caller. When all the devices are updated with their new device list, the network will be reformed (See figure \ref{fig:forming})
 
-\begin{figure}[H]
-\centerline {
-\includegraphics[width=0.5\textwidth, natwidth=1127, natheight=615]{data/discoverPeers}
-}
-\caption{Establishing a network connection among nearby mobile devices.}
-\label{fig:forming}
+\begin{figure}
+	\centering
+	\resizebox{0.5\textwidth}{!}{
+		\includegraphics{data/discoverPeers.pdf}
+	}
+	\caption{Establishing a network connection among nearby mobile devices}
+	\label{fig:forming}
 \end{figure}
+
 
 Once each mobile device receives all the required information from other mobile devices, they can be connected. We provide the method \texttt{connectToADevice()} holding \texttt{WiFiDeviceInfo} as one input parameter to invoke the handshake with another device. Once connection established, the device actively invoked will be assigned as client, which utilize the \texttt{ClientSocketHandler} to listen to a client socket. The device passively received the invocation will be promoted as server and use the \texttt{ServerSocketHandler} to initiate server socket with an random port. If the invoked device is already a server, it will maintain its current state and continuously accept the new client. Moreover, since a device can either be a server to some peers, or serve as client to the others, this method is able to build up a close range peer-to-peer network.
 
@@ -275,15 +277,15 @@ To clarify usage of \texttt{DataParser}, we will go through several important ab
 
 
 \subsection{Runtime System} \label{scheduling}
-In peer-to-peer network supported by our APIs, the server will distribute jobs to peers bases on investigating their availability by \texttt{DecisionMaker} (Figure \ref{fig:checkStatus}). At the early stage before the transmission, the \texttt{DecisionMaker} of the calling device sends inquiring request for status (\texttt{IRS}) to some of selected peers in the network. If one receives this IRS request, its \texttt{DecisionMaker} will estimate its capability of response using the measurements of CPU, memory and battery usage at that time. 
+In peer-to-peer network supported by our APIs, the server will distribute jobs to peers bases on investigating their availability by \texttt{DecisionMaker} (Figure \ref{fig:forming}). At the early stage before the transmission, the \texttt{DecisionMaker} of the calling device sends inquiring request for status (\texttt{IRS}) to some of selected peers in the network. If one receives this IRS request, its \texttt{DecisionMaker} will estimate its capability of response using the measurements of CPU, memory and battery usage at that time. 
 
-\begin{figure}
-\centerline {
-\includegraphics[width=0.45\textwidth, natwidth=915, natheight=837]{data/checkStatusFlow}
-}
-\caption{Workflow between mobile devices.}
-\label{fig:checkStatus}
-\end{figure}
+%\begin{figure}
+%\centerline {
+%\includegraphics[width=0.45\textwidth, natwidth=915, natheight=837]{data/checkStatusFlow}
+%}
+%\caption{Workflow between mobile devices.}
+%\label{fig:checkStatus}
+%\end{figure}
 
 \subsubsection{Finding available devices}\label{ss_dfp}
 
