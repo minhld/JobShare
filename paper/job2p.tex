@@ -210,7 +210,7 @@ Both \texttt{ClientSocketHandler} and \texttt{ServerSocket Handler} are constitu
 \subsection{Programming Model} \label{prog_model}
 Our system has a simple programming model that enables the programmer can easily write remote functionality. Firstly, as described in code snippet (\ref{code:job_def}), we provide \texttt{Job} abstract class that should be extended by the programmer to specify which functionality should be executed remotely.
 
-To support dynamic class loading in Dalvik VM, we provide the \texttt{DexCreator} commandline tool that compiles the \texttt{Job} Java file into a Dex package. The Dex package and sliced resources are packed as a \texttt{JobData} object by \texttt{JobDispatcher} and then dispatched to the available peers. Once a peer receives a \texttt{JobData} object, it first checks the checksum field to confirm the consistency, and then deserializes the object into \texttt{Job} and resources for the execution.
+To support dynamic class loading in Dalvik VM \cite{fred:classloader}, we provide the \texttt{DexCreator} commandline tool that compiles the \texttt{Job} Java file into a Dex package. The Dex package and sliced resources are packed as a \texttt{JobData} object by \texttt{JobDispatcher} and then dispatched to the available peers. Once a peer receives a \texttt{JobData} object, it first checks the checksum field to confirm the consistency, and then deserializes the object into \texttt{Job} and resources for the execution.
 
 \begin{figure}
 \noindent \shadowbox{%
@@ -241,7 +241,7 @@ public interface DataParser {
 \end{figure}
 
 
-\subsubsection{Data Parser}
+\subsubsection{Data Parser} \label{data_parser}
 The code snippet in Listing \ref{code:job_def} shows the main functionality of the \texttt{DataParser} interface that user needs to implement. The \texttt{DataParser} interfaces have the following abstract methods:
 \begin{itemize}
 	\item \texttt{getDataClass()} return data type.
@@ -451,7 +451,7 @@ The library should be simple, so that developer can integrate within just a few 
 
 \subsubsection{Defining a Job}
 
-Job implementation is the prerequisite work to determine what to execute on the remote device and how to cast and manipulate data from the abstract object. According to section \ref{job-description}, developer needs to implement the Job class file separately by overriding the \texttt{exec()} method and cast the input abstract parameter to the concrete. Then run the \texttt{DexCreator} tool on the Job class to compile and compact it into the DEX jar package. The final outcome is the \texttt{job.jar} file, it should be saved in the internal storage of the caller device. To simplify, we can store it in the \texttt{Download} folder.  
+Job implementation is the prerequisite work to determine what to execute on the remote device and how to cast and manipulate data from the abstract object. According to section \ref{prog_model}, developer needs to implement the Job class file separately by overriding the \texttt{exec()} method and cast the input abstract parameter to the concrete. Then run the \texttt{DexCreator} tool on the Job class to compile and compact it into the DEX jar package. The final outcome is the \texttt{job.jar} file, it should be saved in the internal storage of the caller device. To simplify, we can store it in the \texttt{Download} folder.  
 
 \subsubsection{Implementing an Application Using APIs}
 
@@ -459,7 +459,7 @@ This sub section will describe 3 basic steps to implement an Android application
 
 \paragraph{Message Handler}
 
-The Message Handler is required to instantiate at the beginning. In particular, an instance of \texttt{UIHandler} is initiated to receive messages from system when it goes into runtime. While system is in progress, the log and information messages will periodically be returned with label \texttt{MAIN\_INFO} (Code snippet \ref{ui_handler}). When each job result comes, \texttt{JobHandler} will collect and handle by  to partially put into a placeholder. When all results arrived, the placeholder with label \texttt{MAIN\_JOB\_DONE} will be returned to inform the completion of job collaboration, as well as bring the final result back to the main app UI.\\
+The Message Handler is required to instantiate at the beginning. In particular, an instance of \texttt{UIHandler} is initiated to receive messages from system when it goes into runtime. While system is in progress, the log and information messages will periodically be returned with label \texttt{MAIN\_INFO} (Code snippet \ref{ui_handler}). When each job result comes, \texttt{ExecutionHandler} will collect and handle by  to partially put into a placeholder. When all results arrived, the placeholder with label \texttt{MAIN\_JOB\_DONE} will be returned to inform the completion of job collaboration, as well as bring the final result back to the main app UI.\\
 
 \begin{figure}
 \noindent \shadowbox{%
@@ -479,7 +479,7 @@ Handler mainUiHandler = new Handler() {
 
 \paragraph{Data Parser}
 
-Secondly, developer needs to declare \texttt{DataParser} to determine data-type and parser to equip for manipulating data at run-time (see sub section \ref{job-description}). \texttt{JobHandler} is the main component which wraps up the complexity , and exposes only the necessary functions like \texttt{discoverPeers()} and \texttt{dispatchJob()}. To send ACK messages to other peers for exchanging acknowledgments and reforming network, we need to call \texttt{discoverPeers()} function on the program, this work should be done as soon as application starts.\\
+Secondly, developer needs to declare \texttt{DataParser} to determine data-type and parser to equip for manipulating data at run-time (see sub section \ref{data_parser}). \texttt{ExecutionHandler} is the main component which wraps up the complexity , and exposes only the necessary functions like \texttt{discoverPeers()} and \texttt{dispatchJob()}. To send ACK messages to other peers for exchanging acknowledgments and reforming network, we need to call \texttt{discoverPeers()} function on the program, this work should be done as soon as application starts.\\
 
 \begin{figure}
 \noindent \shadowbox{%
@@ -564,7 +564,7 @@ To measure the performance of the system equipped with our APIs, we decorated a 
 We applied blur effect, one of the energy consuming process on images. We run the test repeatedly on two image inputs, the first image has size $2500 \times 1405$ and the second size is $4326 \times 2856$. For the second image, with 4 bytes allocated for each pixel, device must allocate around $50MB$ of heap to open and hold another $50MB$ for the result, thus leading to app crash all the time. The problem will only be solved by other collaborative peers to solve overload in terms of memory and energy consumption.
 
 \paragraph{Design}
-The most important part when applying APIs for image processing is defining the \texttt{BitmapDataParser} (see code snippet (\ref{code:job_def})) with a divide strategy in vertical cut. For an input image, the \texttt{firstOffset} and \texttt{lastOffset} will decide the first and last offsets of the vertical cut correspondingly throughout the width, from the top to the bottom edges. The algorithm of the vertical cut is described in the code snippet (\ref{code:get_single_part}). Regarding the placeholder, we override the \texttt{getJsonMetadata()} method to return a simple JSON string like below:
+The most important part when applying APIs for image processing is defining the \texttt{DataParser} (see code snippet (\ref{code:job_def})) for Bitmap with a divide strategy in vertical cut. For an input image, the \texttt{firstOffset} and \texttt{lastOffset} will decide the first and last offsets of the vertical cut correspondingly throughout the width, from the top to the bottom edges. The algorithm of the vertical cut is described in the code snippet (\ref{code:get_single_part}). Regarding the placeholder, we override the \texttt{getJsonMetadata()} method to return a simple JSON string like below:
 
 %\noindent \shadowbox{%
 %\begin{minipage}{245pt}
@@ -610,14 +610,12 @@ When all the partial bitmaps received, system throws a message titled \texttt{MA
 \paragraph{Performance with large scale image}
 Running the large scale image test case throughout 50 tests by increasing number of devices from 1 to 5 within the network, we found that the test case doesn't work if there is only one device standing desolately. By utilizing 2 threads for the image process on that single device, we realized that only 1 thread works, the another does not due to out of memory exception, and the processing time to complete half of the task is $12,581ms$. 
 
-By increasing the number of devices in network from 2 to 5 and sharing the task by sending jobs to the other peers, we gathered average statistic data in 20 tests as in the Figure \ref{fig:cluster_234} (in cluster with 2, 3, 4 and more). In the Figure, the grey line shows that $12,187$ is the time in millisecond the caller received response from device \#1, and $1354ms$ later it received response from the second device. In other words, the caller accomplished the task within $13,541ms$. The same behaviors happened in the other lines, and it is seen the blue line which 4 more devices get involved will complete the task in the shortest time ($7387ms$), also each device finished its assigned job earlier in compare with them in the other clusters. 
-
-The Figure \ref{fig:cluster_performance} summarized performance in terms of time consuming between multiple clusters. Noticed that system didn't fully work with only one device, and the one feasibly working thread in that single device took $12,581ms$ to complete, similar speed with 2-peer system. However speed is rapidly increased when more peers joined the network, especially with 4 devices, it is twice as fast as having 2 devices. Multiple threading is applied on the 4th device but did not sanitize very much the performance. 
+By increasing the number of devices in network from 2 to 5 and sharing the task by sending jobs to the other peers, we gathered average statistic data in 20 tests as in the Figure (\ref{fig:cluster_performance} - left) (clusters with 2, 3, 4 and more devices). In this Figure, to accomplish the task, the two devices have to work in average of $13,541ms$. The execution time reduced when more devices participate the cluster, down to average $7387ms$ when more than 4 peers joined the cluster, which is twice as fast as having 2 devices (noticed that system didn't fully work with only one device).
 
 To perform energy consumption on each cluster, we used Moosoon Power Monitor and measure the velocity of energy drained on a single mobile device when utilizing power from the other peers. Figure (\ref{fig:cluster_performance} - right) shows the energy measurement results from the two consecutive tests, although the two tests gave the big gap when executing 2 device cluster, in general the variability of energy consumption within multiple clusters matches with time consumption one. By running the two consecutive tests with the same input for 20 times, we realized that the results didn't change, and by utilizing 3 or more devices, we can significantly reduce the amount of energy required for the task, sometimes up to 25\%. However when we increased the number of devices in cluster, we didn't get the performance raised up at corresponding value linearly, this can be explained by Amdahl's law \cite{amdahl}. Throughout our experiments, the number of devices at 3 to 5 will give the maximum benefit in terms of energy saving and device usage productivity.
 
 \paragraph{Performance with normal scale image}
-To make any device in the network to be feasible for image processing, we reduced the input image size to $2500 \times 1405$. By reconfigure the cluster from 1 to 4 devices and measure total execution time on the callers, we gathered performance data between them like in the Figure \ref{fig:small_img_perf}. From our statistic data, the total time consumed by one device to run on itself is slightly fluctuated around $5400ms$ between multiple measurements, but if one more device join the network the time consuming is decreased to $3500ms$ which is 35\% faster. When more devices (3rd and 4th) participated, performance will continuously increase although their finishing time is largely varied. Especially 4 devices will collaboratively execute twice as fast as one device, or 50\% faster in all of our measurements.
+To make any device in the network to be feasible for image processing, we reduced the input image size to $2500 \times 1405$. By reconfigure the cluster from 1 to 4 devices and measure total execution time on the callers, we gathered performance data between them like in the Figure \ref{fig:small_img_perf}. From our statistic data, the total time consumed by one device to run on itself is slightly fluctuated around $5400ms$ between multiple measurements, but if one more device join the network the time consuming is decreased to $3500ms$ which is 35\% faster. When more devices (3 or 4) participated, performance will continuously increase although their finishing time is largely varied. Especially 4 devices will collaboratively execute twice as fast as one device, or 50\% faster in all of our measurements.
 
 \begin{figure*}
 	\centering
@@ -645,7 +643,7 @@ Theoretically, remote accessibility won't help reducing the amount of bytes down
 
 \paragraph{Design}
 
-To apply APIs for this application, from the caller we dispatch job requests, which contains information of job with resources are URL, number of parts and index, to the peers having \texttt{IRS[network]} at \texttt{high} or \texttt{low} (See ). At each peer, when request is received, it executes job to load URL to achieve page in HTML code. Then it will parse the HTML to detect resource links including multimedia resources (images, audio, videos), CSS, and JS. Depend on the number of parts and index, it narrows down the amount of resources and attempt downloading and put into a ZIP file before throw back to the caller.
+To apply APIs for this application, from the caller we dispatch job requests, which contains information of job with resources are URL, number of parts and index, to the peers having \texttt{IRS[network]} at \texttt{high} or \texttt{low}. At each peer, when request is received, it executes job to load URL to achieve page in HTML code. Then it will parse the HTML to detect resource links including multimedia resources (images, audio, videos), CSS, and JS. Depend on the number of parts and index, it narrows down the amount of resources and attempt downloading and put into a ZIP file before throw back to the caller.
 
 According to our system architecture, the caller needs to prepare a placeholder to hold every incoming results. For this test case, the placeholder is designated as a sub folder in the \texttt{Download} folder. When result comes as a ZIP file, contents will be extracted and filled into the placeholder folder. The final HTML file will contain all the modified resource links which locate at the same folder. Finally, the local HTML file can be open by Android Web browser component using a local web server, for instance TinyHTTPd \cite{tinyhttpd}.
 
