@@ -16,7 +16,7 @@ set xtics font "Verdana,12"
 set ytics font "Verdana,12"
 set yrange [2000:6000]
 set xtics ("1 Device" 1, "2 Devices" 2, "3 Devices" 3, "4 Devices" 4) scale 0.0
-plot 'D:\android\JobShare\paper\data\gnuplot\data_small_img_time.dat' using (1):1, \
+plot 'D:\android\JobShare\paper\data\gnuplot\data_small_img_time_2.dat' using (1):1, \
 '' using (2):2, \
 '' using (3):3, \
 '' using (4):4
