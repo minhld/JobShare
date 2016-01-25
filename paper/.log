@@ -1,0 +1,35 @@
+This is XeTeX, Version 3.14159265-2.6-0.99992 (MiKTeX 2.9) (preloaded format=xelatex 2016.1.20)  20 JAN 2016 16:20
+entering extended mode
+**䄴䄴
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\tools\.tex"
+LaTeX2e <2015/01/01> patch level 2
+Babel <3.9m> and hyphenation patterns for 69 languages loaded.
+File ignored)
+*q
+
+! LaTeX Error: Missing \begin{document}.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+<*> q
+     
+? q
+OK, entering \batchmode...
+Missing character: There is no q in font nullfont!
+! Emergency stop.
+<*> q
+     
+*** (job aborted, no legal \end found)
+
+ 
+Here is how much of TeX's memory you used:
+ 5 strings out of 428764
+ 60 string characters out of 3163366
+ 52085 words of memory out of 3000000
+ 3428 multiletter control sequences out of 15000+200000
+ 3640 words of font info for 14 fonts, out of 3000000 for 9000
+ 1096 hyphenation exceptions out of 8191
+ 5i,0n,4p,82b,14s stack positions out of 5000i,500n,10000p,200000b,50000s
+No pages of output.
