@@ -550,9 +550,10 @@ Where $t$ is accumulated time in milliseconds and $E_{WiFi}$ is energy used by s
 \subsection{Case Study}
 To measure the performance of the system equipped with our APIs, we decorated a small testbed with collaboration of 5 different Android devices to perform our 3 test cases:
 \begin{itemize}
-	\item \textbf{Image Processing} we will initiate the P2P network test to perform blurring a large scale image which is unable to process at any of our devices. Particularly, to process an image with size $4000 \times 4000$ and 4 bytes to express each pixel color, application must spare the amount of memory equivalent to 64MB which is way too much for a device, which occasionally returns out of memory exception.
-	\item \textbf{Internet Remote Access} brings the Internet access capability to a device having no Internet connection or limited bandwidth by relying on other Internet-featured peers.
-	\item \textbf{GPS Sharing} establishing a GPS connection is proof of high energy consuming. It would be impossible for a device with low battery to keep update with GPS frequently. We will base on N-DIST to build a simple system so that one device can benefit GPS locations from the healthier devices.
+	\item \textbf{Image Processing:} In this case study, we initiated a P2P network to blur a large size image, which was not loaded and processed on a any single mobile device due to the limited memory space. Then, we distributed the blurring job to 1 to 4 mobile devices. 
+	%Particularly, to process an image with size $4000 \times 4000$ and 4 bytes to express each pixel color, application must spare the amount of memory equivalent to 64MB which is way too much for a device, which occasionally returns out of memory exception.
+	\item \textbf{Internet Access:} In this scenario, we defined an Internet access request for a mobile device that has limited network connection or no Internet connection, so that mobile applications could download remote data.
+	\item \textbf{GPS Sharing:} Because establishing a GPS connection is a highly energy-intensive operation, it would be impossible for a device with low battery to frequently update its location information. We built a simple application that can benefit GPS locations from healthier devices. In addition, our system can be used for Internet of Things devices that do not have GPS sensors.
 \end{itemize}
 
 \subsection{Case Study Implementations}
@@ -609,7 +610,7 @@ Running the large scale image test case throughout 50 tests by increasing number
 
 By increasing the number of devices in network from 2 to 5 and sharing the task by sending jobs to the other peers, we gathered average statistic data in 20 tests as in the Figure (\ref{fig:cluster_performance} - left) (clusters with 2, 3, 4 and more devices). In this Figure, to accomplish the task, the two devices have to work in average of $13,541ms$. The execution time reduced when more devices participate the cluster, down to average $7387ms$ when more than 4 peers joined the cluster, which is twice as fast as having 2 devices (noticed that system didn't fully work with only one device).
 
-To perform energy consumption on each cluster, we used Moosoon Power Monitor and measure the velocity of energy drained on a single mobile device when utilizing power from the other peers. Figure (\ref{fig:cluster_performance} - right) shows the energy measurement results from the two consecutive tests, although the two tests gave the big gap when executing 2 device cluster, in general the variability of energy consumption within multiple clusters matches with time consumption one. By running the two consecutive tests with the same input for 20 times, we realized that the results didn't change, and by utilizing 3 or more devices, we can significantly reduce the amount of energy required for the task, sometimes up to 25\%. However when we increased the number of devices in cluster, we didn't get the performance raised up at corresponding value linearly, this can be explained by Amdahl's law \cite{amdahl}. Throughout our experiments, the number of devices at 3 to 5 will give the maximum benefit in terms of energy saving and device usage productivity.
+To measure energy consumption on each device, we used Monsoon Power Monitor \cite{monsoon} and measured the velocity of energy drained on a single mobile device when utilizing power from the other peers. Figure \ref{fig:cluster_performance} (right) shows the energy measurement results from the two consecutive tests, although the two tests gave the big gap when executing 2 device cluster, in general the variability of energy consumption within multiple clusters matches with time consumption one. By running the two consecutive tests with the same input for 20 times, we realized that the results didn't change, and by utilizing 3 or more devices, we can significantly reduce the amount of energy required for the task, sometimes up to 25\%. However when we increased the number of devices in cluster, we didn't get the performance raised up at corresponding value linearly, this can be explained by Amdahl's law \cite{amdahl}. Throughout our experiments, the number of devices at 3 to 5 will give the maximum benefit in terms of energy saving and device usage productivity.
 
 \paragraph{Performance with normal scale image}
 To make any device in the network to be feasible for image processing, we reduced the input image size to $2500 \times 1405$. By reconfigure the cluster from 1 to 4 devices and measure total execution time on the callers, we gathered performance data between them like in the Figure \ref{fig:small_img_perf}. From our statistic data, the total time consumed by one device to run on itself is slightly fluctuated around $5400ms$ between multiple measurements, but if one more device join the network the time consuming is decreased to $3500ms$ which is 35\% faster. When more devices (3 or 4) participated, performance will continuously increase although their finishing time is largely varied. Especially 4 devices will collaboratively execute twice as fast as one device, or 50\% faster in all of our measurements.
@@ -635,11 +636,10 @@ Basically the variability and fluctuation of energy consumption will reflect the
 	%\label{fig:small_img_energy}
 %\end{figure}
 
-\subsubsection{Internet Remote Access} 
+\subsubsection{Internet Access} 
 Theoretically, remote accessibility won't help reducing the amount of bytes downloading, but the speed is guaranteed to be ameliorative since the downloading process is scattered over a number of devices, therefore energy will be consumed less. 
 
 \paragraph{Design}
-
 To apply APIs for this application, from the caller we dispatch job requests, which contains information of job with resources are URL, number of parts and index, to the peers having \texttt{IRS[network]} at \texttt{high} or \texttt{low}. At each peer, when request is received, it executes job to load URL to achieve page in HTML code. Then it will parse the HTML to detect resource links including multimedia resources (images, audio, videos), CSS, and JS. Depend on the number of parts and index, it narrows down the amount of resources and attempt downloading and put into a ZIP file before throw back to the caller.
 
 According to our system architecture, the caller needs to prepare a placeholder to hold every incoming results. For this test case, the placeholder is designated as a sub folder in the \texttt{Download} folder. When result comes as a ZIP file, contents will be extracted and filled into the placeholder folder. The final HTML file will contain all the modified resource links which locate at the same folder. Finally, the local HTML file can be open by Android Web browser component using a local web server, for instance TinyHTTPd \cite{tinyhttpd}.
@@ -696,6 +696,8 @@ By integrating our system with either RetroSkeleton \cite{retro-skel} or Rio \ci
 
 \section{Related Work}
 \label{sec:related}
+The work presented here is related to other complementary efforts that optimize mobile applications via remote executions including computation offloading and peer to peer networking.
+
 These days, there are several similar approaches facilitating peer-to-peer wireless connection and multiple devices collaboration. 
 
 Alljoyn Framework \cite{alljoyn} is an open source software framework making transparent of complexity of discover and communication to the developers. Providing interoperability functionality without any transport layer, Alljoyn make it easy to integrate and initiate. However since they tried to address multiple platforms: Android, iOS, Linux, Windows and even the other lightweight real-time operating systems, their package became huge and APIs is complicated to use. 
