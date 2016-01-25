@@ -49,7 +49,7 @@
   tabsize=2,
   emphstyle={\bf},
   commentstyle=\it,
-  stringstyle=\scriptsize\ttfamily,
+  stringstyle=\mdseries\ttfamily,
   showspaces=false,
   keywordstyle=\bfseries,
   morekeywords={then,end,String, Class, Object},
@@ -168,7 +168,7 @@ Our approach uses features from mainstream middleware mechanisms for distributed
 %other name?
 \section{Proposed Approach: \emph{N-DEX}}
 \label{sec:approach}
-In this section, we present BLAH BLAH BLAH, a distributed mobile execution model to expand resource-limited mobile devices. Then, Section \ref{sec:eval} presents the evaluation results of applying our approach to three case studies.
+In this section, we present our approach, a distributed mobile execution model that can expand the resource capacities of mobile devices. Then, Section \ref{sec:eval} presents the experimental results of applying our approach to three case studies.
 
 \begin{figure}
 	\centering
@@ -183,14 +183,12 @@ In this section, we present BLAH BLAH BLAH, a distributed mobile execution model
 \subsection{Approach Overview}
 %need a general description
 %need to edit more
-To achieve our goals---BLAH BLAH---, our system design choice is hiding the complexity of implementation details and open to the developers the capability of customization. Figure \ref{fig:architecture} describes the internal architecture of a typical application using our programming model. Our system comprises of two main components: (1) \emph{Network Management} (\emph{WNB}) manages a connection between mobile devices by, socket management, and connection establishment. For application programmers, the \texttt{WiFiBroadcaster} interface of \emph{WNB} provides simple interfaces to establish a connection; (2) \emph{Execution Handler} is in charge of selecting available peers and distributing the job to other peers. Specifically, the \texttt{JobDispatcher} which is the submodule of \texttt{JobHandler} dispatches a job and \texttt{JobExecutor} executes a job on each mobile device. Then, \texttt{JobHandler} merges the scattered incoming results into the final placeholder and relay information messages to the main application. In the following discussion, we present our system architecture.
+To achieve our goals---easy usage BLAH BLAH, , our system design choice is hiding the complexity of implementation details and open to the developers the capability of customization. Figure \ref{fig:architecture} describes the internal architecture of a typical application using our programming model. Our system comprises of two main components: (1) \emph{Network Management} (\emph{WNB}) manages a connection between mobile devices by, socket management, and connection establishment. For application programmers, the \texttt{WiFiBroadcaster} interface of \emph{WNB} provides simple interfaces to establish a connection; (2) \emph{Execution Handler} is in charge of selecting available peers and distributing the job to other peers. Specifically, the \texttt{JobDispatcher} which is the submodule of \texttt{JobHandler} dispatches a job and \texttt{JobExecutor} executes a job on each mobile device. Then, \texttt{JobHandler} merges the scattered incoming results into the final placeholder and relay information messages to the main application. In the following discussion, we present our system architecture.
 
 \subsubsection{WiFi Network Manager}
-To easily establish multiple connections between mobile devices over the WiFi network, we utilized the WiFi Direct technology, the new feature available from Android APIs 4.0. We developed the \texttt{WiFiDirectAdapter} sub module inside the \texttt{WNB} to wrap up the complexity of Wi-Fi Direct implementation. Holding an instance of \texttt{WifiP2pManager}, \texttt{WiFiDirectAdapter} maintains connectivity over peer-to-peer network, discover available peers and setup the connections. As aforementioned in previous section, to leverage cloud offloading when Wi-Fi access point (AP) is available, we implemented \texttt{OffloadEngine} module to handle connection with our cloud-based offloading server \cite{kwon+:mobilesoft15} to offload the jobs to available server instead of looking for the other devices. \texttt{OffloadEngine} will make transparent of the offload server and consider it as a typical device.
+To establish connections between nearby mobile devices over the WiFi network, we utilized the WiFi Direct technology, the new feature available from Android APIs 4.0. In particular, \texttt{WiFiDirectAdapter} of \texttt{WNB} hides the complexity of Wi-Fi Direct implementation. Holding an instance of \texttt{WifiP2pManager}, \texttt{WiFiDirectAdapter} discovers available peers, sets up a connection, and keeps track of the connection. As aforementioned in the previous section, to leverage computational offloading when a WiFi access point (AP) is available, the \texttt{OffloadEngine} module initiates a connection with our cloud-based offloading server \cite{kwon+:mobilesoft2015}, thus executing the job at a powerful remote server instead of looking for nearby devices. By providing transparent operations between the offload server and nearby mobile devices, our approach separates a job implementation from distributed execution models.
 
-When the app starts up, \texttt{WNB} calls \texttt{discoverPeers()} to simultaneously search for available offloading server registered in its configuration file, as well as spread acknowledgments to inform its availability to the other peers. 
-
-If any of offloading servers or devices receives such message, its \texttt{WNB} module will collect information from the new caller and update the list of devices, then send back their information in JSON object \ref{ss_dfp} to the caller. When all the devices are updated with their new device list, the network will be reformed (See figure \ref{fig:forming})
+When an application starts, \texttt{WNB} calls \texttt{discoverPeers()} to search available offloading servers registered in its configuration file, as well as spread acknowledgments to inform its availability to the other peers. If any offloading server or nearby devices receive a discovery message, the \texttt{WNB} module updates the available device list with the information about the new caller, and then sends their information back to the caller in a JSON object \ref{ss_dfp}. When all the devices are updated with the available device list, the network is organized as described in Figure \ref{fig:forming}.
 
 \begin{figure}
 	\centering
@@ -211,17 +209,16 @@ Both \texttt{ClientSocketHandler} and \texttt{ServerSocket Handler} are constitu
 \texttt{DataParser} is a loosely coupled interface of the Job component facilitating adaptation with data heterogeneity. It helps determine mechanisms for: (1) serialization/deserialization object into binary format which is compatible for TCP transmission, (2) task partitioning, and (3) placeholder initialization and concatenation. To make the data type comprehensive to system in terms of reading, parsing or memory allocating, developer needs to supply instructions by instantiating an implementation of Data Parser for that type. 
 
 \subsection{Programming Model} 
-Our system has a simple programming model that enables the programmer can easily write remote functionality. First, as described in \ref{code:job_def}, we first provide a conventional interface that should be implemented by the programmer to specify what kinds of functionality should be executed remotely. Then, the implementation of \texttt{Job} is sent to a remote server or nearby devices along with data.
+Our system has a simple programming model that enables the programmer can easily write remote functionality. First, as described in \ref{code:job_def}, we first provide an abstract class that should be extended by the programmer to specify which functionality should be executed remotely. Then, the \texttt{Job} class file is sent to a remote server or nearby mobile devices along with data.
 
 To support dynamic class loading in Dalvik VM, we provide the \texttt{DexCreator} tool that compiles the \texttt{Job} Java file into a Dex package. The Dex package and sliced resources are packed as a \texttt{JobData} object by \texttt{JobDispatcher} and then dispatched to the available peers. Once a peer receives a \texttt{JobData} object, it first checks the checksum field to confirm the consistency, and then deserializes the object into \texttt{Job} and resources for the execution.
-
 
 \begin{figure}
 \noindent \shadowbox{%
 \begin{minipage}{249pt}
 	\begin{lstlisting}
-	public class Job {
-		public Object exec(Object param) { ... } }
+	public abstract class Job {
+	  public abstract Object exec(Object param); }
 	\end{lstlisting}	
 \end{minipage}}	
 \noindent \shadowbox{%
@@ -258,7 +255,7 @@ The code snippet in Listing \ref{code:job_def} shows the main functionality of t
 In our initial prototype implementation, we provide three default parsers for bitmap images, texts, and GPS, respectively. 
 
 \subsection{Runtime System} \label{scheduling}
-In peer-to-peer network supported by our APIs, the server will distribute jobs to peers bases on investigating their availability by \texttt{DecisionMaker} (Figure \ref{fig:forming}). At the early stage before the transmission, the \texttt{DecisionMaker} of the calling device sends inquiring request for status (\texttt{IRS}) to some of selected peers in the network. If one receives this IRS request, its \texttt{DecisionMaker} will estimate its capability of response using the measurements of CPU, memory and battery usage at that time. 
+Once a peer-to-peer network is constructed by our system, each peer participating in the network can distribute jobs to other peers. Specifically, before making a remote job execution, \texttt{DecisionMaker} determines available peers in accordance with the level of available resources by inquiring peers' status via a (\texttt{IRS}) message. Once one receives the IRS request, its \texttt{DecisionMaker} immediately responds to the request with the capability information of CPU, memory and battery usage at that time depicted in Figure \ref{fig:forming}.
 
 %\begin{figure}
 %\centerline {
@@ -311,7 +308,7 @@ The algorithm \ref{alg:select_peers} describes detailed the three above steps.
 
 \begin{algorithm}
 
-\caption{Select Available Peers Algorithm}
+\caption{Selecting available peers}
 \label{alg:select_peers}
 \begin{algorithmic}[1] 
 \begin{scriptsize}
@@ -387,7 +384,7 @@ M_{i} = M\frac{RL_{i}}{\sum_{j = \overline{1,n}}{RL_{j}}}
 Where $M$ is total size of data in bytes. This below algorithm \ref{alg:assign_job} will represent the procedure that \texttt{DecisionMaker} judge the peer capability to assign the appropriate job. Where $M_{i}$ is quantity of job in binary length, $firstOffset$ and $lastOffset$ indicate the location of the data trunk in the whole.
 
 \begin{algorithm}
-\caption{Assign Job Algorithm}
+\caption{Assigning a job}
 \label{alg:assign_job}
 \begin{algorithmic}[1]
 \begin{scriptsize}
