@@ -155,20 +155,19 @@ The rest of this paper is structured as follows. Section \ref{sec:background} in
  
 \section{Technical Background}
 \label{sec:background}
-In this section, we present the major technologies we used in this paper. The major technologies used in this work computation offloading, machine-to-machine communication, remote execution, and middleware. We describe them in turn next.
+In this section, we present the major technologies we used in this paper. The major technologies used in this work computation offloading, remote execution, and middleware. We describe them in turn next.
 
 \subsection{Computational Offloading}   
 Computation offloading has become a popular optimization technique for mobile applications \cite{maui,chun+:eurosys11,kwon+:icdcs12,wen2012energy}. It leverages the resources of cloud-based remote servers to execute portions of a mobile application's functionality. By executing some of the application's functionality in the cloud, offloading reduces the amount of energy consumed by the mobile device, thus saving its battery power. An additional benefit of computation offloading is improved performance efficiency, as cloud servers have hardware resource more powerful that those available on mobile devices. This computation offloading technique is used as one of the distributed execution model in this paper.
-
-\subsection{Machine-to-Machine Communication}
 
 \subsection{Remote Execution and Middleware}
 Our approach uses features from mainstream middleware mechanisms for distributed execution as building blocks. Middleware systmes provide programming and runtime support to coordinates the execution of multiple remote processes. By eliminating the need for low-level network programming (e.g., managing sockets, marshaling/unmarshaling data, keeping track of processes) middleware systems offer convenient building blocks for constructing distributed systems. In our prior work \cite{kwon+:mobicase14-middleware}, we introduced a novel middleware architecture that optimizes performance and energy consumption by adapting various facets of middleware functionality dynamically in response to fluctuations in network conditions because network communication incurs high energy costs in mobile applications. The runtime system developed in this paper is derived from our prior middleware design.
 
 %other name?
-\section{Proposed Approach: \emph{N-DIST}}
+\section{Our Approach}
 \label{sec:approach}
-In this section, we present our approach, a distributed mobile execution model that can expand the resource capacities of mobile devices. Then, Section \ref{sec:eval} presents the experimental results of applying our approach to three case studies.
+In this section, we present our approach, a distributed mobile execution model that can expand the resource capacities of mobile devices. We start by giving an overview of the approach and then describe its major parts in turn.
+ %Then, Section \ref{sec:eval} presents the experimental results of applying our approach to three case studies.
 
 \begin{figure}
 	\centering
@@ -181,9 +180,7 @@ In this section, we present our approach, a distributed mobile execution model t
 
 
 \subsection{Approach Overview}
-%need a general description
-%need to edit more
-To achieve our goals---easy usage BLAH BLAH, , our system design choice is hiding the complexity of implementation details and open to the developers the capability of customization. Figure \ref{fig:architecture} describes the internal architecture of a typical application using our programming model. Our system comprises of two main components: (1) \emph{Wi-Fi Network Manager} (\emph{WNM}) manages connections between device to device, device to offload server, data transmission via sockets, connection discovery and establishment. For application programmers, the \texttt{WiFiNetworkManager} interface provides a simple API interface to easily form a closed range distributed network; (2) \emph{Execution Handler} provides abstract functionality for job definition, execution and distribution. Equipped with \texttt{DecisionMaker} sub module, \texttt{Execution Handler} can distribute jobs with appropriate amount data to the corresponding device to bring the highest optimization in terms of performance and energy consumption. In the next following sub sections, we will discuss into the details of the system architecture.
+Figure \ref{fig:architecture} shows the overall system architecture of the approach, which consists of two parts: (1) \emph{Wi-Fi Network Manager} (\emph{WNM}) manages connections between device to device, device to offload server, data transmission via sockets, connection discovery and establishment. Our design choice is hiding the complexity of implementation details and open to the developers the capability of customization. Thus, we provide a simple programming model. In particular, for application programmers, the \texttt{WiFiNetworkManager} interface provides a simple API interface to easily form a closed range distributed network; (2) \emph{Execution Handler} provides abstract functionality for job definition, execution and distribution. Equipped with \texttt{DecisionMaker} sub module, \texttt{Execution Handler} can distribute jobs with appropriate amount data to the corresponding device to bring the highest optimization in terms of performance and energy consumption. In the next following sub sections, we will discuss into the details of the system architecture.
 
 \subsubsection{WiFi Network Manager}
 To establish connections between nearby mobile devices over the WiFi network, we utilized the WiFi Direct technology, the new feature available from Android APIs 4.0. In particular, \texttt{WiFiDirectController} of \texttt{WNM} hides the complexity of Wi-Fi Direct implementation. Holding an instance of \texttt{WifiP2pManager}, \texttt{WiFiDirectController} discovers available peers, establishes connections, and keeps track of the connections. As aforementioned in the previous section, to leverage computational offloading when a WiFi access point (AP) is available, the \texttt{OffloadEngine} module initiates a connection with our cloud-based offloading server \cite{kwon+:mobilesoft2015}, thus executing the job at a powerful remote server instead of looking for nearby devices. By providing transparent operations between the offload server and nearby mobile devices, our approach separates a job implementation from distributed execution models.
@@ -722,11 +719,11 @@ Since the modern mobile devices (phones and tablets) are featured with multiple 
 
 In terms of improving energy consumption, offloading-featured systems like MAUI \cite{maui}, COMET \cite{comet}, \cite{cloud-offload}, \cite{mobile-cloud-middleware} or \cite{fuzzy-engine} address the heavy computations by offloading source code or execution module to server following multiple constraints and policies to release workload and energy consumed at client which is either mobile device or low computation capacity computer. 
 
-\section{Future Work and Conclusions}
+\section{Conclusions}
 \label{sec:conc}
-Our future research direction will 
-
-In this paper, we have presented XXXXX, an extended distribution framework for resource-constraint mobile devices. 
+%Our future research direction will 
+%
+In this paper, we have presented an extended distribution framework to increase quality of service in resources-limited execution environments. Our approach improves the energy efficiency and performance of mobile applications with a simple programming model and a novel runtime system by leveraging either cloud infrastructures or nearby mobile devices. In addition, our approach can bring a new hardware feature to the existing mobile devices. We have evaluated our approach by reducing the execution time and the energy consumption of case study applications as well as enabling a mobile device to utilize a GPS sensor from nearby mobile devices. These results indicate that our approach represents a promising direction in developing complex mobile applications for resource-limited mobile devices.
 
 %\section*{Acknowledgment}
 %This research is supported by Utah State University through the RC Grant.
