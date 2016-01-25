@@ -6,6 +6,9 @@ set pointsize 0.5
 set grid nopolar
 unset key
 set border 2
+set xtics font "Verdana,13"
+set ytics font "Verdana,12"
+set ylabel "Energy consumption (uAh)" 
 set xtics nomirror
 set ytics nomirror
 set yrange [250:450]
@@ -15,7 +18,3 @@ plot 'D:\android\JobShare\paper\data\gnuplot\data_small_img_energy.dat' using (1
 '' using (3):3 lc rgb "green", \
 '' using (4):4 lc rgb "grey"
 
-
-set style data histograms
-set style histogram clustered
-plot 'D:/android/JobShare/paper/data/gnuplot/energy_imgproc.dat' using 2:xtic(1) lt rgb "#cccccc" notitle
