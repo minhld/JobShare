@@ -166,7 +166,7 @@ Computation offloading has become a popular optimization technique for mobile ap
 Our approach uses features from mainstream middleware mechanisms for distributed execution as building blocks. Middleware systmes provide programming and runtime support to coordinates the execution of multiple remote processes. By eliminating the need for low-level network programming (e.g., managing sockets, marshaling/unmarshaling data, keeping track of processes) middleware systems offer convenient building blocks for constructing distributed systems. In our prior work \cite{kwon+:mobicase14-middleware}, we introduced a novel middleware architecture that optimizes performance and energy consumption by adapting various facets of middleware functionality dynamically in response to fluctuations in network conditions because network communication incurs high energy costs in mobile applications. The runtime system developed in this paper is derived from our prior middleware design.
 
 %other name?
-\section{Proposed Approach: \emph{N-DEX}}
+\section{Proposed Approach: \emph{N-DIST}}
 \label{sec:approach}
 In this section, we present our approach, a distributed mobile execution model that can expand the resource capacities of mobile devices. Then, Section \ref{sec:eval} presents the experimental results of applying our approach to three case studies.
 
@@ -214,14 +214,14 @@ To support dynamic class loading in Dalvik VM, we provide the \texttt{DexCreator
 
 \begin{figure}
 \noindent \shadowbox{%
-\begin{minipage}{249pt}
+\begin{minipage}{246pt}
 	\begin{lstlisting}
 	public abstract class Job {
 	  public abstract Object exec(Object param); }
 	\end{lstlisting}	
 \end{minipage}}	
 \noindent \shadowbox{%
-\begin{minipage}{245pt}
+\begin{minipage}{242pt}
   \begin{lstlisting}
 public interface DataParser {  
   public Class getDataClass();
@@ -270,7 +270,7 @@ A mobile device at any time maintains a certain number of connection with the ot
 
 \begin{figure}
 \noindent \shadowbox{
-\begin{minipage}{.92\linewidth}	
+\begin{minipage}{240pt}
 \begin{lstlisting}
 JSON : DeviceInfo {
   "device": "LG-Volt", "RL": 24.83,
@@ -281,7 +281,7 @@ JSON : DeviceInfo {
 \end{lstlisting}			
 \end{minipage}}	\\
 \noindent \shadowbox{%
-\begin{minipage}{.93\linewidth}	
+\begin{minipage}{243pt}	
 \begin{lstlisting}
 JSON : Condition {"RL": "max", "gps": "on"}
 \end{lstlisting}\end{minipage}}	
@@ -555,7 +555,7 @@ To measure the performance of the system equipped with our APIs, we decorated a 
 \begin{itemize}
 	\item \textbf{Image Processing} we will initiate the P2P network test to perform blurring a large scale image which is unable to process at any of our devices. Particularly, to process an image with size $4000 \times 4000$ and 4 bytes to express each pixel color, application must spare the amount of memory equivalent to 64MB which is way too much for a device, which occasionally returns out of memory exception.
 	\item \textbf{Internet Remote Access} brings the Internet access capability to a device having no Internet connection or limited bandwidth by relying on other Internet-featured peers.
-	\item \textbf{GPS Sharing} establishing a GPS connection is proof of high energy consuming. It would be impossible for a device with low battery to keep update with GPS frequently. We will base on Job2P to build a simple system so that one device can benefit GPS locations from the healthier devices.
+	\item \textbf{GPS Sharing} establishing a GPS connection is proof of high energy consuming. It would be impossible for a device with low battery to keep update with GPS frequently. We will base on N-DIST to build a simple system so that one device can benefit GPS locations from the healthier devices.
 \end{itemize}
 
 \subsection{Case Study Implementations}
@@ -564,7 +564,7 @@ To measure the performance of the system equipped with our APIs, we decorated a 
 We applied blur effect, one of the energy consuming process on images. We run the test repeatedly on two image inputs, the first image has size $2500 \times 1405$ and the second size is $4326 \times 2856$. For the second image, with 4 bytes allocated for each pixel, device must allocate around $50MB$ of heap to open and hold another $50MB$ for the result, thus leading to app crash all the time. The problem will only be solved by other collaborative peers to solve overload in terms of memory and energy consumption.
 
 \paragraph{Design}
-The most important part when applying APIs for image processing is defining the \texttt{BitmapDataParser} (See code snippet \ref{data_parser}) with a divide strategy in vertical cut. For an input image, the \texttt{firstOffset} and \texttt{lastOffset} will decide the first and last offsets of the vertical cut correspondingly throughout the width, from the top to the bottom edges. The algorithm of the vertical cut is described in the code snippet (\ref{code:get_single_part}). Regarding the placeholder, we override the \texttt{getJsonMetadata()} method to return a simple JSON string like below:
+The most important part when applying APIs for image processing is defining the \texttt{BitmapDataParser} (see code snippet (\ref{code:job_def})) with a divide strategy in vertical cut. For an input image, the \texttt{firstOffset} and \texttt{lastOffset} will decide the first and last offsets of the vertical cut correspondingly throughout the width, from the top to the bottom edges. The algorithm of the vertical cut is described in the code snippet (\ref{code:get_single_part}). Regarding the placeholder, we override the \texttt{getJsonMetadata()} method to return a simple JSON string like below:
 
 %\noindent \shadowbox{%
 %\begin{minipage}{245pt}
