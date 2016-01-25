@@ -689,18 +689,7 @@ We performed 3 GPS Share test cases, 2 for remote GPS requests and 1 for local G
 	\label{fig:gps_perf}
 \end{figure*}
 
-Extracted from the above tests, the Figure \ref{fig:gps_total_energy} describes the distribution of energy consumptions among the 3 case tests. 
-
-%\begin{figure}
-	%\hspace*{0cm}
-	%\resizebox{0.5\textwidth}{!}{
-		%\includegraphics{data/gps_energy_full.pdf}
-	%}
-	%\caption{Energy consumption of GPS Share between remote and local executions}
-	%\label{fig:gps_total_energy}
-%\end{figure}
-
-By applying interpolation to find trend lines for these energy distributions, we got $y = 0.0528388 \times x + 7.31948$ formula for test 1, $y = 0.0547221 \times x + 7.42138$ for test 2 and $y = 0.0575331 \times x - 12.9403$ for test 3. The trend line 3 has the biggest slope, or at the same amount of time it consumed more energy than the first two cases. As we might see, the difference between the slopes of line 3 and line 1, 2 are very slim, however due to our later tests on the weak caller (low battery), the difference will highly increase. 
+Extracted from the above tests, the Figure \ref{fig:gps_perf} describes the distribution of energy consumptions among the 3 case tests. By applying interpolation to find trend lines for these energy distributions, we got $y = 0.0528388 \times x + 7.31948$ formula for test 1, $y = 0.0547221 \times x + 7.42138$ for test 2 and $y = 0.0575331 \times x - 12.9403$ for test 3. The trend line 3 has the biggest slope, or at the same amount of time it consumed more energy than the first two cases. As we might see, the difference between the slopes of line 3 and line 1, 2 are very slim, however due to our later tests on the weak caller (low battery), the difference will highly increase. 
 
 \paragraph{Applications}
 By integrating our system with either RetroSkeleton \cite{retro-skel} or Rio \cite{rio}, we can provide remote or local GPS location data without having to modify the current installed applications. Those systems provide interference methods to capture requests for system resources and instead inject their customized responses. 
