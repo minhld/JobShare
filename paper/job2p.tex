@@ -180,12 +180,11 @@ In this section, we present our approach, a distributed mobile execution model t
 
 
 \subsection{Approach Overview}
-Figure \ref{fig:architecture} shows the overall system architecture of the approach, which consists of two parts: (1) \emph{Wi-Fi Network Manager} (\emph{WNM}) manages connections between device to device, device to offload server, data transmission via sockets, connection discovery and establishment. Our design choice is hiding the complexity of implementation details and open to the developers the capability of customization. Thus, we provide a simple programming model. In particular, for application programmers, the \texttt{WiFiNetworkManager} interface provides a simple API interface to easily form a closed range distributed network; (2) \emph{Execution Handler} provides abstract functionality for job definition, execution and distribution. Equipped with \texttt{DecisionMaker} sub module, \texttt{Execution Handler} can distribute jobs with appropriate amount data to the corresponding device to bring the highest optimization in terms of performance and energy consumption. In the next following sub sections, we will discuss into the details of the system architecture.
+Figure \ref{fig:architecture} shows the overall system architecture, which mainly comprises two parts: (1) \emph{WiFi Network Manager} (\emph{WNM}) discovers available mobile devices, checks the availabilities of the registered cloud-based remote servers, and then establishes a network connection for the data transmission; (2) \emph{Execution Handler} provides abstract functionality for job definition, execution and distribution. For the best execution result, \emph{Execution Handler} keeps track of current execution environments such as network conditions (e.g., delay, bandwidth, etc.) and system status (e.g., resource usage including CPU, memory, etc.). In addition, our important design choice is hiding the complexity of implementation details for application programmers. Thus, we offer a simple programming model that the programmer can easily import or extend. In the following discussion, we will discuss into the details of the system architecture.
 
+%It discovers available peers, establishes connections, and keeps track of the connections. 
 \subsubsection{WiFi Network Manager}
-To establish connections between nearby mobile devices over the WiFi network, we utilized the WiFi Direct technology, the new feature available from Android APIs 4.0. In particular, \texttt{WiFiDirectController} of \texttt{WNM} hides the complexity of Wi-Fi Direct implementation. Holding an instance of \texttt{WifiP2pManager}, \texttt{WiFiDirectController} discovers available peers, establishes connections, and keeps track of the connections. As aforementioned in the previous section, to leverage computational offloading when a WiFi access point (AP) is available, the \texttt{OffloadEngine} module initiates a connection with our cloud-based offloading server \cite{kwon+:mobilesoft2015}, thus executing the job at a powerful remote server instead of looking for nearby devices. By providing transparent operations between the offload server and nearby mobile devices, our approach separates a job implementation from distributed execution models.
-
-When an application starts, \texttt{WNM} calls \texttt{discoverPeers()} to search for available offloading servers registered in its configuration file, as well as spread acknowledgments to inform its availability to the other peers. If any offloading server or nearby devices receive discovery message, its \texttt{WNM} module updates the new caller to its available device list, then simultaneously sends their information back to the caller in a JSON object \ref{ss_dfp}, the same reactions will occur with the other peers. When all the devices are updated with the available device list, the network is organized as described in Figure \ref{fig:forming}.
+To establish a network connection between nearby mobile devices over the WiFi network, we utilized the WiFi Direct technology, the new feature available from Android APIs 4.0. In particular, \texttt{WiFiDirectController} of \texttt{WNM} hides the complex WiFi Direct implementation details. As aforementioned in the previous section, to leverage computational offloading, the \texttt{OffloadEngine} module initiates a connection with our cloud-based offloading server when a WiFi access point (AP) is available \cite{kwon+:mobilesoft2015}, thus executing the job at a powerful remote server instead of looking for nearby devices. By providing transparent operations between the cloud-based server and nearby mobile devices, our approach separates a business logic from distributed execution models.
 
 \begin{figure}
 	\centering
@@ -196,8 +195,9 @@ When an application starts, \texttt{WNM} calls \texttt{discoverPeers()} to searc
 	\label{fig:forming}
 \end{figure}
 
+When an application starts, \texttt{WNM} calls \texttt{discoverPeers()} to search available offloading servers registered in its configuration file, as well as spread acknowledgments to inform its availability to nearby mobile devices. If any offloading server or nearby devices receive discovery message, its \texttt{WNM} module updates the new caller to its available device list, then simultaneously sends their information back to the caller in a JSON object \ref{ss_dfp}. Once all the devices update the available device list, the network is organized as described in Figure \ref{fig:forming}. We provide the method \texttt{connectToADevice()} to make a connection with the best available mobile device. After establishing the connection, the mobile device starts to passively listen to job requests.
 
-Once each mobile device receives all the required information from other mobile devices, they can be connected. We provide the method \texttt{connectToADevice()} holding \texttt{WiFiDeviceInfo} as one input parameter to invoke the handshake with another device. Once connection established, the device actively invoked will be assigned as client, which utilizes the \texttt{ClientSocketHandler} to listen to a client socket. The device passively received the invocation will be promoted as server and use the \texttt{ServerSocketHandler} to initiate server socket with an random port. If the invoked device is already a server, it will maintain its current state and continuously accept the new client. Moreover, since a device can either be a server to some peers, or serve as client to the others, this method is able to build up a close range peer-to-peer network.
+%invocation will be promoted as server and use the \texttt{ServerSocketHandler} to initiate server socket with an random port. If the invoked device is already a server, it will maintain its current state and continuously accept the new client. Moreover, since a device can either be a server to some peers, or serve as client to the others, this method is able to build up a close range peer-to-peer network.
 
 Both \texttt{ClientSocketHandler} and \texttt{ServerSocket Handler} are constituted by a sub module named \texttt{Data TransmitManager}, which periodically observes input and output streams of parent socket (Can be either server or client socket) to verify checksum, check data consistency, send/receive data from the socket. Inheriting the \texttt{TransmitManager} abstract class, developer can instantiate their own version of \texttt{DataTransmitManager} to customize the data consistency checker or improve security. 
 
@@ -205,9 +205,7 @@ Both \texttt{ClientSocketHandler} and \texttt{ServerSocket Handler} are constitu
 \emph{Execution Handler} handles job definition, execution and distribution, where \texttt{Job} (See \ref{prog_model}) is executable unit defined by developer at runtime. By analyzing information of other mobile device list, \texttt{DecisionMaker} module will select a number of highest responsibile devices and decide jobs with appropriate amount of conjunctional data, then by \texttt{JobDispatcher}, dispatch them using to those devices. On each remote device or offload server, \texttt{Job} and its partial data will be deserialized and executed by \texttt{JobExecutor} in synchronous mode. After that, the results will be return back to the caller by \texttt{JobClientHandler} and \text{JobServerHandler}. To facilitate adaptation with data heterogeneity, we define \texttt{DataParser} as a loosely coupled interface of \texttt{Job} to support determining mechanisms for: (1) serialization/deserialization object into binary format which is compatible for TCP transmission, (2) task partitioning, and (3) placeholder initialization and concatenation. To make the data type comprehensive to system in terms of reading, parsing or memory allocating, developer needs to supply instructions by instantiating an implementation of Data Parser for that type. 
 
 \subsection{Programming Model} \label{prog_model}
-Our system has a simple programming model that enables the programmer can easily write remote functionality. Firstly, as described in code snippet (\ref{code:job_def}), we provide \texttt{Job} abstract class that should be extended by the programmer to specify which functionality should be executed remotely.
-
-To support dynamic class loading in Dalvik VM \cite{fred:classloader}, we provide the \texttt{DexCreator} commandline tool that compiles the \texttt{Job} Java file into a Dex package. The Dex package and sliced resources are packed as a \texttt{JobData} object by \texttt{JobDispatcher} and then dispatched to the available peers. Once a peer receives a \texttt{JobData} object, it first checks the checksum field to confirm the consistency, and then deserializes the object into \texttt{Job} and resources for the execution.
+Our system has a simple programming model that enables the programmer can easily write remote functionality. As described in Listing \ref{code:job_def}, we provide the \texttt{Job} abstract class that should be extended by the programmer to specify which functionality should be executed remotely. Also, to support dynamic class loading in Dalvik VM \cite{fred:classloader}, we provide the \texttt{DexCreator} commandline tool that compiles the \texttt{Job} Java class file into a Dex package. The Dex package and sliced resources are packed as a \texttt{JobData} object by \texttt{JobDispatcher} and then dispatched to the available mobile devices or the cloud-based server. Next, the recipient of the \texttt{JobData} checks a checksum field to confirm the consistency, and then deserializes the object into \texttt{Job} and resources for the execution.
 
 \begin{figure}
 \noindent \shadowbox{%
@@ -239,13 +237,13 @@ public interface DataParser {
 
 
 \subsubsection{Data Parser} \label{data_parser}
-The code snippet in Listing \ref{code:job_def} shows the main functionality of the \texttt{DataParser} interface that user needs to implement. The \texttt{DataParser} interfaces have the following abstract methods:
+The code snippet in Listing \ref{code:job_def} shows the important methods of \texttt{DataParser} that user needs to implement. The \texttt{DataParser} interface has the following methods:
 \begin{itemize}
 	\item \texttt{getDataClass()} return data type.
 	\item \texttt{parseObjectToBytes(object)} instructs system to serialize an object to binary array. In Android, not every object can be serialized, for instance Bitmap.  
-	\item \texttt{parseBytesToObject(byte[])} deserialize a binary array back to object.
-	\item \texttt{getSinglePart()} return a data slide bases on number of parts (\texttt{numOfParts}) and its \texttt{index}. Code snippet (\ref{code:get_single_part}) shows an example getting one slice from a bitmap by \texttt{index}. When app runs, \texttt{JobDispatcher} will use this method to partition the task into slices.
-	\item \texttt{copyPartToPlaceholder()} Once partial result is retrieved from a distant peer, this function will instruct application to merge it to the placeholder.
+	\item \texttt{parseBytesToObject(byte[])} deserializes a binary array back to object.
+	\item \texttt{getSinglePart()} returns a data slide bases on number of parts (\texttt{numOfParts}) and its \texttt{index}. Code snippet (\ref{code:get_single_part}) shows an example getting one slice from a bitmap by \texttt{index}. When app runs, \texttt{JobDispatcher} will use this method to partition the task into slices.
+	\item \texttt{copyPartToPlaceholder()} instructs application to merge it to the placeholder when a result is partially retrieved from a distant peer.
 \end{itemize}
 
 In our initial prototype implementation, we provide three default parsers for bitmap images, texts, and GPS, respectively. 
@@ -341,7 +339,7 @@ The algorithm \ref{alg:select_peers} describes detailed the three above steps.
 
 \end{algorithm}
 
-The algorithm \ref{alg:select_peers} explains how the caller select the suitable peers from its connection list. Where $P_{AV}$ stands for map of available peers and $P2pDevice$ is the device information list.\\
+The algorithm \ref{alg:select_peers} explains how the caller selects appropriate peers from its connection list. Specifically, $P_{AV}$ stands for map of available peers and $P2pDevice$ is the device information list.\\
 
 \subsubsection{Job quantitation for peers}\label{ss_jqfp}
 
@@ -525,6 +523,7 @@ jobHandler.dispatchJob(dataPath, jobPath);
 
 \section{Evaluation}
 \label{sec:eval}
+This section describes the micro benchmarks and case studies that evaluate the effectiveness of our approach. The experimental setup includes BLAH BLAH BLAH. Table \ref{table:devices} shows the device-specific values.
 
 \subsection{Micro Benchmark}
 We started the evaluation with micro benchmarking energy consumption of the system when mobile devices maintain connections in idle state, to figure out the cost of network maintenance overhead. Using Moosoon Power Monitor device \cite{moosoon} to replace battery and measure on one caller, we evaluated overhead bases on cumulation of energy consumption by time. The Figure (\ref{fig:microb_24}) shows the outcome of the caller measuring from 0 to 100 seconds when preserving connections with 1, 2 and 3 other peers. 
