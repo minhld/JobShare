@@ -1,4 +1,4 @@
-\documentclass[conference]{IEEEtran}
+\documentclass{sig-alternate}[10pt]
 
 % graphic declaration
 \usepackage{graphicx}
@@ -61,30 +61,13 @@
 
 \graphicspath{ {data/} }
 
-\ifCLASSINFOpdf
-  % \usepackage[pdftex]{graphicx}
-  % declare the path(s) where your graphic files are
-  % \graphicspath{{../pdf/}{../jpeg/}}
-  % and their extensions so you won't have to specify these with
-  % every instance of \includegraphics
-  % \DeclareGraphicsExtensions{.pdf,.jpeg,.png}
-\else
-  % or other class option (dvipsone, dvipdf, if not using dvips). graphicx
-  % will default to the driver specified in the system graphics.cfg if no
-  % driver is specified.
-  % \usepackage[dvips]{graphicx}
-  % declare the path(s) where your graphic files are
-  % \graphicspath{{../eps/}}
-  % and their extensions so you won't have to specify these with
-  % every instance of \includegraphics
-  % \DeclareGraphicsExtensions{.eps}
-\fi
-
-% correct bad hyphenation here
-\hyphenation{op-tical net-works semi-conduc-tor}
-
-
 \begin{document}
+
+\setcopyright{acmcopyright}
+\conferenceinfo{MOBILESoft '16}{May 16--17, 2016, Austin, TX, USA}
+\acmPrice{\$15.00}
+%\doi{}
+
 %
 % paper title
 % Titles are generally capitalized except for words such as a, an, and, as,
@@ -102,14 +85,17 @@
 % author names and affiliations
 % use a multiple column layout for up to three different
 % affiliations
-\author{\IEEEauthorblockN{Le Dinh Minh}
-\IEEEauthorblockA{Utah State University\\
-minh.le@aggiemail.usu.edu}
-\and
-\IEEEauthorblockN{Young-Woo Kwon}
-\IEEEauthorblockA{Utah State University\\
-young.kwon@usu.edu}}
-
+\numberofauthors{2}
+\author{
+\alignauthor Le Dinh Minh \\
+\affaddr{Department of Computer Science} \\
+\affaddr{Utah State University} \\
+\email{minh.le@aggiemail.usu.edu}
+\alignauthor Young-Woo Kwon \\
+\affaddr{Department of Computer Science} \\
+\affaddr{Utah State University} \\
+\email{young.kwon@usu.edu}
+}
 
 % make the title area
 \maketitle
@@ -118,7 +104,40 @@ young.kwon@usu.edu}}
 For the last decade, mobile devices have been significantly developed with powerful hardware facilities such as multicore CPUs, large and fast memory, fast network, high resolution displays, etc. As a result, mobile applications deliver increasingly complex functionality from the recent past. Furthermore, rapid growth in application functionality requires ever greater hardware capacities. Thus ensuring the quality of service in resources-limited execution environments remains a major challenge of mobile software development. To reduce execution time and save battery power, some functionality of mobile applications is often executed at a remote server. However, such an optimization mechanism (i.e., computational offloading) has only received much attention in the research literature due to difficult implementation, limited applicability, cost of the cloud, etc. In this paper, we present a novel distribution infrastructure that executes any functionality at a powerful remote server or nearby mobile devices using two distributed execution models---client/server and peer to peer. By means of a simple programming model, the programmer can easily adopt two distributed execution models in their applications. Our benchmarks and case studies demonstrate that the new distribution infrastructure can increase both performance and energy efficiency of mobile applications as well as introducing new feature (i.e., GPS, sensors) to the existing mobile devices.
 \end{abstract}
 
+\begin{CCSXML}
+<ccs2012>
+ <concept>
+  <concept_id>10010520.10010553.10010562</concept_id>
+  <concept_desc>Computer systems organization~Embedded systems</concept_desc>
+  <concept_significance>500</concept_significance>
+ </concept>
+ <concept>
+  <concept_id>10010520.10010575.10010755</concept_id>
+  <concept_desc>Computer systems organization~Redundancy</concept_desc>
+  <concept_significance>300</concept_significance>
+ </concept>
+ <concept>
+  <concept_id>10010520.10010553.10010554</concept_id>
+  <concept_desc>Computer systems organization~Robotics</concept_desc>
+  <concept_significance>100</concept_significance>
+ </concept>
+ <concept>
+  <concept_id>10003033.10003083.10003095</concept_id>
+  <concept_desc>Networks~Network reliability</concept_desc>
+  <concept_significance>100</concept_significance>
+ </concept>
+</ccs2012>  
+\end{CCSXML}
 
+\ccsdesc[500]{Computer systems organization~Embedded systems}
+\ccsdesc[300]{Computer systems organization~Redundancy}
+\ccsdesc{Computer systems organization~Robotics}
+\ccsdesc[100]{Networks~Network reliability}
+
+\terms{Design}
+
+\printccsdesc
+\keywords{Mobile Computing, Remote Execution, Offloading, Peer to Peer, Runtime System}
 % For peer review papers, you can put extra information on the cover
 % page as needed:
 % \ifCLASSOPTIONpeerreview
@@ -127,7 +146,7 @@ For the last decade, mobile devices have been significantly developed with power
 %
 % For peerreview papers, this IEEEtran command inserts a page break and
 % creates the second title. It will be ignored for other modes.
-\IEEEpeerreviewmaketitle
+%\IEEEpeerreviewmaketitle
 
 
 \section{Introduction}
@@ -526,7 +545,7 @@ jobHandler.dispatchJob(dataPath, jobPath);
 This section describes the micro benchmarks and case studies that evaluate the effectiveness of our approach. The experimental setup includes BLAH BLAH BLAH. Table \ref{table:devices} shows the device-specific values.
 
 \subsection{Micro Benchmark}
-We started the evaluation with micro benchmarking energy consumption of the system when mobile devices maintain connections in idle state, to figure out the cost of network maintenance overhead. Using Moosoon Power Monitor device \cite{moosoon} to replace battery and measure on one caller, we evaluated overhead bases on cumulation of energy consumption by time. The Figure (\ref{fig:microb_24}) shows the outcome of the caller measuring from 0 to 100 seconds when preserving connections with 1, 2 and 3 other peers. 
+We started the evaluation with micro benchmarking energy consumption of the system when mobile devices maintain connections in idle state, to figure out the cost of network maintenance overhead. Using Moosoon Power Monitor device \cite{moosoon} to replace battery and measure on one caller, we evaluated overhead bases on accumulation of energy consumption by time. The Figure (\ref{fig:microb_24}) shows the outcome of the caller measuring from 0 to 100 seconds when preserving connections with 1, 2 and 3 other peers. 
 
 \begin{figure}
 	\hspace*{-0.15cm}
@@ -558,7 +577,7 @@ To measure the performance of the system equipped with our APIs, we decorated a 
 \subsection{Case Study Implementations}
 
 \subsubsection{Image Processing}
-We applied blur effect, one of the energy consuming process on images. We run the test repeatedly on two image inputs, the first image has size $2500 \times 1405$ and the second size is $4326 \times 2856$. For the second image, with 4 bytes allocated for each pixel, device must allocate around $50MB$ of heap to open and hold another $50MB$ for the result, thus leading to app crash all the time. The problem will only be solved by other collaborative peers to solve overload in terms of memory and energy consumption.
+We applied blur effect, one of the energy consuming image processes. We run the test repeatedly on two image inputs, the first image has size $2500 \times 1405$ and the second size is $4326 \times 2856$. For the second image, with 4 bytes allocated for each pixel, device must allocate around $50MB$ of heap to open and hold another $50MB$ for the result, thus leading to app crash all the time. The problem will only be solved by other collaborative peers to solve overload in terms of memory and energy consumption.
 
 \paragraph{Design}
 The most important part when applying APIs for image processing is defining the \texttt{DataParser} (see code snippet (\ref{code:job_def})) for Bitmap with a divide strategy in vertical cut. For an input image, the \texttt{firstOffset} and \texttt{lastOffset} will decide the first and last offsets of the vertical cut correspondingly throughout the width, from the top to the bottom edges. The algorithm of the vertical cut is described in the code snippet (\ref{code:get_single_part}). Regarding the placeholder, we override the \texttt{getJsonMetadata()} method to return a simple JSON string like below:
@@ -620,7 +639,7 @@ To make any device in the network to be feasible for image processing, we reduce
 		\includegraphics[width=0.48\textwidth]{data/img_small_perf_full.pdf}
 		\includegraphics[width=0.45\textwidth]{data/img_small_energy.pdf}
 	%}
-	\caption{Performance and energy consumption from the image processing tests with normal size image in multiple clusters.}
+	\caption{Performance and energy consumption of the image processing tests with a normal image size.}
 	\label{fig:small_img_perf}
 \end{figure*}
 
