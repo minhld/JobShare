@@ -138,16 +138,6 @@ For the last decade, mobile devices have been significantly developed with power
 
 \printccsdesc
 \keywords{Mobile Computing, Remote Execution, Offloading, Peer to Peer, Runtime System}
-% For peer review papers, you can put extra information on the cover
-% page as needed:
-% \ifCLASSOPTIONpeerreview
-% \begin{center} \bfseries EDICS Category: 3-BBND \end{center}
-% \fi
-%
-% For peerreview papers, this IEEEtran command inserts a page break and
-% creates the second title. It will be ignored for other modes.
-%\IEEEpeerreviewmaketitle
-
 
 \section{Introduction}
 Mobile devices have been evolving at lightning pace with powerful hardware facilities such as multicore CPUs, large and fast memory, fast network and high resolution displays. Due to the significant development of mobile hardware, today's mobile applications are becoming more complex with a increasingly feature-rich nature. As a result, mobile devices often overtake the personal computer as a primary means of accessing computing resource. However, the resource demands (e.g., computation, memory, battery, etc.) of mobile applications often outstrip the hardware capacities of mobile devices. A particularly popular technique to extend limited mobile hardware is \emph{computational offloading}---executing CPU-intensive functionality at a powerful cloud-based server with the parameters and results transferred across a mobile network, thereby improving both performance and energy efficiency. 
@@ -183,8 +173,9 @@ Computation offloading has become a popular optimization technique for mobile ap
 Our approach uses features from mainstream middleware mechanisms for distributed execution as building blocks. Middleware systmes provide programming and runtime support to coordinates the execution of multiple remote processes. By eliminating the need for low-level network programming (e.g., managing sockets, marshaling/unmarshaling data, keeping track of processes) middleware systems offer convenient building blocks for constructing distributed systems. In our prior work \cite{kwon+:mobicase14-middleware}, we introduced a novel middleware architecture that optimizes performance and energy consumption by adapting various facets of middleware functionality dynamically in response to fluctuations in network conditions because network communication incurs high energy costs in mobile applications. The runtime system developed in this paper is derived from our prior middleware design.
 
 \subsection{WiFi Direct}
-The WiFi Direct technology has become available from Android 4.0 APIs.
-In this paper, our approach uses the WiFi direct technology \cite{wifi:p2p} to utilize nearby computing resources over the WiFi network, which makes it possible to communicate between mobile devices without any Internet connection or wireless access point. 
+The WiFi Direct \cite{alliance2010wi} is a new peer to peer standard built on top of the IEEE 802.11 to provide connections between WiFi devices without an Internet connection. Over a WiFi network, a WiFi device can discover any nearby WiFi devices without special configurations or setups. Once a connection is established, WiFi devices can communicate with each other as a client or an access point. WiFi Direct has been widely used to transfer content or share applications among mobile devices. Recently in Android, WiFi Direct has become available from Android 4.0 APIs. In this paper, our approach uses Android WiFi Direct \cite{wifi:p2p} to utilize nearby computing resources without any Internet connection or wireless access point. Even though the discovery operation of WiFi Direct is costly \cite{trifunovic2013slicing}, our approach is still efficient for heavy CPU-intensive executions or sharing hardware resources. 
+
+
 
 %other name?
 \section{Our Approach}
@@ -193,10 +184,8 @@ In this section, we present our approach, a distributed mobile execution model t
  %Then, Section \ref{sec:eval} presents the experimental results of applying our approach to three case studies.
 
 \begin{figure}
-	\centering
-	\resizebox{0.55\textwidth}{!}{
-		\includegraphics{data/jobShareArch.pdf}
-	}
+	\centering	
+		\includegraphics[width=.95\linewidth]{data/jobShareArch.pdf}	
 	\caption{System architecture}
 	\label{fig:architecture}
 \end{figure}
@@ -209,7 +198,13 @@ Figure \ref{fig:architecture} shows the overall system architecture, which main-
 \subsubsection{WiFi Network Manager}
 To establish a network connection between nearby mobile devices over the WiFi network, we utilize the WiFi Direct technology. In particular, \texttt{WiFiDirectController} of \texttt{WNM} hides the complex WiFi Direct implementation details. As aforementioned in the previous section, to leverage computational offloading, the \texttt{OffloadEngine} module initiates a connection with our cloud-based offloading server when a WiFi access point (AP) is available \cite{kwon+:mobilesoft2015}, thus executing the job at a powerful remote server instead of looking for nearby devices. By providing transparent operations between the cloud-based server and nearby mobile devices, our approach separates a business logic from distributed execution models.
 
-\begin{figure}
+When an application starts, \texttt{WNM} calls \texttt{discoverPeers()} to search for available offloading servers registered in its configuration file. It also spreads acknowledgments to inform its availability to nearby mobile devices. If any offloading server or nearby devices receive a discovery message, its \texttt{WNM} module updates the new caller to its available device list, then simultaneously sends their information back to the caller in a JSON object (see \ref{ss_dfp}). Once all the devices are updated with the available device list, the network is organized as described in Figure \ref{fig:forming}. We provide the method \texttt{connectToADevice()} to make a connection with the best available mobile device. After establishing the connection, the mobile device starts to passively listen to job requests.
+
+%invocation will be promoted as server and use the \texttt{ServerSocketHandler} to initiate server socket with an random port. If the invoked device is already a server, it will maintain its current state and continuously accept the new client. Moreover, since a device can either be a server to some peers, or serve as client to the others, this method is able to build up a close range peer-to-peer network.
+
+Both \texttt{ClientSocketHandler} and \texttt{ServerSocketHandler} are constituted by a sub module named \texttt{DataTransmitManager}, which periodically observes input and output streams of parent socket (which can be either server or client socket) to verify checksum, check data consistency, send/receive data from the socket. Inheriting the \texttt{TransmitManager} abstract class, developer can instantiate their own version of \texttt{DataTransmitManager} to customize the data consistency checker or improve security. 
+
+\begin{figure} 
 	\centering
 	\resizebox{0.5\textwidth}{!}{
 		\includegraphics{data/discoverPeers.pdf}
@@ -218,11 +213,6 @@ To establish a network connection between nearby mobile devices over the WiFi ne
 	\label{fig:forming}
 \end{figure}
 
-When an application starts, \texttt{WNM} calls \texttt{discoverPeers()} to search for available offloading servers registered in its configuration file. It also spreads acknowledgments to inform its availability to nearby mobile devices. If any offloading server or nearby devices receive a discovery message, its \texttt{WNM} module updates the new caller to its available device list, then simultaneously sends their information back to the caller in a JSON object (see \ref{ss_dfp}). Once all the devices are updated with the available device list, the network is organized as described in Figure \ref{fig:forming}. We provide the method \texttt{connectToADevice()} to make a connection with the best available mobile device. After establishing the connection, the mobile device starts to passively listen to job requests.
-
-%invocation will be promoted as server and use the \texttt{ServerSocketHandler} to initiate server socket with an random port. If the invoked device is already a server, it will maintain its current state and continuously accept the new client. Moreover, since a device can either be a server to some peers, or serve as client to the others, this method is able to build up a close range peer-to-peer network.
-
-Both \texttt{ClientSocketHandler} and \texttt{ServerSocketHandler} are constituted by a sub module named \texttt{DataTransmitManager}, which periodically observes input and output streams of parent socket (which can be either server or client socket) to verify checksum, check data consistency, send/receive data from the socket. Inheriting the \texttt{TransmitManager} abstract class, developer can instantiate their own version of \texttt{DataTransmitManager} to customize the data consistency checker or improve security. 
 
 \subsubsection{Execution Handler}
 \emph{Execution Handler} handles job definition, execution and distribution. \texttt{Job} (see \ref{prog_model}) is an executable unit defined by the programmer. By analyzing information of available mobile device list, \texttt{DecisionMaker} selects a number of highest responsibile devices and decides jobs with appropriate amount of conjunctional data. Then \texttt{JobDispatcher} dispatches them using \texttt{WNM} to the selected devices. On each remote device or offload server, \texttt{Job} and its partial data will be deserialized and executed by \texttt{JobExecutor} in synchronous mode. After that, the results will be return back to the caller by \texttt{JobClientHandler} and \text{JobServerHandler}. To facilitate adaptation with data heterogeneity, we define \texttt{DataParser} as a loosely coupled interface of \texttt{Job} to support determining mechanisms for: (1) serialization/deserialization object into binary format which is compatible for TCP transmission, (2) task partitioning, and (3) placeholder initialization and concatenation. To make the data type comprehensive to system in terms of reading, parsing or memory allocating, developer needs to supply instructions by instantiating an implementation of Data Parser for that type. 
@@ -377,14 +367,12 @@ Algorithm \ref{alg:select_peers} explains how the caller selects appropriate pee
 
 \subsubsection{Job quantitation for peers}\label{ss_jqfp}
 To assign a job to multiple peers, the runtime system collects the available resource information from each mobile device. Specifically, the percentage of CPU usage is calculated using the \texttt{/proc/stat} system file as follows:
-
 \begin{equation}
 \label{eq:cpu_usage}
 Usage_{CPU} = \frac{(\sum{T_{CPU2}} - T_{Idle2}) - (\sum{T_{CPU1}} - T_{Idle1})}{(\sum{T_{CPU2}} - \sum{T_{CPU1}})}
 \end{equation}
 
 \noindent where $\sum{T_{CPU}}$ is total active time and $T_{Idle}$ is idle time. For the memory usage, $Usage_{Mem}$ is calculated by accessing \texttt{MemoryInfo} of Android APIs such as $Mem_{Avail}$ and $Mem_{Total}$. Finally, we  calculate the battery usage, $Usage_{Batt}$. Next, to determine the appropriate amount of data to each mobile device, we introduce $RL$ parameter as follows:
-
 \begin{equation}
 \label{eq:res_level}
 %\begin{\footnotesize}
@@ -396,8 +384,7 @@ RL = \frac{N_{Cores} \times CPU_{Speed}}{Usage_{CPU}} + \frac{Mem_{Spec}}{Usage_
 
 If the selected peer is a powerful cloud-based server, $Batt_{Spec}$ is considered $\infty$ and $Usage_{Batt}$ is 0. According to Equation \ref{eq:res_level}, $RL$ will also be $\infty$. To make the calculation simple, we assign the maximum value of Integer to $RL$. To reduce the calculation overhead on the calling side, $RL$ is prematurely calculated on each peer and then sent to the caller in response to the IRS request.
 
-Finally, the \texttt{DecisionMaker} assigns the job with carrying amount of data ($M_{i}$) in accordance with the following equation:
-
+Finally, the \texttt{DecisionMaker} assigns the job with the appropriate amount of data ($M_{i}$) in accordance with the following equation:
 \begin{equation} 
 \label{eq:data_amount}
 M_{i} = M\frac{RL_{i}}{\sum_{j = \overline{1,n}}{RL_{j}}}
@@ -445,45 +432,34 @@ M_{i} = M\frac{RL_{i}}{\sum_{j = \overline{1,n}}{RL_{j}}}
 \end{algorithm}
 
 \subsection{Estimating Energy Consumption}
-Assume that we have a Wi-Fi peer-to-peer network available with $n$ devices, each at a certain time having level of responsibility $RL_{i} (i = \overline{1,n})$. According to the section \ref{scheduling}, if $E$ is the energy consumed by the application for only completing the task regardless of other ambiances, the total energy $E_{0}$ will be
-
+As compared to estimating the energy consumption in cellular networks, in a WiFi network the energy consumption can be easily estimated. The total energy consumption can be calculated as follows:
 $$E_{0} = E + E_{w}$$
-
-Where $E_{w}$ is the energy the app requires for waiting. Also, 
-
+\noindent where $E_{w}$ is the energy that the app requires for waiting. Then, we calculate the energy consumed by sending a job to other peers through the WiFi Direct technology as follows:
 $$E_{p2p} = E(\frac{RL_{0}}{\sum_{i = 1}^{n}{RL_{i}}}) + E_{WiFi} + E_{w}$$ 
+\noindent $n$ is the number of devices. $RL_{i} (i = \overline{1,n})$ is the responsibility level of each mobile device. 
 
-Where $E_{WiFi}$ is the energy consumed by Wi-Fi for sending jobs to other peers.
-
-In this estimation we skipped considering $E_{w}$ since it will depend on the appearance of applications. If an application has no GUI like system background services, $E_{w}$ will cause very little effect. From the two above equations, we can get the energy consumption difference between the two job processing mechanisms $E_{Diff}$ 
-
+However, we do not consider $E_{w}$ because it will depend on the appearance of applications. For example, if an application has no GUI, $E_{w}$ will cause very little effect. From the two above equations, we can calculate the energy consumption differences between two job processing mechanisms:
 $$E_{Diff} = E_{0} - E_{p2p}$$ 
-
 or 
-
 \begin{equation}
 \label{eq:energy_diff}
 E_{Diff} = E(1 - \frac{RL_{0}}{\sum_{i=1}^{n}{RL_{i}}}) - E_{WiFi}
 \end{equation}
 
-According to \cite{wifi_energy}, Wi-Fi caused the battery to drain linearly by time during the transmission, particularly the drain can be represented by $y = 17.01x - 0.93$ for downloading and $y = 17.31x - 2.28$ for uploading, where $y$ stands for percentage of battery consumed when using Wi-Fi for a period of $x$ hours. Therefore, under non-adventitious circumstances, equation (\ref{eq:energy_diff}) infers that in a mobile system with a certain number of devices in different levels of responsibility, if E is big enough, or in other words, if the task to perform is big enough, then $E_{Diff} > 0$ will result in, thus deploying a peer-to-peer cluster will give a great benefit in terms of energy efficiency. The bigger value of $E_{Diff}$, the more benefit we will gain. 
+Since WiFi is known to drain a battery linearly by time during transmission \cite{wifi_energy}, particularly it can be represented by $y = 17.01x - 0.93$ for downloading and $y = 17.31x - 2.28$ for uploading, where $y$ stands for percentage of battery consumed when using Wi-Fi for a period of $x$ hours. Therefore, under non-adventitious circumstances, equation (\ref{eq:energy_diff}) infers that in a mobile system with a certain number of devices in different levels of responsibility, if E is big enough, or in other words, if the task to perform is big enough, then $E_{Diff} > 0$ will result in, thus deploying a peer-to-peer cluster will give a great benefit in terms of energy efficiency. The bigger value of $E_{Diff}$, the more benefit we will gain. 
 
-Especially, when there is an offloading server in the network, $\sum_{i=1}^{n}{RL_{i}} \rightarrow \infty$, $E_{Diff} = E - E_{WiFi}$ which is the maximum value under the same conditions.
+In addition, if a cloud-based offloading server is available in the network, $RL$ and $E_{Diff}$ are calculated as follows: $\sum_{i=1}^{n}{RL_{i}} \rightarrow \infty$, $E_{Diff} = E - E_{WiFi}$ which is the maximum value under the same conditions.
 
 \subsection{API Usage Scenario}
-
-The library should be simple, so that the developers can integrate within just a few steps. This section will describe step-by-step the way to utilize our API to enable a typical peer-to-peer network.
+The programming model should be simple, so that application programmers can integrate with a few steps. This section will describe step-by-step the way to utilize our API to enable a typical peer-to-peer network.
 
 \subsubsection{Defining a Job}
-
 Job implementation is the prerequisite work to determine what to execute on the remote device and how to cast and manipulate data from the abstract object. According to section \ref{prog_model}, a developer needs to implement the Job class file separately by overriding the \texttt{exec()} method and casting the abstract input parameter to the concrete one. Then run the \texttt{DexCreator} tool on the Job class to compile and compact it into the DEX jar package. The final outcome is the \texttt{job.jar} file, which should be saved in the internal storage of the caller device. In order to simplify, we can store it in the \texttt{Download} folder.  
 
 \subsubsection{Implementing an Application Using APIs}
+This section describes three basic steps to implement an Android application to utilize our APIs
 
-This sub section will describe 3 basic steps to implement an Android application to utilize our APIs
-
-\paragraph{Message Handler}
-
+\textbf{\emph{Message Handler:}}
 The Message Handler is required to be instantiated at the beginning. In particular, an instance of \texttt{UIHandler} is initiated to receive messages from system when it goes into runtime. While the system is in progress, the log and information messages will periodically be returned with label \texttt{MAIN\_INFO} (Code snippet \ref{ui_handler}). When each job result comes, \texttt{ExecutionHandler} will collect and handle by partially put into a placeholder. When all results have arrived, the placeholder with label \texttt{MAIN\_JOB\_DONE} will be returned to inform the completion of job collaboration, as well as bringing the final result back to the main app UI.
 
 \begin{figure}
@@ -502,8 +478,7 @@ Handler mainUiHandler = new Handler() {
 \label{ui_handler}
 \end{figure}
 
-\paragraph{Data Parser}
-
+\textbf{\emph{Data Parser:}}
 Secondly, the developer needs to declare \texttt{DataParser} to determine the data-type and the relevant parser to equip the system for manipulating data at run-time (see sub section \ref{data_parser}). \texttt{ExecutionHandler} is the main component which wraps up the complexity, and exposes only the necessary functions like \texttt{discoverPeers()} and \texttt{dispatchJob()}. To send ACK messages to other peers for exchanging acknowledgments and reforming network, we need to call \texttt{discoverPeers()} function on the program, which should be done as soon as the application starts.
 
 \begin{figure}
@@ -522,7 +497,7 @@ public Object getSinglePart(object, sOffset, eOffset) {
 
 \end{figure}
 
-\paragraph{Discovery Peer and Dispatching Jobs}
+\textbf{\emph{Discovery Peer and Dispatching Jobs}}
 
 When the network is formed and connections are held with some other peers, \texttt{dispatchJob()} will be called to locate the resources and the job which is predefined in local storage, it then invokes \texttt{DecisionMaker} (sub section \ref{scheduling}) for job splitting and binary serialization. Finally jobs will be dispatched over the socket.
 
@@ -605,7 +580,7 @@ To measure the performance of the system equipped with our APIs, we decorated a 
 \subsubsection{Image Processing}
 We applied blur effect, one of the high energy consuming image processes. We run the test repeatedly on two image inputs, the first image has size $2500 \times 1405$ and the second size is $4326 \times 2856$. For the second image, with 4 bytes allocated for each pixel, device had to allocate around $50MB$ of heap to open and hold another $50MB$ for the result, thus leading to app crash all the time. This problem will only be solved with the help of other collaborative peers to solve overload in terms of memory and energy consumption.
 
-\paragraph{Design}
+\textbf{\emph{Design:}}
 The most important part when applying APIs for image processing is defining the \texttt{DataParser} (see code snippet (\ref{code:job_def})) for Bitmap with a divide strategy in vertical cut. For an input image, the \texttt{firstOffset} and \texttt{lastOffset} will decide the first and last offsets of the vertical cut correspondingly throughout the width, from the top to the bottom edges. The algorithm of the vertical cut is described in the code snippet (\ref{code:get_single_part}). Regarding the placeholder, we override the \texttt{getJsonMetadata()} method to return a simple JSON string like below:
 
 %\noindent \shadowbox{%
@@ -741,7 +716,7 @@ By integrating our system with either RetroSkeleton \cite{retro-skel} or Rio \ci
 \label{sec:related}
 The work presented here is related to other complementary efforts that optimize mobile applications via remote executions including computation offloading and peer to peer networking.
 
-These days, there are several similar approaches facilitating peer-to-peer wireless connection and multiple devices collaboration. 
+%These days, there are several similar approaches facilitating peer-to-peer wireless connection and multiple devices collaboration. 
 
 Alljoyn Framework \cite{alljoyn} is an open source software framework making transparent of complexity of discover and communication to the developers. Providing interoperability functionality without any transport layer, Alljoyn make it easy to integrate and initiate. However since they tried to address multiple platforms: Android, iOS, Linux, Windows and even the other lightweight real-time operating systems, their package became huge and APIs is complicated to use. 
 
