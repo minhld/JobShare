@@ -156,7 +156,7 @@ Although computational offloading has been widely enjoyed in the research litera
 
 Nevertheless, computational offloading is still considered an important optimization mechanism for mobile applications as one of distributed execution models. Thus, in order to optimize mobile applications' executions and extend mobile devices' hardware capacity through distributed executions, we solve the following research problems: (1) how can mobile applications utilize remote computing resources at low cost? (2) how can the application programmer express the desired mobile hardware resources? (3) how can mobile devices allow using their resources without affecting the existing applications' executions? Solving these problems requires innovations in programming models and middleware design spaces. 
 
-In this paper, we present a novel distributed execution model that not only optimizes mobile application's executions in terms of performance and energy efficiency, but also extends mobile device's hardware capability. In other words, mobile devices will be able to virtually add more hardware resources including computation, networking, memory, and sensors to the existing hardware setup. Our approach is realized as the following two major technical solutions: (1) a straight programming model that enables the programmer to write any execution task and (2) a runtime system that determines an execution strategy and distributes the requested execution task over the nearby or remote network. In particular, our approach uses the WiFi direct technology \cite{wifi:p2p} to utilize nearby computing resources over the WiFi network, which makes it possible to communicate between mobile devices without any Internet connection or wireless access point. Our runtime system employs a dynamic, adaptive mechanism to determine the best distribution strategy under different execution environments including diverse network conditions and heterogeneous mobile hardware capacity.
+In this paper, we present a novel distributed execution model that not only optimizes mobile application's executions in terms of performance and energy efficiency, but also extends mobile device's hardware capability. In other words, mobile devices will be able to virtually add more hardware resources including computation, networking, memory, and sensors to the existing hardware setup. Our approach is realized as the following two major technical solutions: (1) a straight programming model that enables the programmer to write any execution task and (2) a runtime system that determines an execution strategy and distributes the requested execution task over the nearby or remote network. Our runtime system employs a dynamic, adaptive mechanism to determine the best distribution and execution strategy under different execution environments including diverse network conditions and heterogeneous mobile hardware capacity.
 
 The experiments in 3 case studies have demonstrated the effectiveness of our approach, to extend limited mobile hardware resources, thereby improving performance and energy efficiency as well as bringing new hardware capabilities. By presenting our approach, this paper makes the following technical contributions:
 \begin{itemize}
@@ -174,13 +174,17 @@ The rest of this paper is structured as follows. Section \ref{sec:background} in
  
 \section{Technical Background}
 \label{sec:background}
-In this section, we present the major technologies we used in this paper. The major technologies used in this work including computation offloading, remote execution, and middleware. We will describe them in the following sub sections.
+In this section, we present the major technologies we used in this paper. The major technologies used in this work including computation offloading, remote execution, middleware, and WiFi direct. We will describe them in the following sub sections.
 
 \subsection{Computational Offloading}   
 Computation offloading has become a popular optimization technique for mobile applications \cite{maui,chun+:eurosys11,kwon+:icdcs12,wen2012energy}. It leverages the resources of cloud-based remote servers to execute portions of a mobile application's functionality. By executing some of the application's functionality in the cloud, offloading reduces the amount of energy consumed by the mobile device, thus saving its battery power. An additional benefit of computation offloading is improved performance efficiency, as cloud servers have hardware resource more powerful that those available on mobile devices. This technique is used as one of the distributed execution model in this paper.
 
 \subsection{Remote Execution and Middleware}
 Our approach uses features from mainstream middleware mechanisms for distributed execution as building blocks. Middleware systmes provide programming and runtime support to coordinates the execution of multiple remote processes. By eliminating the need for low-level network programming (e.g., managing sockets, marshaling/unmarshaling data, keeping track of processes) middleware systems offer convenient building blocks for constructing distributed systems. In our prior work \cite{kwon+:mobicase14-middleware}, we introduced a novel middleware architecture that optimizes performance and energy consumption by adapting various facets of middleware functionality dynamically in response to fluctuations in network conditions because network communication incurs high energy costs in mobile applications. The runtime system developed in this paper is derived from our prior middleware design.
+
+\subsection{WiFi Direct}
+The WiFi Direct technology has become available from Android 4.0 APIs.
+In this paper, our approach uses the WiFi direct technology \cite{wifi:p2p} to utilize nearby computing resources over the WiFi network, which makes it possible to communicate between mobile devices without any Internet connection or wireless access point. 
 
 %other name?
 \section{Our Approach}
@@ -203,7 +207,7 @@ Figure \ref{fig:architecture} shows the overall system architecture, which main-
 
 %It discovers available peers, establishes connections, and keeps track of the connections. 
 \subsubsection{WiFi Network Manager}
-To establish a network connection between nearby mobile devices over the WiFi network, we utilized the WiFi Direct technology, the new feature available from Android 4.0 APIs. In particular, \texttt{WiFiDirectController} of \texttt{WNM} hides the complex WiFi Direct implementation details. As aforementioned in the previous section, to leverage computational offloading, the \texttt{OffloadEngine} module initiates a connection with our cloud-based offloading server when a WiFi access point (AP) is available \cite{kwon+:mobilesoft2015}, thus executing the job at a powerful remote server instead of looking for nearby devices. By providing transparent operations between the cloud-based server and nearby mobile devices, our approach separates a business logic from distributed execution models.
+To establish a network connection between nearby mobile devices over the WiFi network, we utilize the WiFi Direct technology. In particular, \texttt{WiFiDirectController} of \texttt{WNM} hides the complex WiFi Direct implementation details. As aforementioned in the previous section, to leverage computational offloading, the \texttt{OffloadEngine} module initiates a connection with our cloud-based offloading server when a WiFi access point (AP) is available \cite{kwon+:mobilesoft2015}, thus executing the job at a powerful remote server instead of looking for nearby devices. By providing transparent operations between the cloud-based server and nearby mobile devices, our approach separates a business logic from distributed execution models.
 
 \begin{figure}
 	\centering
@@ -221,10 +225,11 @@ When an application starts, \texttt{WNM} calls \texttt{discoverPeers()} to searc
 Both \texttt{ClientSocketHandler} and \texttt{ServerSocketHandler} are constituted by a sub module named \texttt{DataTransmitManager}, which periodically observes input and output streams of parent socket (which can be either server or client socket) to verify checksum, check data consistency, send/receive data from the socket. Inheriting the \texttt{TransmitManager} abstract class, developer can instantiate their own version of \texttt{DataTransmitManager} to customize the data consistency checker or improve security. 
 
 \subsubsection{Execution Handler}
-\emph{Execution Handler} handles job definition, execution and distribution. \texttt{Job} (see \ref{prog_model}) is executable unit defined by developer at runtime. By analyzing information of other mobile device list, \texttt{DecisionMaker} module will select a number of highest responsibile devices and decide jobs with appropriate amount of conjunctional data. Then \texttt{JobDispatcher} dispatches them using \texttt{WNM} to those devices. On each remote device or offload server, \texttt{Job} and its partial data will be deserialized and executed by \texttt{JobExecutor} in synchronous mode. After that, the results will be return back to the caller by \texttt{JobClientHandler} and \text{JobServerHandler}. To facilitate adaptation with data heterogeneity, we define \texttt{DataParser} as a loosely coupled interface of \texttt{Job} to support determining mechanisms for: (1) serialization/deserialization object into binary format which is compatible for TCP transmission, (2) task partitioning, and (3) placeholder initialization and concatenation. To make the data type comprehensive to system in terms of reading, parsing or memory allocating, developer needs to supply instructions by instantiating an implementation of Data Parser for that type. 
+\emph{Execution Handler} handles job definition, execution and distribution. \texttt{Job} (see \ref{prog_model}) is an executable unit defined by the programmer. By analyzing information of available mobile device list, \texttt{DecisionMaker} selects a number of highest responsibile devices and decides jobs with appropriate amount of conjunctional data. Then \texttt{JobDispatcher} dispatches them using \texttt{WNM} to the selected devices. On each remote device or offload server, \texttt{Job} and its partial data will be deserialized and executed by \texttt{JobExecutor} in synchronous mode. After that, the results will be return back to the caller by \texttt{JobClientHandler} and \text{JobServerHandler}. To facilitate adaptation with data heterogeneity, we define \texttt{DataParser} as a loosely coupled interface of \texttt{Job} to support determining mechanisms for: (1) serialization/deserialization object into binary format which is compatible for TCP transmission, (2) task partitioning, and (3) placeholder initialization and concatenation. To make the data type comprehensive to system in terms of reading, parsing or memory allocating, developer needs to supply instructions by instantiating an implementation of Data Parser for that type. 
+
 
 \subsection{Programming Model} \label{prog_model}
-Our system has a simple programming model that enables the programmer to easily implement remote functions. As described in Listing \ref{code:job_def}, we provide a \texttt{Job} abstract class that will be extended by the programmer to specify which functionality should be executed remotely. Also, to support dynamic class loading in Dalvik VM \cite{fred:classloader}, we provide the \texttt{DexCreator} commandline tool that compiles the \texttt{Job} Java class file into a Dex package. The Dex package and sliced resources are packed as a \texttt{JobData} object by \texttt{JobDispatcher} and then dispatched to the available mobile devices or the cloud-based server. Next, the recipient of the \texttt{JobData} checks a checksum field to confirm the consistency, and then deserializes the object into \texttt{Job} and resources for the execution.
+Our system has a simple programming model that enables the programmer to easily implement remote functions. As described in Listing \ref{code:job_def}, we provide a \texttt{Job} abstract class that will be extended by the programmer to specify which functionality should be executed remotely. Also, to support dynamic class loading in Dalvik VM, we provide the \texttt{DexCreator} commandline tool that compiles the \texttt{Job} Java class file into a Dex package. The Dex package and sliced resources are packed as a \texttt{JobData} object by \texttt{JobDispatcher} and then dispatched to the available mobile devices or the cloud-based server. Next, the recipient of the \texttt{JobData} checks a checksum field to confirm the consistency, and then deserializes the object into \texttt{Job} and resources for the execution.
 
 \begin{figure}
 \noindent \shadowbox{%
@@ -265,7 +270,7 @@ The code snippet in Listing \ref{code:job_def} shows the important methods of \t
 	\item \texttt{copyPartToPlaceholder()} instructs the application to merge it to the placeholder when a result is partially retrieved from a distant peer.
 \end{itemize}
 
-In our initial prototype implementation, we provide three default parsers for bitmap images, text, and GPS, respectively. 
+In our case studies (see Section \ref{sec:eval}), we implemented three default parsers for bitmap images, text, and GPS, respectively. 
 
 \subsection{Runtime System} \label{scheduling}
 Once a peer-to-peer network is constructed by our system, each peer participating in the network can distribute jobs to other peers. Specifically, before making a remote job execution, \texttt{DecisionMaker} determines available peers in accordance with the level of available resources by inquiring peers' status via an \texttt{IRS} message. Once one receives the IRS request, its \texttt{DecisionMaker} immediately responds to the request with the capability information of CPU, memory and battery usage at that time depicted in Figure \ref{fig:forming}.
@@ -371,19 +376,14 @@ Algorithm \ref{alg:select_peers} describes in detail the three above steps.
 Algorithm \ref{alg:select_peers} explains how the caller selects appropriate peers from its connection list. Specifically, $P_{AV}$ stands for map of available peers and $WiFiDevices$ is the device information list.\\
 
 \subsubsection{Job quantitation for peers}\label{ss_jqfp}
-
-The calling peer quantitates the jobs from a task to distribute them to the other available devices in the network suitably. To achieve this, the $RL$ parameter will be used as the main coefficient for the split. 
- 
-To calculate $RL$ as well as the other parameters in IRS, retrieved from \texttt{/proc/stat} system file \cite{stat_explain}, the percentage of CPU usage is expressed by this following expression in two short consecutive times
+To assign a job to multiple peers, the runtime system collects the available resource information from each mobile device. Specifically, the percentage of CPU usage is calculated using the \texttt{/proc/stat} system file as follows:
 
 \begin{equation}
 \label{eq:cpu_usage}
 Usage_{CPU} = \frac{(\sum{T_{CPU2}} - T_{Idle2}) - (\sum{T_{CPU1}} - T_{Idle1})}{(\sum{T_{CPU2}} - \sum{T_{CPU1}})}
 \end{equation}
 
-Where $\sum{T_{CPU}}$ is total time of running CPU and $T_{Idle}$ is idle time correspondingly in hertz. In term of memory usage, the $Usage_{Mem}$ can be determined by using \texttt{MemoryInfo} from Android API to retrieve $Mem_{Avail}$ and $Mem_{Total}$, so the $Usage_{Batt}$.
-
-Since in the mobile device, the lower resource usage state states the higher availability, and the higher specifications represent the better responsibility. Then the level of responsibility of device can be simply summarized by the expression below
+\noindent where $\sum{T_{CPU}}$ is total active time and $T_{Idle}$ is idle time. For the memory usage, $Usage_{Mem}$ is calculated by accessing \texttt{MemoryInfo} of Android APIs such as $Mem_{Avail}$ and $Mem_{Total}$. Finally, we  calculate the battery usage, $Usage_{Batt}$. Next, to determine the appropriate amount of data to each mobile device, we introduce $RL$ parameter as follows:
 
 \begin{equation}
 \label{eq:res_level}
@@ -392,21 +392,18 @@ RL = \frac{N_{Cores} \times CPU_{Speed}}{Usage_{CPU}} + \frac{Mem_{Spec}}{Usage_
 %\end{\footnotesize}
 \end{equation}
 
-Where $N_{Cores}$ is the number of CPU cores, $CPU_{Speed}$ is speed of single core in GHz unit, $Mem_{Spec}$ has GB unit and $Batt_{Spec}$ has uAh unit. At a certain time in this device, if $Usage_{CPU}$ is 0.3, $Usage_{Mem}$ is 0.5 (half of 1GB memory consumed) and $Usage_{Batt}$ is 0.7 or 70\% used over a 2800uAh capacity battery, the value of $RL$ will be
-$$RL = \frac{5.2}{0.3} + \frac{1}{0.5} + \frac{2800}{0.7 \times 1000} = 23.33$$
+\noindent where $RL$ is an indicator to the level of availability of mobile devices. The smaller $RL$ means the higher availability. $N_{Cores}$ is the number of CPU cores. $CPU_{Speed}$ is speed of single core in GHz. $Mem_{Spec}$ is the memory capacity in GB and $Batt_{Spec}$ is the battery capacity in uAh. For example, if $Usage_{CPU}$ is 0.3, $Usage_{Mem}$ is 0.5 (i.e., half of 1GB memory has been consumed), and $Usage_{Batt}$ is 0.7 or 70\% used over a 2800uAh capacity battery, then $RL$ will be $$RL = \frac{5.2}{0.3} + \frac{1}{0.5} + \frac{2800}{0.7 \times 1000} = 23.33$$
 
-If the peer is offloading server with power wired, $Batt_{Spec}$ is considered as $\infty$ and $Usage_{Batt}$ is 0. According to Equation \ref{eq:res_level}, $RL$ will also be $\infty$. To make it easy for calculation, we assign $RL$ value of offloading server as maximum value of Integer.
+If the selected peer is a powerful cloud-based server, $Batt_{Spec}$ is considered $\infty$ and $Usage_{Batt}$ is 0. According to Equation \ref{eq:res_level}, $RL$ will also be $\infty$. To make the calculation simple, we assign the maximum value of Integer to $RL$. To reduce the calculation overhead on the calling side, $RL$ is prematurely calculated on each peer and then sent to the caller in response to the IRS request.
 
-To reduce the latency and to avoid miscalculation at the calling peer, $RL$ is prematurely calculated by each available called peer and wrapped up in the IRS response sent back to the caller. 
-
-In a P2P network comprising of $n$ devices, where $i$-device has responsibility level $RL_{i}$, the \texttt{DecisionMaker} will assign the job with carrying amount of data ($M_{i}$) which is equivalent to
+Finally, the \texttt{DecisionMaker} assigns the job with carrying amount of data ($M_{i}$) in accordance with the following equation:
 
 \begin{equation} 
 \label{eq:data_amount}
 M_{i} = M\frac{RL_{i}}{\sum_{j = \overline{1,n}}{RL_{j}}}
 \end{equation}
 
-Where $M$ is total size of data in bytes. It is obvious that in the network with an offloading server, $M_{offload}$ is almost equal to $M$, therefore we can flush the full task with heavy computation to the server. This below algorithm \ref{alg:assign_job} will represent the procedure through which the \texttt{DecisionMaker} judges peer capability to assign appropriate job. Where $M_{i}$ is the quantity of job in binary length, $firstOffset$ and $lastOffset$ indicate the location of the data trunk in the whole.
+\noindent where $M$ is total size of data in bytes. $n$ is the number of mobile devices, where $i$-device has responsibility level $RL_{i}$. It is obvious that in the network with an offloading server, $M_{offload}$ is almost equal to $M$, and thus we can flush the full task with heavy computation to the offloading server. Algorithm \ref{alg:assign_job} describes how \texttt{DecisionMaker} assign a job appropriately while considering the availability of each mobile device. The algorithm returns the amount of data in binary length with two offsets that indicate the location of the data.
 
 \begin{algorithm}
 \caption{Assigning a job}
@@ -447,7 +444,7 @@ Where $M$ is total size of data in bytes. It is obvious that in the network with
 \end{algorithmic}
 \end{algorithm}
 
-\subsection{Estimating Energy Consumption in WiFi Environment}
+\subsection{Estimating Energy Consumption}
 Assume that we have a Wi-Fi peer-to-peer network available with $n$ devices, each at a certain time having level of responsibility $RL_{i} (i = \overline{1,n})$. According to the section \ref{scheduling}, if $E$ is the energy consumed by the application for only completing the task regardless of other ambiances, the total energy $E_{0}$ will be
 
 $$E_{0} = E + E_{w}$$
@@ -686,12 +683,12 @@ Basically the variability and fluctuation of energy consumption will reflect the
 \subsubsection{Internet Access} 
 Theoretically, remote accessibility won't help reducing the amount of bytes downloading, but the speed is guaranteed to be ameliorative since the downloading process is scattered over a number of devices, therefore energy will be consumed less. 
 
-\paragraph{Design}
+\textbf{\emph{Design:}}
 To apply APIs for this application, from the caller we dispatch job requests, which contains information of job with resources are URL, number of parts and index, to the peers having \texttt{IRS[network]} at \texttt{high} or \texttt{low}. At each peer, when request is received, it executes job to load URL to achieve page in HTML code. Then it will parse the HTML to detect resource links including multimedia resources (images, audio, videos), CSS, and JS. Depend on the number of parts and index, it narrows down the amount of resources and attempt downloading and put into a ZIP file before throw back to the caller.
 
 According to our system architecture, the caller needs to prepare a placeholder to hold every incoming results. For this test case, the placeholder is designated as a sub folder in the \texttt{Download} folder. When result comes as a ZIP file, contents will be extracted and filled into the placeholder folder. The final HTML file will contain all the modified resource links which locate at the same folder. Finally, the local HTML file can be open by Android Web browser component using a local web server, for instance TinyHTTPd \cite{tinyhttpd}.
 
-\paragraph{Performance}
+\textbf{\emph{Performance:}}
 Figure (\ref{fig:net_clusters_perf} - left) describes performance of multiple clusters from 1 to 4 peers and one peer has a few threads (for simulating high performance) when remotely rendering web pages from CNN URLs. The figure describes the execution time of each peer in each cluster after being assigned job, and the peak is reached when the last peer completed. In the cluster with only one device, that device works desolately without any peer contacts; it will download web pages from the internet by opening Wi-Fi connection. It is obvious that executing Internet Remote access brings the high benefit in terms of performance that rendering time reduced almost half when at least 3 peers participating network. 
 
 \begin{figure*}
@@ -718,27 +715,26 @@ To evaluate energy consumption, we performed the same tests like the first test 
 \subsubsection{GPS Share}
 Connecting and retrieving GPS location is really energy consuming. Generally the smartphone will enable and contact at least 3 satellites through radio signals in order to start retrieving GPS location (4 satellites to get more information like altitude). Therefore, energy can be saved if GPS requests are relayed to another device in the network which is healthier (higher remain battery, in idle state etc.) or better specifications.
 
-
-\paragraph{Design}
+\textbf{\emph{Design}}
 With GPS Share, only one peer is entrusted. Our strategy is letting the caller to select the peer having GPS enabled and maximum value of $RL$ (at the best conditions) by configure the caller with initiative criteria including $RL$ is \texttt{max} and \texttt{GPS} is \texttt{on}. Regarding job definition, we utilize the \texttt{LocationManager} to get a single location result per each request and store the result to a simple string. For remote GPS request, we have to avoid callback functions from \texttt{LocationManager}, therefore retrieving multiple requests periodically is not effective.
 
 
-\paragraph{Performance}
+\textbf{\emph{Performance}}
 We performed 3 GPS Share test cases, 2 for remote GPS requests and 1 for local GPS (Using GPS on it own). For each case we execute $10$ times on two devices having same specifications and assign roles to them as a caller and a receiver to minimize the overloads throughout the system. Figure \ref{fig:gps_perf} interprets that GPS Share mechanism doesn't give any benefit in terms of performance, since the remote device has the same resource specs and remote GPS may require more time including time for GPS plus time for data transmission back to the caller (However it is too short for the consideration).
 
 \begin{figure*}
 	\centering
 	%\resizebox{0.36\textwidth}{!}{
-		\includegraphics[width=.39\textwidth]{data/gps_perf.pdf}
-		\includegraphics[width=.45\textwidth]{data/gps_energy_full.pdf}
+		\includegraphics[width=.42\textwidth]{data/gps_perf.pdf}
+		\includegraphics[width=.47\textwidth]{data/gps_energy_full.pdf}
 	%}
-	\caption{Performance and energy consumption comparison for GPS between remote and local executions}
+	\caption{Performance and energy consumption comparison between remote and local GPS sensing.}
 	\label{fig:gps_perf}
 \end{figure*}
 
 Extracted from the above tests, the Figure \ref{fig:gps_perf} describes the distribution of energy consumptions among the 3 case tests. By applying interpolation to find trend lines for these energy distributions, we got $y = 0.0528388 \times x + 7.31948$ formula for test 1, $y = 0.0547221 \times x + 7.42138$ for test 2 and $y = 0.0575331 \times x - 12.9403$ for test 3. The trend line 3 has the biggest slope, or at the same amount of time it consumed more energy than the first two cases. As we might see, the difference between the slopes of line 3 and line 1, 2 are very slim, however due to our later tests on the weak caller (low battery), the difference will highly increase. 
 
-\paragraph{Applications}
+\textbf{\emph{Applications}}
 By integrating our system with either RetroSkeleton \cite{retro-skel} or Rio \cite{rio}, we can provide remote or local GPS location data without having to modify the current installed applications. Those systems provide interference methods to capture requests for system resources and instead inject their customized responses. 
 
 \section{Related Work}
