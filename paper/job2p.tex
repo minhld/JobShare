@@ -351,7 +351,12 @@ Algorithm \ref{alg:select_peers} describes in detail the three above steps.
 
   \If {All condition statements are satisfied} 
   	\State $P_{Info} \leftarrow WiFiDevices.get(DeviceId) + $
-		\State $Resp_{IRS}[RL]$
+		\State
+			\hspace{\algorithmicindent}
+			\hspace{\algorithmicindent}
+			\hspace{\algorithmicindent}
+			\hspace{\algorithmicindent}
+			$Resp_{IRS}[RL]$
   	\State $P_{AV}[DeviceId] \leftarrow P_{Info}$
   \EndIf
 \EndFor
@@ -378,17 +383,19 @@ Usage_{CPU} = \frac{(\sum{T_{CPU2}} - T_{Idle2}) - (\sum{T_{CPU1}} - T_{Idle1})}
 
 Where $\sum{T_{CPU}}$ is total time of running CPU and $T_{Idle}$ is idle time correspondingly in hertz. In term of memory usage, the $Usage_{Mem}$ can be determined by using \texttt{MemoryInfo} from Android API to retrieve $Mem_{Avail}$ and $Mem_{Total}$, so the $Usage_{Batt}$.
 
-Since in the mobile device, the lower resource usage state states the higher availability, and the higher specifications represents the better responsibility. Then the level of responsibility of device can be simply summarized by the expression below
+Since in the mobile device, the lower resource usage state states the higher availability, and the higher specifications represent the better responsibility. Then the level of responsibility of device can be simply summarized by the expression below
 
 \begin{equation}
 \label{eq:res_level}
 %\begin{\footnotesize}
-RL = \frac{N_{Cores} \times CPU_{Speed}}{Usage_{CPU}} + \frac{Mem_{Spec}}{Usage_{Mem}} + \frac{Batt_{Spec}}{Usage_{Batt} \times 1000}}
+RL = \frac{N_{Cores} \times CPU_{Speed}}{Usage_{CPU}} + \frac{Mem_{Spec}}{Usage_{Mem}} + \frac{Batt_{Spec}}{Usage_{Batt} \times 1000}
 %\end{\footnotesize}
 \end{equation}
 
 Where $N_{Cores}$ is the number of CPU cores, $CPU_{Speed}$ is speed of single core in GHz unit, $Mem_{Spec}$ has GB unit and $Batt_{Spec}$ has uAh unit. At a certain time in this device, if $Usage_{CPU}$ is 0.3, $Usage_{Mem}$ is 0.5 (half of 1GB memory consumed) and $Usage_{Batt}$ is 0.7 or 70\% used over a 2800uAh capacity battery, the value of $RL$ will be
 $$RL = \frac{5.2}{0.3} + \frac{1}{0.5} + \frac{2800}{0.7 \times 1000} = 23.33$$
+
+If the peer is offloading server with power wired, $Batt_{Spec}$ is considered as $\infty$ and $Usage_{Batt}$ is 0. According to Equation \ref{eq:res_level}, $RL$ will also be $\infty$. To make it easy for calculation, we assign $RL$ value of offloading server as maximum value of Integer.
 
 To reduce the latency and to avoid miscalculation at the calling peer, $RL$ is prematurely calculated by each available called peer and wrapped up in the IRS response sent back to the caller. 
 
@@ -399,7 +406,7 @@ In a P2P network comprising of $n$ devices, where $i$-device has responsibility 
 M_{i} = M\frac{RL_{i}}{\sum_{j = \overline{1,n}}{RL_{j}}}
 \end{equation}
 
-Where $M$ is total size of data in bytes. This below algorithm \ref{alg:assign_job} will represent the procedure through which the \texttt{DecisionMaker} judges peer capability to assign appropriate job. Where $M_{i}$ is the quantity of job in binary length, $firstOffset$ and $lastOffset$ indicate the location of the data trunk in the whole.
+Where $M$ is total size of data in bytes. It is obvious that in the network with an offloading server, $M_{offload}$ is almost equal to $M$, therefore we can flush the full task with heavy computation to the server. This below algorithm \ref{alg:assign_job} will represent the procedure through which the \texttt{DecisionMaker} judges peer capability to assign appropriate job. Where $M_{i}$ is the quantity of job in binary length, $firstOffset$ and $lastOffset$ indicate the location of the data trunk in the whole.
 
 \begin{algorithm}
 \caption{Assigning a job}
@@ -441,17 +448,17 @@ Where $M$ is total size of data in bytes. This below algorithm \ref{alg:assign_j
 \end{algorithm}
 
 \subsection{Estimating Energy Consumption in WiFi Environment}
-Assume that we have a Wi-Fi peer-to-peer network available with $n$ devices, each device at a certain time has level of responsibility $RL_{i} (i = \overline{1,n})$. According to the section \ref{scheduling}, if $E$ is the energy consumed by the application for only completing the task regardless of other ambiances, the total energy $E_{0}$ will be
+Assume that we have a Wi-Fi peer-to-peer network available with $n$ devices, each at a certain time having level of responsibility $RL_{i} (i = \overline{1,n})$. According to the section \ref{scheduling}, if $E$ is the energy consumed by the application for only completing the task regardless of other ambiances, the total energy $E_{0}$ will be
 
 $$E_{0} = E + E_{w}$$
 
-Where $E_{w}$ is energy the app requires for waiting. Also, 
+Where $E_{w}$ is the energy the app requires for waiting. Also, 
 
 $$E_{p2p} = E(\frac{RL_{0}}{\sum_{i = 1}^{n}{RL_{i}}}) + E_{WiFi} + E_{w}$$ 
 
 Where $E_{WiFi}$ is energy consumed by Wi-Fi for sending jobs to other peers.
 
-In this estimation we skipped considering $E_{w}$ since it will depend on appearance of applications. If application have no GUI like system background services, $E_{w}$ will cause very little effect. From the two above equations, we can get the difference energy consumption between the two job processing mechanisms $E_{Diff}$ 
+In this estimation we skipped considering $E_{w}$ since it will depend on the appearance of applications. If an application has no GUI like system background services, $E_{w}$ will cause very little effect. From the two above equations, we can get the energy consumption difference between the two job processing mechanisms $E_{Diff}$ 
 
 $$E_{Diff} = E_{0} - E_{p2p}$$ 
 
