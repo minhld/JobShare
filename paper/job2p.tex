@@ -241,14 +241,14 @@ The code snippet in Listing \ref{code:job_def} shows the important methods of \t
 	\item \texttt{getDataClass()} returns data type.
 	\item \texttt{parseObjectToBytes(object)} instructs system to serialize an object to binary array. In Android, not every object can be serialized, for instance, Bitmap.  
 	\item \texttt{parseBytesToObject(byte[])} deserializes a binary array back to object.
-	\item \texttt{getSinglePart()} returns a data slide based on number of parts (\texttt{numOfParts}) and its \texttt{index}. Code snippet (\ref{code:get_single_part}) shows an example getting one slice from a bitmap by \texttt{index}. When app runs, \texttt{JobDispatcher} will use this method to partition the task into slices.
+	\item \texttt{getSinglePart()} returns a data slide based on number of parts (\texttt{numOfParts}) and its \texttt{index}. Listing \ref{code:get_single_part} shows an example getting one slice from a bitmap by \texttt{index}. When app runs, \texttt{JobDispatcher} will use this method to partition the task into slices.
 	\item \texttt{copyPartToPlaceholder()} instructs the application to merge it to the placeholder when a result is partially retrieved from a distant peer.
 \end{itemize}
 
 In our case studies (see Section \ref{sec:eval}), we implemented three default parsers for bitmap images, text, and GPS, respectively. 
 
 \subsection{Runtime System} \label{scheduling}
-Once a peer-to-peer network is constructed by our system, each peer participating in the network can distribute jobs to other peers. Specifically, before making a remote job execution, \texttt{DecisionMaker} determines available peers in accordance with the level of available resources by inquiring peers' status via an \texttt{IRS} message. Once one receives the IRS request, its \texttt{DecisionMaker} immediately responds to the request with the capability information of CPU, memory and battery usage at that time depicted in Figure \ref{fig:forming}.
+Once a peer-to-peer network is constructed by our system, each peer participating in the network can distribute jobs to other peers. Specifically, before making a remote job execution, \texttt{DecisionMaker} determines available peers in accordance with the level of available resources by inquiring peers' status via an \texttt{IRS} (Inquiry of Responsibility Status) message. Once one receives the IRS request, its \texttt{DecisionMaker} immediately responds to the request with the capability information of CPU, memory and battery usage at that time depicted in Figure \ref{fig:forming}.
 
 %\begin{figure}
 %\centerline {
@@ -260,7 +260,7 @@ Once a peer-to-peer network is constructed by our system, each peer participatin
 
 \subsubsection{Finding available devices}\label{ss_dfp}
 
-A mobile device at any time maintains a certain number of connections with the others. Before delivering jobs, it dispatches IRS messages to all the peers for acknowledgment of their availability ($RL$ - Level of Responsibility). If a peer receives an IRS, its \texttt{DecisionMaker} will capture its configuration and corresponding usage states to generate a response in JSON format, The code snippet (\ref{code:jsonResponse}) shows such a typical response.\\
+A mobile device at any time maintains a certain number of connections with the others. Before delivering jobs, it dispatches IRS messages to all the peers for acknowledgment of their availability ($RL$ - Level of Responsibility). If a peer receives an IRS, its \texttt{DecisionMaker} will capture its configuration and corresponding usage states to generate a response in JSON format, Listing \ref{code:jsonResponse} shows a typical response.\\
 
 \begin{figure}
 \noindent \shadowbox{
@@ -292,7 +292,7 @@ Where \texttt{device} parameter can be either device name (if it is device) or \
 
 In any IRS response, \texttt{availability} is determined by the remote device which value can be assigned to \texttt{on} or \texttt{off}. The \texttt{off} value informs the caller that it is not available due to temporary shortage of resource and therefore prevents the caller from sending jobs. Only the devices with \texttt{availability} set to \texttt{on} will accept jobs for execution. The value is given based on whether the device has bypassed the threshold of battery usage which is by default set to 0.8 (or 80\% overall usage). User can override those thresholds by updating the \texttt{availability-thresholds} in the configuration file before app initialization. 
 
-In the above example (code snippet \ref{code:jsonResponse}), the battery usage is 0.85 or 15\% remaining, so the \texttt{DecisionMaker} on it states that its \texttt{availability} is \texttt{off} and it won't be able to handle any jobs.
+In the above example (Listing \ref{code:jsonResponse}), the battery usage is 0.85 or 15\% remaining, so the \texttt{DecisionMaker} on it states that its \texttt{availability} is \texttt{off} and it won't be able to handle any jobs.
 
 To make the system adjustable to wide range of resource usages with regard to energy and performance efficiency, the IRS criteria (Example in \ref{code:jsonResponse}) is added to the app configuration so that the \texttt{DecisionMaker} can check it by going through 3 following steps
 \begin{itemize}
@@ -445,7 +445,7 @@ Job implementation is the prerequisite work to determine what to execute on the 
 This section describes three basic steps to implement an Android application to utilize our APIs
 
 \textbf{\emph{Message Handler:}}
-The Message Handler is required to be instantiated at the beginning. In particular, an instance of \texttt{UIHandler} is initiated to receive messages from system when it goes into runtime. While the system is in progress, the log and information messages will periodically be returned with label \texttt{MAIN\_INFO} (Code snippet \ref{ui_handler}). When each job result comes, \texttt{ExecutionHandler} will collect and handle by partially put into a placeholder. When all results have arrived, the placeholder with label \texttt{MAIN\_JOB\_DONE} will be returned to inform the completion of job collaboration, as well as bringing the final result back to the main app UI.
+The Message Handler is required to be instantiated at the beginning. In particular, an instance of \texttt{UIHandler} is initiated to receive messages from system when it goes into runtime. While the system is in progress, the log and information messages will periodically be returned with label \texttt{MAIN\_INFO} (Listing \ref{ui_handler}). When each job result comes, \texttt{ExecutionHandler} will collect and handle by partially put into a placeholder. When all results have arrived, the placeholder with label \texttt{MAIN\_JOB\_DONE} will be returned to inform the completion of job collaboration, as well as bringing the final result back to the main app UI.
 
 \begin{figure}
 \noindent \shadowbox{%
@@ -566,7 +566,7 @@ To measure the performance of the system equipped with our APIs, we decorated a 
 We applied blur effect, one of the high energy consuming image processes. We run the test repeatedly on two image inputs, the first image has size $2500 \times 1405$ and the second size is $4326 \times 2856$. For the second image, with 4 bytes allocated for each pixel, device had to allocate around $50MB$ of heap to open and hold another $50MB$ for the result, thus leading to app crash all the time. This problem will only be solved with the help of other collaborative peers to solve overload in terms of memory and energy consumption.
 
 \textbf{\emph{Design:}}
-The most important part when applying APIs for image processing is defining the \texttt{DataParser} (see code snippet (\ref{code:job_def})) for Bitmap with a divide strategy in vertical cut. For an input image, the \texttt{firstOffset} and \texttt{lastOffset} will decide the first and last offsets of the vertical cut correspondingly throughout the width, from the top to the bottom edges. The algorithm of the vertical cut is described in the code snippet (\ref{code:get_single_part}). Regarding the placeholder, we override the \texttt{getJsonMetadata()} method to return a simple JSON string like below:
+The most important part when applying APIs for image processing is defining the \texttt{DataParser} (see Listing \ref{code:job_def}) for Bitmap with a divide strategy in vertical cut. For an input image, the \texttt{firstOffset} and \texttt{lastOffset} will decide the first and last offsets of the vertical cut correspondingly throughout the width, from the top to the bottom edges. The algorithm of the vertical cut is described in Listing \ref{code:get_single_part}. Regarding the placeholder, we override the \texttt{getJsonMetadata()} method to return a simple JSON string like below:
 
 %\noindent \shadowbox{%
 %\begin{minipage}{245pt}
