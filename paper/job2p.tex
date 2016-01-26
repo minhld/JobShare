@@ -101,40 +101,39 @@
 \maketitle
 
 \begin{abstract}
-For the last decade, mobile devices have been significantly developed with powerful hardware facilities such as multicore CPUs, large and fast memory, fast network and high resolution displays. As a result, mobile applications deliver increasingly complex functionality from the recent past. Furthermore, rapid growth in application functionality requires ever greater hardware capability. Thus ensuring the quality of service in resources-limited execution environments remains a major challenge of mobile software development. To reduce execution time and save battery power, some functionality of mobile applications is often executed at a remote server. However, such an optimization mechanism (i.e., computational offloading) has only received much attention in the research literature due to difficult implementation, limited applicability, cost of the cloud, etc. In this paper, we present a novel distribution infrastructure that executes any functionality at a powerful remote server or nearby mobile devices using two distributed execution models---client/server and peer to peer. By means of a simple programming model, the programmer can easily adopt two distributed execution models in their applications. Our benchmarks and case studies demonstrate that the new distribution infrastructure can increase both performance and energy efficiency of mobile applications as well as introducing new feature (i.e., GPS, sensors) to the existing mobile devices.
+For the last decade, mobile devices have been significantly developed with powerful hardware facilities such as multicore CPUs, large and fast memory, fast network and high resolution displays. As a result, mobile applications deliver increasingly complex functionality from the recent past. Furthermore, rapid growth in application functionality requires ever greater hardware capability. Thus ensuring the quality of service in resources-limited execution environments remains a major challenge of mobile software development. To reduce execution time and save battery power, some functionality of mobile applications is often executed at a remote server. However, such an optimization mechanism (i.e., computational offloading) has only received much attention in the research literature due to difficult implementation, limited applicability, cost of the cloud, etc. In this paper, we present a novel distribution infrastructure that executes any functionality at a powerful remote server or nearby mobile devices using two distributed execution models---client/server and peer to peer. By means of a simple programming model, the programmer can easily adopt two distributed execution models in their applications. Our benchmarks and case studies demonstrate that the new distribution infrastructure can increase both performance and energy efficiency of mobile applications as well as introducing new feature (i.e., sensors) to the existing mobile devices.
 \end{abstract}
 
 \begin{CCSXML}
-\begin{CCSXML}
 <ccs2012>
+<concept>
+<concept_id>10010520.10010521.10010537</concept_id>
+<concept_desc>Computer systems organization~Distributed architectures</concept_desc>
+<concept_significance>100</concept_significance>
+</concept>
 <concept>
 <concept_id>10010520.10010521.10010537.10010540</concept_id>
 <concept_desc>Computer systems organization~Peer-to-peer architectures</concept_desc>
-<concept_significance>500</concept_significance>
-</concept>
-<concept>
-<concept_id>10010520.10010521.10010537.10003100</concept_id>
-<concept_desc>Computer systems organization~Cloud computing</concept_desc>
-<concept_significance>300</concept_significance>
+<concept_significance>100</concept_significance>
 </concept>
 </ccs2012>
 \end{CCSXML}
-\ccsdesc[500]{Computer systems organization~Peer-to-peer architectures}
-\ccsdesc[300]{Computer systems organization~Cloud computing}
 
+\ccsdesc[100]{Computer systems organization~Distributed architectures}
+\ccsdesc[100]{Computer systems organization~Peer-to-peer architectures}
 \terms{Design}
 
 \printccsdesc
 \keywords{Mobile Computing, Remote Execution, Offloading, Peer to Peer, Runtime System}
 
 \section{Introduction}
-Mobile devices have been evolving at lightning pace with powerful hardware facilities such as multicore CPUs, large and fast memory, fast network and high resolution displays. Due to the significant development of mobile hardware, today's mobile applications are becoming more complex with a increasingly feature-rich nature. As a result, mobile devices often overtake the personal computer as a primary means of accessing computing resource. However, the resource demands (e.g., computation, memory, battery, etc.) of mobile applications often outstrip the hardware capacities of mobile devices. A particularly popular technique to extend limited mobile hardware is \emph{computational offloading}---executing CPU-intensive functionality at a powerful cloud-based server with the parameters and results transferred across a mobile network, thereby improving both performance and energy efficiency. 
+Mobile devices have been evolving at lightning pace with powerful hardware facilities such as multicore CPUs, large and fast memory, fast network and high resolution displays. Due to the significant development of mobile hardware, today's mobile applications are becoming more complex with a increasingly feature-rich nature. As a result, mobile devices often overtake the personal computer as a primary means of accessing computing resource. However, the resource demands (e.g., computation, memory, battery, etc.) of mobile applications often outstrip the hardware capacities of mobile devices. A particularly popular technique to extend limited mobile hardware is \emph{computational offloading}---executing CPU-intensive functionality at a powerful cloud-based server, thereby improving both performance and energy efficiency. 
 
-Although computational offloading has been widely enjoyed in the research literature as an optimization mechanism that can utilize remote CPU resources, a majority of feature-rich mobile applications still suffer from resource constraints to provide quality user experiences. In addition, because computational offloading mechanisms have been developed by leveraging cloud computing technologies, in spite of their great advantages, the high operational cost of cloud infrastructures and the implementation difficulties of computational offloading have deterred programmers from actively applying computational offloading in their mobile applications. In particular, performance or energy benefits gained through computational offloading would be considerably low when comparing to the operational costs of cloud-based offloading server. Moreover, mobile devices can only executes computation-intensive functionality by accessing the CPU resources of the cloud-based server. Finally, implementing effective computational offloading optimizations often requires highly experienced programming skills and efforts \cite{kwon+:mobilesoft15}.
+Although computational offloading has been widely enjoyed in the research literature as an optimization mechanism that can utilize remote CPU resources, a majority of feature-rich mobile applications still suffer from resource constraints to provide quality user experiences. In addition, because computational offloading mechanisms have been developed by leveraging cloud computing technologies, in spite of their great advantages, the high operational cost of cloud infrastructures and the implementation difficulties of computational offloading have deterred programmers from actively applying computational offloading in their mobile applications. In particular, performance or energy benefits gained through computational offloading would be considerably low when comparing to the operational costs of cloud-based offloading server. Moreover, mobile devices can only execute computation-intensive functionality by accessing the cloud-based server. Finally, implementing effective computational offloading optimizations often requires highly experienced programming skills and efforts \cite{kwon+:mobilesoft2015}.
 
-Nevertheless, computational offloading is still considered an important optimization mechanism for mobile applications as one of distributed execution models. Thus, in order to optimize mobile applications' executions and extend mobile devices' hardware capacity through distributed executions, we solve the following research problems: (1) how can mobile applications utilize remote computing resources at low cost? (2) how can the application programmer express the desired mobile hardware resources? (3) how can mobile devices allow using their resources without affecting the existing applications' executions? Solving these problems requires innovations in programming models and middleware design spaces. 
+Nevertheless, computational offloading is still considered an important optimization mechanism for mobile applications as one of distributed execution models. In order to optimize mobile applications' executions and extend their hardware capacities through distributed executions, we solve the following research problems: (1) how can mobile applications utilize remote computing resources at low cost? (2) how can the application programmer express the desired mobile hardware resources? (3) how can mobile devices allow using their resources without affecting the existing applications' executions? Solving these problems requires innovations in programming models and middleware design spaces. 
 
-In this paper, we present a novel distributed execution model that not only optimizes mobile application's executions in terms of performance and energy efficiency, but also extends mobile device's hardware capability. In other words, mobile devices will be able to virtually add more hardware resources including computation, networking, memory, and sensors to the existing hardware setup. Our approach is realized as the following two major technical solutions: (1) a straight programming model that enables the programmer to write any execution task and (2) a runtime system that determines an execution strategy and distributes the requested execution task over the nearby or remote network. Our runtime system employs a dynamic, adaptive mechanism to determine the best distribution and execution strategy under different execution environments including diverse network conditions and heterogeneous mobile hardware capacity.
+In this paper, we present a novel distributed execution model that not only optimizes mobile application's executions in terms of performance and energy efficiency, but also extends mobile device's hardware capability. In other words, mobile devices will be able to virtually add more hardware resources including computation, networking, memory, and sensors to the existing hardware setups. Our approach is realized as the following major technical solutions: (1) a straight programming model that enables the programmer to write any execution task and (2) a runtime system that determines an execution strategy and distributes the requested execution task over the nearby or remote network. Our runtime system employs a dynamic, adaptive mechanism to determine the best distribution and execution strategy under different execution environments including diverse network conditions and heterogeneous mobile devices.
 
 The experiments in 3 case studies have demonstrated the effectiveness of our approach, to extend limited mobile hardware resources, thereby improving performance and energy efficiency as well as bringing new hardware capabilities. By presenting our approach, this paper makes the following technical contributions:
 \begin{itemize}
@@ -155,15 +154,13 @@ The rest of this paper is structured as follows. Section \ref{sec:background} in
 In this section, we present the major technologies we used in this paper. The major technologies used in this work including computation offloading, remote execution, middleware, and WiFi direct. We will describe them in the following sub sections.
 
 \subsection{Computational Offloading}   
-Computation offloading has become a popular optimization technique for mobile applications \cite{maui,chun+:eurosys11,kwon+:icdcs12,wen2012energy}. It leverages the resources of cloud-based remote servers to execute portions of a mobile application's functionality. By executing some of the application's functionality in the cloud, offloading reduces the amount of energy consumed by the mobile device, thus saving its battery power. An additional benefit of computation offloading is improved performance efficiency, as cloud servers have hardware resource more powerful that those available on mobile devices. This technique is used as one of the distributed execution model in this paper.
+Computation offloading has become a popular optimization technique for mobile applications \cite{maui,chun+:eurosys11,kwon+:icsm13,wen2012energy}. It leverages the resources of cloud-based remote servers to execute portions of a mobile application's functionality. By executing some of the application's functionality in the cloud, offloading reduces the amount of energy consumed by the mobile device, thus saving its battery power. An additional benefit of computation offloading is improved performance efficiency, as cloud servers have hardware resource more powerful that those available on mobile devices. This technique is used as one of the distributed execution model in this paper.
 
 \subsection{Remote Execution and Middleware}
-Our approach uses features from mainstream middleware mechanisms for distributed execution as building blocks. Middleware systmes provide programming and runtime support to coordinates the execution of multiple remote processes. By eliminating the need for low-level network programming (e.g., managing sockets, marshaling/unmarshaling data, keeping track of processes) middleware systems offer convenient building blocks for constructing distributed systems. In our prior work \cite{kwon+:mobicase14-middleware}, we introduced a novel middleware architecture that optimizes performance and energy consumption by adapting various facets of middleware functionality dynamically in response to fluctuations in network conditions because network communication incurs high energy costs in mobile applications. The runtime system developed in this paper is derived from our prior middleware design.
+Our approach uses features from mainstream middleware mechanisms for distributed execution as building blocks. Middleware systems provide programming and runtime support to coordinates the execution of multiple remote processes. By eliminating the need for low-level network programming (e.g., managing sockets, marshaling/unmarshaling data, keeping track of processes), middleware offers convenient building blocks for constructing distributed systems. In our prior work \cite{kwon+:mobilesoft2015}, we introduced a programming model and a middleware architecture for performance and energy optimization. The runtime system developed in this paper is derived from our prior middleware design.
 
 \subsection{WiFi Direct}
-The WiFi Direct \cite{alliance2010wi} is a new peer to peer standard built on top of the IEEE 802.11 to provide connections between WiFi devices without an Internet connection. Over a WiFi network, a WiFi device can discover any nearby WiFi devices without special configurations or setups. Once a connection is established, WiFi devices can communicate with each other as a client or an access point. WiFi Direct has been widely used to transfer content or share applications among mobile devices. Recently in Android, WiFi Direct has become available from Android 4.0 APIs. In this paper, our approach uses Android WiFi Direct \cite{wifi:p2p} to utilize nearby computing resources without any Internet connection or wireless access point. Even though the discovery operation of WiFi Direct is costly \cite{trifunovic2013slicing}, our approach is still efficient for heavy CPU-intensive executions or sharing hardware resources. 
-
-
+The WiFi Direct \cite{alliance2010wi} is a new peer to peer standard built on top of the IEEE 802.11 to provide direct connections between WiFi devices without an Internet connection. Over a WiFi network, a WiFi device can discover and connect to any types of WiFi devices without special configurations or setups. Once a connection is established, WiFi devices can communicate with each other as a client or an access point. WiFi Direct has been widely used to transfer content or share applications between mobile devices. Recently in Android, WiFi Direct has been available from Android 4.0 APIs. In this paper, our approach uses Android WiFi Direct \cite{wifi:p2p} to utilize nearby computing resources without an Internet connection or wireless access point (AP). Even though the discovery operation of WiFi Direct is costly \cite{trifunovic2013slicing}, our approach is still efficient for CPU-intensive executions and sharing hardware resources. 
 
 %other name?
 \section{Our Approach}
@@ -184,7 +181,7 @@ Figure \ref{fig:architecture} shows the overall system architecture, which main-
 
 %It discovers available peers, establishes connections, and keeps track of the connections. 
 \subsubsection{WiFi Network Manager}
-To establish a network connection between nearby mobile devices over the WiFi network, we utilize the WiFi Direct technology. In particular, \texttt{WiFiDirectController} of \texttt{WNM} hides the complex WiFi Direct implementation details. As aforementioned in the previous section, to leverage computational offloading, the \texttt{OffloadEngine} module initiates a connection with our cloud-based offloading server when a WiFi access point (AP) is available \cite{kwon+:mobilesoft2015}, thus executing the job at a powerful remote server instead of looking for nearby devices. By providing transparent operations between the cloud-based server and nearby mobile devices, our approach separates a business logic from distributed execution models.
+To establish a network connection between nearby mobile devices over the WiFi network, we utilize the WiFi Direct technology. In particular, \texttt{WiFiDirectController} of \texttt{WNM} hides the complex WiFi Direct implementation details. As aforementioned in the previous section, to leverage computational offloading, the \texttt{OffloadEngine} module initiates a connection with our cloud-based offloading server when a WiFi access point (AP) is available, thus executing the job at a powerful remote server instead of looking for nearby devices. By providing transparent operations between the cloud-based server and nearby mobile devices, our approach separates a business logic from distributed execution models.
 
 When an application starts, \texttt{WNM} calls \texttt{discoverPeers()} to search for available offloading servers registered in its configuration file. It also spreads acknowledgments to inform its availability to nearby mobile devices. If any offloading server or nearby devices receive a discovery message, its \texttt{WNM} module updates the new caller to its available device list, then simultaneously sends their information back to the caller in a JSON object (see \ref{ss_dfp}). Once all the devices are updated with the available device list, the network is organized as described in Figure \ref{fig:forming}. We provide the method \texttt{connectToADevice()} to make a connection with the best available mobile device. After establishing the connection, the mobile device starts to passively listen to job requests.
 
@@ -286,7 +283,7 @@ JSON : DeviceInfo {
 JSON : Condition {"RL": "max", "gps": "on"}
 \end{lstlisting}\end{minipage}}	
 
-\captionof{lstlisting}{A JSON response format and initiative condition.}
+\captionof{lstlisting}{JSON response format and initiative condition.}
 \label{code:jsonResponse}
 
 \end{figure}
@@ -434,7 +431,7 @@ or
 E_{Diff} = E(1 - \frac{RL_{0}}{\sum_{i=1}^{n}{RL_{i}}}) - E_{WiFi}
 \end{equation}
 
-Since WiFi is known to drain a battery linearly by time during transmission \cite{wifi_energy}, particularly it can be represented by $y = 17.01x - 0.93$ for downloading and $y = 17.31x - 2.28$ for uploading, where $y$ stands for percentage of battery consumed when using Wi-Fi for a period of $x$ hours. Therefore, under non-adventitious circumstances, equation (\ref{eq:energy_diff}) infers that in a mobile system with a certain number of devices in different levels of responsibility, if E is big enough, or in other words, if the task to perform is big enough, then $E_{Diff} > 0$ will result in, thus deploying a peer-to-peer cluster will give a great benefit in terms of energy efficiency. The bigger value of $E_{Diff}$, the more benefit we will gain. 
+Since WiFi is known to drain a battery linearly by time during transmission \cite{wifi_energy}, particularly it can be represented by $y = 17.01x - 0.93$ for downloading and $y = 17.31x - 2.28$ for uploading, where $y$ stands for percentage of battery consumed when using Wi-Fi for a period of $x$ hours. Therefore, under non-adventitious circumstances, equation (\ref{eq:energy_diff}) infers that in a mobile system with a certain number of devices in different levels of responsibility, if E is big enough, or in other words, if the task to perform is big enough, then $E_{Diff} > 0$ will result in, thus deploying a peer-to-peer group will give a great benefit in terms of energy efficiency. The bigger value of $E_{Diff}$, the more benefit we will gain. 
 
 In addition, if a cloud-based offloading server is available in the network, $RL$ and $E_{Diff}$ are calculated as follows: $\sum_{i=1}^{n}{RL_{i}} \rightarrow \infty$, $E_{Diff} = E - E_{WiFi}$ which is the maximum value under the same conditions.
 
@@ -541,7 +538,7 @@ We started the evaluation with micro benchmarking energy consumption of the syst
 	\resizebox{0.5\textwidth}{!}{
 		\includegraphics{data/ovh.pdf}
 	}
-	\caption{Energy consumption cumulation on caller in multi-device clusters}
+	\caption{Total energy consumption on caller.}
 	\label{fig:microb_24}
 \end{figure}
 
@@ -580,7 +577,7 @@ The most important part when applying APIs for image processing is defining the 
 %\end{minipage}
 %}
 
-The method \texttt{createPlaceholder()} will parse this JSON object to obtain \texttt{width} and \texttt{height} as the inputs to initiate an empty placeholder bitmap. Finally \texttt{copyPartToPlaceholder()} method will place the partial result bitmap into its correct location on the placeholder defined by \texttt{sOffset} and \texttt{eOffset}.\\
+The \texttt{createPlaceholder()} method obtains \texttt{width} and \texttt{height} from the JSON object and then initiates an empty placeholder bitmap. Finally \texttt{copyPartToPlaceholder()} method will place the partial result bitmap into its correct location on the placeholder defined by \texttt{sOffset} and \texttt{eOffset}.\\
 
 \begin{figure}
 \noindent \shadowbox{%
@@ -596,7 +593,7 @@ public Object copyPartToPlaceholder(placeholder,
 }
 	\end{lstlisting}
 \end{minipage}}
-	\captionof{lstlisting}{Merging the result}
+	\captionof{lstlisting}{Merging results in the image processing app.}
 \end{figure}
 
 When all the partial bitmaps are received, the system throws a message titled \texttt{MAIN\_JOB\_DONE} to the UI in which \texttt{msg.obj} contains the final bitmap.
@@ -605,22 +602,22 @@ When all the partial bitmaps are received, the system throws a message titled \t
 	\centering
 	%\resizebox{0.39\textwidth}{!}{
 	%\includegraphics[width=0.32\textwidth]{data/img_large_perf_full.pdf}
-		\includegraphics[width=0.39\textwidth]{data/img_perf.pdf}
-		\includegraphics[width=0.45\textwidth]{data/img_energy.pdf}
+		\includegraphics[width=0.43\textwidth]{data/img_perf.pdf}
+		\includegraphics[width=0.48\textwidth]{data/img_energy.pdf}
 	%}
-	\caption{Performance and energy consumption of the large image processing tests in multiple clusters}
+	\caption{Performance and energy consumption of the large image processing tests in multiple devices.}
 	\label{fig:cluster_performance}
 \end{figure*}
 
 \paragraph{Performance with large scale image}
 Running the large scale image test case throughout 50 tests by increasing number of devices from 1 to 5 within the network, we found that the test case doesn't work if there is only one device standing desolately. By utilizing 2 threads for the image process on that single device, we realized that only 1 thread works, while the other does not, due to an out of memory exception, and the processing time to complete half of the task is $12,581ms$. 
 
-By increasing the number of devices in network from 2 to 5 and sharing the task by sending jobs to other peers, we gathered average statistic data in 20 tests as in the Figure (\ref{fig:cluster_performance} - left) (clusters with 2, 3, 4 and more devices). In this Figure, to accomplish the task, the two devices have to work in $13,541ms$ average. The execution time reduced when more devices participate the cluster, down to average $7387ms$ when more than 4 peers joined the cluster, which is twice as fast as having 2 devices (notice that system didn't fully work with only one device).
+By increasing the number of devices in network from 2 to 5 and sharing the task by sending jobs to other peers, we gathered average statistic data in 20 tests as in the Figure (\ref{fig:cluster_performance} - left) (groups with 2, 3, 4 and more devices). In this Figure, to accomplish the task, the two devices have to work in $13,541ms$ average. The execution time reduced when more devices participate the group, down to average $7387ms$ when more than 4 peers joined the group, which is twice as fast as having 2 devices (notice that system didn't fully work with only one device).
 
-To measure energy consumption on each device, we used Monsoon Power Monitor \cite{moosoon} and measured the velocity of energy drained on a single mobile device when utilizing power from the other peers. Figure \ref{fig:cluster_performance} (right) shows the energy measurement results from the two consecutive tests. Although the two tests showed the big gap when executing a 2 device cluster, in general the variability of energy consumption within multiple clusters matches with time consumption one. By running the two consecutive tests with the same input for 20 times, we realized that the results didn't change, and by utilizing 3 or more devices, we can significantly reduce the amount of energy required for the task, sometimes up to 25\%. However when we increased the number of devices in cluster, we didn't get the performance raised up at the corresponding value linearly, this can be explained by Amdahl's law \cite{amdahl}. Throughout our experiments, the number of devices at 3 to 5 will give the maximum benefit in terms of energy saving and device usage productivity.
+To measure energy consumption on each device, we used Monsoon Power Monitor \cite{moosoon} and measured the velocity of energy drained on a single mobile device when utilizing power from the other peers. Figure \ref{fig:cluster_performance} (right) shows the energy measurement results from the two consecutive tests. Although the two tests showed the big gap when executing the 2 device group, in general the variability of energy consumption within multiple groups matches with time consumption one. By running the two consecutive tests with the same input for 20 times, we realized that the results didn't change, and by utilizing 3 or more devices, we can significantly reduce the amount of energy required for the task, sometimes up to 25\%. However when we increased the number of devices in a group, we didn't get the performance raised up at the corresponding value linearly, this can be explained by Amdahl's law \cite{amdahl}. Throughout our experiments, the number of devices at 3 to 5 will give the maximum benefit in terms of energy saving and device usage productivity.
 
 \paragraph{Performance with normal scale image}
-To make any device in the network feasible for image processing, we reduced the input image size to $2500 \times 1405$. By reconfiguring the cluster from 1 to 4 devices and measure total execution time on the callers, we gathered performance data among them as shown in Figure \ref{fig:small_img_perf}. From our statistic data, the total time consumed by one device to run on itself is slightly fluctuated around $5400ms$ between multiple measurements, but if one more device joins the network the time consumed is decreased to $3500ms$ which is 35\% faster. When more devices (3 or 4) participate, performance will continuously increase although their finishing time largely varies. Specifically 4 devices will collaboratively execute twice as fast as one device, or 50\% faster according to our measurements.
+To make any device in the network feasible for image processing, we reduced the input image size to $2500 \times 1405$. By reconfiguring the group from 1 to 4 devices and measure total execution time on the callers, we gathered performance data among them as shown in Figure \ref{fig:small_img_perf}. From our statistic data, the total time consumed by one device to run on itself is slightly fluctuated around $5400ms$ between multiple measurements, but if one more device joins the network the time consumed is decreased to $3500ms$ which is 35\% faster. When more devices (3 or 4) participate, performance will continuously increase although their finishing time largely varies. Specifically 4 devices will collaboratively execute twice as fast as one device, or 50\% faster according to our measurements.
 
 \begin{figure*}
 	\centering
@@ -632,7 +629,7 @@ To make any device in the network feasible for image processing, we reduced the 
 	\label{fig:small_img_perf}
 \end{figure*}
 
-Basically the variability and fluctuation of energy consumption will reflect the performance, Figure (\ref{fig:small_img_perf} - right) displays the details. Through our experiments, running the cluster with 2 devices will preserve 20\% energy compare with 1 device, the number is better with 3 devices at $34\%$ and 4 devices at $37.5\%$ respectively.
+Basically the variability and fluctuation of energy consumption will reflect the performance, Figure (\ref{fig:small_img_perf} - right) displays the details. Through our experiments, running the group with 2 devices will preserve 20\% energy compare with 1 device, the number is better with 3 devices at $34\%$ and 4 devices at $37.5\%$ respectively.
 
 %\begin{figure}
 	%\centering
@@ -652,7 +649,8 @@ To apply APIs for this application, from the caller we dispatch job requests, wh
 According to our system architecture, the caller needs to prepare a placeholder to hold every incoming result. For this test case, the placeholder is designated as a sub folder in the \texttt{Download} folder. When the result comes as a ZIP file, its contents will be extracted and filled into the placeholder folder. The final HTML file will contain all the modified resource links which are located at the same folder. Finally, the local HTML file can be opened by Android Web browser component using a local web server, for instance, TinyHTTPd \cite{tinyhttpd}.
 
 \textbf{\emph{Performance:}}
-Figure (\ref{fig:net_clusters_perf} - left) describes performance of multi-device clusters from 1 to more than 4 peers (some peers use a few more threads for simulating high performance) when remotely rendering web pages from CNN URLs. The figure describes the execution time of each peer in each cluster after being assigned a job, and the peak is reached when the last peer completes its work. In the cluster with only one device, it works desolately without any peer contacts; it will download web pages from the internet by opening Wi-Fi connection. It is obvious that executing Internet Remote access brings a high benefit in terms of performance since rendering time is reduced almost a half when at least 3 peers participate in the network. 
+Figure (\ref{fig:net_clusters_perf} - left) describes performance of multi-device groups from 1 to more than 4 peers (some peers use a few more threads for simulating high performance) when remotely rendering web pages from CNN URLs. The figure describes the execution time of each peer in each group after being assigned a job, and the peak is reached when the last peer completes its work. In the group with only one device, it works desolately without any peer contacts; it will download web pages from the internet by opening Wi-Fi connection. It is obvious that executing Internet Remote access brings a high benefit in terms of performance since rendering time is reduced almost a half when at least three peers participate in the network. 
+
 
 \begin{figure*}
 	\centering
@@ -664,16 +662,8 @@ Figure (\ref{fig:net_clusters_perf} - left) describes performance of multi-devic
 	\label{fig:net_clusters_perf}
 \end{figure*}
 
-To evaluate energy consumption, we performed the same tests similar to the first test case by measuring in multi-device clusters with overheads and when remotely rendering web pages. From the outcome of energy test (Figure \ref{fig:net_clusters_perf} - right), we realized that by handing over computation utilizing system resources (Here is Internet accessibility) over peer-to-peer network with multiple peers will help reducing significantly energy consumed, particularly more than a half in compare with a solo device. The differences between the total energy and overheads are not fluctuated much between the multiple clusters, which can be easily explained by \cite{wifi_energy}.\\
 
-%\begin{figure}
-	%\centering
-	%\resizebox{0.39\textwidth}{!}{
-		%\includegraphics{data/net_energy.pdf}
-	%}
-	%\caption{Energy consumption of clusters for Internet sharing}
-	%\label{fig:net_cluster_energy}
-%\end{figure}
+To evaluate energy consumption, we performed the same tests similar to the first test case by measuring in multi-device groups with overheads and when remotely rendering web pages. From the outcome of energy test (Figure \ref{fig:net_clusters_perf} - right), we realized that by handing over computation utilizing system resources (Here is Internet accessibility) over peer-to-peer network with multiple peers will help reducing significantly energy consumed, particularly more than a half in compare with a solo device. The differences between the total energy and overheads are not fluctuated much between the multiple groups, which can be easily explained by \cite{wifi_energy}.\\
 
 \subsubsection{GPS Share}
 Connecting and retrieving the GPS location is really energy consuming. Generally the smartphone will enable and contact at least 3 satellites through radio signals in order to start retrieving the GPS location (4 satellites to get more information like altitude). Therefore, energy can be saved if GPS requests are relayed to another device in the network which is healthier (higher remaining battery, in idle state, etc.) or has better specifications.
@@ -685,6 +675,11 @@ With GPS Share, only one peer is entrusted. Our strategy is letting the caller t
 \textbf{\emph{Performance}}
 We performed 3 GPS Share test cases, 2 for remote GPS requests and 1 for local GPS (Using GPS on it own). For each case we execute $10$ times on two devices with the same specifications and assign roles to them as a caller and a receiver to minimize the overloads throughout the system. Figure \ref{fig:gps_perf} interprets that GPS Share mechanism doesn't give any benefit in terms of performance, since the remote device has the same resource specs and remote GPS may require even more time including time for GPS plus time for data transmission back to the caller (however it is too short for consideration).
 
+Extracted from the above tests, Figure \ref{fig:gps_perf} describes the distribution of energy consumptions among the 3 test cases. By applying interpolation to find trend lines for these energy distributions, we got $y = 0.0528388 \times x + 7.31948$ formula for test 1, $y = 0.0547221 \times x + 7.42138$ for test 2 and $y = 0.0575331 \times x - 12.9403$ for test 3. The trend line 3 has the biggest slope, or at the same amount of time it consumed more energy than the first two cases. As we might see, the difference between the slopes of line 3 and line 1, 2 are very slim, however due to our later tests on the weak caller (low battery), the difference will highly increase. 
+
+\textbf{\emph{Applications}}
+By integrating our system with either RetroSkeleton \cite{retro-skel} or Rio \cite{rio}, we can provide remote or local GPS location data without having to modify the current installed applications. Those systems provide interference methods to capture requests for system resources and instead inject their customized responses. 
+
 \begin{figure*}
 	\centering
 	%\resizebox{0.36\textwidth}{!}{
@@ -695,22 +690,15 @@ We performed 3 GPS Share test cases, 2 for remote GPS requests and 1 for local G
 	\label{fig:gps_perf}
 \end{figure*}
 
-Extracted from the above tests, Figure \ref{fig:gps_perf} describes the distribution of energy consumptions among the 3 test cases. By applying interpolation to find trend lines for these energy distributions, we got $y = 0.0528388 \times x + 7.31948$ formula for test 1, $y = 0.0547221 \times x + 7.42138$ for test 2 and $y = 0.0575331 \times x - 12.9403$ for test 3. The trend line 3 has the biggest slope, or at the same amount of time it consumed more energy than the first two cases. As we might see, the difference between the slopes of line 3 and line 1, 2 are very slim, however due to our later tests on the weak caller (low battery), the difference will highly increase. 
-
-\textbf{\emph{Applications}}
-By integrating our system with either RetroSkeleton \cite{retro-skel} or Rio \cite{rio}, we can provide remote or local GPS location data without having to modify the current installed applications. Those systems provide interference methods to capture requests for system resources and instead inject their customized responses. 
-
 \section{Related Work}
 \label{sec:related}
 The work presented here is related to other complementary efforts that optimize mobile applications via remote executions including computation offloading and peer to peer networking.
 
-Alljoyn \cite{alljoyn} is an open source framework that hides the complexity of network communications for application programmers. By providing interoperability between multiple platforms without any transport layers, Alljoyn makes the integration and initiation of network communication easy and simple. 
+Alljoyn \cite{alljoyn} is an open source framework that hides the complexity of network communications for application programmers. By providing interoperability between multiple platforms without any transport layers, Alljoyn makes the integration and initiation of network communication easy and simple. Prior to the the Wi-Fi Direct technology, peer to peer networks have demonstrated the initiative steps to establish the point-to-point collaborative WiFi networks \cite{m_p2p_tutor}. 
 
-Before the Wi-Fi Direct available in software industry, many efforts to address P2P networks, Frank H. P. Fitzek et al. \cite{m_p2p_tutor} summarized the relevant papers focusing on this topic to demonstrate the initiative steps to establish the point-to-point collaborative Wi-Fi networks. Liam McNamara et al. published \cite{media_share} media sharing based on historical colocation information over urban transport using blue-tooth or any available wireless connections.
+In addition to the WiFi-based peer to peer network, there had been several efforts to use other communication medium such as bluetooth to share media contents \cite{media_share}. Rio \cite{rio} bases on I/O files to share contents and resources among the applications in different devices without having to modify them. Their use cases addressed multi-system photography and gaming, singular SIM card for multi-devices, music and video sharing. GameOn \cite{gameon} utilizes WiFi P2P to establish non-Internet connection between gamers with a focus on closed range networks like in public transportation. The other content sharing systems include CAMEO \cite{cameo}, Spartacus \cite{spartacus} and GigaSight \cite{crowd-sourcing}, which distribute data in closed range networks. By utilizing the Doppler effect, Spartacus help initiate and interact with nearby devices through pointing gesture with accuracy up to 90\% within 3 meters.
 
-Since the modern mobile devices (phones and tablets) are featured with multiple network capabilities, many researches relied on these features to exchange resources and computations. Ardalan et al. designed Rio \cite{rio} bases on I/O device files to share contents and resources among the applications in different devices without having to modify them. Their use-cases addressed multi-system photography and gaming, singular SIM card for multi-devices, music and video sharing. Nairan Zhang et al. developed GameOn \cite{gameon} to utilize Wi-Fi P2P to establish non-Internet connection between the gamers, which majorly focuses on closed range network like in public transportation, bus or train. The other content sharing systems CAMEO \cite{cameo}, Spartacus \cite{spartacus} and GigaSight \cite{crowd-sourcing} try to detect closed range networks base on specific methods to distributed data. Utilizing Doppler effect applying on built-in microphones and speakers, Spartacus help can initiate and interact with nearby devices through pointing gesture with accuracy up to 90\% within distance of 3 meters.
-
-In terms of improving energy consumption, offloading-featured systems like MAUI \cite{maui}, COMET \cite{comet}, \cite{kwon+:mobilesoft15}, \cite{mobile-cloud-middleware} or \cite{fuzzy-engine} address the heavy computations by offloading source code or execution module to server following multiple constraints and policies to release workload and energy consumed at client which is either mobile device or low computation capacity computer. 
+Finally, our work shares objectives and techniques with the well-known computational offloading approaches \cite{maui,comet,mobile-cloud-middleware,fuzzy-engine}. These offloading mechanisms is a well-known mobile application optimization technique that makes it possible to execute the application’s energy intensive functionality at a powerful cloud-based server, without draining the mobile device’s battery. In this research, we have focused on generalizing these offloading mechanisms using two different distributed execution models---client/server and peer to peer communication models.
 
 \section{Conclusions}
 \label{sec:conc}
