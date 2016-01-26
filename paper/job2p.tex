@@ -456,7 +456,7 @@ Where $E_{w}$ is the energy the app requires for waiting. Also,
 
 $$E_{p2p} = E(\frac{RL_{0}}{\sum_{i = 1}^{n}{RL_{i}}}) + E_{WiFi} + E_{w}$$ 
 
-Where $E_{WiFi}$ is energy consumed by Wi-Fi for sending jobs to other peers.
+Where $E_{WiFi}$ is the energy consumed by Wi-Fi for sending jobs to other peers.
 
 In this estimation we skipped considering $E_{w}$ since it will depend on the appearance of applications. If an application has no GUI like system background services, $E_{w}$ will cause very little effect. From the two above equations, we can get the energy consumption difference between the two job processing mechanisms $E_{Diff}$ 
 
@@ -469,15 +469,17 @@ or
 E_{Diff} = E(1 - \frac{RL_{0}}{\sum_{i=1}^{n}{RL_{i}}}) - E_{WiFi}
 \end{equation}
 
-According to \cite{wifi_energy}, Wi-Fi caused battery drained linearly by time during the transmission, particularly the drain can be represented by $y = 17.01x - 0.93$ for downloading and $y = 17.31x - 2.28$ for uploading, where $y$ stands for percentage of battery consumed when using Wi-Fi for a period of $x$ hours. Therefore, under non-adventitious circumstances, equation (\ref{eq:energy_diff}) infers that in a mobile system with a certain number of devices in different levels of responsibility, if E is big enough, or in the other words, if the task to perform is big enough, then $E_{Diff} > 0$ will happen, thus deploying a peer-to-peer cluster will give the great benefit in term of energy efficiency. The bigger value of $E_{Diff}$, the more benefit we will archive.
+According to \cite{wifi_energy}, Wi-Fi caused the battery to drain linearly by time during the transmission, particularly the drain can be represented by $y = 17.01x - 0.93$ for downloading and $y = 17.31x - 2.28$ for uploading, where $y$ stands for percentage of battery consumed when using Wi-Fi for a period of $x$ hours. Therefore, under non-adventitious circumstances, equation (\ref{eq:energy_diff}) infers that in a mobile system with a certain number of devices in different levels of responsibility, if E is big enough, or in other words, if the task to perform is big enough, then $E_{Diff} > 0$ will result in, thus deploying a peer-to-peer cluster will give a great benefit in terms of energy efficiency. The bigger value of $E_{Diff}$, the more benefit we will gain. 
+
+Especially, when there is an offloading server in the network, $\sum_{i=1}^{n}{RL_{i}} \rightarrow \infty$, $E_{Diff} = E - E_{WiFi}$ which is the maximum value under the same conditions.
 
 \subsection{API Usage Scenario}
 
-The library should be simple, so that developer can integrate within just a few steps. This section will describe step-by-step the way to utilize our API to enable a typical peer-to-peer network.
+The library should be simple, so that the developers can integrate within just a few steps. This section will describe step-by-step the way to utilize our API to enable a typical peer-to-peer network.
 
 \subsubsection{Defining a Job}
 
-Job implementation is the prerequisite work to determine what to execute on the remote device and how to cast and manipulate data from the abstract object. According to section \ref{prog_model}, developer needs to implement the Job class file separately by overriding the \texttt{exec()} method and cast the input abstract parameter to the concrete. Then run the \texttt{DexCreator} tool on the Job class to compile and compact it into the DEX jar package. The final outcome is the \texttt{job.jar} file, it should be saved in the internal storage of the caller device. To simplify, we can store it in the \texttt{Download} folder.  
+Job implementation is the prerequisite work to determine what to execute on the remote device and how to cast and manipulate data from the abstract object. According to section \ref{prog_model}, a developer needs to implement the Job class file separately by overriding the \texttt{exec()} method and casting the abstract input parameter to the concrete one. Then run the \texttt{DexCreator} tool on the Job class to compile and compact it into the DEX jar package. The final outcome is the \texttt{job.jar} file, which should be saved in the internal storage of the caller device. In order to simplify, we can store it in the \texttt{Download} folder.  
 
 \subsubsection{Implementing an Application Using APIs}
 
@@ -485,7 +487,7 @@ This sub section will describe 3 basic steps to implement an Android application
 
 \paragraph{Message Handler}
 
-The Message Handler is required to instantiate at the beginning. In particular, an instance of \texttt{UIHandler} is initiated to receive messages from system when it goes into runtime. While system is in progress, the log and information messages will periodically be returned with label \texttt{MAIN\_INFO} (Code snippet \ref{ui_handler}). When each job result comes, \texttt{ExecutionHandler} will collect and handle by  to partially put into a placeholder. When all results arrived, the placeholder with label \texttt{MAIN\_JOB\_DONE} will be returned to inform the completion of job collaboration, as well as bring the final result back to the main app UI.\\
+The Message Handler is required to be instantiated at the beginning. In particular, an instance of \texttt{UIHandler} is initiated to receive messages from system when it goes into runtime. While the system is in progress, the log and information messages will periodically be returned with label \texttt{MAIN\_INFO} (Code snippet \ref{ui_handler}). When each job result comes, \texttt{ExecutionHandler} will collect and handle by partially put into a placeholder. When all results have arrived, the placeholder with label \texttt{MAIN\_JOB\_DONE} will be returned to inform the completion of job collaboration, as well as bringing the final result back to the main app UI.\\
 
 \begin{figure}
 \noindent \shadowbox{%
@@ -505,7 +507,7 @@ Handler mainUiHandler = new Handler() {
 
 \paragraph{Data Parser}
 
-Secondly, developer needs to declare \texttt{DataParser} to determine data-type and parser to equip for manipulating data at run-time (see sub section \ref{data_parser}). \texttt{ExecutionHandler} is the main component which wraps up the complexity , and exposes only the necessary functions like \texttt{discoverPeers()} and \texttt{dispatchJob()}. To send ACK messages to other peers for exchanging acknowledgments and reforming network, we need to call \texttt{discoverPeers()} function on the program, this work should be done as soon as application starts.\\
+Secondly, the developer needs to declare \texttt{DataParser} to determine the data-type and the relevant parser to equip the system for manipulating data at run-time (see sub section \ref{data_parser}). \texttt{ExecutionHandler} is the main component which wraps up the complexity, and exposes only the necessary functions like \texttt{discoverPeers()} and \texttt{dispatchJob()}. To send ACK messages to other peers for exchanging acknowledgments and reforming network, we need to call \texttt{discoverPeers()} function on the program, which should be done as soon as the application starts.
 
 \begin{figure}
 \noindent \shadowbox{%
@@ -525,7 +527,7 @@ public Object getSinglePart(object, sOffset, eOffset) {
 
 \paragraph{Discovery Peer and Dispatching Jobs}
 
-When network is formed and connections are held from some of the peers, \texttt{dispatchJob()} will be call to locate the resources and job which predefined in local storage, it then invokes \texttt{DecisionMaker} (sub section \ref{scheduling}) for job splitting and binary serialization. Finally jobs will be dispatched over the socket\\
+When the network is formed and connections are held with some other peers, \texttt{dispatchJob()} will be called to locate the resources and the job which is predefined in local storage, it then invokes \texttt{DecisionMaker} (sub section \ref{scheduling}) for job splitting and binary serialization. Finally jobs will be dispatched over the socket.
 
 \begin{figure}
 \noindent \shadowbox{%
