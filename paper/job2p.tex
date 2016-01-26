@@ -571,30 +571,30 @@ This section describes the micro benchmarks and case studies that evaluate the e
 \end{table}
 
 \subsection{Micro Benchmark}
-We started the evaluation with micro benchmarking energy consumption of the system when mobile devices maintain connections in idle state, to figure out the cost of network maintenance overhead. Using Monsoon Power Monitor device \cite{moosoon} to replace battery and measure on one caller, we evaluated overhead bases on accumulation of energy consumption by time. The Figure (\ref{fig:microb_24}) shows the outcome of the caller measuring from 0 to 100 seconds when preserving connections with 1, 2 and 3 other peers. 
+We started the evaluation with micro benchmarking energy consumption of the system when mobile devices maintain connections in idle state, to figure out the cost of network maintenance overhead. Using Monsoon Power Monitor device \cite{moosoon} to replace battery and measure on one caller, we evaluated overhead based on accumulation of energy consumption by time. The Figure (\ref{fig:microb_24}) shows the outcome of the caller measuring from 0 to 100 seconds when preserving connections with 1, 2 and 3 other peers. 
 
 \begin{figure}
 	\hspace*{-0.15cm}
 	\resizebox{0.5\textwidth}{!}{
 		\includegraphics{data/ovh.pdf}
 	}
-	\caption{Energy consumption cumulation on caller in multiple clusters}
+	\caption{Energy consumption cumulation on caller in multi-device clusters}
 	\label{fig:microb_24}
 \end{figure}
 
-According to the figure \ref{fig:microb_24}, it is revealed that in idle condition without transmitting any data, the energy consuming variability on each device within the P2P network is linear and mostly identical at any time, regardless of number of devices to which it connects. This result is completely harmonized with results from \cite{wifi_energy}, especially since we transmit the same amount of data regularly over Wi-Fi connection. From the statistic information we collected, the energy variability of one device within P2P network in idle condition can be represented by the below linear formula
+According to the figure \ref{fig:microb_24}, it is revealed that in idle condition without transmitting any data, the energy consuming variability on each device within the P2P network is linear and mostly identical at any time, regardless of the number of devices to which it connects. This result is completely harmonized with results from \cite{wifi_energy}, especially since we transmit the same amount of data regularly over Wi-Fi connection. From the statistic information we collected, the energy variability of one device within P2P network in idle condition can be represented by the below linear formula
 
 \begin{equation}
 \label{eq:wifi_overload}
 E_{WiFi} = t \times 50
 \end{equation}
 
-Where $t$ is accumulated time in milliseconds and $E_{WiFi}$ is energy used by system in uAh (micro ampere hour) unit.
+Where $t$ is accumulated time in milliseconds and $E_{WiFi}$ is energy used by system in uAh (micro ampere hour).
 
 \subsection{Case Study}
 To measure the performance of the system equipped with our APIs, we decorated a small testbed with collaboration of 5 different Android devices to perform our 3 test cases:
 \begin{itemize}
-	\item \textbf{Image Processing:} In this case study, we initiated a P2P network to blur a large size image, which was not loaded and processed on a any single mobile device due to the limited memory space. Then, we distributed the blurring job to 1 to 4 mobile devices. 
+	\item \textbf{Image Processing:} In this case study, we initiated a P2P network to blur a large size image, which could not be loaded and processed on a any single mobile device due to the limited memory space in mobile devices. Then, we distributed the blurring job to 1 to 4 mobile devices. 
 	%Particularly, to process an image with size $4000 \times 4000$ and 4 bytes to express each pixel color, application must spare the amount of memory equivalent to 64MB which is way too much for a device, which occasionally returns out of memory exception.
 	\item \textbf{Internet Access:} In this scenario, we defined an Internet access request for a mobile device that has limited network connection or no Internet connection, so that mobile applications could download remote data.
 	\item \textbf{GPS Sharing:} Because establishing a GPS connection is a highly energy-intensive operation, it would be impossible for a device with low battery to frequently update its location information. We built a simple application that can benefit GPS locations from healthier devices. In addition, our system can be used for Internet of Things devices that do not have GPS sensors.
@@ -603,7 +603,7 @@ To measure the performance of the system equipped with our APIs, we decorated a 
 \subsection{Case Study Implementations}
 
 \subsubsection{Image Processing}
-We applied blur effect, one of the energy consuming image processes. We run the test repeatedly on two image inputs, the first image has size $2500 \times 1405$ and the second size is $4326 \times 2856$. For the second image, with 4 bytes allocated for each pixel, device must allocate around $50MB$ of heap to open and hold another $50MB$ for the result, thus leading to app crash all the time. The problem will only be solved by other collaborative peers to solve overload in terms of memory and energy consumption.
+We applied blur effect, one of the high energy consuming image processes. We run the test repeatedly on two image inputs, the first image has size $2500 \times 1405$ and the second size is $4326 \times 2856$. For the second image, with 4 bytes allocated for each pixel, device had to allocate around $50MB$ of heap to open and hold another $50MB$ for the result, thus leading to app crash all the time. This problem will only be solved with the help of other collaborative peers to solve overload in terms of memory and energy consumption.
 
 \paragraph{Design}
 The most important part when applying APIs for image processing is defining the \texttt{DataParser} (see code snippet (\ref{code:job_def})) for Bitmap with a divide strategy in vertical cut. For an input image, the \texttt{firstOffset} and \texttt{lastOffset} will decide the first and last offsets of the vertical cut correspondingly throughout the width, from the top to the bottom edges. The algorithm of the vertical cut is described in the code snippet (\ref{code:get_single_part}). Regarding the placeholder, we override the \texttt{getJsonMetadata()} method to return a simple JSON string like below:
@@ -636,7 +636,7 @@ public Object copyPartToPlaceholder(placeholder,
 	\captionof{lstlisting}{Merging the result}
 \end{figure}
 
-When all the partial bitmaps received, system throws a message titled \texttt{MAIN\_JOB\_DONE} to the UI which \texttt{msg.obj} contains a final bitmap.
+When all the partial bitmaps are received, the system throws a message titled \texttt{MAIN\_JOB\_DONE} to the UI in which \texttt{msg.obj} contains the final bitmap.
 
 \begin{figure*}
 	\centering
@@ -650,9 +650,9 @@ When all the partial bitmaps received, system throws a message titled \texttt{MA
 \end{figure*}
 
 \paragraph{Performance with large scale image}
-Running the large scale image test case throughout 50 tests by increasing number of devices from 1 to 5 within the network, we found that the test case doesn't work if there is only one device standing desolately. By utilizing 2 threads for the image process on that single device, we realized that only 1 thread works, the another does not due to out of memory exception, and the processing time to complete half of the task is $12,581ms$. 
+Running the large scale image test case throughout 50 tests by increasing number of devices from 1 to 5 within the network, we found that the test case doesn't work if there is only one device standing desolately. By utilizing 2 threads for the image process on that single device, we realized that only 1 thread works, while the other does not, due to an out of memory exception, and the processing time to complete half of the task is $12,581ms$. 
 
-By increasing the number of devices in network from 2 to 5 and sharing the task by sending jobs to the other peers, we gathered average statistic data in 20 tests as in the Figure (\ref{fig:cluster_performance} - left) (clusters with 2, 3, 4 and more devices). In this Figure, to accomplish the task, the two devices have to work in average of $13,541ms$. The execution time reduced when more devices participate the cluster, down to average $7387ms$ when more than 4 peers joined the cluster, which is twice as fast as having 2 devices (noticed that system didn't fully work with only one device).
+By increasing the number of devices in network from 2 to 5 and sharing the task by sending jobs to other peers, we gathered average statistic data in 20 tests as in the Figure (\ref{fig:cluster_performance} - left) (clusters with 2, 3, 4 and more devices). In this Figure, to accomplish the task, the two devices have to work in $13,541ms$ average. The execution time reduced when more devices participate the cluster, down to average $7387ms$ when more than 4 peers joined the cluster, which is twice as fast as having 2 devices (notice that system didn't fully work with only one device).
 
 To measure energy consumption on each device, we used Monsoon Power Monitor \cite{moosoon} and measured the velocity of energy drained on a single mobile device when utilizing power from the other peers. Figure \ref{fig:cluster_performance} (right) shows the energy measurement results from the two consecutive tests, although the two tests gave the big gap when executing 2 device cluster, in general the variability of energy consumption within multiple clusters matches with time consumption one. By running the two consecutive tests with the same input for 20 times, we realized that the results didn't change, and by utilizing 3 or more devices, we can significantly reduce the amount of energy required for the task, sometimes up to 25\%. However when we increased the number of devices in cluster, we didn't get the performance raised up at corresponding value linearly, this can be explained by Amdahl's law \cite{amdahl}. Throughout our experiments, the number of devices at 3 to 5 will give the maximum benefit in terms of energy saving and device usage productivity.
 
