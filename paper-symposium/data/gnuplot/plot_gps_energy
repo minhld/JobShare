@@ -1,0 +1,23 @@
+set boxwidth 0.5 absolute
+set style fill   solid 1.00 border lt -1
+set grid nopolar
+set grid nopolar
+set key inside right top vertical Right noreverse enhanced autotitle columnhead nobox
+set pointsize 2
+set xtics border in scale 0,0 mirror norotate  autojustify
+set xtics  norangelimit
+set xrange [ -0.500000 : 11.5000 ] noreverse nowriteback
+set ylabel "Energy Consumption (uAh)" 
+set xlabel "Time (s)" 
+set xtics font "Verdana,12"
+set ytics font "Verdana,12"
+set xrange [ 6000 : 22000 ] noreverse nowriteback
+set yrange [ 200 : 1500 ] noreverse nowriteback
+set bmargin  3
+set xtics rotate by 0 offset 0, 0
+x = 0.0
+show style line
+set style line 1 lt 1 lw 3 pt 3 linecolor rgb "red"
+plot 'D:/android/JobShare/paper/data/gnuplot/data_gps_energy_1.dat' using 1:2 with points ls 1 lt 1 lw 2 ps 1 lc rgb "#888888" title "Remote GPS Test 1", \
+'D:/android/JobShare/paper/data/gnuplot/data_gps_energy_2.dat' using 1:2 with points ls 2 lt 3 lw 2 ps 1 lc rgb "brown" title "Remote GPS Test 2", \
+'D:/android/JobShare/paper/data/gnuplot/data_gps_energy_3.dat' using 1:2 with points ls 3 lt 5 lw 2 ps 1 lc rgb "blue" title "Local GPS Test 1"

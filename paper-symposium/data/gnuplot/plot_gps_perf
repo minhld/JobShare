@@ -1,0 +1,18 @@
+set style fill solid 0.25 border -1
+set style boxplot outliers pointtype 7
+set style data boxplot
+set boxwidth  0.25
+set pointsize 0.5
+set grid nopolar
+unset key
+set border 2
+set xtics nomirror
+set ytics nomirror
+set ylabel "Time consumption (ms)" 
+set xtics font "Verdana,10"
+set ytics font "Verdana,12"
+set yrange [0:22000]
+set xtics ("Remote (#1)" 1, "Remote #2" 2, "Local" 3) scale 0.0
+plot 'D:\android\JobShare\paper\data\gnuplot\data_gps_time.dat' using (1):1, \
+'' using (2):3, \
+'' using (3):5

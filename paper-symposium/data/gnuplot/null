@@ -1,0 +1,813 @@
+
+
+*******************************************************************************
+Sat Jan 23 00:38:37 2016
+
+
+FIT:    data read from filename using 10:11
+        format = x:z
+        x range restricted to [0.00000 : *]
+
+
+*******************************************************************************
+Sat Jan 23 00:39:02 2016
+
+
+FIT:    data read from filename using 10:11
+        format = x:z
+        x range restricted to [0.00000 : *]
+
+
+*******************************************************************************
+Sat Jan 23 00:41:49 2016
+
+
+FIT:    data read from filename using 10:11
+        format = x:z
+        x range restricted to [0.00000 : *]
+
+
+*******************************************************************************
+Sat Jan 23 00:42:09 2016
+
+
+FIT:    data read from filename using 10:11
+        format = x:z
+        x range restricted to [0.00000 : *]
+
+
+*******************************************************************************
+Sat Jan 23 00:45:06 2016
+
+
+FIT:    data read from 'D:/android/JobShare/paper/data/gnuplot/data_gps_energy_1.dat'
+        format = z
+        x range restricted to [0.00000 : *]
+        #datapoints = 10
+        residuals are weighted equally (unit weight)
+
+function used for fitting: l(x)
+	l(x) = y0 + m*x
+fitted parameters initialized with current variable values
+
+iter      chisq       delta/lim  lambda   y0            m            
+   0 3.6647335437e+06  0.00e+00 9.30e+00  1.080166e+00 -1.181519e-03
+   4 2.7578507084e+03 -5.07e-03 9.30e-04  7.291590e+00  5.284121e-02
+
+After 4 iterations the fit converged.
+final sum of squares of residuals : 2757.85
+rel. change during last iteration : -5.06736e-008
+
+degrees of freedom    (FIT_NDF)                        : 8
+rms of residuals      (FIT_STDFIT) = sqrt(WSSR/ndf)    : 18.5669
+variance of residuals (reduced chisquare) = WSSR/ndf   : 344.731
+
+Final set of parameters            Asymptotic Standard Error
+=======================            ==========================
+y0              = 7.29159          +/- 24.06        (329.9%)
+m               = 0.0528412        +/- 0.002169     (4.105%)
+
+correlation matrix of the fit parameters:
+                y0     m      
+y0              1.000 
+m              -0.970  1.000 
+
+
+*******************************************************************************
+Sat Jan 23 00:53:29 2016
+
+
+FIT:    data read from filename using 10:11
+        format = x:z
+        x range restricted to [0.00000 : *]
+BREAK: No data to fit
+
+*******************************************************************************
+Sat Jan 23 00:54:53 2016
+
+
+FIT:    data read from filename using 10:11
+        format = x:z
+        x range restricted to [0.00000 : *]
+
+
+*******************************************************************************
+Sat Jan 23 01:12:53 2016
+
+
+FIT:    data read from "D:/android/JobShare/paper/data/gnuplot/data_gps_energy_1.dat"
+        format = z
+        #datapoints = 10
+        residuals are weighted equally (unit weight)
+
+function used for fitting: y(x)
+	y(x)=m*x+b
+fitted parameters initialized with current variable values
+
+iter      chisq       delta/lim  lambda   m             b            
+   0 3.6656750900e+06  0.00e+00 9.29e+00 -1.181519e-03  1.000000e+00
+   4 2.7578507084e+03 -1.29e-02 9.29e-04  5.284121e-02  7.291588e+00
+
+After 4 iterations the fit converged.
+final sum of squares of residuals : 2757.85
+rel. change during last iteration : -1.29218e-007
+
+degrees of freedom    (FIT_NDF)                        : 8
+rms of residuals      (FIT_STDFIT) = sqrt(WSSR/ndf)    : 18.5669
+variance of residuals (reduced chisquare) = WSSR/ndf   : 344.731
+
+Final set of parameters            Asymptotic Standard Error
+=======================            ==========================
+m               = 0.0528412        +/- 0.002169     (4.105%)
+b               = 7.29159          +/- 24.06        (329.9%)
+
+correlation matrix of the fit parameters:
+                m      b      
+m               1.000 
+b              -0.970  1.000 
+
+
+*******************************************************************************
+Sat Jan 23 01:53:25 2016
+
+
+FIT:    data read from "D:/android/JobShare/paper/data/gnuplot/data_gps_energy_1.dat"
+        format = z
+        #datapoints = 10
+        residuals are weighted equally (unit weight)
+
+function used for fitting: y(x)
+	y(x)=m*x+b
+fitted parameters initialized with current variable values
+
+iter      chisq       delta/lim  lambda   m             b            
+   0 2.7578507084e+03  0.00e+00 4.14e+02  5.284121e-02  7.291588e+00
+   1 2.7578507084e+03  0.00e+00 4.14e+04  5.284121e-02  7.291588e+00
+
+After 1 iterations the fit converged.
+final sum of squares of residuals : 2757.85
+rel. change during last iteration : 0
+
+degrees of freedom    (FIT_NDF)                        : 8
+rms of residuals      (FIT_STDFIT) = sqrt(WSSR/ndf)    : 18.5669
+variance of residuals (reduced chisquare) = WSSR/ndf   : 344.731
+
+Final set of parameters            Asymptotic Standard Error
+=======================            ==========================
+m               = 0.0528412        +/- 0.002169     (4.105%)
+b               = 7.29159          +/- 24.06        (329.9%)
+
+correlation matrix of the fit parameters:
+                m      b      
+m               1.000 
+b              -0.970  1.000 
+
+
+*******************************************************************************
+Sat Jan 23 01:53:25 2016
+
+
+FIT:    data read from "D:/android/JobShare/paper/data/gnuplot/data_gps_energy_2.dat"
+        format = z
+BREAK: bad data on line 1 of datafile
+
+*******************************************************************************
+Sat Jan 23 01:53:35 2016
+
+
+FIT:    data read from "D:/android/JobShare/paper/data/gnuplot/data_gps_energy_1.dat"
+        format = z
+        #datapoints = 10
+        residuals are weighted equally (unit weight)
+
+function used for fitting: y(x)
+	y(x)=m*x+b
+fitted parameters initialized with current variable values
+
+iter      chisq       delta/lim  lambda   m             b            
+   0 2.7578507084e+03  0.00e+00 4.14e+02  5.284121e-02  7.291588e+00
+   1 2.7578507084e+03  0.00e+00 4.14e+04  5.284121e-02  7.291588e+00
+
+After 1 iterations the fit converged.
+final sum of squares of residuals : 2757.85
+rel. change during last iteration : 0
+
+degrees of freedom    (FIT_NDF)                        : 8
+rms of residuals      (FIT_STDFIT) = sqrt(WSSR/ndf)    : 18.5669
+variance of residuals (reduced chisquare) = WSSR/ndf   : 344.731
+
+Final set of parameters            Asymptotic Standard Error
+=======================            ==========================
+m               = 0.0528412        +/- 0.002169     (4.105%)
+b               = 7.29159          +/- 24.06        (329.9%)
+
+correlation matrix of the fit parameters:
+                m      b      
+m               1.000 
+b              -0.970  1.000 
+
+
+*******************************************************************************
+Sat Jan 23 01:53:35 2016
+
+
+FIT:    data read from "D:/android/JobShare/paper/data/gnuplot/data_gps_energy_2.dat"
+        format = z
+BREAK: bad data on line 1 of datafile
+
+*******************************************************************************
+Sat Jan 23 01:54:28 2016
+
+
+FIT:    data read from "D:/android/JobShare/paper/data/gnuplot/data_gps_energy_1.dat"
+        format = z
+        #datapoints = 10
+        residuals are weighted equally (unit weight)
+
+function used for fitting: y(x)
+	y(x)=m*x+b
+fitted parameters initialized with current variable values
+
+iter      chisq       delta/lim  lambda   m             b            
+   0 2.7578507084e+03  0.00e+00 4.14e+02  5.284121e-02  7.291588e+00
+   1 2.7578507084e+03  0.00e+00 4.14e+04  5.284121e-02  7.291588e+00
+
+After 1 iterations the fit converged.
+final sum of squares of residuals : 2757.85
+rel. change during last iteration : 0
+
+degrees of freedom    (FIT_NDF)                        : 8
+rms of residuals      (FIT_STDFIT) = sqrt(WSSR/ndf)    : 18.5669
+variance of residuals (reduced chisquare) = WSSR/ndf   : 344.731
+
+Final set of parameters            Asymptotic Standard Error
+=======================            ==========================
+m               = 0.0528412        +/- 0.002169     (4.105%)
+b               = 7.29159          +/- 24.06        (329.9%)
+
+correlation matrix of the fit parameters:
+                m      b      
+m               1.000 
+b              -0.970  1.000 
+
+
+*******************************************************************************
+Sat Jan 23 01:54:28 2016
+
+
+FIT:    data read from "D:/android/JobShare/paper/data/gnuplot/data_gps_energy_2.dat"
+        format = z
+BREAK: bad data on line 1 of datafile
+
+*******************************************************************************
+Sat Jan 23 01:54:48 2016
+
+
+FIT:    data read from "D:/android/JobShare/paper/data/gnuplot/data_gps_energy_1.dat"
+        format = z
+        #datapoints = 10
+        residuals are weighted equally (unit weight)
+
+function used for fitting: y(x)
+	y(x)=m*x+b
+fitted parameters initialized with current variable values
+
+iter      chisq       delta/lim  lambda   m             b            
+   0 2.7578507084e+03  0.00e+00 4.14e+02  5.284121e-02  7.291588e+00
+   1 2.7578507084e+03  0.00e+00 4.14e+04  5.284121e-02  7.291588e+00
+
+After 1 iterations the fit converged.
+final sum of squares of residuals : 2757.85
+rel. change during last iteration : 0
+
+degrees of freedom    (FIT_NDF)                        : 8
+rms of residuals      (FIT_STDFIT) = sqrt(WSSR/ndf)    : 18.5669
+variance of residuals (reduced chisquare) = WSSR/ndf   : 344.731
+
+Final set of parameters            Asymptotic Standard Error
+=======================            ==========================
+m               = 0.0528412        +/- 0.002169     (4.105%)
+b               = 7.29159          +/- 24.06        (329.9%)
+
+correlation matrix of the fit parameters:
+                m      b      
+m               1.000 
+b              -0.970  1.000 
+
+
+*******************************************************************************
+Sat Jan 23 01:54:48 2016
+
+
+FIT:    data read from "D:/android/JobShare/paper/data/gnuplot/data_gps_energy_2.dat"
+        format = z
+        #datapoints = 10
+        residuals are weighted equally (unit weight)
+
+function used for fitting: z(x)
+fitted parameters initialized with current variable values
+
+
+
+*******************************************************************************
+Sat Jan 23 01:55:12 2016
+
+
+FIT:    data read from "D:/android/JobShare/paper/data/gnuplot/data_gps_energy_1.dat"
+        format = z
+        #datapoints = 10
+        residuals are weighted equally (unit weight)
+
+function used for fitting: y(x)
+	y(x)=m*x+b
+fitted parameters initialized with current variable values
+
+iter      chisq       delta/lim  lambda   m             b            
+   0 2.7578507084e+03  0.00e+00 4.14e+02  5.284121e-02  7.291588e+00
+   1 2.7578507084e+03  0.00e+00 4.14e+04  5.284121e-02  7.291588e+00
+
+After 1 iterations the fit converged.
+final sum of squares of residuals : 2757.85
+rel. change during last iteration : 0
+
+degrees of freedom    (FIT_NDF)                        : 8
+rms of residuals      (FIT_STDFIT) = sqrt(WSSR/ndf)    : 18.5669
+variance of residuals (reduced chisquare) = WSSR/ndf   : 344.731
+
+Final set of parameters            Asymptotic Standard Error
+=======================            ==========================
+m               = 0.0528412        +/- 0.002169     (4.105%)
+b               = 7.29159          +/- 24.06        (329.9%)
+
+correlation matrix of the fit parameters:
+                m      b      
+m               1.000 
+b              -0.970  1.000 
+
+
+*******************************************************************************
+Sat Jan 23 01:55:13 2016
+
+
+FIT:    data read from "D:/android/JobShare/paper/data/gnuplot/data_gps_energy_2.dat"
+        format = z
+        #datapoints = 10
+        residuals are weighted equally (unit weight)
+
+function used for fitting: y(x)
+	y(x)=m*x+b
+fitted parameters initialized with current variable values
+
+iter      chisq       delta/lim  lambda   m             b            
+   0 8.7383933075e+03  0.00e+00 4.71e+02  5.284121e-02  7.291588e+00
+   3 3.0674995527e+03 -1.81e-01 4.71e-01  5.472679e-02  7.361458e+00
+
+After 3 iterations the fit converged.
+final sum of squares of residuals : 3067.5
+rel. change during last iteration : -1.81494e-006
+
+degrees of freedom    (FIT_NDF)                        : 8
+rms of residuals      (FIT_STDFIT) = sqrt(WSSR/ndf)    : 19.5816
+variance of residuals (reduced chisquare) = WSSR/ndf   : 383.437
+
+Final set of parameters            Asymptotic Standard Error
+=======================            ==========================
+m               = 0.0547268        +/- 0.002301     (4.205%)
+b               = 7.36146          +/- 28.98        (393.7%)
+
+correlation matrix of the fit parameters:
+                m      b      
+m               1.000 
+b              -0.977  1.000 
+
+
+*******************************************************************************
+Sat Jan 23 01:56:31 2016
+
+
+FIT:    data read from "D:/android/JobShare/paper/data/gnuplot/data_gps_energy_1.dat"
+        format = z
+        #datapoints = 10
+        residuals are weighted equally (unit weight)
+
+function used for fitting: y(x)
+	y(x)=m*x+b
+fitted parameters initialized with current variable values
+
+iter      chisq       delta/lim  lambda   m             b            
+   0 7.1590012674e+03  0.00e+00 4.29e+02  5.472679e-02  7.361458e+00
+   3 2.7578510480e+03 -8.10e-02 4.29e-01  5.283913e-02  7.315467e+00
+
+After 3 iterations the fit converged.
+final sum of squares of residuals : 2757.85
+rel. change during last iteration : -8.10464e-007
+
+degrees of freedom    (FIT_NDF)                        : 8
+rms of residuals      (FIT_STDFIT) = sqrt(WSSR/ndf)    : 18.5669
+variance of residuals (reduced chisquare) = WSSR/ndf   : 344.731
+
+Final set of parameters            Asymptotic Standard Error
+=======================            ==========================
+m               = 0.0528391        +/- 0.002169     (4.105%)
+b               = 7.31547          +/- 24.06        (328.8%)
+
+correlation matrix of the fit parameters:
+                m      b      
+m               1.000 
+b              -0.970  1.000 
+
+
+*******************************************************************************
+Sat Jan 23 01:56:31 2016
+
+
+FIT:    data read from "D:/android/JobShare/paper/data/gnuplot/data_gps_energy_2.dat"
+        format = z
+        #datapoints = 10
+        residuals are weighted equally (unit weight)
+
+function used for fitting: y(x)
+	y(x)=m*x+b
+fitted parameters initialized with current variable values
+
+iter      chisq       delta/lim  lambda   m             b            
+   0 8.7398044311e+03  0.00e+00 4.71e+02  5.283913e-02  7.315467e+00
+   3 3.0674989860e+03 -1.20e-01 4.71e-01  5.472590e-02  7.372907e+00
+
+After 3 iterations the fit converged.
+final sum of squares of residuals : 3067.5
+rel. change during last iteration : -1.19883e-006
+
+degrees of freedom    (FIT_NDF)                        : 8
+rms of residuals      (FIT_STDFIT) = sqrt(WSSR/ndf)    : 19.5816
+variance of residuals (reduced chisquare) = WSSR/ndf   : 383.437
+
+Final set of parameters            Asymptotic Standard Error
+=======================            ==========================
+m               = 0.0547259        +/- 0.002301     (4.205%)
+b               = 7.37291          +/- 28.98        (393.1%)
+
+correlation matrix of the fit parameters:
+                m      b      
+m               1.000 
+b              -0.977  1.000 
+
+
+*******************************************************************************
+Sat Jan 23 01:57:20 2016
+
+
+FIT:    data read from "D:/android/JobShare/paper/data/gnuplot/data_gps_energy_1.dat"
+        format = z
+        #datapoints = 10
+        residuals are weighted equally (unit weight)
+
+function used for fitting: y(x)
+	y(x)=m*x+b
+fitted parameters initialized with current variable values
+
+iter      chisq       delta/lim  lambda   m             b            
+   0 7.1595280626e+03  0.00e+00 4.29e+02  5.472590e-02  7.372907e+00
+   3 2.7578511722e+03 -1.11e-01 4.29e-01  5.283877e-02  7.319494e+00
+
+After 3 iterations the fit converged.
+final sum of squares of residuals : 2757.85
+rel. change during last iteration : -1.11166e-006
+
+degrees of freedom    (FIT_NDF)                        : 8
+rms of residuals      (FIT_STDFIT) = sqrt(WSSR/ndf)    : 18.5669
+variance of residuals (reduced chisquare) = WSSR/ndf   : 344.731
+
+Final set of parameters            Asymptotic Standard Error
+=======================            ==========================
+m               = 0.0528388        +/- 0.002169     (4.105%)
+b               = 7.31949          +/- 24.06        (328.7%)
+
+correlation matrix of the fit parameters:
+                m      b      
+m               1.000 
+b              -0.970  1.000 
+
+
+*******************************************************************************
+Sat Jan 23 01:57:20 2016
+
+
+FIT:    data read from "D:/android/JobShare/paper/data/gnuplot/data_gps_energy_2.dat"
+        format = z
+        #datapoints = 10
+        residuals are weighted equally (unit weight)
+
+function used for fitting: z(x)
+	z(x)=n*x+c
+fitted parameters initialized with current variable values
+
+iter      chisq       delta/lim  lambda   n             c            
+   0 1.4155794383e+09  0.00e+00 8.90e+03  1.000000e+00  1.000000e+00
+   7 3.0674979129e+03 -7.12e-02 8.90e-04  5.472214e-02  7.421381e+00
+
+After 7 iterations the fit converged.
+final sum of squares of residuals : 3067.5
+rel. change during last iteration : -7.12162e-007
+
+degrees of freedom    (FIT_NDF)                        : 8
+rms of residuals      (FIT_STDFIT) = sqrt(WSSR/ndf)    : 19.5816
+variance of residuals (reduced chisquare) = WSSR/ndf   : 383.437
+
+Final set of parameters            Asymptotic Standard Error
+=======================            ==========================
+n               = 0.0547221        +/- 0.002301     (4.206%)
+c               = 7.42138          +/- 28.98        (390.5%)
+
+correlation matrix of the fit parameters:
+                n      c      
+n               1.000 
+c              -0.977  1.000 
+
+
+*******************************************************************************
+Sat Jan 23 01:59:16 2016
+
+
+FIT:    data read from "D:/android/JobShare/paper/data/gnuplot/data_gps_energy_1.dat"
+        format = z
+        #datapoints = 10
+        residuals are weighted equally (unit weight)
+
+function used for fitting: y(x)
+	y(x)=m*x+b
+fitted parameters initialized with current variable values
+
+iter      chisq       delta/lim  lambda   m             b            
+   0 2.7578511722e+03  0.00e+00 4.14e+02  5.283877e-02  7.319494e+00
+   1 2.7578511720e+03 -6.25e-06 4.14e+01  5.283877e-02  7.319488e+00
+
+After 1 iterations the fit converged.
+final sum of squares of residuals : 2757.85
+rel. change during last iteration : -6.24833e-011
+
+degrees of freedom    (FIT_NDF)                        : 8
+rms of residuals      (FIT_STDFIT) = sqrt(WSSR/ndf)    : 18.5669
+variance of residuals (reduced chisquare) = WSSR/ndf   : 344.731
+
+Final set of parameters            Asymptotic Standard Error
+=======================            ==========================
+m               = 0.0528388        +/- 0.002169     (4.105%)
+b               = 7.31949          +/- 24.06        (328.7%)
+
+correlation matrix of the fit parameters:
+                m      b      
+m               1.000 
+b              -0.970  1.000 
+
+
+*******************************************************************************
+Sat Jan 23 01:59:16 2016
+
+
+FIT:    data read from "D:/android/JobShare/paper/data/gnuplot/data_gps_energy_2.dat"
+        format = z
+        #datapoints = 10
+        residuals are weighted equally (unit weight)
+
+function used for fitting: z(x)
+	z(x)=n*x+c
+fitted parameters initialized with current variable values
+
+iter      chisq       delta/lim  lambda   n             c            
+   0 3.0674979129e+03  0.00e+00 4.87e+02  5.472214e-02  7.421381e+00
+   1 3.0674979129e+03 -1.48e-11 4.87e+03  5.472214e-02  7.421381e+00
+
+After 1 iterations the fit converged.
+final sum of squares of residuals : 3067.5
+rel. change during last iteration : -1.48247e-016
+
+degrees of freedom    (FIT_NDF)                        : 8
+rms of residuals      (FIT_STDFIT) = sqrt(WSSR/ndf)    : 19.5816
+variance of residuals (reduced chisquare) = WSSR/ndf   : 383.437
+
+Final set of parameters            Asymptotic Standard Error
+=======================            ==========================
+n               = 0.0547221        +/- 0.002301     (4.206%)
+c               = 7.42138          +/- 28.98        (390.5%)
+
+correlation matrix of the fit parameters:
+                n      c      
+n               1.000 
+c              -0.977  1.000 
+
+
+*******************************************************************************
+Sat Jan 23 02:01:03 2016
+
+
+FIT:    data read from "D:/android/JobShare/paper/data/gnuplot/data_gps_energy_1.dat"
+        format = z
+        #datapoints = 10
+        residuals are weighted equally (unit weight)
+
+function used for fitting: y(x)
+	y(x)=m*x+b
+fitted parameters initialized with current variable values
+
+iter      chisq       delta/lim  lambda   m             b            
+   0 2.7578511720e+03  0.00e+00 4.14e+02  5.283877e-02  7.319488e+00
+   1 2.7578511719e+03 -6.25e-06 4.14e+01  5.283878e-02  7.319483e+00
+
+After 1 iterations the fit converged.
+final sum of squares of residuals : 2757.85
+rel. change during last iteration : -6.24592e-011
+
+degrees of freedom    (FIT_NDF)                        : 8
+rms of residuals      (FIT_STDFIT) = sqrt(WSSR/ndf)    : 18.5669
+variance of residuals (reduced chisquare) = WSSR/ndf   : 344.731
+
+Final set of parameters            Asymptotic Standard Error
+=======================            ==========================
+m               = 0.0528388        +/- 0.002169     (4.105%)
+b               = 7.31948          +/- 24.06        (328.7%)
+
+correlation matrix of the fit parameters:
+                m      b      
+m               1.000 
+b              -0.970  1.000 
+
+
+*******************************************************************************
+Sat Jan 23 02:01:03 2016
+
+
+FIT:    data read from "D:/android/JobShare/paper/data/gnuplot/data_gps_energy_2.dat"
+        format = z
+        #datapoints = 10
+        residuals are weighted equally (unit weight)
+
+function used for fitting: z(x)
+	z(x)=n*x+c
+fitted parameters initialized with current variable values
+
+iter      chisq       delta/lim  lambda   n             c            
+   0 3.0674979129e+03  0.00e+00 4.87e+02  5.472214e-02  7.421381e+00
+   1 3.0674979129e+03 -1.04e-10 4.87e+03  5.472214e-02  7.421381e+00
+
+After 1 iterations the fit converged.
+final sum of squares of residuals : 3067.5
+rel. change during last iteration : -1.03773e-015
+
+degrees of freedom    (FIT_NDF)                        : 8
+rms of residuals      (FIT_STDFIT) = sqrt(WSSR/ndf)    : 19.5816
+variance of residuals (reduced chisquare) = WSSR/ndf   : 383.437
+
+Final set of parameters            Asymptotic Standard Error
+=======================            ==========================
+n               = 0.0547221        +/- 0.002301     (4.206%)
+c               = 7.42138          +/- 28.98        (390.5%)
+
+correlation matrix of the fit parameters:
+                n      c      
+n               1.000 
+c              -0.977  1.000 
+
+
+*******************************************************************************
+Sat Jan 23 02:01:03 2016
+
+
+FIT:    data read from "D:/android/JobShare/paper/data/gnuplot/data_gps_energy_2.dat"
+        format = z
+        #datapoints = 10
+        residuals are weighted equally (unit weight)
+
+function used for fitting: r(x)
+	r(x)=p*x+q
+fitted parameters initialized with current variable values
+
+iter      chisq       delta/lim  lambda   p             q            
+   0 1.4155794383e+09  0.00e+00 8.90e+03  1.000000e+00  1.000000e+00
+   7 3.0674979129e+03 -7.12e-02 8.90e-04  5.472214e-02  7.421381e+00
+
+After 7 iterations the fit converged.
+final sum of squares of residuals : 3067.5
+rel. change during last iteration : -7.12162e-007
+
+degrees of freedom    (FIT_NDF)                        : 8
+rms of residuals      (FIT_STDFIT) = sqrt(WSSR/ndf)    : 19.5816
+variance of residuals (reduced chisquare) = WSSR/ndf   : 383.437
+
+Final set of parameters            Asymptotic Standard Error
+=======================            ==========================
+p               = 0.0547221        +/- 0.002301     (4.206%)
+q               = 7.42138          +/- 28.98        (390.5%)
+
+correlation matrix of the fit parameters:
+                p      q      
+p               1.000 
+q              -0.977  1.000 
+
+
+*******************************************************************************
+Sat Jan 23 02:01:18 2016
+
+
+FIT:    data read from "D:/android/JobShare/paper/data/gnuplot/data_gps_energy_1.dat"
+        format = z
+        #datapoints = 10
+        residuals are weighted equally (unit weight)
+
+function used for fitting: y(x)
+	y(x)=m*x+b
+fitted parameters initialized with current variable values
+
+iter      chisq       delta/lim  lambda   m             b            
+   0 2.7578511719e+03  0.00e+00 4.14e+02  5.283878e-02  7.319483e+00
+   1 2.7578511717e+03 -6.24e-06 4.14e+01  5.283878e-02  7.319478e+00
+
+After 1 iterations the fit converged.
+final sum of squares of residuals : 2757.85
+rel. change during last iteration : -6.24367e-011
+
+degrees of freedom    (FIT_NDF)                        : 8
+rms of residuals      (FIT_STDFIT) = sqrt(WSSR/ndf)    : 18.5669
+variance of residuals (reduced chisquare) = WSSR/ndf   : 344.731
+
+Final set of parameters            Asymptotic Standard Error
+=======================            ==========================
+m               = 0.0528388        +/- 0.002169     (4.105%)
+b               = 7.31948          +/- 24.06        (328.7%)
+
+correlation matrix of the fit parameters:
+                m      b      
+m               1.000 
+b              -0.970  1.000 
+
+
+*******************************************************************************
+Sat Jan 23 02:01:18 2016
+
+
+FIT:    data read from "D:/android/JobShare/paper/data/gnuplot/data_gps_energy_2.dat"
+        format = z
+        #datapoints = 10
+        residuals are weighted equally (unit weight)
+
+function used for fitting: z(x)
+	z(x)=n*x+c
+fitted parameters initialized with current variable values
+
+iter      chisq       delta/lim  lambda   n             c            
+   0 3.0674979129e+03  0.00e+00 4.87e+02  5.472214e-02  7.421381e+00
+   1 3.0674979129e+03  0.00e+00 4.87e+03  5.472214e-02  7.421381e+00
+
+After 1 iterations the fit converged.
+final sum of squares of residuals : 3067.5
+rel. change during last iteration : 0
+
+degrees of freedom    (FIT_NDF)                        : 8
+rms of residuals      (FIT_STDFIT) = sqrt(WSSR/ndf)    : 19.5816
+variance of residuals (reduced chisquare) = WSSR/ndf   : 383.437
+
+Final set of parameters            Asymptotic Standard Error
+=======================            ==========================
+n               = 0.0547221        +/- 0.002301     (4.206%)
+c               = 7.42138          +/- 28.98        (390.5%)
+
+correlation matrix of the fit parameters:
+                n      c      
+n               1.000 
+c              -0.977  1.000 
+
+
+*******************************************************************************
+Sat Jan 23 02:01:18 2016
+
+
+FIT:    data read from "D:/android/JobShare/paper/data/gnuplot/data_gps_energy_3.dat"
+        format = z
+        #datapoints = 10
+        residuals are weighted equally (unit weight)
+
+function used for fitting: r(x)
+	r(x)=p*x+q
+fitted parameters initialized with current variable values
+
+iter      chisq       delta/lim  lambda   p             q            
+   0 2.3662147204e+04  0.00e+00 4.88e+02  5.472214e-02  7.421381e+00
+   5 2.0304356538e+04 -1.35e-03 4.88e-03  5.753310e-02 -1.294027e+01
+
+After 5 iterations the fit converged.
+final sum of squares of residuals : 20304.4
+rel. change during last iteration : -1.35172e-008
+
+degrees of freedom    (FIT_NDF)                        : 8
+rms of residuals      (FIT_STDFIT) = sqrt(WSSR/ndf)    : 50.379
+variance of residuals (reduced chisquare) = WSSR/ndf   : 2538.04
+
+Final set of parameters            Asymptotic Standard Error
+=======================            ==========================
+p               = 0.0575331        +/- 0.003339     (5.804%)
+q               = -12.9403         +/- 42.15        (325.7%)
+
+correlation matrix of the fit parameters:
+                p      q      
+p               1.000 
+q              -0.926  1.000 
