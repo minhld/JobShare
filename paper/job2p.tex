@@ -418,8 +418,7 @@ M_{i} = M\frac{RL_{i}}{\sum_{j = \overline{1,n}}{RL_{j}}}
 \end{algorithmic}
 \end{algorithm}
 
-\subsection{Fault Tolerance}
-
+\subsection{Handling Runtime Exceptions}
 Since the mobile devices are the motive objects in the network, there is no guarantee that connections can be permanently maintained during the execution. To handle network malfunctions, as well as to ensure all jobs are completely executed by peers, we designed the \emph{HeartChecker} module to frequently check for heartbeat of all available peers. 
 
 After dispatching a job to a peer, \emph{HeartChecker} will be enabled to periodically send heartbeat request to the peer in every $2$ seconds. After $10$ seconds listening without any response, the peer will be considered as disconnected for whatever reason. \emph{HeartChecker} will then remove it out of the available peer list and aware the dispatcher about the job incompleteness on that peer. Eventually the caller will handle that job and execute it locally. 
@@ -442,8 +441,6 @@ E_{Diff} = E(1 - \frac{RL_{0}}{\sum_{i=1}^{n}{RL_{i}}}) - E_{WiFi}
 Since WiFi is known to drain a battery linearly by time during transmission \cite{wifi_energy}, particularly it can be represented by $y = 17.01x - 0.93$ for downloading and $y = 17.31x - 2.28$ for uploading, where $y$ stands for percentage of battery consumed when using Wi-Fi for a period of $x$ hours. Therefore, under non-adventitious circumstances, equation (\ref{eq:energy_diff}) infers that in a mobile system with a certain number of devices in different levels of responsibility, if E is big enough, or in other words, if the task to perform is big enough, then $E_{Diff} > 0$ will result in, thus deploying a peer-to-peer group will give a great benefit in terms of energy efficiency. The bigger value of $E_{Diff}$, the more benefit we will gain. 
 
 In addition, if a cloud-based offloading server is available in the network, $RL$ and $E_{Diff}$ are calculated as follows: $\sum_{i=1}^{n}{RL_{i}} \rightarrow \infty$, $E_{Diff} = E - E_{WiFi}$ which is the maximum value under the same conditions.
-
-\subsection{Handling Faults}
 
 \subsection{API Usage Scenario}
 The programming model should be simple, so that application programmers can integrate with a few steps. This section will describe step-by-step the way to utilize our API to enable a typical peer-to-peer network.
