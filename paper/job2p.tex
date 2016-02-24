@@ -151,16 +151,19 @@ The rest of this paper is structured as follows. Section \ref{sec:background} in
  
 \section{Technical Background}
 \label{sec:background}
-In this section, we present the major technologies we used in this paper. The major technologies used in this work including computation offloading, remote execution, middleware, and WiFi direct. We will describe them in the following sub sections.
+In this section, we present the major technologies used in this paper including computation offloading, remote execution, middleware, and WiFi direct. We will describe them in the following subsections.
 
 \subsection{Computational Offloading}   
-Computation offloading has become a popular optimization technique for mobile applications \cite{maui,chun+:eurosys11,kwon+:icsm13,wen2012energy}. It leverages the resources of cloud-based remote servers to execute portions of a mobile application's functionality. By executing some of the application's functionality in the cloud, offloading reduces the amount of energy consumed by the mobile device, thus saving its battery power. An additional benefit of computation offloading is improved performance efficiency, as cloud servers have hardware resource more powerful that those available on mobile devices. This technique is used as one of the distributed execution model in this paper.
+Computation offloading---executing computation-intensive functionalty and receiving a result only---has become a popular optimization technique for mobile applications \cite{maui,chun+:eurosys11,kwon+:icsm13,wen2012energy}. It leverages the resources of cloud-based remote servers to execute portions of a mobile application's functionality. By executing some of the application's functionality in the cloud, offloading reduces the amount of energy consumed by the mobile device, thus saving its battery power. An additional benefit of computation offloading is improved performance efficiency, as cloud servers have hardware resource more powerful that those available on mobile devices. This technique is used as one of the distributed execution model in this paper.
 
 \subsection{Remote Execution and Middleware}
 Our approach uses features from mainstream middleware mechanisms for distributed execution as building blocks. Middleware systems provide programming and runtime support to coordinates the execution of multiple remote processes. By eliminating the need for low-level network programming (e.g., managing sockets, marshaling/unmarshaling data, keeping track of processes), middleware offers convenient building blocks for constructing distributed systems. In our prior work \cite{kwon+:mobilesoft2015}, we introduced a programming model and a middleware architecture for performance and energy optimization. The runtime system developed in this paper is derived from our prior middleware design.
 
-\subsection{WiFi Direct}
+\subsection{Peer to Peer Network and WiFi Direct}
 The WiFi Direct \cite{alliance2010wi} is a new peer to peer standard built on top of the IEEE 802.11 to provide direct connections between WiFi devices without an Internet connection. Over a WiFi network, a WiFi device can discover and connect to any types of WiFi devices without special configurations or setups. Once a connection is established, WiFi devices can communicate with each other as a client or an access point. WiFi Direct has been widely used to transfer content or share applications between mobile devices. Recently in Android, WiFi Direct has been available from Android 4.0 APIs. In this paper, our approach uses Android WiFi Direct \cite{wifi:p2p} to utilize nearby computing resources without an Internet connection or wireless access point (AP). Even though the discovery operation of WiFi Direct is costly \cite{trifunovic2013slicing}, our approach is still efficient for CPU-intensive executions and sharing hardware resources. 
+
+\subsection{Code Migration}
+
 
 %other name?
 \section{Our Approach}
@@ -221,8 +224,7 @@ public interface DataParser {
   public Class getDataClass();
   public byte[] parseObjectToBytes(dataObject);
   public Object parseBytesToObject(byteArray);
-  public Object getSinglePart(..., 
-		numOfParts, sOffset, eOffset);    
+  public Object getSinglePart(..., numOfParts, sOffset, eOffset);    
   public Object createPlaceholder(jsonMetadata);
   public Object copyPartToPlaceholder(... 
 					partDataObject, sOffset, eOffset);
@@ -435,6 +437,8 @@ Since WiFi is known to drain a battery linearly by time during transmission \cit
 
 In addition, if a cloud-based offloading server is available in the network, $RL$ and $E_{Diff}$ are calculated as follows: $\sum_{i=1}^{n}{RL_{i}} \rightarrow \infty$, $E_{Diff} = E - E_{WiFi}$ which is the maximum value under the same conditions.
 
+\subsection{Handling Faults}
+
 \subsection{API Usage Scenario}
 The programming model should be simple, so that application programmers can integrate with a few steps. This section will describe step-by-step the way to utilize our API to enable a typical peer-to-peer network.
 
@@ -510,6 +514,15 @@ jobHandler.dispatchJob(dataPath, jobPath);
 
 \captionof{lstlisting}{Using DataParser and JobHandler}
 \end{figure}
+
+\section{Discussion}
+\subsection{Advantages}
+\subsubsection{Applicability}
+\subsubsection{Extensibility}
+
+\subsection{Limitations}
+\subsubsection{Security}
+
 
 \section{Evaluation}
 \label{sec:eval}
@@ -689,6 +702,10 @@ By integrating our system with either RetroSkeleton \cite{retro-skel} or Rio \ci
 	\caption{Performance and energy consumption comparison between remote and local GPS sensing.}
 	\label{fig:gps_perf}
 \end{figure*}
+
+\subsection{Threats to Validity}
+\subsubsection{Internal Validity}
+\subsubsection{External Validity}
 
 \section{Related Work}
 \label{sec:related}
