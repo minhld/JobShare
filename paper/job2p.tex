@@ -419,9 +419,9 @@ M_{i} = M\frac{RL_{i}}{\sum_{j = \overline{1,n}}{RL_{j}}}
 \end{algorithm}
 
 \subsection{Handling Runtime Exceptions}
-Since the mobile devices are the motive objects in the network, there is no guarantee that connections can be permanently maintained during the execution. To handle network malfunctions, as well as to ensure all jobs are completely executed by peers, we designed the \emph{HeartChecker} module to frequently check for heartbeat of all available peers. 
+Since the mobile devices are the motive objects in the network, there is no guarantee that connections can be permanently maintained during the execution. To handle such network runtime exception, as well as to ensure all jobs are completely executed by peers, we utilized functionality of \emph{BroadcastReceiver} object which is available in Android SDK to listen to any updates from the network elements during the runtime.
 
-After dispatching a job to a peer, \emph{HeartChecker} will be enabled to periodically send heartbeat request to the peer in every $2$ seconds. After $10$ seconds listening without any response, the peer will be considered as disconnected for whatever reason. \emph{HeartChecker} will then remove it out of the available peer list and aware the dispatcher about the job incompleteness on that peer. Eventually the caller will handle that job and execute it locally. 
+In our middleware, the \emph{Wi-Fi Direct Controller} module extends the \emph{BroadcastReceiver} class to inherit the network listening capability. During the runtime, whenever network mutates, a system event of type \emph{WIFI\_P2P\_PEERS\_CHAN-GED\_ACTION} containing a list of available peers will be returned to \emph{Wi-Fi Direct Controller}. By comparing the previous and updated peer lists, we can figure out which devices are joining or leaving. Our middleware keeps the copies of all the running jobs after dispatching. If a job is being executed on a begone peer, the caller will use its copy to run it locally instead.
 
 \subsection{Estimating Energy Consumption}
 As compared to estimating the energy consumption in cellular networks, in a WiFi network the energy consumption can be easily estimated. The total energy consumption can be calculated as follows:
