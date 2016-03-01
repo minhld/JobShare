@@ -41,7 +41,7 @@
 %\fi
 
 \lstset{%
-  xleftmargin=0pt,
+  xleftmargin=0pt,	
   belowcaptionskip=\bigskipamount,
   captionpos=b,
   escapeinside={*'}{'*},
@@ -64,9 +64,20 @@
 \begin{document}
 
 \setcopyright{acmcopyright}
-\conferenceinfo{MOBILESoft '16}{May 16--17, 2016, Austin, TX, USA}
+\conferenceinfo{DEBS '16}{June 20--24, 2016, Irvine, CA, USA}
 \acmPrice{\$15.00}
 %\doi{}
+
+\makeatletter
+\renewcommand{\@maketitle}{
+\newpage
+ \null
+ \vskip 2em%
+ \begin{center}%
+	{\ttlfnt \@title\par}
+	\vskip 10em                % Vertical space after title.
+ \end{center}%
+ \par} \makeatother
 
 %
 % paper title
@@ -354,17 +365,16 @@ Algorithm \ref{alg:select_peers} explains how the caller selects appropriate pee
 
 \subsubsection{Job quantitation for peers}\label{ss_jqfp}
 To assign a job to multiple peers, the runtime system collects the available resource information from each mobile device. Specifically, the percentage of CPU usage is calculated using the \texttt{/proc/stat} system file as follows:
-\begin{equation}
-\label{eq:cpu_usage}
+\begin{equation} 
+\label{eq:cpu_usage} \small
 Usage_{CPU} = \frac{(\sum{T_{CPU2}} - T_{Idle2}) - (\sum{T_{CPU1}} - T_{Idle1})}{(\sum{T_{CPU2}} - \sum{T_{CPU1}})}
 \end{equation}
 
 \noindent where $\sum{T_{CPU}}$ is total active time and $T_{Idle}$ is idle time. For the memory usage, $Usage_{Mem}$ is calculated by accessing \texttt{MemoryInfo} of Android APIs such as $Mem_{Avail}$ and $Mem_{Total}$. Finally, we  calculate the battery usage, $Usage_{Batt}$. Next, to determine the appropriate amount of data to each mobile device, we introduce $RL$ parameter as follows:
 \begin{equation}
 \label{eq:res_level}
-%\begin{\footnotesize}
+\small
 RL = \frac{N_{Cores} \times CPU_{Speed}}{Usage_{CPU}} + \frac{Mem_{Spec}}{Usage_{Mem}} + \frac{Batt_{Spec}}{Usage_{Batt} \times 1000}
-%\end{\footnotesize}
 \end{equation}
 
 \noindent where $RL$ is an indicator to the level of availability of mobile devices. The smaller $RL$ means the higher availability. $N_{Cores}$ is the number of CPU cores. $CPU_{Speed}$ is speed of single core in GHz. $Mem_{Spec}$ is the memory capacity in GB and $Batt_{Spec}$ is the battery capacity in uAh. For example, if $Usage_{CPU}$ is 0.3, $Usage_{Mem}$ is 0.5 (i.e., half of 1GB memory has been consumed), and $Usage_{Batt}$ is 0.7 or 70\% used over a 2800uAh capacity battery, then $RL$ will be $$RL = \frac{5.2}{0.3} + \frac{1}{0.5} + \frac{2800}{0.7 \times 1000} = 23.33$$
@@ -534,7 +544,7 @@ This section describes the micro benchmarks and case studies that evaluate the e
 \begin{table}[h]
 \caption{Specifications of our test devices}
 \label{table:devices}
-\centering
+\centering \small
 \begin{tabular}{| l | l | l | l |}
     \hline
     Phone & CPU & RAM & Battery \\ \hline
