@@ -378,19 +378,32 @@ RL = \frac{N_{Cores} \times CPU_{Speed}}{Usage_{CPU}} + \frac{Mem_{Spec}}{Usage_
 Where $N_{Cores}$ is the number of CPU cores. $CPU_{Speed}$ is speed of a single core in GHz. $Mem_{Spec}$ is the memory capacity in GB and $Batt_{Spec}$ is the battery capacity in mAh. For example, if $Usage_{CPU}$ is 0.3, $Usage_{Mem}$ is 0.5 (of half of 1GB memory has been consumed), and $Usage_{Batt}$ is 0.7 or 70\% used over a 2800uAh capacity battery, then $RL$ will be 
 $$RL = \frac{5.2}{0.3} + \frac{1}{0.5} + \frac{2800}{0.7 \times 1000} = 23.33$$
 
-The higher value of $RL$ means the higher availability of the peer. If the selected peer is a powerful cloud-based server with power wired, $Batt_{Spec}$ can be considered $\infty$ and $Usage_{Batt}$ is 0. According to Equation \ref{eq:res_level}, its $RL$ will be $\infty$. In our implementation, we assign the maximum value of Integer to $RL$ of offloading server. To reduce the calculation overhead on the caller side, $RL$ is prematurely calculated on each peer and then sent back to caller in IRS responses.
+The higher value of $RL$ means the higher availability of the peer. If the selected peer is a powerful cloud-based server with power wired, $Batt_{Spec}$ can be considered $\infty$ and $Usage_{Batt}$ is 0. According to Equation \ref{eq:res_level}, its $RL$ will be $\infty$. In our implementation, we assign the maximum value of Integer to $RL$ of offloading server. To reduce the calculation overhead on the caller side, $RL$ value is prematurely calculated on each peer and then sent back to caller in IRS responses.
 
 \subsubsection{Job quantitation for peers}\label{ss_jqfp}
 
-To assign a job to multiple peers, the runtime system collects the available resource information from each mobile device. Specifically, 
+Before sending jobs to peers, \texttt{DecisionMaker} will quantitate the amount of data sending along with job to one peer based on $RL$ value it received from that peer. By doing that, our middleware can guarantee each peer will receive an appropriate job that is suitable to its capability.
 
-Finally, the \texttt{DecisionMaker} assigns the job with the appropriate amount of data ($M_{i}$) in accordance with the following equation:
+Assume that $M_{i}$ is the appropriate amount of data sending to device $i$, the \texttt{DecisionMaker} will assign value by the following equation
 \begin{equation} 
 \label{eq:data_amount}
 M_{i} = M\frac{RL_{i}}{\sum_{j = \overline{1,n}}{RL_{j}}}
 \end{equation}
 
-\noindent where $M$ is total size of data in bytes. $n$ is the number of mobile devices, where $i$-device has responsibility level $RL_{i}$. It is obvious that in the network with an offloading server, $M_{offload}$ is almost equal to $M$, and thus we can flush the full task with heavy computation to the offloading server. Algorithm \ref{alg:assign_job} describes how \texttt{DecisionMaker} assign a job appropriately while considering the availability of each mobile device. The algorithm returns the amount of data in binary length with two offsets that indicate the location of the data.
+Where $M$ is total size of data in bytes. $n$ is the number of active peers, and $j$-peer has its Responsibility Level $RL_{j}$. According to this equation, in the network with an offloading server, we calculate the amount of data to send to the server $M_{offload}$
+$$M_{offload} = M\frac{RL_{offload}}{\sum_{j = \overline{1, n}}{RL_{j}}} = M\frac{1}{1 + \frac{\sum_{j \neq offload}{RL_{j}}}{RL_{offload}}}$$
+
+From the above Sub section \ref{ss_ers}, we got $RL_{offload}$ is $\infty$. Since $\sum_{j \neq offload}{RL_{j}}$ is a limited value due to peers' resource limits, therefore $M_{offload} \approx M$. Thus we can flush the whole task to the offloading server to gain the best performance. 
+
+According to the above estimations, we design the Algorithm \ref{alg:assign_job} for the \texttt{DecisionMaker} to assign appropriate job to each peer. It goes through 3 basic steps
+
+\begin{itemize}
+	\item Calculate the total size of data ($M$) and total Responsibility capacity of all the peers ($RL_{Total}$).
+	\item Estimate the length of data sending to each peer ($M_{i}$), indicated by \texttt{firstOffset} and \texttt{lastOffset}
+	\item Use \texttt{DataParser.getSinglePart()} to split data into 
+\end{itemize}
+
+Algorithm \ref{alg:assign_job} describes how \texttt{DecisionMaker} assigns a job appropriately to each mobile device. The algorithm returns the amount of data in binary length with two offsets that indicate the location of the data.
 
 \begin{algorithm}
 \caption{Assigning a job}
@@ -413,7 +426,7 @@ M_{i} = M\frac{RL_{i}}{\sum_{j = \overline{1,n}}{RL_{j}}}
   \State $M_{i} \leftarrow M\frac{RL_{i}}{RL_{Total}}$\\
   \State $firstOffset \leftarrow M_{C} $
   \State $lastOffset \leftarrow M_{C} + M_{i}$
-  \State $jobData \leftarrow DataParser.getSinglePart($
+  \State $jobData \leftarrow DataParser.getSinglePart(data,$
   \State 
 		\hspace{\algorithmicindent}
 		\hspace{\algorithmicindent}
