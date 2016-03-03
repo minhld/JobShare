@@ -458,13 +458,13 @@ Since the mobile devices are the motive objects in the network, there is no guar
 In our middleware, the \emph{Wi-Fi Direct Controller} module extends the \emph{BroadcastReceiver} class to inherit the network listening capability. During the runtime, whenever network mutates, a system event of type \emph{WIFI\_P2P\_PEERS\_CHAN-GED\_ACTION} containing a list of available peers will be returned to \emph{Wi-Fi Direct Controller}. By comparing the previous and updated peer lists, we can figure out which devices are joining or leaving. Our middleware keeps the copies of all the running jobs after dispatching. If a job is being executed on a begone peer, the caller will use its copy to run it locally instead.
 
 \subsection{Estimating Energy Consumption}
-As compared to estimating the energy consumption in cellular networks, in a WiFi network the energy consumption can be easily estimated. The total energy consumption can be calculated as follows:
-$$E_{0} = E + E_{w}$$
-\noindent where $E_{w}$ is the energy that the app requires for waiting. Then, we calculate the energy consumed by sending a job to other peers through the WiFi Direct technology as follows:
-$$E_{p2p} = E(\frac{RL_{0}}{\sum_{i = 1}^{n}{RL_{i}}}) + E_{WiFi} + E_{w}$$ 
+As compared to estimating the energy consumption in cellular networks, in a Wi-Fi network the energy consumption can be easily estimated. The total energy consumption can be calculated as follows:
+$$E_{0} = E + E_{wait}$$
+Where $E_{wait}$ is the energy that the app requires for waiting. Then, we calculate the energy consumed by sending a job to other peers through the WiFi Direct technology as follows:
+$$E_{p2p} = E(\frac{RL_{0}}{\sum_{i = 1}^{n}{RL_{i}}}) + E_{WiFi} + E_{wait}$$ 
 \noindent $n$ is the number of devices. $RL_{i} (i = \overline{1,n})$ is the responsibility level of each mobile device. 
 
-However, we do not consider $E_{w}$ because it will depend on the appearance of applications. For example, if an application has no GUI, $E_{w}$ will cause very little effect. From the two above equations, we can calculate the energy consumption differences between two job processing mechanisms:
+However, we do not consider $E_{wait}$ because it will depend on the appearance of applications. For example, if an application has no GUI, $E_{wait}$ will cause very little effect. From the two above equations, we can calculate the energy consumption differences between two job processing mechanisms:
 $$E_{Diff} = E_{0} - E_{p2p}$$ 
 or 
 \begin{equation}
@@ -472,7 +472,7 @@ or
 E_{Diff} = E(1 - \frac{RL_{0}}{\sum_{i=1}^{n}{RL_{i}}}) - E_{WiFi}
 \end{equation}
 
-Since WiFi is known to drain a battery linearly by time during transmission \cite{wifi_energy}, particularly it can be represented by $y = 17.01x - 0.93$ for downloading and $y = 17.31x - 2.28$ for uploading, where $y$ stands for percentage of battery consumed when using Wi-Fi for a period of $x$ hours. Therefore, under non-adventitious circumstances, equation (\ref{eq:energy_diff}) infers that in a mobile system with a certain number of devices in different levels of responsibility, if E is big enough, or in other words, if the task to perform is big enough, then $E_{Diff} > 0$ will result in, thus deploying a peer-to-peer group will give a great benefit in terms of energy efficiency. The bigger value of $E_{Diff}$, the more benefit we will gain. 
+Since Wi-Fi is known to drain a battery linearly by time during transmission \cite{wifi_energy}, particularly it can be represented by $y = 17.01x - 0.93$ for downloading and $y = 17.31x - 2.28$ for uploading, where $y$ stands for percentage of battery consumed when using Wi-Fi for a period of $x$ hours. Therefore, under non-adventitious circumstances, equation (\ref{eq:energy_diff}) infers that in a mobile system with a certain number of devices in different levels of responsibility, if E is big enough, or in other words, if the task to perform is big enough, then $E_{Diff} > 0$ will result in, thus deploying a peer-to-peer group will give a great benefit in terms of energy efficiency. The bigger value of $E_{Diff}$, the more benefit we will gain. 
 
 In addition, if a cloud-based offloading server is available in the network, $RL$ and $E_{Diff}$ are calculated as follows: $\sum_{i=1}^{n}{RL_{i}} \rightarrow \infty$, $E_{Diff} = E - E_{WiFi}$ which is the maximum value under the same conditions.
 
@@ -485,7 +485,7 @@ Job implementation is the prerequisite work to determine what to execute on the 
 \subsubsection{Implementing an Application Using APIs}
 This section describes three basic steps to implement an Android application to utilize our APIs
 
-\textbf{\emph{Message Handler:}}
+\textbf{\emph{Message Handler}}
 The Message Handler is required to be instantiated at the beginning. In particular, an instance of \texttt{UIHandler} is initiated to receive messages from system when it goes into runtime. While the system is in progress, the log and information messages will periodically be returned with label \texttt{MAIN\_INFO} (Listing \ref{ui_handler}). When each job result comes, \texttt{ExecutionHandler} will collect and handle by partially put into a placeholder. When all results have arrived, the placeholder with label \texttt{MAIN\_JOB\_DONE} will be returned to inform the completion of job collaboration, as well as bringing the final result back to the main app UI.
 
 \begin{figure}
@@ -504,7 +504,7 @@ Handler mainUiHandler = new Handler() {
 \label{ui_handler}
 \end{figure}
 
-\textbf{\emph{Data Parser:}}
+\textbf{\emph{Data Parser}}
 Secondly, the developer needs to declare \texttt{DataParser} to determine the data-type and the relevant parser to equip the system for manipulating data at run-time (see sub section \ref{data_parser}). \texttt{ExecutionHandler} is the main component which wraps up the complexity, and exposes only the necessary functions like \texttt{discoverPeers()} and \texttt{dispatchJob()}. To send ACK messages to other peers for exchanging acknowledgments and reforming network, we need to call \texttt{discoverPeers()} function on the program, which should be done as soon as the application starts.
 
 \begin{figure}
