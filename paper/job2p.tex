@@ -293,19 +293,17 @@ JSON : Condition {"RL": "max", "gps": "on"}
 
 \end{figure}
 
-The Listing \ref{code:jsonResponse} depicts a typical (IRS) response from the peer in JSON format. Where \texttt{device} parameter can be either device name (if it is a peer) or \texttt{Hostname/IP} (if it is offloading server), \texttt{RL} is the device's Response Level (Estimation of $RL$ will be covered in Sub section \ref{ss_jqfp}), \texttt{availability} indicates whether the device is ready for the job. \texttt{network} gives the Internet connection status, which can be either \texttt{high}, \texttt{low} or \texttt{off} (no connections), \texttt{gps} shows GPS status which can be either \texttt{on} or \texttt{off}. Finally \texttt{cpu}, \texttt{memory} and \texttt{battery} are the status of the essential resources at the time of response. 
+The Listing \ref{code:jsonResponse} depicts a typical (IRS) response from the peer in JSON format. Where \texttt{device} parameter can be either device name (if it is a peer) or \texttt{Hostname/IP} (if it is offloading server), \texttt{RL} is the device's Response Level (Estimation of $RL$ will be covered in Sub section \ref{ss_ers}), \texttt{availability} indicates whether the device is ready for the job. \texttt{network} gives the Internet connection status, which can be either \texttt{high}, \texttt{low} or \texttt{off} (no connections), \texttt{gps} shows GPS status which can be either \texttt{on} or \texttt{off}. Finally \texttt{cpu}, \texttt{memory} and \texttt{battery} are the status of the essential resources at the time of response. 
 
-In any IRS response, \texttt{availability} is determined by the remote peer which value can be either \texttt{on} or \texttt{off}. The \texttt{off} value informs the caller that it is not available due to temporary shortage of resource and therefore prevents the caller from sending jobs. Only the devices with \texttt{availability} with \texttt{on} value will accept jobs for execution. By default, if a device has the battery usage higher than 80\%, it will return \texttt{availability} \texttt{off}. 
+In any IRS response, \texttt{availability} is determined by the remote peer which value can be either \texttt{on} or \texttt{off}. The \texttt{off} value informs the caller that it is not available due to temporary shortage of resource and therefore prevents the caller from sending jobs. Only the devices with \texttt{availability} with \texttt{on} value will accept jobs for execution. By default, if a device has the battery usage higher than 80\%, it will return \texttt{availability} \texttt{off}. However user can override this threshold by updating the \texttt{availability-threshold} property in the configuration file before the app initialization. 
 
-The value is given based on whether the device has bypassed the threshold of battery usage which is by default set to 0.8 (or 80\% overall usage). User can override those thresholds by updating the \texttt{availability-thresholds} in the configuration file before app initialization . 
+In the above example (Listing \ref{code:jsonResponse}), the peer has battery usage is 85\% (or 15\% remaining), so the \texttt{DecisionMaker} returns \texttt{availability} is \texttt{off} and it won't be able to handle any jobs.
 
-In the above example (Listing \ref{code:jsonResponse}), the battery usage is 0.85 or 15\% remaining, so the \texttt{DecisionMaker} on it states that its \texttt{availability} is \texttt{off} and it won't be able to handle any jobs.
-
-To make the system adjustable to wide range of resource usages with regard to energy and performance efficiency, the IRS criteria (Example in \ref{code:jsonResponse}) is added to the app configuration so that the \texttt{DecisionMaker} can check it by going through 3 following steps
+Depend on each task, the number of peers will be decided correspondingly. Generally, system will try to contact as many peers as possible, but for some tasks like requesting GPS location data, only one peer which has the highest availability of resources will be invoked. In this case, the IRS criteria (Second code sniplet in Listing \ref{code:jsonResponse}) is added to the app configuration to support \texttt{DecisionMaker}. Based on these IRS responses and criteria, \texttt{DecisionMaker} will select the peers through 3 following steps
 \begin{itemize}
-	\item \emph{If $RL$ is max}: Select one device having max $RL$ and match the other criteria, then finish.
-	\item \emph{If offloading server available}: Select the first available server, then finish.
-	\item \emph{If other criteria are matched}: Select a list of available devices having matched conditions.
+	\item \emph{If only one peer is requested}: Select one peer having max $RL$ and match the other criteria, then finish.
+	\item \emph{If offloading server available}: Select one first available server, then finish.
+	\item \emph{Otherwise}: Select a list of available peers having matched conditions.
 \end{itemize}
 Algorithm \ref{alg:select_peers} describes in detail the three above steps.
 
@@ -355,25 +353,36 @@ Algorithm \ref{alg:select_peers} describes in detail the three above steps.
 
 \end{algorithm}
 
-Algorithm \ref{alg:select_peers} explains how the caller selects appropriate peers from its connection list. Specifically, $P_{AV}$ stands for map of available peers and $WiFiDevices$ is the device information list.\\
+Where $P_{AV}$ is a saving map of available peers and $WiFiDevices$ is the device list.\\
 
-\subsubsection{Job quantitation for peers}\label{ss_jqfp}
-To assign a job to multiple peers, the runtime system collects the available resource information from each mobile device. Specifically, the percentage of CPU usage is calculated using the \texttt{/proc/stat} system file as follows:
+\subsubsection{Estimate resource usages} \label{ss_ers}
+The CPU usage is calculated using the \texttt{/proc/stat} system file as follows:
 \begin{equation} 
 \label{eq:cpu_usage} \small
 Usage_{CPU} = \frac{(\sum{T_{CPU2}} - T_{Idle2}) - (\sum{T_{CPU1}} - T_{Idle1})}{(\sum{T_{CPU2}} - \sum{T_{CPU1}})}
 \end{equation}
 
-\noindent where $\sum{T_{CPU}}$ is total active time and $T_{Idle}$ is idle time. For the memory usage, $Usage_{Mem}$ is calculated by accessing \texttt{MemoryInfo} of Android APIs such as $Mem_{Avail}$ and $Mem_{Total}$. Finally, we  calculate the battery usage, $Usage_{Batt}$. Next, to determine the appropriate amount of data to each mobile device, we introduce $RL$ parameter as follows:
+Where $\sum{T_{CPU}}$ is total active time and $T_{Idle}$ is idle time. 
+
+To calculate memory usage, we used \texttt{MemoryInfo} object from \texttt{ActivityManager} (available on Android SDK). After requesting system service, \texttt{MemoryInfo.availMem} returns the available amount of memory and \texttt{MemoryInfo.totalMem} returns the total amount of memory.
+
+Regarding battery, by using hidden class \texttt{PowerProfile}, the capacity can be estimated from the \texttt{battery.capacity} property, while the usage can be retrieved by inquiring system service using \texttt{ACTION\_BATTERY\_CHANGED} intent.
+
+Finally, we realized that the Responsibility Level (or $RL$) of a peer is proportional to resource capacity (ex. Number of cores, CPU speed or Total memory), and inversely proportional to resource usage. The more resources occupied, the more responding time the peer would take. Since we only consider the main system resources including CPU, memory and battery, we estimate $RL$ by the below equation
 \begin{equation}
 \label{eq:res_level}
 \small
 RL = \frac{N_{Cores} \times CPU_{Speed}}{Usage_{CPU}} + \frac{Mem_{Spec}}{Usage_{Mem}} + \frac{Batt_{Spec}}{Usage_{Batt} \times 1000}
 \end{equation}
 
-\noindent where $RL$ is an indicator to the level of availability of mobile devices. The smaller $RL$ means the higher availability. $N_{Cores}$ is the number of CPU cores. $CPU_{Speed}$ is speed of single core in GHz. $Mem_{Spec}$ is the memory capacity in GB and $Batt_{Spec}$ is the battery capacity in uAh. For example, if $Usage_{CPU}$ is 0.3, $Usage_{Mem}$ is 0.5 (i.e., half of 1GB memory has been consumed), and $Usage_{Batt}$ is 0.7 or 70\% used over a 2800uAh capacity battery, then $RL$ will be $$RL = \frac{5.2}{0.3} + \frac{1}{0.5} + \frac{2800}{0.7 \times 1000} = 23.33$$
+Where $N_{Cores}$ is the number of CPU cores. $CPU_{Speed}$ is speed of a single core in GHz. $Mem_{Spec}$ is the memory capacity in GB and $Batt_{Spec}$ is the battery capacity in mAh. For example, if $Usage_{CPU}$ is 0.3, $Usage_{Mem}$ is 0.5 (of half of 1GB memory has been consumed), and $Usage_{Batt}$ is 0.7 or 70\% used over a 2800uAh capacity battery, then $RL$ will be 
+$$RL = \frac{5.2}{0.3} + \frac{1}{0.5} + \frac{2800}{0.7 \times 1000} = 23.33$$
 
-If the selected peer is a powerful cloud-based server, $Batt_{Spec}$ is considered $\infty$ and $Usage_{Batt}$ is 0. According to Equation \ref{eq:res_level}, $RL$ will also be $\infty$. To make the calculation simple, we assign the maximum value of Integer to $RL$. To reduce the calculation overhead on the calling side, $RL$ is prematurely calculated on each peer and then sent to the caller in response to the IRS request.
+The higher value of $RL$ means the higher availability of the peer. If the selected peer is a powerful cloud-based server with power wired, $Batt_{Spec}$ can be considered $\infty$ and $Usage_{Batt}$ is 0. According to Equation \ref{eq:res_level}, its $RL$ will be $\infty$. In our implementation, we assign the maximum value of Integer to $RL$ of offloading server. To reduce the calculation overhead on the caller side, $RL$ is prematurely calculated on each peer and then sent back to caller in IRS responses.
+
+\subsubsection{Job quantitation for peers}\label{ss_jqfp}
+
+To assign a job to multiple peers, the runtime system collects the available resource information from each mobile device. Specifically, 
 
 Finally, the \texttt{DecisionMaker} assigns the job with the appropriate amount of data ($M_{i}$) in accordance with the following equation:
 \begin{equation} 
