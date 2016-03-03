@@ -259,20 +259,13 @@ The code snippet in Listing \ref{code:job_def} shows the important methods of \t
 
 In our case studies (see Section \ref{sec:eval}), we implemented three default parsers for bitmap images, text, and GPS, respectively. 
 
-\subsection{Runtime System} \label{scheduling}
-Once a peer-to-peer network is constructed by our system, each peer participating in the network can distribute jobs to other peers. Specifically, before making a remote job execution, \texttt{DecisionMaker} determines available peers in accordance with the level of available resources by inquiring peers' status via an \texttt{IRS} (Inquiry of Responsibility Status) message. Once one receives the IRS request, its \texttt{DecisionMaker} immediately responds to the request with the capability information of CPU, memory and battery usage at that time depicted in Figure \ref{fig:forming}.
+\subsection{Decision Maker} \label{scheduling}
 
-%\begin{figure}
-%\centerline {
-%\includegraphics[width=0.45\textwidth, natwidth=915, natheight=837]{data/checkStatusFlow}
-%}
-%\caption{Workflow between mobile devices.}
-%\label{fig:checkStatus}
-%\end{figure}
+In this section, we will discuss about (1) how our middleware can detect the available peers, (2) find out how much one peer can response (to select the most appropriate ones before sending the jobs to) and (3) quantitate the jobs to send to the selected peers. These problems will be addressed by our \texttt{DecisionMaker} module.
 
 \subsubsection{Finding available devices}\label{ss_dfp}
 
-A mobile device at any time maintains a certain number of connections with the others. Before delivering jobs, it dispatches IRS messages to all the peers for acknowledgment of their availability ($RL$ - Level of Responsibility). If a peer receives an IRS, its \texttt{DecisionMaker} will capture its configuration and corresponding usage states to generate a response in JSON format, Listing \ref{code:jsonResponse} shows a typical response.\\
+When middleware is active, the \texttt{DecisionMaker} periodically broadcasts messages inquiring Responsibility status (or IRS requests). The other peers will immediately respond to these messages with conclusion of its status including CPU, memory and battery usages (See Listing \ref{fig:forming}).
 
 \begin{figure}
 \noindent \shadowbox{
@@ -300,7 +293,7 @@ JSON : Condition {"RL": "max", "gps": "on"}
 
 \end{figure}
 
-Where \texttt{device} parameter can be either device name (if it is device) or \texttt{server host/IP} (if it is offloading server), $RL$ is the device's Level of Responsibility (for estimation of $RL$ and the other parameters, see \ref{ss_jqfp}), \texttt{availability} indicates whether the device is feasible for handling job. \texttt{network} gives the network status, which can be either \texttt{high}, \texttt{low} or \texttt{off} (no connections), and \texttt{gps} is information of GPS being \texttt{on} or \texttt{off}. Finally \texttt{cpu}, \texttt{memory} and \texttt{battery} are the status of the essential resources at the time of response. 
+The Listing \ref{code:jsonResponse} depicts a typical (IRS) response from the peer in JSON format. Where \texttt{device} parameter can be either device name (if it is a peer) or \texttt{Hostname/IP} (if it is offloading server), \texttt{RL} is the device's Response Level (Estimation of $RL$ will be covered in Sub section \ref{ss_jqfp}), \texttt{availability} indicates whether the device is ready for the job. \texttt{network} gives the Internet connection status, which can be either \texttt{high}, \texttt{low} or \texttt{off} (no connections), \texttt{gps} shows GPS status which can be either \texttt{on} or \texttt{off}. Finally \texttt{cpu}, \texttt{memory} and \texttt{battery} are the status of the essential resources at the time of response. 
 
 In any IRS response, \texttt{availability} is determined by the remote device which value can be assigned to \texttt{on} or \texttt{off}. The \texttt{off} value informs the caller that it is not available due to temporary shortage of resource and therefore prevents the caller from sending jobs. Only the devices with \texttt{availability} set to \texttt{on} will accept jobs for execution. The value is given based on whether the device has bypassed the threshold of battery usage which is by default set to 0.8 (or 80\% overall usage). User can override those thresholds by updating the \texttt{availability-thresholds} in the configuration file before app initialization. 
 
