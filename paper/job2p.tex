@@ -395,15 +395,14 @@ $$M_{offload} = M\frac{RL_{offload}}{\sum_{j = \overline{1, n}}{RL_{j}}} = M\fra
 
 From the above Sub section \ref{ss_ers}, we got $RL_{offload}$ is $\infty$. Since $\sum_{j \neq offload}{RL_{j}}$ is a limited value due to peers' resource limits, therefore $M_{offload} \approx M$. Thus we can flush the whole task to the offloading server to gain the best performance. 
 
-According to the above estimations, we design the Algorithm \ref{alg:assign_job} for the \texttt{DecisionMaker} to assign appropriate job to each peer. It goes through 3 basic steps
+According to the above estimations, we design the Algorithm \ref{alg:assign_job} for the \texttt{DecisionMaker} to assign appropriate job to each peer. It goes through a few simple steps
 
 \begin{itemize}
 	\item Calculate the total size of data ($M$) and total Responsibility capacity of all the peers ($RL_{Total}$).
 	\item Estimate the length of data sending to each peer ($M_{i}$), indicated by \texttt{firstOffset} and \texttt{lastOffset}
-	\item Use \texttt{DataParser.getSinglePart()} to split data into 
+	\item Use \texttt{DataParser.getSinglePart()} to split data into smaller part, merge it with \texttt{Job} class and then compact them into an instance of \texttt{JobData}.
+	\item The \texttt{JobData} will be serialized and dispatched to a peer by \texttt{dispatchJob()} from \texttt{JobDispatcher}
 \end{itemize}
-
-Algorithm \ref{alg:assign_job} describes how \texttt{DecisionMaker} assigns a job appropriately to each mobile device. The algorithm returns the amount of data in binary length with two offsets that indicate the location of the data.
 
 \begin{algorithm}
 \caption{Assigning a job}
