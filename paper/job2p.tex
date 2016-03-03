@@ -216,7 +216,6 @@ Both \texttt{ClientSocketHandler} and \texttt{ServerSocketHandler} are constitut
 \subsubsection{Execution Handler}
 \emph{Execution Handler} handles job definition, execution and distribution. \texttt{Job} (see \ref{prog_model}) is an executable unit defined by the programmer. By analyzing information of available mobile device list, \texttt{DecisionMaker} selects a number of highest responsibile devices and decides jobs with appropriate amount of conjunctional data. Then \texttt{JobDispatcher} dispatches them using \texttt{WNM} to the selected devices. On each remote device or offload server, \texttt{Job} and its partial data will be deserialized and executed by \texttt{JobExecutor} in synchronous mode. After that, the results will be return back to the caller by \texttt{JobClientHandler} and \text{JobServerHandler}. To facilitate adaptation with data heterogeneity, we define \texttt{DataParser} as a loosely coupled interface of \texttt{Job} to support determining mechanisms for: (1) serialization/deserialization object into binary format which is compatible for TCP transmission, (2) task partitioning, and (3) placeholder initialization and concatenation. To make the data type comprehensive to system in terms of reading, parsing or memory allocating, developer needs to supply instructions by instantiating an implementation of Data Parser for that type. 
 
-
 \subsection{Programming Model} \label{prog_model}
 Our system has a simple programming model that enables the programmer to easily implement remote functions. As described in Listing \ref{code:job_def}, we provide a \texttt{Job} abstract class that will be extended by the programmer to specify which functionality should be executed remotely. Also, to support dynamic class loading in Dalvik VM, we provide the \texttt{DexCreator} commandline tool that compiles the \texttt{Job} Java class file into a Dex package. The Dex package and sliced resources are packed as a \texttt{JobData} object by \texttt{JobDispatcher} and then dispatched to the available mobile devices or the cloud-based server. Next, the recipient of the \texttt{JobData} checks a checksum field to confirm the consistency, and then deserializes the object into \texttt{Job} and resources for the execution.
 
@@ -427,6 +426,15 @@ M_{i} = M\frac{RL_{i}}{\sum_{j = \overline{1,n}}{RL_{j}}}
 \end{scriptsize}
 \end{algorithmic}
 \end{algorithm}
+
+
+\subsection{Cloud Offloading}
+
+Cloud offloading \cite{kwon+:mobilesoft15} plays a very important role. When a peer found a nearby offloading server, it will attempt connecting to that server and offload the whole computation on it. 
+
+Since the peers dispatch DEX execution packages among them in the network (Section \ref{prog_model}), these packages are only able to execute on Java VM on Android platforms like Android phones or tablets. To build up the server that can handle execution of these packages without modifying them, we installed Android platform on our server using Android x86 installation \cite{android-x86}.
+
+We also modified our middleware to be able to run on Android x86. We replaced the Wi-Fi Direct module by an ordinary network module using Socket to handle connection from the other peers. The outcomes of server offloading will be represented in the Section \ref{sec:eval}
 
 \subsection{Handling Runtime Exceptions}
 Since the mobile devices are the motive objects in the network, there is no guarantee that connections can be permanently maintained during the execution. To handle such network runtime exception, as well as to ensure all jobs are completely executed by peers, we utilized functionality of \emph{BroadcastReceiver} object which is available in Android SDK to listen to any updates from the network elements during the runtime.
@@ -672,7 +680,7 @@ Theoretically, remote accessibility won't help reducing the amount of bytes down
 \textbf{\emph{Design:}}
 To apply APIs for this application, from the caller we dispatch job requests, which contain the information of job with resources including URL, number of parts and index, to the peers having \texttt{IRS[network]} at \texttt{high} or \texttt{low}. At each peer, when a request is received, it executes the job to load the URL to achieve a page in HTML code. Then it will parse the HTML to detect resource links including multimedia resources (images, audio, videos), CSS, and JS. Depending on the number of parts and index, it narrows down the amount of resources and attempt to download and put them into a ZIP file before throwing it back to the caller.
 
-According to our system architecture, the caller needs to prepare a placeholder to hold every incoming result. For this test case, the placeholder is designated as a sub folder in the \texttt{Download} folder. When the result comes as a ZIP file, its contents will be extracted and filled into the placeholder folder. The final HTML file will contain all the modified resource links which are located at the same folder. Finally, the local HTML file can be opened by Android Web browser component using a local web server, for instance, TinyHTTPd \cite{tinyhttpd}.
+According to our system architecture, the caller needs to prepare a placeholder to hold every incoming result. For this test case, the placeholder is designated as a sub folder in the \texttt{Download} folder. When the result comes as a ZIP file, its contents will be extracted and filled into the placeholder folder. The final HTML file will contain all the modified resource links which are located at the same folder. Finally, the local HTML file can be opened by Android Web browser component using a local web server, for instance, NanoHttpd \cite{nanohttpd}.
 
 \textbf{\emph{Performance:}}
 Figure (\ref{fig:net_clusters_perf} - left) describes performance of multi-device groups from 1 to more than 4 peers (some peers use a few more threads for simulating high performance) when remotely rendering web pages from CNN URLs. The figure describes the execution time of each peer in each group after being assigned a job, and the peak is reached when the last peer completes its work. In the group with only one device, it works desolately without any peer contacts; it will download web pages from the internet by opening Wi-Fi connection. It is obvious that executing Internet Remote access brings a high benefit in terms of performance since rendering time is reduced almost a half when at least three peers participate in the network. 
