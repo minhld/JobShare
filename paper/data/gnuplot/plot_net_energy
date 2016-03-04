@@ -5,7 +5,7 @@ set ytics font "Verdana,12"
 set grid nopolar
 set style fill solid 1
 set ylabel "Energy Consumption (uAh)" 
-set yrange [ 0 : 1900 ]
+set yrange [ 0 : 2200 ]
 
-plot 'D:\android\JobShare\paper\data\gnuplot\c_5_net_energy.dat' using 2:xticlabels(1) title 'Energy drained for process' with boxes lt rgb "#666" fillstyle pattern 3, \
+plot 'D:\android\JobShare\paper\data\gnuplot\energy_netshare.dat' using 2:xticlabels(1) title 'Energy drained for process' with boxes lt rgb "#666" fillstyle pattern 3, \
 	'' using 3 title 'Overhead' with boxes lt rgb "#666" fillstyle pattern 5
