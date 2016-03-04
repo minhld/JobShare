@@ -207,7 +207,7 @@ Figure \ref{fig:architecture} shows the overall system design that comprises two
 	\label{fig:forming}
 \end{figure}
 
-\emph{Execution Handler} selects the best available distribution targets, assigns a job to nearby peers or a cloud-based offloading server, and steers its execution. Since we provide a simple programming model to enable the programmer to execute any kinds of jobs without the ad-hoc modification of the runtime system, the programmer first must implement both the \texttt{Job} and \texttt{DataParser} class, which will be discussed in Section \ref{prog_model}. The \texttt{Job} class defines how the distributed job should be executed. The \texttt{DataParser} class codifies how the relevant data should be  processed (e.g., read/write), partitioned, and merged. Then, the module selects a number of favorable peers based on the current runtime condition and peers' system status if peer to peer execution is more beneficial than executing on an offloading server. Once all the distribution targets are determined, the job is dispatched with the appropriate amount of data. On the caller side, \emph{Execution Handler} dynamically loads the \texttt{Job} class and executes it. Finally, the execution result is sent back to the caller and is naturally migrated with other results by \texttt{DataParser}.
+\emph{Execution Handler} selects the best available distribution targets, assigns a job to nearby peers or a cloud-based offloading server, and steers its execution. Since we provide a simple programming model to enable the programmer to execute any kinds of jobs without the ad-hoc modification of the runtime system, the programmer first must implement both the \texttt{Job} and \texttt{DataParser} class, which will be discussed in Section \ref{prog_model}. The \texttt{Job} class defines how the distributed job should be executed. The \texttt{DataParser} class codifies how data to be sent should be processed (e.g., read/write), partitioned, and merged. Then, the module selects a number of favorable peers based on the current runtime condition and peers' system status if peer to peer execution is more beneficial than executing on an offloading server. Once all the distribution targets are determined, the job is dispatched with the appropriate amount of data. On the caller side, \emph{Execution Handler} dynamically loads the \texttt{Job} class and executes it. Finally, the execution result is sent back to the caller and is naturally migrated with other results by \texttt{DataParser}.
 
 \emph{Network Manager} opens a communication channel, monitors peers' execution status, and handles faults. First, the module discovers all available nearby devices through WiFi Direct and check the availability of a cloud-based offloading server. By providing transparent operations between the cloud-based offloading server and nearby mobile devices, our approach allows the programmer only to focus on his/her business logic. The \emph{Network Manager} sends a very short status inquiry message to the discovered devices and measures runtime conditions such as end-to-end latency, etc, and then each peer sends its information in a JSON format (see \ref{ss_dfp}). Next, \emph{Execution Handler} can determine the best execution strategy (e.g., peer-to-peer execution vs. cloud offloading, the optimal number of peers, the amount of data to be assigned to each peer, etc.). Once the available device list is determined, a communication channel is organized as described in Figure \ref{fig:forming}. Finally, the module keeps monitoring peers' execution status through WiFi Direct's exception handling mechanism, so that if there is any fault during the execution, \emph{Network Manager} catches the exception and then \emph{Execution Handler} immediately restarts the failed job locally. In addition to the exception handling mechanism, the module uses checksum to verify data integrity.
 
@@ -270,6 +270,52 @@ JSON : DeviceInfo {
 
 %In the above example (Listing \ref{code:jsonResponse}), the peer has battery usage is 85\% (or 15\% remaining), so the \texttt{DecisionMaker} returns \texttt{availability} is \texttt{off} and it won't be able to handle any jobs.
 
+\subsubsection{Estimating Resource Usages}
+Algorithm \ref{alg:select_peers} describes how to determine appropriate peers. Specifically, $P_{AV}$ is a hashmap that stores all the available peers from the list of all nearby peers, $WiFiDevices$. Then, we calculate resource usages including CPU, memory, and battery. In particular, for the memory and battery usage, we used standard Android packages including the \texttt{MemoryInfo} and \texttt{PowerProfile} class. The CPU usage is calculated using the \texttt{/proc/stat} system file as follows:
+
+\begin{equation} 
+\label{eq:cpu_usage} \small
+Usage_{CPU} = \frac{(\sum{T_{CPU2}} - T_{Idle2}) - (\sum{T_{CPU1}} - T_{Idle1})}{(\sum{T_{CPU2}} - \sum{T_{CPU1}})}
+\end{equation}
+\noindent
+where $\sum{T_{CPU}}$ and $T_{Idle}$ are the total active time and idle time, respectively.
+
+
+Finally, \emph{Responsiveness Level} (or $RL$) of a device is proportional to its resource capacities (e.g., the number of cores, CPU speed, total memory) while it is inversely proportional to resource usage. As a result, the more resources consumed, the more responding time the peer would take. Since we only consider the main system resources including CPU, memory and battery, we estimate $RL$ as follows:
+
+\begin{equation}
+\label{eq:res_level}
+\small
+RL = \frac{N_{Cores} \times CPU_{Speed}}{Usage_{CPU}} + \frac{Mem_{Spec}}{Usage_{Mem}} + \frac{Batt_{Spec}}{Usage_{Batt} \times 1000}
+\end{equation}
+
+\noindent where $N_{Cores}$ is the number of CPU cores. $CPU_{Speed}$ is speed of a single core in GHz. $Mem_{Spec}$ is the memory capacity in GB. $Batt_{Spec}$ is the battery capacity in mAh. For example, the current CPU utilization is 30\%, half of 1GB memory is being allocated, and 70\% of a 2800uAh capacity battery has bee consumed. Then, $RL$ will be 
+
+\begin{small} $$RL = \frac{5.2}{0.3} + \frac{1}{0.5} + \frac{2800}{0.7 \times 1000} = 23.33$$ \end{small}
+
+The higher value of $RL$ means the higher availability of the peer. Thus, if the selected peer is a powerful cloud-based server connected, $Batt_{Spec}$ can be considered $\infty$ and $Usage_{Batt}$ is 0. According to Equation \ref{eq:res_level}, its $RL$ will be $\infty$. In our proof-of-concept implementation, to reduce the overhead caused by the calculation on the caller side, the $RL$ value is pre-calculated on each peer and then sent back to the caller in response to the inquiry message.
+
+\subsubsection{Estimating Energy Consumption}
+When executing a task, an application may consume energy dedicating for running that task ($E$) and overhead during the execution (ex. maintaining GUI or callbacks - $E_{overhead}$). Therefore, the total energy the application may use during the execution ($E_{0}$) can be calculated as follows:
+$$E_{0} = E + E_{overhead}$$
+
+When the device joins P2P network, the task will be splitted into smaller jobs, one is assigned to the caller and the others are executed on remote peers. The one assigned to the caller has data size $M(\frac{RL_{caller}}{\sum_{j \neq caller}{RL_{i}}})$, (Equation \ref{eq:data_amount}). Theoretically, it will consume an amount of energy equivalent to $E(\frac{RL_{caller}}{\sum_{i \neq caller}{RL_{i}}})$. To dispatch the jobs to the other peers, the application has to maintain Wi-Fi connections ($E_{WiFi}$) and wait for the responses ($E_{overload}$). Then the total energy consumed by application when running task in P2P network can be estimated like below
+
+\begin{small} $$E_{p2p} = E(\frac{RL_{caller}}{\sum_{i \neq caller}{RL_{i}}}) + E_{WiFi} + E_{overload}$$  \end{small}
+
+Where $RL_{i} (i \neq caller)$ is the Responsibility Level of i-peer. In our estimation, we do not consider $E_{overload}$ because it will depend on the appearance of applications. If an application has no GUI, $E_{overload}$ will cause very little effect. From the two above equations, we can calculate the difference of energy consumption between two job processing mechanisms:
+
+\begin{small} $$E_{Diff} = E_{0} - E_{p2p}$$ \end{small} Or 
+\begin{equation}
+\label{eq:energy_diff} \small
+E_{Diff} = E(1 - \frac{RL_{caller}}{\sum_{i \neq caller}{RL_{i}}}) - E_{WiFi}
+\end{equation}
+
+Since Wi-Fi is known to drain a battery steadily by time during transmission \cite{wifi_energy}. Under the non-adventitious circumstances, Equation \ref{eq:energy_diff} infers that in a P2P mobile network with a certain number of devices, if E is big enough (in other words, if the task to perform is big enough), then $E_{Diff} > 0$ will result in, or $E_{P2P} < E_{0}$. This can be interpreted that executing heavy tasks in Wi-Fi P2P network will consume less energy than running the tasks in one device. The higher value of $E_{Diff}$, the more benefit we will obtain in terms of energy efficiency.
+
+In addition, if a cloud-based offloading server is available in the network, $RL_{offload}$ is $\infty$ (Sub section \ref{ss_ers}) $\Rightarrow \sum_{i \neq caller}{RL_{i}} \rightarrow \infty$, $E_{Diff} = E - E_{WiFi}$ which is the maximum value under the same conditions. In other words, utilizing offloading server will bring the maximum benefit in compare with P2P network.
+
+
 \subsubsection{Selecting Available Peers} \label{ss_ers}
 Next, depending on the amount of job and data, an appropriate number of peers should be chosen for the best execution result. To that end, we take various parameters including execution characteristics (e.g., CPU-intensive computation, sensor access), data size, performance/energy prediction, and peers' status into consideration. However, because it is a challenge to select an optimal number of peers, we use a heuristic way to select peers as follows:
 \begin{itemize} \denseitems
@@ -323,48 +369,23 @@ Next, depending on the amount of job and data, an appropriate number of peers sh
 
 \end{algorithm}
 
-Algorithm \ref{alg:select_peers} describes how to determine appropriate peers. Specifically, $P_{AV}$ is a hashmap that stores all the available peers from the list of all nearby peers, $WiFiDevices$. Then, we calculate resource usages including CPU, memory, and battery. In particular, for the memory and battery usage, we used standard Android packages including the \texttt{MemoryInfo} and \texttt{PowerProfile} class. The CPU usage is calculated using the \texttt{/proc/stat} system file as follows:
-
-\begin{equation} 
-\label{eq:cpu_usage} \small
-Usage_{CPU} = \frac{(\sum{T_{CPU2}} - T_{Idle2}) - (\sum{T_{CPU1}} - T_{Idle1})}{(\sum{T_{CPU2}} - \sum{T_{CPU1}})}
-\end{equation}
-\noindent
-where $\sum{T_{CPU}}$ and $T_{Idle}$ are the total active time and idle time, respectively.
-
-
-Finally, \emph{Responsiveness Level} (or $RL$) of a device is proportional to its resource capacities (e.g., the number of cores, CPU speed, total memory) while it is inversely proportional to resource usage. As a result, the more resources consumed, the more responding time the peer would take. Since we only consider the main system resources including CPU, memory and battery, we estimate $RL$ as follows:
-
-\begin{equation}
-\label{eq:res_level}
-\small
-RL = \frac{N_{Cores} \times CPU_{Speed}}{Usage_{CPU}} + \frac{Mem_{Spec}}{Usage_{Mem}} + \frac{Batt_{Spec}}{Usage_{Batt} \times 1000}
-\end{equation}
-\noindent where $N_{Cores}$ is the number of CPU cores. $CPU_{Speed}$ is speed of a single core in GHz. $Mem_{Spec}$ is the memory capacity in GB. $Batt_{Spec}$ is the battery capacity in mAh. For example, the current CPU utilization is 30\%, half of 1GB memory is being allocated, and 70\% of a 2800uAh capacity battery has bee consumed. Then, $RL$ will be 
-
-\begin{small} $$RL = \frac{5.2}{0.3} + \frac{1}{0.5} + \frac{2800}{0.7 \times 1000} = 23.33$$ \end{small}
-
-The higher value of $RL$ means the higher availability of the peer. Thus, if the selected peer is a powerful cloud-based server connected, $Batt_{Spec}$ can be considered $\infty$ and $Usage_{Batt}$ is 0. According to Equation \ref{eq:res_level}, its $RL$ will be $\infty$. In our proof-of-concept implementation, to reduce the overhead caused by the calculation on the caller side, the $RL$ value is pre-calculated on each peer and then sent back to the caller in response to the inquiry message.
-
-
-\subsubsection{Partitioning Job}\label{ss_jqfp}
-Before sending jobs to peers, \texttt{DecisionMaker} will partition the amount of data sending along with job to one peer based on $RL$ value it received from that peer. By doing that, our middleware can guarantee each peer will receive an appropriate job that is suitable to its capability.
-
-Assume that $M_{i}$ is the appropriate amount of data sending to device $i$, the \texttt{DecisionMaker} will assign value by the following equation
+\subsubsection{Partitioning Data}\label{ss_jqfp}
+After determining appropriate peers, the runtime system partitions the data to be sent along with a job. As a result, the runtime system can ensure that each peer receives appropriate amount of job that is suitable to execute. Specifically, the appropriate amount of data sent to peers is calculated as follows:
 \begin{equation} 
 \label{eq:data_amount} \small
 M_{i} = M\frac{RL_{i}}{\sum_{j = \overline{1,n}}{RL_{j}}}
 \end{equation}
 
-Where $M$ is total size of data in bytes. $n$ is the number of active peers, and $j$-peer has its Responsibility Level $RL_{j}$. According to this equation, in the network with an offloading server, we calculate the amount of data to send to the server $M_{offload}$
+\noindent 
+where $M$ is total size of data in bytes, $n$ is the number of active peers, and $j$-peer has its \emph{Responsibility Level}, $RL_{j}$, respectively. If an offloading server is available, we calculate the amount of data sent to the server $M_{offload}$
 \begin{small}
 $$M_{offload} = M\frac{RL_{offload}}{\sum_{j = \overline{1, n}}{RL_{j}}} = M\frac{1}{1 + \frac{\sum_{j \neq offload}{RL_{j}}}{RL_{offload}}}$$
 \end{small}
 
-From the above Sub section \ref{ss_ers}, we got $RL_{offload}$ is $\infty$. Since $\sum_{j \neq offload}{RL_{j}}$ is a limited value due to peers' resource limits, therefore $M_{offload} \approx M$. Thus we can flush the whole task to the offloading server to gain the best performance. 
+From Section \ref{ss_ers}, we know that $RL_{offload}$ is $\infty$ for the offloading server. Since $\sum_{j \neq offload}{RL_{j}}$ is a limited value due to peers' resource limits, $M_{offload} \approx M$. As a result, we can flush the whole task to the offloading server to gain the best performance. 
 
-According to the above estimations, we design the Algorithm \ref{alg:assign_job} for the \texttt{DecisionMaker} to assign appropriate job to each peer. It goes through a few simple steps
 
+Based on our estimation, we design Algorithm \ref{alg:assign_job} that assigns appropriate amounts of data to each peer through the following steps:
 \begin{itemize} \denseitems
 	\item Calculate the total size of data ($M$) and total Responsibility capacity of all the peers ($RL_{Total}$).
 	\item Estimate the length of data sending to each peer ($M_{i}$), indicated by \texttt{firstOffset} and \texttt{lastOffset}
@@ -412,32 +433,13 @@ According to the above estimations, we design the Algorithm \ref{alg:assign_job}
 \end{algorithm}
 
 
-\subsection{Cloud Offloading}
+\subsubsection{Offloading To the Cloud}
 Cloud offloading \cite{kwon+:mobilesoft2015} has received much attention as a popular energy/performance optimization mechanism. Thus, we still want to take advantage of a powerful cloud-based remote server for computation-intensive executions to achieve further energy/performance optimization. Specifically, if an offloading server is available, our middleware estimates costs (e.g., network cost) and benefits (e.g., CPU savings) to execute a job on the offloading server. Then, if executing the job on the offloading server is more favorable than executing peers in terms of energy- or performance-efficiency, the runtime system directly establish a communication channel between the offloading server and mobile device.
 
-\subsection{Handling Runtime Exceptions}
+\subsubsection{Handling Runtime Exceptions}
 Since the mobile devices are the motive objects in the network, there is no guarantee that connections can be permanently maintained during the execution. To handle such network runtime exception, as well as to ensure all jobs are completely executed by peers, we utilized functionality of \emph{BroadcastReceiver} object which is available in Android SDK to listen to any updates from the network elements during the runtime.
 
 In our middleware, the \emph{Wi-Fi Direct Controller} module extends the \emph{BroadcastReceiver} class to inherit the network listening capability. During the runtime, whenever network mutates, a system event of type \emph{WIFI\_P2P\_PEERS\_CHAN-GED\_ACTION} containing a list of available peers will be returned to \emph{Wi-Fi Direct Controller}. By comparing the previous and updated peer lists, we can figure out which devices are joining or leaving. Our middleware keeps the copies of all the running jobs after dispatching. If a job is being executed on a begone peer, the caller will use its copy to run it locally instead.
-
-\subsection{Estimating Energy Consumption}
-When executing a task, an application may consume energy dedicating for running that task ($E$) and overhead during the execution (ex. maintaining GUI or callbacks - $E_{overhead}$). Therefore, the total energy the application may use during the execution ($E_{0}$) can be calculated as follows:
-$$E_{0} = E + E_{overhead}$$
-
-When the device joins P2P network, the task will be splitted into smaller jobs, one is assigned to the caller and the others are executed on remote peers. The one assigned to the caller has data size $M(\frac{RL_{caller}}{\sum_{j \neq caller}{RL_{i}}})$, (Equation \ref{eq:data_amount}). Theoretically, it will consume an amount of energy equivalent to $E(\frac{RL_{caller}}{\sum_{i \neq caller}{RL_{i}}})$. To dispatch the jobs to the other peers, the application has to maintain Wi-Fi connections ($E_{WiFi}$) and wait for the responses ($E_{overload}$). Then the total energy consumed by application when running task in P2P network can be estimated like below
-$$E_{p2p} = E(\frac{RL_{caller}}{\sum_{i \neq caller}{RL_{i}}}) + E_{WiFi} + E_{overload}$$ 
-
-Where $RL_{i} (i \neq caller)$ is the Responsibility Level of i-peer. In our estimation, we do not consider $E_{overload}$ because it will depend on the appearance of applications. If an application has no GUI, $E_{overload}$ will cause very little effect. From the two above equations, we can calculate the difference of energy consumption between two job processing mechanisms:
-$$E_{Diff} = E_{0} - E_{p2p}$$ 
-Or 
-\begin{equation}
-\label{eq:energy_diff}
-E_{Diff} = E(1 - \frac{RL_{caller}}{\sum_{i \neq caller}{RL_{i}}}) - E_{WiFi}
-\end{equation}
-
-Since Wi-Fi is known to drain a battery steadily by time during transmission \cite{wifi_energy}. Under the non-adventitious circumstances, Equation \ref{eq:energy_diff} infers that in a P2P mobile network with a certain number of devices, if E is big enough (in other words, if the task to perform is big enough), then $E_{Diff} > 0$ will result in, or $E_{P2P} < E_{0}$. This can be interpreted that executing heavy tasks in Wi-Fi P2P network will consume less energy than running the tasks in one device. The higher value of $E_{Diff}$, the more benefit we will obtain in terms of energy efficiency.
-
-In addition, if a cloud-based offloading server is available in the network, $RL_{offload}$ is $\infty$ (Sub section \ref{ss_ers}) $\Rightarrow \sum_{i \neq caller}{RL_{i}} \rightarrow \infty$, $E_{Diff} = E - E_{WiFi}$ which is the maximum value under the same conditions. In other words, utilizing offloading server will bring the maximum benefit in compare with P2P network.
 
 \subsection{Programming Model} \label{prog_model}
 The programming model should be simple, so that application programmers can integrate with a few steps. This section will describe step-by-step the way to utilize our API to enable a typical peer-to-peer network.
@@ -494,10 +496,9 @@ In our case studies (see Section \ref{sec:eval}), we implemented three default p
 Job implementation is the prerequisite work to determine what to execute on the remote device and how to cast and manipulate data from the abstract object. According to section \ref{prog_model}, a developer needs to implement the Job class file separately by overriding the \texttt{exec()} method and casting the abstract input parameter to the concrete one. Then run the \texttt{DexCreator} tool on the Job class to compile and compact it into the DEX jar package. The final outcome is the \texttt{job.jar} file, which should be saved in the internal storage of the caller device. In order to simplify, we can store it in the \texttt{Download} folder.  
 
 \subsubsection{API Usage Scenario}
-Next, we present how to implement an Android application using the provided APIs.
+Next, we present how to implement an Android application using the provided programming model.
 
-\textbf{\emph{Message Handler}}
-The Message Handler is required to be instantiated at the beginning. In particular, an instance of \texttt{UIHandler} is initiated to receive messages from system when it goes into runtime. While the system is in progress, the log and information messages will periodically be returned with label \texttt{MAIN\_INFO} (Listing \ref{ui_handler}). When each job result comes, \texttt{ExecutionHandler} will collect and handle by partially put into a placeholder. When all results have arrived, the placeholder with label \texttt{MAIN\_JOB\_DONE} will be returned to inform the completion of job collaboration, as well as bringing the final result back to the main app UI.
+\textbf{\emph{Message Handler.}} \emph{Message Handler} is required to be instantiated during the initialization process. In particular, an instance of \texttt{UIHandler} is initiated to receive messages from system when it goes into runtime. While the system is in progress, the log and information messages will periodically be returned with label \texttt{MAIN\_INFO} (Listing \ref{ui_handler}). When each job result comes, \texttt{ExecutionHandler} will collect and handle by partially put into a placeholder. When all results have arrived, the placeholder with label \texttt{MAIN\_JOB\_DONE} will be returned to inform the completion of job collaboration, as well as bringing the final result back to the main app UI.
 
 \begin{figure}
 \noindent \shadowbox{%
@@ -515,8 +516,7 @@ Handler mainUiHandler = new Handler() {
 \label{ui_handler}
 \end{figure}
 
-\textbf{\emph{Data Parser}}
-Secondly, the developer needs to declare \texttt{DataParser} to determine the data-type and the relevant parser to equip the system for manipulating data at run-time (see sub section \ref{data_parser}). \texttt{ExecutionHandler} is the main component which wraps up the complexity, and exposes only the necessary functions like \texttt{discoverPeers()} and \texttt{dispatchJob()}. To send ACK messages to other peers for exchanging acknowledgments and reforming network, we need to call \texttt{discoverPeers()} function on the program, which should be done as soon as the application starts.
+\textbf{\emph{Data Parser.}} Next, the developer needs to declare \texttt{DataParser} to determine the data-type and the relevant parser to equip the system for manipulating data at run-time (see sub section \ref{data_parser}). \texttt{ExecutionHandler} is the main component which wraps up the complexity, and exposes only the necessary functions like \texttt{discoverPeers()} and \texttt{dispatchJob()}. To send ACK messages to other peers for exchanging acknowledgments and reforming network, we need to call \texttt{discoverPeers()} function on the program, which should be done as soon as the application starts.
 
 \begin{figure}
 \noindent \shadowbox{%
@@ -531,11 +531,9 @@ public Object getSinglePart(object, sOffset, eOffset) {
 \end{minipage}}	
   \captionof{lstlisting}{Example of \texttt{getSinglePart()} for Bitmap}
   \label{code:get_single_part}
-
 \end{figure}
 
-\textbf{\emph{Discovering Available Peers and Dispatching Jobs}}
-When the network is formed and connections are held with some other peers, \texttt{dispatchJob()} will be called to locate the resources and the job which is predefined in local storage, it then invokes \texttt{DecisionMaker} (sub section \ref{scheduling}) for job splitting and binary serialization. Finally jobs will be dispatched over the socket.
+\textbf{\emph{Discovering Available Peers and Dispatching Jobs.}} When the network is formed and connections are held with some other peers, \texttt{dispatchJob()} will be called to locate the resources and the job which is predefined in local storage, it then invokes \texttt{DecisionMaker} (sub section \ref{scheduling}) for job splitting and binary serialization. Finally jobs will be dispatched over the socket.
 
 \begin{figure}
 \noindent \shadowbox{%
@@ -562,15 +560,6 @@ jobHandler.dispatchJob(dataPath, jobPath);
 \captionof{lstlisting}{Using DataParser and JobHandler}
 \end{figure}
 
-\section{Discussion}
-\subsection{Advantages}
-\subsubsection{Applicability}
-\subsubsection{Extensibility}
-
-\subsection{Limitations}
-\subsubsection{Security}
-
-
 \section{Evaluation}
 \label{sec:eval}
 This section describes the micro benchmarks and case studies that evaluate the effectiveness of our approach. The experimental setup includes a testbed with 5 Android phones. Table \ref{table:devices} shows the device-specific values.
@@ -581,7 +570,7 @@ This section describes the micro benchmarks and case studies that evaluate the e
 \centering \small
 \begin{tabular}{| l | l | l | l |}
     \hline
-    Phone & CPU & RAM & Battery \\ \hline
+    Phone & CPU & RAM & Battery \\ \hline \hline
     LG Volt & Quad-core 1.2GHz & 1GB & 3000mAh\\ \hline
 		LG Opt. GK & Quad-core 1.7GHz & 2GB & 3100mAh\\ \hline
 		LG G Stylo & Quad-core 1.2GHz & 1GB & 3000mAh\\ \hline
@@ -623,7 +612,7 @@ To measure the performance of the system equipped with our APIs, we decorated a 
 \subsection{Case Study Implementations}
 
 \subsubsection{Image Processing}
-We applied blur effect, one of the high energy consuming image processes. We run the test repeatedly on two image inputs, the first image has size $2500 \times 1405$ and the second size is $4326 \times 2856$. For the second image, with 4 bytes allocated for each pixel, device had to allocate around $50MB$ of heap to open and hold another $50MB$ for the result, thus leading to app crash all the time. This problem will only be solved with the help of other collaborative peers to solve overload in terms of memory and energy consumption.
+We applied blur effect, one of the high energy consuming image processes. We ran the test repeatedly with two images that have different sizes: the first image has size $2500 \times 1405$ and the second one's size is $4326 \times 2856$. For the second image, with 4 bytes allocated for each pixel, device had to allocate around $50MB$ of heap to open and hold another $50MB$ for the result, thus leading to app crash all the time. This problem will only be solved with the help of other collaborative peers to solve overload in terms of memory and energy consumption.
 
 \textbf{\emph{Design:}}
 The most important part when applying APIs for image processing is defining the \texttt{DataParser} (see Listing \ref{code:job_def}) for Bitmap with a divide strategy in vertical cut. For an input image, the \texttt{firstOffset} and \texttt{lastOffset} will decide the first and last offsets of the vertical cut correspondingly throughout the width, from the top to the bottom edges. The algorithm of the vertical cut is described in Listing \ref{code:get_single_part}. Regarding the placeholder, we override the \texttt{getJsonMetadata()} method to return a simple JSON string like below:
@@ -715,8 +704,8 @@ Figure (\ref{fig:net_clusters_perf} - left) describes performance of multi-devic
 \begin{figure*}
 	\centering
 	%\resizebox{0.45\textwidth}{!}{
-		\includegraphics[width=.40\textwidth]{data/net_perf_01.pdf}
-		\includegraphics[width=.40\textwidth]{data/net_energy.pdf}
+		\includegraphics[width=.45\textwidth]{data/net_perf_01.pdf}
+		\includegraphics[width=.45\textwidth]{data/net_energy.pdf}
 	%}
 	\caption{Performance and energy consumption comparison for Internet sharing}
 	\label{fig:net_clusters_perf}
@@ -753,6 +742,15 @@ By integrating our system with either RetroSkeleton \cite{retro-skel} or Rio \ci
 \subsection{Threats to Validity}
 \subsubsection{Internal Validity}
 \subsubsection{External Validity}
+
+\section{Discussion}
+\label{sec:discussion}
+\subsection{Advantages}
+\subsubsection{Applicability}
+\subsubsection{Extensibility}
+
+\subsection{Limitations}
+%\subsubsection{Security}
 
 \section{Related Work}
 \label{sec:related}
