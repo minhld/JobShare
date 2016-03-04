@@ -1,5 +1,4 @@
-\documentclass{sig-alternate}[10pt]
-
+\documentclass{sig-alternate}
 % graphic declaration
 \usepackage{graphicx}
 \usepackage{listings}
@@ -197,18 +196,7 @@ In this section, we present our approach, a distributed mobile execution model t
 
 
 \subsection{Approach Overview}
-Figure \ref{fig:architecture} shows the overall system architecture, which mainly consists of two parts: (1) \emph{Network Manager} discovers available mobile devices, checks the availability of the registered cloud-based remote servers, and then establishes a network connection for data transmissions; (2) \emph{Execution Handler} provides abstract functionality for job definition, execution, and distribution. For the optimal execution result, \emph{Execution Handler} keeps track of current execution environments such as network conditions (e.g., delay, bandwidth) and system status (e.g., resource usage including CPU, memory). Finally, to hide the complex implementation details for application programmers, we offer a straightforward programming model that can be easily imported or extended. In the following discussion, we present the details of the system architecture.
-
-\subsubsection{Network Manager}
-\emph{Network Manager} opens a peer to peer channel between nearby mobile devices over a WiFi network using WiFi Direct \cite{} or a direct communication channel to the cloud-based offloading server if it is more favorable than nearby peers. Specifically, the \emph{Network Manager} consists of three sub-modules including \texttt{Socket Handler}, \texttt{WiFi Direct Controller}, and \texttt{Offloading Engine}. First, \texttt{Socket Handler} manages a communication channel through an appropriate communication controller.
-
-As aforementioned in the previous section, to leverage computational offloading, the \texttt{OffloadEngine} module initiates a connection with our cloud-based offloading server when a WiFi access point (AP) is available, thus executing the job at a powerful remote server instead of looking for nearby devices. By providing transparent operations between the cloud-based server and nearby mobile devices, our approach separates a business logic from distributed execution models.
-
-When an application starts, \texttt{WNM} calls \texttt{discoverPeers()} to search for available offloading servers registered in its configuration file. It also spreads acknowledgments to inform its availability to nearby mobile devices. If any offloading server or nearby devices receive a discovery message, its \texttt{WNM} module updates the new caller to its available device list, then simultaneously sends their information back to the caller in a JSON object (see \ref{ss_dfp}). Once all the devices are updated with the available device list, the network is organized as described in Figure \ref{fig:forming}. We provide the method \texttt{connectToADevice()} to make a connection with the best available mobile device. After establishing the connection, the mobile device starts to passively listen to job requests.
-
-%invocation will be promoted as server and use the \texttt{ServerSocketHandler} to initiate server socket with an random port. If the invoked device is already a server, it will maintain its current state and continuously accept the new client. Moreover, since a device can either be a server to some peers, or serve as client to the others, this method is able to build up a close range peer-to-peer network.
-
-Both \texttt{ClientSocketHandler} and \texttt{ServerSocketHandler} are constituted by a sub module named \texttt{DataTransmitManager}, which periodically observes input and output streams of parent socket (which can be either server or client socket) to verify checksum, check data consistency, send/receive data from the socket. Inheriting the \texttt{TransmitManager} abstract class, developer can instantiate their own version of \texttt{DataTransmitManager} to customize the data consistency checker or improve security. 
+Figure \ref{fig:architecture} shows the overall system design that comprises two main components: (1) \emph{Execution Handler} determines appropriate distribution units and targets and then steers job executions and (2) \emph{Network Manager} discovers available mobile devices, checks the availability of the registered cloud-based remote servers, and then establishes a network connection for data transmissions. For the optimal execution result, \emph{Execution Handler} keeps track of current execution environments such as network conditions (e.g., delay, bandwidth) and system status (e.g., resource usage including CPU, memory). Finally, we offer a simple programming model that hides complex implementation details such as distributing a job and steering its execution, so that the programmer can introduce distribution to his/her program as well as extending the provided runtime system.
 
 \begin{figure} 
 	\centering
@@ -219,61 +207,78 @@ Both \texttt{ClientSocketHandler} and \texttt{ServerSocketHandler} are constitut
 	\label{fig:forming}
 \end{figure}
 
+\emph{Execution Handler} selects the best available distribution targets, assigns a job to nearby peers or a cloud-based offloading server, and steers its execution. Since we provide a simple programming model to enable the programmer to execute any kinds of jobs without the ad-hoc modification of the runtime system, the programmer first must implement both the \texttt{Job} and \texttt{DataParser} class, which will be discussed in Section \ref{prog_model}. The \texttt{Job} class defines how the distributed job should be executed. The \texttt{DataParser} class codifies how the relevant data should be  processed (e.g., read/write), partitioned, and merged. Then, the module selects a number of favorable peers based on the current runtime condition and peers' system status if peer to peer execution is more beneficial than executing on an offloading server. Once all the distribution targets are determined, the job is dispatched with the appropriate amount of data. On the caller side, \emph{Execution Handler} dynamically loads the \texttt{Job} class and executes it. Finally, the execution result is sent back to the caller and is naturally migrated with other results by \texttt{DataParser}.
 
-\subsubsection{Execution Handler}
-\emph{Execution Handler} is in charge of assigning a job to nearby peers and executing the request job. To execute a job remotely, a programmer first needs to define a job and a data parser using the provided programming model (see \ref{prog_model}) 
-%is an executable unit defined by the programmer. 
+\emph{Network Manager} opens a communication channel, monitors peers' execution status, and handles faults. First, the module discovers all available nearby devices through WiFi Direct and check the availability of a cloud-based offloading server. By providing transparent operations between the cloud-based offloading server and nearby mobile devices, our approach allows the programmer only to focus on his/her business logic. The \emph{Network Manager} sends a very short status inquiry message to the discovered devices and measures runtime conditions such as end-to-end latency, etc, and then each peer sends its information in a JSON format (see \ref{ss_dfp}). Next, \emph{Execution Handler} can determine the best execution strategy (e.g., peer-to-peer execution vs. cloud offloading, the optimal number of peers, the amount of data to be assigned to each peer, etc.). Once the available device list is determined, a communication channel is organized as described in Figure \ref{fig:forming}. Finally, the module keeps monitoring peers' execution status through WiFi Direct's exception handling mechanism, so that if there is any fault during the execution, \emph{Network Manager} catches the exception and then \emph{Execution Handler} immediately restarts the failed job locally. In addition to the exception handling mechanism, the module uses checksum to verify data integrity.
 
-By analyzing information of available mobile device list, \texttt{DecisionMaker} selects a number of highest responsibile devices and decides jobs with appropriate amount of conjunctional data. Then \texttt{JobDispatcher} dispatches them using \texttt{WNM} to the selected devices. On each remote device or offload server, \texttt{Job} and its partial data will be deserialized and executed by \texttt{JobExecutor} in synchronous mode. After that, the results will be return back to the caller by \texttt{JobClientHandler} and \text{JobServerHandler}. To facilitate adaptation with data heterogeneity, we define \texttt{DataParser} as a loosely coupled interface of \texttt{Job} to support determining mechanisms for: (1) serialization/deserialization object into binary format which is compatible for TCP transmission, (2) task partitioning, and (3) placeholder initialization and concatenation. To make the data type comprehensive to system in terms of reading, parsing or memory allocating, developer needs to supply instructions by instantiating an implementation of Data Parser for that type. 
 
-\subsection{Decision Maker} \label{scheduling}
-In this section, we will discuss about (1) how our middleware can detect the available peers, (2) find out how much one peer can response (to select the most appropriate ones before sending the jobs to) and (3) quantitate the jobs to send to the selected peers. These problems will be addressed by our \texttt{DecisionMaker} module.
+\subsection{Runtime System} \label{scheduling}
+In this section, we discuss about (1) how to discover available peers and exchange peers' information, (2) how to select appropriate peers, and (3) how to partition data to be sent to the selected peers. 
+%These problems will be addressed by our \texttt{DecisionMaker} module.
 
-\subsubsection{Finding available devices}\label{ss_dfp}
-When middleware is active, the \texttt{DecisionMaker} periodically broadcasts messages inquiring Responsibility status (or IRS requests). The other peers will immediately respond to these messages with conclusion of its status including CPU, memory and battery usages (See Listing \ref{fig:forming}).
+\subsubsection{Discovering Available Peers}\label{ss_dfp}
+During the initialization phase, our runtime system first bootstraps the peer discovery process by sending a broadcast messages to nearby peers for collecting peers' information. Once a runtime system receives a status inquiry message from nearby devices, it immediately sends a response message in a JSON format as shown in Listing \ref{code:jsonResponse}. While most fields are self-explanatory, \texttt{RL} (Responsiveness Level) is a parameter that represents how much the selected peer is favorable to execute the requested job. We will further discuss this parameter in Section \ref{ss_ers}. The \texttt{availability} parameter is determined by the current level of battery usage. By default, if a device's battery level is higher than 80\%, its value is set to \texttt{on}. Otherwise, it is \texttt{off}. However user can override this threshold by updating the \texttt{availability-threshold} property in the configuration file\footnote{We currently use a simple key-value configuration files for user-specific preferences.} before the runtime system starts. 
 
 \begin{figure}
 \noindent \shadowbox{
 \begin{minipage}{240pt}
 \begin{lstlisting}
 JSON : DeviceInfo {
-  "device": "LG-Volt", 
-	"RL": 24.83,
-  "availability": "off", 
-	"network": "low", 
-	"gps": "on",	
-  "cpu": {"usage": "0.3", "speed": "1.3", "cores": 4},
-  "memory": {"usage": "0.5", "total": 2},
-  "battery": {"usage": 0.85, "total": 2800}}
+	"availability": Boolean, "gps": Boolean,
+	"network": ["low" | "high" | "off"], "RL": Double}
 \end{lstlisting}			
-\end{minipage}}	\\
-\noindent \shadowbox{%
-\begin{minipage}{243pt}	
-\begin{lstlisting}
-JSON : Condition {"RL": "max", "gps": "on"}
-\end{lstlisting}\end{minipage}}	
-
-\captionof{lstlisting}{JSON response format and initiative condition.}
+\end{minipage}}	
+%\\
+%\noindent \shadowbox{%
+%\begin{minipage}{243pt}	
+%\begin{lstlisting}
+%JSON : Condition {"RL": "max", "gps": "on"}
+%\end{lstlisting}\end{minipage}}	
+\captionof{lstlisting}{JSON response message.}
 \label{code:jsonResponse}
-
 \end{figure}
 
-The Listing \ref{code:jsonResponse} depicts a typical (IRS) response from the peer in JSON format. Where \texttt{device} parameter can be either device name (if it is a peer) or \texttt{Hostname/IP} (if it is offloading server), \texttt{RL} is the device's Response Level (Estimation of $RL$ will be covered in Sub section \ref{ss_ers}), \texttt{availability} indicates whether the device is ready for the job. \texttt{network} gives the Internet connection status, which can be either \texttt{high}, \texttt{low} or \texttt{off} (no connections), \texttt{gps} shows GPS status which can be either \texttt{on} or \texttt{off}. Finally \texttt{cpu}, \texttt{memory} and \texttt{battery} are the status of the essential resources at the time of response. 
+%\begin{figure}
+%\noindent \shadowbox{
+%\begin{minipage}{240pt}
+%\begin{lstlisting}
+%JSON : DeviceInfo {
+  %"device": "LG-Volt", 
+	%"RL": 24.83,
+  %"availability": "off", 
+	%"network": "low", 
+	%"gps": "on",	
+  %"cpu": {"usage": "0.3", "speed": "1.3", "cores": 4},
+  %"memory": {"usage": "0.5", "total": 2},
+  %"battery": {"usage": 0.85, "total": 2800}}
+%\end{lstlisting}			
+%\end{minipage}}	\\
+%\noindent \shadowbox{%
+%\begin{minipage}{243pt}	
+%\begin{lstlisting}
+%JSON : Condition {"RL": "max", "gps": "on"}
+%\end{lstlisting}\end{minipage}}	
+%
+%\captionof{lstlisting}{JSON response format and initiative condition.}
+%\label{code:jsonResponse}
+%
+%\end{figure}
 
-In any IRS response, \texttt{availability} is determined by the remote peer which value can be either \texttt{on} or \texttt{off}. The \texttt{off} value informs the caller that it is not available due to temporary shortage of resource and therefore prevents the caller from sending jobs. Only the devices with \texttt{availability} with \texttt{on} value will accept jobs for execution. By default, if a device has the battery usage higher than 80\%, it will return \texttt{availability} \texttt{off}. However user can override this threshold by updating the \texttt{availability-threshold} property in the configuration file before the app initialization. 
+%Where \texttt{device} parameter can be either device name (if it is a peer) or \texttt{Hostname/IP} (if it is offloading server), \texttt{RL} is the device's Response Level (Estimation of $RL$ will be covered in Sub section \ref{ss_ers}), \texttt{availability} indicates whether the device is ready for the job. \texttt{network} gives the Internet connection status, which can be either \texttt{high}, \texttt{low} or \texttt{off} (no connections), \texttt{gps} shows GPS status which can be either \texttt{on} or \texttt{off}. Finally \texttt{cpu}, \texttt{memory} and \texttt{battery} are the status of the essential resources at the time of response. 
 
-In the above example (Listing \ref{code:jsonResponse}), the peer has battery usage is 85\% (or 15\% remaining), so the \texttt{DecisionMaker} returns \texttt{availability} is \texttt{off} and it won't be able to handle any jobs.
+%In any IRS response, \texttt{availability} is determined by the remote peer which value can be either \texttt{on} or \texttt{off}. The \texttt{off} value informs the caller that it is not available due to temporary shortage of resource and therefore prevents the caller from sending jobs. Only the devices with \texttt{availability} with \texttt{on} value will accept jobs for execution. By default, if a device has the battery usage higher than 80\%, it will return \texttt{availability} \texttt{off}. However user can override this threshold by updating the \texttt{availability-threshold} property in the configuration file before the app initialization. 
 
-Depend on each task, the number of peers will be decided correspondingly. Generally, system will try to contact as many peers as possible, but for some tasks like requesting GPS location data, only one peer which has the highest availability of resources will be invoked. In this case, the IRS criteria (Second code sniplet in Listing \ref{code:jsonResponse}) is added to the app configuration to support \texttt{DecisionMaker}. Based on these IRS responses and criteria, \texttt{DecisionMaker} will select the peers through 3 following steps
+%In the above example (Listing \ref{code:jsonResponse}), the peer has battery usage is 85\% (or 15\% remaining), so the \texttt{DecisionMaker} returns \texttt{availability} is \texttt{off} and it won't be able to handle any jobs.
+
+\subsubsection{Selecting Available Peers} \label{ss_ers}
+Next, depending on the amount of job and data, an appropriate number of peers should be chosen for the best execution result. To that end, we take various parameters including execution characteristics (e.g., CPU-intensive computation, sensor access), data size, performance/energy prediction, and peers' status into consideration. However, because it is a challenge to select an optimal number of peers, we use a heuristic way to select peers as follows:
 \begin{itemize} \denseitems
-	\item \emph{If only one peer is requested}: Select one peer having max $RL$ and match the other criteria, then finish.
-	\item \emph{If offloading server available}: Select one first available server, then finish.
-	\item \emph{Otherwise}: Select a list of available peers having matched conditions.
+	\item \emph{If only one peer is requested}: Select one peer that has the largest \texttt{"RL"} value and meets other criteria.
+	\item \emph{If an offloading server available}: Select the offloading server only when the \texttt{"network"} parameter sent from the server is \texttt{"high"} and a job is computation-intensive.	
+	\item \emph{Otherwise}: Select a list of available peers that have larger \texttt{"RL"} and meet other selection criteria.
 \end{itemize}
-Algorithm \ref{alg:select_peers} describes in detail the three above steps.
 
 \begin{algorithm}
-
 \caption{Selecting Available Peers}
 \label{alg:select_peers}
 \begin{algorithmic}[1] 
@@ -299,7 +304,7 @@ Algorithm \ref{alg:select_peers} describes in detail the three above steps.
   	\State \Return $P_{AV}$
   \EndIf
 
-  \If {All condition statements are satisfied} 
+  \If {All condition statements are met} 
   	\State $P_{Info} \leftarrow WiFiDevices.get(DeviceId) + $
 		\State
 			\hspace{\algorithmicindent}
@@ -318,45 +323,43 @@ Algorithm \ref{alg:select_peers} describes in detail the three above steps.
 
 \end{algorithm}
 
-Where $P_{AV}$ is a saving map of available peers and $WiFiDevices$ is the device list.\\
+Algorithm \ref{alg:select_peers} describes how to determine appropriate peers. Specifically, $P_{AV}$ is a hashmap that stores all the available peers from the list of all nearby peers, $WiFiDevices$. Then, we calculate resource usages including CPU, memory, and battery. In particular, for the memory and battery usage, we used standard Android packages including the \texttt{MemoryInfo} and \texttt{PowerProfile} class. The CPU usage is calculated using the \texttt{/proc/stat} system file as follows:
 
-\subsubsection{Estimating Resource Usages} \label{ss_ers}
-The CPU usage is calculated using the \texttt{/proc/stat} system file as follows:
 \begin{equation} 
 \label{eq:cpu_usage} \small
 Usage_{CPU} = \frac{(\sum{T_{CPU2}} - T_{Idle2}) - (\sum{T_{CPU1}} - T_{Idle1})}{(\sum{T_{CPU2}} - \sum{T_{CPU1}})}
 \end{equation}
+\noindent
+where $\sum{T_{CPU}}$ and $T_{Idle}$ are the total active time and idle time, respectively.
 
-Where $\sum{T_{CPU}}$ is total active time and $T_{Idle}$ is idle time. 
 
-To calculate memory usage, we used \texttt{MemoryInfo} object from \texttt{ActivityManager} (available on Android SDK). After requesting system service, \texttt{MemoryInfo.availMem} returns the available amount of memory and \texttt{MemoryInfo.totalMem} returns the total amount of memory.
+Finally, \emph{Responsiveness Level} (or $RL$) of a device is proportional to its resource capacities (e.g., the number of cores, CPU speed, total memory) while it is inversely proportional to resource usage. As a result, the more resources consumed, the more responding time the peer would take. Since we only consider the main system resources including CPU, memory and battery, we estimate $RL$ as follows:
 
-Regarding battery, by using hidden class \texttt{PowerProfile}, the capacity can be estimated from the \texttt{battery.capacity} property, while the usage can be retrieved by inquiring system service using \texttt{ACTION\_BATTERY\_CHANGED} intent.
-
-Finally, we realized that the Responsibility Level (or $RL$) of a peer is proportional to resource capacity (ex. Number of cores, CPU speed or Total memory), and inversely proportional to resource usage. The more resources occupied, the more responding time the peer would take. Since we only consider the main system resources including CPU, memory and battery, we estimate $RL$ by the below equation
 \begin{equation}
 \label{eq:res_level}
 \small
 RL = \frac{N_{Cores} \times CPU_{Speed}}{Usage_{CPU}} + \frac{Mem_{Spec}}{Usage_{Mem}} + \frac{Batt_{Spec}}{Usage_{Batt} \times 1000}
 \end{equation}
+\noindent where $N_{Cores}$ is the number of CPU cores. $CPU_{Speed}$ is speed of a single core in GHz. $Mem_{Spec}$ is the memory capacity in GB. $Batt_{Spec}$ is the battery capacity in mAh. For example, the current CPU utilization is 30\%, half of 1GB memory is being allocated, and 70\% of a 2800uAh capacity battery has bee consumed. Then, $RL$ will be 
 
-Where $N_{Cores}$ is the number of CPU cores. $CPU_{Speed}$ is speed of a single core in GHz. $Mem_{Spec}$ is the memory capacity in GB and $Batt_{Spec}$ is the battery capacity in mAh. For example, if $Usage_{CPU}$ is 0.3, $Usage_{Mem}$ is 0.5 (of half of 1GB memory has been consumed), and $Usage_{Batt}$ is 0.7 or 70\% used over a 2800uAh capacity battery, then $RL$ will be 
-$$RL = \frac{5.2}{0.3} + \frac{1}{0.5} + \frac{2800}{0.7 \times 1000} = 23.33$$
+\begin{small} $$RL = \frac{5.2}{0.3} + \frac{1}{0.5} + \frac{2800}{0.7 \times 1000} = 23.33$$ \end{small}
 
-The higher value of $RL$ means the higher availability of the peer. If the selected peer is a powerful cloud-based server with power wired, $Batt_{Spec}$ can be considered $\infty$ and $Usage_{Batt}$ is 0. According to Equation \ref{eq:res_level}, its $RL$ will be $\infty$. In our implementation, we assign the maximum value of Integer to $RL$ of offloading server. To reduce the calculation overhead on the caller side, $RL$ value is prematurely calculated on each peer and then sent back to caller in IRS responses.
+The higher value of $RL$ means the higher availability of the peer. Thus, if the selected peer is a powerful cloud-based server connected, $Batt_{Spec}$ can be considered $\infty$ and $Usage_{Batt}$ is 0. According to Equation \ref{eq:res_level}, its $RL$ will be $\infty$. In our proof-of-concept implementation, to reduce the overhead caused by the calculation on the caller side, the $RL$ value is pre-calculated on each peer and then sent back to the caller in response to the inquiry message.
 
-\subsubsection{Job quantitation for peers}\label{ss_jqfp}
 
-Before sending jobs to peers, \texttt{DecisionMaker} will quantitate the amount of data sending along with job to one peer based on $RL$ value it received from that peer. By doing that, our middleware can guarantee each peer will receive an appropriate job that is suitable to its capability.
+\subsubsection{Partitioning Job}\label{ss_jqfp}
+Before sending jobs to peers, \texttt{DecisionMaker} will partition the amount of data sending along with job to one peer based on $RL$ value it received from that peer. By doing that, our middleware can guarantee each peer will receive an appropriate job that is suitable to its capability.
 
 Assume that $M_{i}$ is the appropriate amount of data sending to device $i$, the \texttt{DecisionMaker} will assign value by the following equation
 \begin{equation} 
-\label{eq:data_amount}
+\label{eq:data_amount} \small
 M_{i} = M\frac{RL_{i}}{\sum_{j = \overline{1,n}}{RL_{j}}}
 \end{equation}
 
 Where $M$ is total size of data in bytes. $n$ is the number of active peers, and $j$-peer has its Responsibility Level $RL_{j}$. According to this equation, in the network with an offloading server, we calculate the amount of data to send to the server $M_{offload}$
+\begin{small}
 $$M_{offload} = M\frac{RL_{offload}}{\sum_{j = \overline{1, n}}{RL_{j}}} = M\frac{1}{1 + \frac{\sum_{j \neq offload}{RL_{j}}}{RL_{offload}}}$$
+\end{small}
 
 From the above Sub section \ref{ss_ers}, we got $RL_{offload}$ is $\infty$. Since $\sum_{j \neq offload}{RL_{j}}$ is a limited value due to peers' resource limits, therefore $M_{offload} \approx M$. Thus we can flush the whole task to the offloading server to gain the best performance. 
 
@@ -659,8 +662,8 @@ When all the partial bitmaps are received, the system throws a message titled \t
 	\centering
 	%\resizebox{0.39\textwidth}{!}{
 	%\includegraphics[width=0.32\textwidth]{data/img_large_perf_full.pdf}
-		\includegraphics[width=0.36\textwidth]{data/img_perf.pdf}
-		\includegraphics[width=0.36\textwidth]{data/img_energy.pdf}
+		\includegraphics[width=0.45\textwidth]{data/img_perf.pdf}		
+		\includegraphics[width=0.48\textwidth]{data/img_energy.pdf}
 	%}
 	\caption{Performance and energy consumption of the large image processing tests in multiple devices.}
 	\label{fig:cluster_performance}
