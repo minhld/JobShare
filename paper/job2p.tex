@@ -458,21 +458,21 @@ Since the mobile devices are the motive objects in the network, there is no guar
 In our middleware, the \emph{Wi-Fi Direct Controller} module extends the \emph{BroadcastReceiver} class to inherit the network listening capability. During the runtime, whenever network mutates, a system event of type \emph{WIFI\_P2P\_PEERS\_CHAN-GED\_ACTION} containing a list of available peers will be returned to \emph{Wi-Fi Direct Controller}. By comparing the previous and updated peer lists, we can figure out which devices are joining or leaving. Our middleware keeps the copies of all the running jobs after dispatching. If a job is being executed on a begone peer, the caller will use its copy to run it locally instead.
 
 \subsection{Estimating Energy Consumption}
-As compared to estimating the energy consumption in cellular networks, in a Wi-Fi network the energy consumption can be easily estimated. The total energy consumption can be calculated as follows:
-$$E_{0} = E + E_{wait}$$
-Where $E_{wait}$ is the energy that the app requires for waiting. Then, we calculate the energy consumed by sending a job to other peers through the WiFi Direct technology as follows:
-$$E_{p2p} = E(\frac{RL_{0}}{\sum_{i = 1}^{n}{RL_{i}}}) + E_{WiFi} + E_{wait}$$ 
-\noindent $n$ is the number of devices. $RL_{i} (i = \overline{1,n})$ is the responsibility level of each mobile device. 
+When executing a task, an application may consume energy dedicating for running that task ($E$) and overhead during the execution (ex. maintaining GUI or callbacks - $E_{overhead}$). Therefore, the total energy the application may use during the execution ($E_{0}$) can be calculated as follows:
+$$E_{0} = E + E_{overhead}$$
 
-However, we do not consider $E_{wait}$ because it will depend on the appearance of applications. For example, if an application has no GUI, $E_{wait}$ will cause very little effect. From the two above equations, we can calculate the energy consumption differences between two job processing mechanisms:
+When the device joins P2P network, the task will be splitted into smaller jobs, one is assigned to the caller and the others are executed on remote peers. The one assigned to the caller has data size $M(\frac{RL_{caller}}{\sum_{j \neq caller}{RL_{i}}})$, (Equation \ref{eq:data_amount}). Theoretically, it will consume an amount of energy equivalent to $E(\frac{RL_{caller}}{\sum_{i \neq caller}{RL_{i}}})$. To dispatch the jobs to the other peers, the application has to maintain Wi-Fi connections ($E_{WiFi}$) and wait for the responses ($E_{overload}$). Then the total energy consumed by application when running task in P2P network can be estimated like below
+$$E_{p2p} = E(\frac{RL_{caller}}{\sum_{i \neq caller}{RL_{i}}}) + E_{WiFi} + E_{overload}$$ 
+
+Where $RL_{i} (i \neq caller)$ is the Responsibility Level of i-peer. In our estimation, we do not consider $E_{overload}$ because it will depend on the appearance of applications. If an application has no GUI, $E_{overload}$ will cause very little effect. From the two above equations, we can calculate the difference of energy consumption between two job processing mechanisms:
 $$E_{Diff} = E_{0} - E_{p2p}$$ 
-or 
+Or 
 \begin{equation}
 \label{eq:energy_diff}
-E_{Diff} = E(1 - \frac{RL_{0}}{\sum_{i=1}^{n}{RL_{i}}}) - E_{WiFi}
+E_{Diff} = E(1 - \frac{RL_{caller}}{\sum_{i \neq caller}{RL_{i}}}) - E_{WiFi}
 \end{equation}
 
-Since Wi-Fi is known to drain a battery linearly by time during transmission \cite{wifi_energy}, particularly it can be represented by $y = 17.01x - 0.93$ for downloading and $y = 17.31x - 2.28$ for uploading, where $y$ stands for percentage of battery consumed when using Wi-Fi for a period of $x$ hours. Therefore, under non-adventitious circumstances, equation (\ref{eq:energy_diff}) infers that in a mobile system with a certain number of devices in different levels of responsibility, if E is big enough, or in other words, if the task to perform is big enough, then $E_{Diff} > 0$ will result in, thus deploying a peer-to-peer group will give a great benefit in terms of energy efficiency. The bigger value of $E_{Diff}$, the more benefit we will gain. 
+Since Wi-Fi is known to drain a battery steadily by time during transmission \cite{wifi_energy}. Under the non-adventitious circumstances, Equation \ref{eq:energy_diff} infers that in a P2P mobile network with a certain number of devices, if E is big enough (in other words, if the task to perform is big enough), then $E_{Diff} > 0$ will result in, or $E_{P2P} < E_{0}$. This can be interpreted that executing heavy tasks in Wi-Fi P2P network will consume less energy than running the tasks in one device.
 
 In addition, if a cloud-based offloading server is available in the network, $RL$ and $E_{Diff}$ are calculated as follows: $\sum_{i=1}^{n}{RL_{i}} \rightarrow \infty$, $E_{Diff} = E - E_{WiFi}$ which is the maximum value under the same conditions.
 
