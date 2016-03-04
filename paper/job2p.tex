@@ -472,9 +472,9 @@ Or
 E_{Diff} = E(1 - \frac{RL_{caller}}{\sum_{i \neq caller}{RL_{i}}}) - E_{WiFi}
 \end{equation}
 
-Since Wi-Fi is known to drain a battery steadily by time during transmission \cite{wifi_energy}. Under the non-adventitious circumstances, Equation \ref{eq:energy_diff} infers that in a P2P mobile network with a certain number of devices, if E is big enough (in other words, if the task to perform is big enough), then $E_{Diff} > 0$ will result in, or $E_{P2P} < E_{0}$. This can be interpreted that executing heavy tasks in Wi-Fi P2P network will consume less energy than running the tasks in one device.
+Since Wi-Fi is known to drain a battery steadily by time during transmission \cite{wifi_energy}. Under the non-adventitious circumstances, Equation \ref{eq:energy_diff} infers that in a P2P mobile network with a certain number of devices, if E is big enough (in other words, if the task to perform is big enough), then $E_{Diff} > 0$ will result in, or $E_{P2P} < E_{0}$. This can be interpreted that executing heavy tasks in Wi-Fi P2P network will consume less energy than running the tasks in one device. The higher value of $E_{Diff}$, the more benefit we will obtain in terms of energy efficiency.
 
-In addition, if a cloud-based offloading server is available in the network, $RL$ and $E_{Diff}$ are calculated as follows: $\sum_{i=1}^{n}{RL_{i}} \rightarrow \infty$, $E_{Diff} = E - E_{WiFi}$ which is the maximum value under the same conditions.
+In addition, if a cloud-based offloading server is available in the network, $RL_{offload}$ is $\infty$ (Sub section \ref{ss_ers}) \Rightarrow $\sum_{i \neq caller}{RL_{i}} \rightarrow \infty$, $E_{Diff} = E - E_{WiFi}$ which is the maximum value under the same conditions. In other words, utilizing offloading server will bring the maximum benefit in compare with P2P network.
 
 \subsection{API Usage Scenario}
 The programming model should be simple, so that application programmers can integrate with a few steps. This section will describe step-by-step the way to utilize our API to enable a typical peer-to-peer network.
