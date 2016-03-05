@@ -189,14 +189,14 @@ In this section, we present our approach, a distributed mobile execution model t
 
 \begin{figure}
 	\centering	
-		\includegraphics[width=.95\linewidth]{data/jobShareArch.pdf}	
+		\includegraphics[width=1.1\linewidth]{data/jobShareArch.pdf}	
 	\caption{System architecture}
 	\label{fig:architecture}
 \end{figure}
 
 
 \subsection{Approach Overview}
-Figure \ref{fig:architecture} shows the overall system design that comprises two main components: (1) \emph{Execution Handler} determines appropriate distribution units and targets and then steers job executions and (2) \emph{Network Manager} discovers available mobile devices, checks the availability of the registered cloud-based remote servers, and then establishes a network connection for data transmissions. For the optimal execution result, \emph{Execution Handler} keeps track of current execution environments such as network conditions (e.g., delay, bandwidth) and system status (e.g., resource usage including CPU, memory). Finally, we offer a simple programming model that hides complex implementation details such as distributing a job and steering its execution, so that the programmer can introduce distribution to his/her program as well as extending the provided runtime system.
+Figure \ref{fig:architecture} shows the overall system design that comprises two main components: (1) \emph{Execution Manager} determines appropriate distribution units and targets and then steers job executions and (2) \emph{Network Manager} discovers available mobile devices, checks the availability of the registered cloud-based remote servers, and then establishes a network connection for data transmissions. For the optimal execution result, \emph{Execution Manager} keeps track of current execution environments such as network conditions (e.g., delay, bandwidth) and system status (e.g., resource usage including CPU, memory). Finally, we offer a simple programming model that hides complex implementation details such as distributing a job and steering its execution, so that the programmer can introduce distribution to his/her program as well as extending the provided runtime system.
 
 \begin{figure} 
 	\centering
@@ -207,9 +207,9 @@ Figure \ref{fig:architecture} shows the overall system design that comprises two
 	\label{fig:forming}
 \end{figure}
 
-\emph{Execution Handler} selects the best available distribution targets, assigns a job to nearby peers or a cloud-based offloading server, and steers its execution. Since we provide a simple programming model to enable the programmer to execute any kinds of jobs without the ad-hoc modification of the runtime system, the programmer first must implement both the \texttt{Job} and \texttt{DataParser} class, which will be discussed in Section \ref{prog_model}. The \texttt{Job} class defines how the distributed job should be executed. The \texttt{DataParser} class codifies how data to be sent should be processed (e.g., read/write), partitioned, and merged. Then, the module selects a number of favorable peers based on the current runtime condition and peers' system status if peer to peer execution is more beneficial than executing on an offloading server. Once all the distribution targets are determined, the job is dispatched with the appropriate amount of data. On the caller side, \emph{Execution Handler} dynamically loads the \texttt{Job} class and executes it. Finally, the execution result is sent back to the caller and is naturally migrated with other results by \texttt{DataParser}.
+\emph{Execution Manager} selects the best available distribution targets, assigns a job to nearby peers or a cloud-based offloading server, and steers its execution. Since we provide a simple programming model to enable the programmer to execute any kinds of jobs without the ad-hoc modification of the runtime system, the programmer first must implement both the \texttt{Job} and \texttt{DataParser} class, which will be discussed in Section \ref{prog_model}. The \texttt{Job} class defines how the distributed job should be executed. The \texttt{DataParser} class codifies how data to be sent should be processed (e.g., read/write), partitioned, and merged. Then, the module selects a number of favorable peers based on the current runtime condition and peers' system status if peer to peer execution is more beneficial than executing on an offloading server. Once all the distribution targets are determined, the job is dispatched with the appropriate amount of data. On the caller side, \emph{Execution Manager} dynamically loads the \texttt{Job} class and executes it. Finally, the execution result is sent back to the caller and is naturally migrated with other results by \texttt{DataParser}.
 
-\emph{Network Manager} opens a communication channel, monitors peers' execution status, and handles faults. First, the module discovers all available nearby devices through WiFi Direct and check the availability of a cloud-based offloading server. By providing transparent operations between the cloud-based offloading server and nearby mobile devices, our approach allows the programmer only to focus on his/her business logic. The \emph{Network Manager} sends a very short status inquiry message to the discovered devices and measures runtime conditions such as end-to-end latency, etc, and then each peer sends its information in a JSON format (see \ref{ss_dfp}). Next, \emph{Execution Handler} can determine the best execution strategy (e.g., peer-to-peer execution vs. cloud offloading, the optimal number of peers, the amount of data to be assigned to each peer, etc.). Once the available device list is determined, a communication channel is organized as described in Figure \ref{fig:forming}. Finally, the module keeps monitoring peers' execution status through WiFi Direct's exception handling mechanism, so that if there is any fault during the execution, \emph{Network Manager} catches the exception and then \emph{Execution Handler} immediately restarts the failed job locally. In addition to the exception handling mechanism, the module uses checksum to verify data integrity.
+\emph{Network Manager} opens a communication channel, monitors peers' execution status, and handles faults. First, the module discovers all available nearby devices through WiFi Direct and check the availability of a cloud-based offloading server. By providing transparent operations between the cloud-based offloading server and nearby mobile devices, our approach allows the programmer only to focus on his/her business logic. The \emph{Network Manager} sends a very short status inquiry message to the discovered devices and measures runtime conditions such as end-to-end latency, etc, and then each peer sends its information in a JSON format (see \ref{ss_dfp}). Next, \emph{Execution Manager} can determine the best execution strategy (e.g., peer-to-peer execution vs. cloud offloading, the optimal number of peers, the amount of data to be assigned to each peer, etc.). Once the available device list is determined, a communication channel is organized as described in Figure \ref{fig:forming}. Finally, the module keeps monitoring peers' execution status through WiFi Direct's exception handling mechanism, so that if there is any fault during the execution, \emph{Network Manager} catches the exception and then \emph{Execution Manager} immediately restarts the failed job locally. In addition to the exception handling mechanism, the module uses checksum to verify data integrity.
 
 Our approach mainly comprises two parts: a programming model and runtime system. We describe these parts in turn next.
 
@@ -541,7 +541,7 @@ Where $t$ is accumulated time in milliseconds and $E_{WiFi}$ is energy used by s
 \subsection{API Usage Scenario}
 Next, we present how to implement an Android application using the provided programming model.
 
-\textbf{\emph{Message Handler.}} \emph{Message Handler} is required to be instantiated during the initialization process. In particular, an instance of \texttt{UIHandler} is initiated to receive messages from system when it goes into runtime. While the system is in progress, the log and information messages will periodically be returned with label \texttt{MAIN\_INFO} (Listing \ref{ui_handler}). When each job result comes, \texttt{ExecutionHandler} will collect and handle by partially put into a placeholder. When all results have arrived, the placeholder with label \texttt{MAIN\_JOB\_DONE} will be returned to inform the completion of job collaboration, as well as bringing the final result back to the main app UI.
+\textbf{\emph{Message Handler.}} \emph{Message Handler} is required to be instantiated during the initialization process. In particular, an instance of \texttt{UIHandler} is initiated to receive messages from system when it goes into runtime. While the system is in progress, the log and information messages will periodically be returned with label \texttt{MAIN\_INFO} (Listing \ref{ui_handler}). When each job result comes, \texttt{Execution Manager} will collect and handle by partially put into a placeholder. When all results have arrived, the placeholder with label \texttt{MAIN\_JOB\_DONE} will be returned to inform the completion of job collaboration, as well as bringing the final result back to the main app UI.
 
 \begin{figure}
 \noindent \shadowbox{%
@@ -559,7 +559,7 @@ Handler mainUiHandler = new Handler() {
 \label{ui_handler}
 \end{figure}
 
-\textbf{\emph{Data Parser.}} Next, the developer needs to declare \texttt{DataParser} to determine the data-type and the relevant parser to equip the system for manipulating data at run-time (see sub section \ref{data_parser}). \texttt{ExecutionHandler} is the main component which wraps up the complexity, and exposes only the necessary functions like \texttt{discoverPeers()} and \texttt{dispatchJob()}. To send ACK messages to other peers for exchanging acknowledgments and reforming network, we need to call \texttt{discoverPeers()} function on the program, which should be done as soon as the application starts.
+\textbf{\emph{Data Parser.}} Next, the developer needs to declare \texttt{DataParser} to determine the data-type and the relevant parser to equip the system for manipulating data at run-time (see sub section \ref{data_parser}). \texttt{Execution Manager} is the main component which wraps up the complexity, and exposes only the necessary functions like \texttt{discoverPeers()} and \texttt{dispatchJob()}. To send ACK messages to other peers for exchanging acknowledgments and reforming network, we need to call \texttt{discoverPeers()} function on the program, which should be done as soon as the application starts.
 
 \begin{figure}
 \noindent \shadowbox{%
@@ -653,7 +653,7 @@ When all the partial bitmaps are received, the system throws a message titled \t
 	%\resizebox{0.39\textwidth}{!}{
 	%\includegraphics[width=0.32\textwidth]{data/img_large_perf_full.pdf}
 		\includegraphics[width=0.45\textwidth]{data/img_perf.pdf}		
-		\includegraphics[width=0.48\textwidth]{data/img_energy.pdf}
+		\includegraphics[width=0.41\textwidth]{data/img_energy.pdf}
 	%}
 	\caption{Performance and energy consumption of the large image processing tests in multiple devices.}
 	\label{fig:cluster_performance}
@@ -705,8 +705,8 @@ Figure (\ref{fig:net_clusters_perf} - left) describes performance of multi-devic
 \begin{figure*}
 	\centering
 	%\resizebox{0.45\textwidth}{!}{
-		\includegraphics[width=.45\textwidth]{data/net_perf_01.pdf}
-		\includegraphics[width=.45\textwidth]{data/net_energy.pdf}
+		\includegraphics[width=.43\textwidth]{data/net_perf_01.pdf}
+		\includegraphics[width=.46\textwidth]{data/net_energy.pdf}
 	%}
 	\caption{Performance and energy consumption comparison for Internet sharing}
 	\label{fig:net_clusters_perf}

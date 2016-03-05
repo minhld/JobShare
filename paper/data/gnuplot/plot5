@@ -17,6 +17,6 @@ set yrange [ 500 : 6000 ] noreverse nowriteback
 set bmargin  3
 x = 0.0
 ## Last datafile plotted: "table.dat"
-plot 'D:/android/JobShare/paper/data/gnuplot/mb_02.dat' using 0:2:xtic(1) with linespoints ls 1 lw 2 ps 1 lc rgb "black" title "Cluster with 2 peers", \
-'D:/android/JobShare/paper/data/gnuplot/mb_03.dat' using 0:2:xtic(1) with linespoints ls 2 lw 2 ps 1 lc rgb "blue" title "Cluster with 3 peers", \
-'D:/android/JobShare/paper/data/gnuplot/mb_04.dat' using 0:2:xtic(1) with linespoints ls 3 lw 2 ps 1 lc rgb "orange" title "Cluster with 4 peers"
+plot 'D:/android/projects/JobShare/paper/data/gnuplot/mb_02.dat' using 0:2:xtic(1) with linespoints ls 1 lw 2 ps 1 lc rgb "black" title "2 Devices", \
+'D:/android/projects/JobShare/paper/data/gnuplot/mb_03.dat' using 0:2:xtic(1) with linespoints ls 2 lw 2 ps 1 lc rgb "blue" title "3 Devices", \
+'D:/android/projects/JobShare/paper/data/gnuplot/mb_04.dat' using 0:2:xtic(1) with linespoints ls 3 lw 2 ps 1 lc rgb "orange" title "4 Devices"

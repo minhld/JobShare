@@ -9,5 +9,6 @@ set xtic scale 0
 set yrange [0:1600]; 
 set ylabel "Energy Consumption (uAh)" 
 set xlabel ' '
-p 'D:\android\JobShare\paper\data\gnuplot\c_5_img_energy_reduced.dat' u 3 title 'Overhead' lt rgb "#666" fillstyle pattern 3, \
-  '' u 2 title 'Image Processing' lt rgb "#666" fillstyle pattern 7, '' u 0:(0):xticlabel(1) w l title ''
+p 'D:\android\projects\JobShare\paper\data\gnuplot\c_5_img_energy_reduced.dat' u 2 title 'Image Processing' lt rgb "#666" fillstyle pattern 7, \
+  'D:/android/projects/JobShare/paper/data/gnuplot/c_5_img_energy_reduced.dat' using 0:2:xtic(1) with linespoints ls 3 lw 2 ps 1 lc rgb "blue" notitle, \
+  '' u 0:(0):xticlabel(1) w l title ''
