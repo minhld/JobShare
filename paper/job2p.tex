@@ -58,9 +58,9 @@
   stringstyle=\mdseries\ttfamily,
   showspaces=false,
   keywordstyle=\bfseries,
-  morekeywords={then,end,String, Class, Object},
+  morekeywords={then,end,String,Class,Object},
   columns=flexible,
-  basicstyle=\scriptsize\ttfamily,
+  basicstyle=\footnotesize\ttfamily,
   showstringspaces=false,
   morecomment=[l]\%,
 }
@@ -168,18 +168,22 @@ The rest of this paper is structured as follows. Section \ref{sec:background} in
  
 \section{Technical Background}
 \label{sec:background}
-In this section, we present the major technologies used in this paper including computation offloading, remote execution, middleware, and WiFi direct. We will describe them in the following subsections.
+In this section, we present the major technologies used in this paper including remote execution (remote procedure call, computation offloading, and mobile agent), peer-to-peer network, and middleware. We will describe them in the following subsections.
 
-\subsection{Computational Offloading}   
-Computation offloading---executing computation-intensive functionalty and receiving a result only---has become a popular optimization technique for mobile applications \cite{maui,chun+:eurosys11,kwon+:icsm13,wen2012energy}. It leverages the resources of cloud-based remote servers to execute portions of a mobile application's functionality. By executing some of the application's functionality in the cloud, offloading reduces the amount of energy consumed by the mobile device, thus saving its battery power. An additional benefit of computation offloading is improved performance efficiency, as cloud servers have hardware resource more powerful that those available on mobile devices. This technique is used as one of the distributed execution model in this paper.
+\subsection{Remote Execution}   
+\textbf{Remote Procedure Call (RPC).} RPC has become the basis for modern middleware systems. In this model, each call to a remote object is sent from the client to the server and then the results are returned back to the client. In distributed/mobile computing, the RPC model has been widely used for performance and energy-efficiency optimizations. In this paper, our approach heavily relies on the RPC model for discovering nearby devices, dispatching a job, and monitoring peer status.
 
-\subsection{Remote Execution and Middleware}
-Our approach uses features from mainstream middleware mechanisms for distributed execution as building blocks. Middleware systems provide programming and runtime support to coordinates the execution of multiple remote processes. By eliminating the need for low-level network programming (e.g., managing sockets, marshaling/unmarshaling data, keeping track of processes), middleware offers convenient building blocks for constructing distributed systems. In our prior work \cite{kwon+:mobilesoft2015}, we introduced a programming model and a middleware architecture for performance and energy optimization. The runtime system developed in this paper is derived from our prior middleware design.
+\textbf{Computation Offloading.} Computation offloading---executing computation-intensive functionalty and receiving a result only---has become a popular optimization technique for mobile applications \cite{maui,chun+:eurosys11,kwon+:icsm13,wen2012energy}. It leverages the resources of cloud-based remote servers to execute portions of a mobile application's functionality. By executing some of the application's functionality in the cloud, offloading reduces the amount of energy consumed by the mobile device, thus saving its battery power. An additional benefit of computation offloading is improved performance efficiency, as cloud servers have hardware resource more powerful that those available on mobile devices. This technique is used as one of the distributed execution model in this paper.
 
-\subsection{Peer to Peer Network and WiFi Direct}
+\textbf{Mobile Agent.} Mobile agent was introduced to move computer programs within distributed systems and act on behalf of the user. The programs can be executed near the data, thereby reducing data transmission time and improving the overall performance \cite{peine+:ma99}. The concept of the mobile agent have been applied to the grid computing to allocate remote computing resources, so that users can execute their jobs at the remote machines \cite{fukuda+:ma_grid03}. By embracing the concept of mobile agent, our approach allow resource-limited mobile devices to utilize nearby computing resources for improving performance and energy efficiency as well as introducing a new hardware feature.
+
+\subsection{Peer-to-Peer Network and WiFi Direct}
 WiFi Direct \cite{alliance2010wi} is a new peer to peer standard built on top of the IEEE 802.11 to provide direct connections between WiFi devices without an Internet connection. Over a WiFi network, a WiFi device can discover and connect to any types of WiFi devices without special configurations or setups. Once a connection is established, WiFi devices can communicate with each other as a client or an access point. WiFi Direct has been widely used to transfer content or share applications between mobile devices. Recently in Android, WiFi Direct has been available from Android 4.0 APIs. In this paper, our approach uses Android WiFi Direct \cite{wifi:p2p} to utilize nearby computing resources without an Internet connection or wireless access point (AP). Even though the discovery operation of WiFi Direct is costly \cite{trifunovic2013slicing}, our approach is still efficient for CPU-intensive executions and sharing hardware resources. 
 
-\subsection{Code Migration}
+\subsection{Middleware}
+Middleware systems provide programming and runtime support to coordinates the execution of multiple remote processes. By eliminating the need for low-level network programming (e.g., managing sockets, marshaling/unmarshaling data, keeping track of processes), middleware offers convenient building blocks for constructing distributed systems. Moreover, several middleware infrastructures provide a programming model as well as advanced functionality to improve performance- and energy-efficiency \cite{kwon+:mobilesoft2015}. Thus, our approach uses these features from mainstream middleware mechanisms for distributed execution as building blocks. 
+
+%In our prior work \cite{kwon+:mobilesoft2015}, we introduced a programming model and a middleware architecture for performance and energy optimization. The runtime system developed in this paper is derived from our prior middleware design.
 
 
 %other name?
@@ -189,8 +193,8 @@ In this section, we present our approach, a distributed mobile execution model t
 
 \begin{figure}
 	\centering	
-		\includegraphics[width=1.1\linewidth]{data/jobShareArch.pdf}	
-	\caption{System architecture}
+		\includegraphics[width=.98\linewidth]{data/jobShareArch.pdf}	
+	\caption{The overall system design.}
 	\label{fig:architecture}
 \end{figure}
 
@@ -198,57 +202,58 @@ In this section, we present our approach, a distributed mobile execution model t
 \subsection{Approach Overview}
 Figure \ref{fig:architecture} shows the overall system design that comprises two main components: (1) \emph{Execution Manager} determines appropriate distribution units and targets and then steers job executions and (2) \emph{Network Manager} discovers available mobile devices, checks the availability of the registered cloud-based remote servers, and then establishes a network connection for data transmissions. For the optimal execution result, \emph{Execution Manager} keeps track of current execution environments such as network conditions (e.g., delay, bandwidth) and system status (e.g., resource usage including CPU, memory). Finally, we offer a simple programming model that hides complex implementation details such as distributing a job and steering its execution, so that the programmer can introduce distribution to his/her program as well as extending the provided runtime system.
 
-\begin{figure} 
+\emph{Execution Manager} selects the best available distribution targets, assigns a job to nearby peers or an offloading server, and steers its execution. Since we provide a simple programming model to enable the programmer to execute any kinds of jobs without the ad-hoc modification of the runtime system, the programmer first must implement both the \texttt{Job} and \texttt{DataParser} class, which will be discussed in Section \ref{prog_model}. Then, the module selects a number of favorable peers based on the current runtime condition and peers' system status if peer to peer execution is more beneficial than executing on an offloading server. Once all the distribution targets are determined, the job is dispatched with the appropriate amount of data. On the caller side, \emph{Execution Manager} dynamically loads the \texttt{Job} class and executes it. Finally, the execution result is sent back to the caller and is naturally migrated with other results by \texttt{DataParser}.
+
+\begin{figure} [!tbh]
 	\centering
-	\resizebox{0.5\textwidth}{!}{
+	\resizebox{.95\linewidth}{!}{
 		\includegraphics{data/discoverPeers.pdf}
 	}
 	\caption{Establishing a network connection between devices}
 	\label{fig:forming}
 \end{figure}
 
-\emph{Execution Manager} selects the best available distribution targets, assigns a job to nearby peers or a cloud-based offloading server, and steers its execution. Since we provide a simple programming model to enable the programmer to execute any kinds of jobs without the ad-hoc modification of the runtime system, the programmer first must implement both the \texttt{Job} and \texttt{DataParser} class, which will be discussed in Section \ref{prog_model}. The \texttt{Job} class defines how the distributed job should be executed. The \texttt{DataParser} class codifies how data to be sent should be processed (e.g., read/write), partitioned, and merged. Then, the module selects a number of favorable peers based on the current runtime condition and peers' system status if peer to peer execution is more beneficial than executing on an offloading server. Once all the distribution targets are determined, the job is dispatched with the appropriate amount of data. On the caller side, \emph{Execution Manager} dynamically loads the \texttt{Job} class and executes it. Finally, the execution result is sent back to the caller and is naturally migrated with other results by \texttt{DataParser}.
-
-\emph{Network Manager} opens a communication channel, monitors peers' execution status, and handles faults. First, the module discovers all available nearby devices through WiFi Direct and check the availability of a cloud-based offloading server. By providing transparent operations between the cloud-based offloading server and nearby mobile devices, our approach allows the programmer only to focus on his/her business logic. The \emph{Network Manager} sends a very short status inquiry message to the discovered devices and measures runtime conditions such as end-to-end latency, etc, and then each peer sends its information in a JSON format (see \ref{ss_dfp}). Next, \emph{Execution Manager} can determine the best execution strategy (e.g., peer-to-peer execution vs. cloud offloading, the optimal number of peers, the amount of data to be assigned to each peer, etc.). Once the available device list is determined, a communication channel is organized as described in Figure \ref{fig:forming}. Finally, the module keeps monitoring peers' execution status through WiFi Direct's exception handling mechanism, so that if there is any fault during the execution, \emph{Network Manager} catches the exception and then \emph{Execution Manager} immediately restarts the failed job locally. In addition to the exception handling mechanism, the module uses checksum to verify data integrity.
+\emph{Network Manager} opens a communication channel, monitors peers' execution status, and handles faults. First, the module discovers all available nearby devices through WiFi Direct and check the availability of a cloud-based offloading server. By providing transparent operations between the offloading server and nearby mobile devices, our approach allows the programmer only to focus on his/her business logic. The \emph{Network Manager} sends a very short status inquiry message to the discovered devices and measures runtime conditions such as end-to-end latency, etc, and then each peer sends its information in a JSON format (see \ref{ss_dfp}). Next, \emph{Execution Manager} can determine the best execution strategy (e.g., peer-to-peer execution vs. cloud offloading, the optimal number of peers, the amount of data to be assigned to each peer, etc.). Once the available device list is determined, a communication channel is organized as described in Figure \ref{fig:forming}. Finally, the module keeps monitoring peers' execution status through WiFi Direct's exception handling mechanism, so that if there is any fault during the execution, \emph{Network Manager} catches the exception and then \emph{Execution Manager} immediately restarts the failed job locally. In addition to the exception handling mechanism, the module uses checksum to verify data integrity.
 
 Our approach mainly comprises two parts: a programming model and runtime system. We describe these parts in turn next.
 
-
 \subsection{Programming Model} \label{prog_model}
-To help application programmers who want to apply our approach, we provide a simple programming model. As described in Listing \ref{code:job_def}, the \texttt{Job} abstract class that should be extended by the programmer to specify which functionality needs to be executed remotely. 
+In this section, we discuss a programming model provided for application programmers. As described in Listing \ref{code:job_def}, the \texttt{Job} abstract class should be extended by the programmer to specify which functionality needs to be executed remotely. 
 
-%Also, to support dynamic class loading in Dalvik VM, we provide the \texttt{DexCreator} commandline tool that compiles the \texttt{Job} Java class file into a Dex package. The Dex package and sliced resources are packed as a \texttt{JobData} object by \texttt{JobDispatcher} and then dispatched to the available mobile devices or the cloud-based server. Next, the recipient of the \texttt{JobData} checks a checksum field to confirm the consistency, and then deserializes the object into \texttt{Job} and resources for the execution.
+\subsubsection{Defining a Job}
+Job implementation is the prerequisite work to determine what to execute on the remote device and how to cast and manipulate data from the abstract object. First, programmers should extend the \texttt{Job} class as well as overriding its \texttt{exec()} method. The \texttt{Job} class defines how the distributed job should be executed. 
 
-\begin{figure}
+
+\begin{figure} [!tbh]
 \noindent \shadowbox{%
-\begin{minipage}{240pt}
+\begin{minipage}{.95\linewidth}
 	\begin{lstlisting}
 	public abstract class Job {
 	  public abstract Object exec(Object param); }
 	\end{lstlisting}	
 \end{minipage}}	
 \noindent \shadowbox{%
-\begin{minipage}{237pt}
+\begin{minipage}{.94\linewidth}
   \begin{lstlisting}
 public interface DataParser {  
   public Class getDataClass();
   public byte[] parseObjectToBytes(dataObject);
   public Object parseBytesToObject(byteArray);
-  public Object getSinglePart(..., numOfParts, sOffset, eOffset);    
+  public Object getSinglePart(..., 
+						numOfParts, sOffset, eOffset);    
   public Object createPlaceholder(jsonMetadata);
   public Object copyPartToPlaceholder(... 
-					partDataObject, sOffset, eOffset);
+						partDataObject, sOffset, eOffset);
   public void destroy(dataObject);  }
   \end{lstlisting}	
 \end{minipage}
 }	
-\captionof{lstlisting}{Provided APIs (top: Job, bottom: DataParser)}
+\captionof{lstlisting}{Programming model (APIs).}
 \label{code:job_def}
 \end{figure}
 
-
-\subsubsection{Data Parser} \label{data_parser}
-The code snippet in Listing \ref{code:job_def} shows the important methods of \texttt{DataParser} that user needs to implement. The \texttt{DataParser} interface has the following methods:
+\subsubsection{Processing Application-Specific Data} \label{data_parser}
+The \texttt{DataParser} class codifies how data to be sent should be processed (e.g., read/write), partitioned, and merged. The \texttt{DataParser} interface described in Listing \ref{code:job_def} has the following methods:
 \begin{itemize} \denseitems
 	\item \texttt{getDataClass()} returns data type.
 	\item \texttt{parseObjectToBytes(object)} instructs system to serialize an object to binary array. In Android, not every object can be serialized, for instance, Bitmap.  
@@ -257,30 +262,23 @@ The code snippet in Listing \ref{code:job_def} shows the important methods of \t
 	\item \texttt{copyPartToPlaceholder()} instructs the application to merge it to the placeholder when a result is partially retrieved from a distant peer.
 \end{itemize}
 
-In our case studies (see Section \ref{sec:eval}), we implemented three default parsers for bitmap images, text, and GPS, respectively. 
+In our case studies (Section \ref{sec:eval}), we evaluated our programming model through three case studies (i.e., bitmap image processing, internet sharing, and GPS accessing).
 
-
-%Since the peers dispatch DEX execution packages among them in the network (Section \ref{prog_model}), these packages are only able to execute on Java VM on Android platforms like Android phones or tablets. To build up the server that can handle execution of these packages without modifying them, we installed Android platform on our server using Android x86 installation \cite{android-x86}.
-
-%We also modified our middleware to be able to run on Android x86. We replaced the Wi-Fi Direct module by an ordinary network module using Socket to handle connection from the other peers. The outcomes of server offloading will be represented in the Section \ref{sec:eval}
-
-\subsubsection{Defining a Job}
-Job implementation is the prerequisite work to determine what to execute on the remote device and how to cast and manipulate data from the abstract object. According to section \ref{prog_model}, a developer needs to implement the Job class file separately by overriding the \texttt{exec()} method and casting the abstract input parameter to the concrete one. Then run the \texttt{DexCreator} tool on the Job class to compile and compact it into the DEX jar package. The final outcome is the \texttt{job.jar} file, which should be saved in the internal storage of the caller device. In order to simplify, we can store it in the \texttt{Download} folder.
 
 \subsection{Runtime System} \label{scheduling}
 In this section, we discuss about (1) how to discover available peers and exchange peers' information, (2) how to select appropriate peers, and (3) how to partition data to be sent to the selected peers. 
 %These problems will be addressed by our \texttt{DecisionMaker} module.
 
 \subsubsection{Discovering Available Peers}\label{ss_dfp}
-During the initialization phase, our runtime system first bootstraps the peer discovery process by sending a broadcast messages to nearby peers for collecting peers' information. Once a runtime system receives a status inquiry message from nearby devices, it immediately sends a response message in a JSON format as shown in Listing \ref{code:jsonResponse}. While most fields are self-explanatory, \texttt{RL} (Responsiveness Level) is a parameter that represents how much the selected peer is favorable to execute the requested job. We will further discuss this parameter in Section \ref{ss_ers}. The \texttt{availability} parameter is determined by the current level of battery usage. By default, if a device's battery level is higher than 80\%, its value is set to \texttt{on}. Otherwise, it is \texttt{off}. However user can override this threshold by updating the \texttt{availability-threshold} property in the configuration file\footnote{We currently use a simple key-value configuration files for user-specific preferences.} before the runtime system starts. 
+During the initialization phase, our runtime system first bootstraps the peer discovery process by sending a broadcast messages to nearby peers for collecting peers' information. Once a runtime system receives a status inquiry message from nearby devices, it immediately sends a response message in a JSON format as shown in Listing \ref{code:jsonResponse}. While most fields are self-explanatory, \texttt{RL} (Responsiveness Level) is a parameter that represents how favorable the selected peer is to execute the requested job. We will further discuss this parameter in Section \ref{ss_ers}. The \texttt{availability} parameter is determined by the current level of battery usage. By default, if a device's battery level is higher than 80\%, its value is set to \texttt{on}. Otherwise, it is \texttt{off}. However user can override this threshold by updating the \texttt{availability-threshold} property in the configuration file\footnote{We currently use a simple key-value configuration file to specify user-specific preferences.} before the runtime system starts. 
 
-\begin{figure}
+\begin{figure} [!tbh]
 \noindent \shadowbox{
-\begin{minipage}{240pt}
+\begin{minipage}{.95\linewidth}
 \begin{lstlisting}
 JSON : DeviceInfo {
 	"availability": Boolean, "gps": Boolean,
-	"network": ["low" | "high" | "off"], "RL": Double}
+	"network": ["low"|"high"|"off"], "RL": Double}
 \end{lstlisting}			
 \end{minipage}}	
 %\\
@@ -488,26 +486,26 @@ Based on these estimations, we design Algorithm \ref{alg:assign_job} that assign
 \end{algorithm}
 
 
-\subsubsection{Offloading to the Cloud}
-Cloud offloading \cite{kwon+:mobilesoft2015} has received much attention as a popular energy/performance optimization mechanism. Thus, we will take advantage of a powerful cloud-based remote server for computation-intensive jobs to achieve further energy/performance optimization. Specifically, if an offloading server is available, our middleware estimates costs (e.g., network cost) and benefits (e.g., CPU savings) to execute a job on the offloading server. Then, if executing the job on the offloading server is beneficial in terms of energy- or performance-efficiency, the runtime system directly establishes a communication channel between the offloading server and mobile device.
+\subsubsection{Executing a Job in the Cloud}
+Computational offloading \cite{kwon+:icsm13} has received much attention as an energy/performance optimization mechanism. Thus, we will take advantage of a powerful cloud-based remote server for computation-intensive jobs to achieve further energy/performance optimization. Specifically, if an offloading server is available, our middleware estimates costs (e.g., network cost) and benefits (e.g., CPU savings) to execute a job on the offloading server. Then, if executing the job on the offloading server is beneficial in terms of energy- or performance-efficiency, the runtime system directly establishes a communication channel between the offloading server and mobile device.
 
 \subsubsection{Handling Runtime Exceptions}
 %To handle execution failures, as well as 
-Due to the nature of volatile mobile networks, a communication channel between peers can be disconnected at any time. To ensure all jobs are completely executed by peers and their results are returned back to a caller, our runtime system listens to any network-related updates (e.g, network join/leave events from the \texttt{BroadcastReceiver} class) and as well as catching exceptions thrown from the underlying system (e.g., TCP socket, WiFi Direct Controller, Android). Moreover, we use a simple checksum mechanism to check the integrity of execution results. If any types of execution failures occur, the \emph{Execution Manager} module immediately re-execute the failed job on the caller side.
+Due to the nature of volatile mobile networks, partial failure may occur because each component of a distributed execution (e.g., peers, offloading server, or the network) can fail independently. Thus, to ensure all jobs are completely executed at peers and their results are returned back to a caller, our runtime system listens to network-related updates (e.g, network join/leave events from the \texttt{BroadcastReceiver} class) and as well as catching exceptions thrown from the underlying system (e.g., TCP socket, WiFi Direct Controller, Android). Moreover, we use a simple checksum mechanism to check the integrity of execution results. If any types of execution failures occur, the \emph{Execution Manager} module immediately re-execute the failed job on the caller side.
 
 %By comparing the previous and updated peer lists, we can figure out which devices are joining or leaving. Our middleware keeps the copies of all the running jobs after dispatching. If a job is being executed on a begone peer, the caller will use its copy to run it locally instead.
   
 \section{Evaluation}
 \label{sec:eval}
-This section describes the micro benchmarks and case studies that evaluate the effectiveness of our approach. The experimental setup includes a testbed with 5 Android phones. Table \ref{table:devices} shows the device-specific values.
+We have evaluated the effectiveness of our approach in improving energy- and performance-efficiency and introducing a new hardware capability by applying it to three applications. The experimental setup includes a testbed with five Android phones. Table \ref{table:devices} shows the device-specific values. The mobile devices have communicated with each other or a remote server in an emulated network. In particular, we have experimented with three emulated network conditions that have the following respective round trip time and bandwidth characteristics: 2ms and 50Mbps for LAN, 20ms and 10Mbps for WLAN, and 120ms and 1Mbps for WAN. To measure energy consumption, we used a Monsoon Power Monitor device \cite{moosoon}. Also, for the offloading server, we set up an Android-based server using Android x86 \cite{android-x86}.
 
 \begin{table}[h]
-\caption{Specifications of our test devices}
+\caption{Specifications of the testing devices}
 \label{table:devices}
 \centering \small
 \begin{tabular}{| l | l | l | l |}
     \hline
-    Phone & CPU & RAM & Battery \\ \hline \hline
+    \textbf{Phone} & \textbf{CPU} & \textbf{RAM} & \textbf{Battery} \\ \hline \hline
     LG Volt & Quad-core 1.2GHz & 1GB & 3000mAh\\ \hline
 		LG Opt. GK & Quad-core 1.7GHz & 2GB & 3100mAh\\ \hline
 		LG G Stylo & Quad-core 1.2GHz & 1GB & 3000mAh\\ \hline
@@ -517,7 +515,14 @@ This section describes the micro benchmarks and case studies that evaluate the e
 \end{table}
 
 \subsection{Micro Benchmark}
-We started the evaluation with micro benchmarking energy consumption of the system when mobile devices maintain connections in idle state, to figure out the cost of network maintenance overhead. Using Monsoon Power Monitor device \cite{moosoon} to replace battery and measure on one caller, we evaluated overhead based on accumulation of energy consumption by time. The Figure (\ref{fig:microb_24}) shows the outcome of the caller measuring from 0 to 100 seconds when preserving connections with 1, 2 and 3 other peers. 
+The purpose of this micro benchmark is to understand the overhead imposed by our runtime system, whose responsibilities include constructing a peer to peer network, monitoring nearby peers, and steering job executions. Figure (\ref{fig:microb_24}) shows the amount of energy consumed to maintain the constructed peer to peer network. Surprisingly, the number of peers does not influence the total energy consumption. This result is completely harmonized with results from \cite{wifi_energy}, especially since we transmit the same amount of data regularly over Wi-Fi connection. From the statistic information we collected, the energy variability of one device within P2P network in idle condition can be represented by the following linear formula:
+\begin{equation} \small
+\label{eq:wifi_overload}
+E_{WiFi} = t \times 50
+\end{equation}
+
+\noindent 
+where $t$ is accumulated time in milliseconds and $E_{WiFi}$ is energy used by system in uAh (micro ampere hour).
 
 \begin{figure}
 	\hspace*{-0.15cm}
@@ -528,26 +533,43 @@ We started the evaluation with micro benchmarking energy consumption of the syst
 	\label{fig:microb_24}
 \end{figure}
 
-According to the figure \ref{fig:microb_24}, it is revealed that in idle condition without transmitting any data, the energy consuming variability on each device within the P2P network is linear and mostly identical at any time, regardless of the number of devices to which it connects. This result is completely harmonized with results from \cite{wifi_energy}, especially since we transmit the same amount of data regularly over Wi-Fi connection. From the statistic information we collected, the energy variability of one device within P2P network in idle condition can be represented by the below linear formula
 
-\begin{equation}
-\label{eq:wifi_overload}
-E_{WiFi} = t \times 50
-\end{equation}
-
-Where $t$ is accumulated time in milliseconds and $E_{WiFi}$ is energy used by system in uAh (micro ampere hour).
-
-%\subsection{Case Study Implementations}
 \subsection{API Usage Scenario}
-Next, we present how to implement an Android application using the provided programming model.
+Next, we present how one can implement a mobile application using the provided programming model.
 
-\textbf{\emph{Message Handler.}} \emph{Message Handler} is required to be instantiated during the initialization process. In particular, an instance of \texttt{UIHandler} is initiated to receive messages from system when it goes into runtime. While the system is in progress, the log and information messages will periodically be returned with label \texttt{MAIN\_INFO} (Listing \ref{ui_handler}). When each job result comes, \texttt{Execution Manager} will collect and handle by partially put into a placeholder. When all results have arrived, the placeholder with label \texttt{MAIN\_JOB\_DONE} will be returned to inform the completion of job collaboration, as well as bringing the final result back to the main app UI.
+\textbf{\emph{Job Definition.}} As discussed in Section \ref{prog_model}, the programmer must define what he/she will execute remotely by overriding \texttt{exec()} of the \texttt{Job} class. Then, the provided \texttt{DexCreator} tool compiles and compacts it into the DEX jar package, which will be sent to peers or an offloading server. 
 
-\begin{figure}
+
+%Also, to support dynamic class loading in Dalvik VM, we provide the \texttt{DexCreator} commandline tool that compiles the \texttt{Job} Java class file into a Dex package. The Dex package and sliced resources are packed as a \texttt{JobData} object by \texttt{JobDispatcher} and then dispatched to the available mobile devices or the cloud-based server. Next, the recipient of the \texttt{JobData} checks a checksum field to confirm the consistency, and then deserializes the object into \texttt{Job} and resources for the execution.
+
+\textbf{\emph{Data Parser.}} Next, the programmer needs to write the \texttt{DataParser} class, so that any uder-defined data can be processed at remote locations. The following code snippet \ref{code:get_single_part} shows how the programmer can partition an image file for his/her image processing application.
+
+%\texttt{ExecutionHandler} is the main component which wraps up the complexity, and exposes only the necessary functions like \texttt{discoverPeers()} and \texttt{dispatchJob()}. To send ACK messages to other peers for exchanging acknowledgments and reforming network, we need to call \texttt{discoverPeers()} function on the program, which should be done as soon as the application starts.
+
+\begin{figure} [!tbh]
 \noindent \shadowbox{%
-\begin{minipage}{239pt}	
+\begin{minipage}{.95\linewidth}
+  \begin{lstlisting}
+public Object getSinglePart(...) {
+  Bitmap bmpData = (Bitmap) data;
+  int pWidth = eOffset - sOffset;
+  return Bitmap.createBitmap(bmpData, sOffset, 
+									0, pWidth, bmpData.getHeight()); 
+}
+  \end{lstlisting}	
+\end{minipage}}	
+  \captionof{lstlisting}{Example of \texttt{getSinglePart()} for Bitmap}
+  \label{code:get_single_part}
+\end{figure}
+
+
+\textbf{\emph{Message Handler.}} \emph{Message Handler} is required to be instantiated during the initialization process to receive job-related events. In Listing \ref{ui_handler}, we created \texttt{UIHandler} which handles two events---\texttt{MAIN\_INFO} containing job-related information and \texttt{MAIN\_JOB\_DONE} containing job results. 
+
+\begin{figure} [!tbh]
+\noindent \shadowbox{%
+\begin{minipage}{.95\linewidth}
 	\begin{lstlisting}
-Handler mainUiHandler = new Handler() {
+Handler UIHandler = new Handler() {
 	public void handleMessage(Message msg) {
 		switch (msg.what) {
 			case Utils.MAIN_JOB_DONE: { ... }
@@ -555,98 +577,36 @@ Handler mainUiHandler = new Handler() {
 	\end{lstlisting}
 \end{minipage}
 }
-\captionof{lstlisting}{UI handler}
+\captionof{lstlisting}{Message handler implementation.}
 \label{ui_handler}
 \end{figure}
 
-\textbf{\emph{Data Parser.}} Next, the developer needs to declare \texttt{DataParser} to determine the data-type and the relevant parser to equip the system for manipulating data at run-time (see sub section \ref{data_parser}). \texttt{Execution Manager} is the main component which wraps up the complexity, and exposes only the necessary functions like \texttt{discoverPeers()} and \texttt{dispatchJob()}. To send ACK messages to other peers for exchanging acknowledgments and reforming network, we need to call \texttt{discoverPeers()} function on the program, which should be done as soon as the application starts.
+%\textbf{\emph{Discovering Available Peers and Dispatching Jobs.}} When the network is formed and connections are held with some other peers, \texttt{dispatchJob()} will be called to locate the resources and the job which is predefined in local storage, it then invokes \texttt{DecisionMaker} (sub section \ref{scheduling}) for job splitting and binary serialization. Finally jobs will be dispatched over the socket.
 
-\begin{figure}
-\noindent \shadowbox{%
-\begin{minipage}{245pt}
-  \begin{lstlisting}
-public Object getSinglePart(object, sOffset, eOffset) {
-  Bitmap bmpData = (Bitmap) data;
-  int pWidth = eOffset - sOffset;
-  return Bitmap.createBitmap(bmpData, sOffset, 
-									0, pWidth, bmpData.getHeight()); }
-  \end{lstlisting}	
-\end{minipage}}	
-  \captionof{lstlisting}{Example of \texttt{getSinglePart()} for Bitmap}
-  \label{code:get_single_part}
-\end{figure}
-
-\textbf{\emph{Discovering Available Peers and Dispatching Jobs.}} When the network is formed and connections are held with some other peers, \texttt{dispatchJob()} will be called to locate the resources and the job which is predefined in local storage, it then invokes \texttt{DecisionMaker} (sub section \ref{scheduling}) for job splitting and binary serialization. Finally jobs will be dispatched over the socket.
-
-\begin{figure}
-\noindent \shadowbox{%
-\begin{minipage}{245pt}
-	\begin{lstlisting}
-dataParser = new BitmapJobDataParser();
-jobHandler = new JobHandler(this, dataParser);
-
-jobHandler.setSocketListener(
-	new JobHandler.JobSocketListener() {
-		@Override
-		public void socketUpdated(... isConnected){
-			...
-		}});
-deviceList.setAdapter(jobHandler.getDeviceListAdapter());
-jobHandler.discoverPeers();
-
-String dataPath = downloadPath + "/mars.jpg";
-String jobPath = downloadPath + "/Job.jar";
-jobHandler.dispatchJob(dataPath, jobPath);
-\end{lstlisting}
-\end{minipage}}
-
-\captionof{lstlisting}{Using DataParser and JobHandler}
-\end{figure}
-
-\subsection{Case Study}
-To measure the performance of the system equipped with our APIs, we decorated a small testbed with collaboration of 5 different Android devices to perform our 3 test cases:
-\begin{itemize} \denseitems
-	\item \textbf{Image Processing:} In this case study, we initiated a P2P network to blur a large size image, which could not be loaded and processed on a any single mobile device due to the limited memory space in mobile devices. Then, we distributed the blurring job to 1 to 4 mobile devices. 
-	%Particularly, to process an image with size $4000 \times 4000$ and 4 bytes to express each pixel color, application must spare the amount of memory equivalent to 64MB which is way too much for a device, which occasionally returns out of memory exception.
-	\item \textbf{Internet Access:} In this scenario, we defined an Internet access request for a mobile device that has limited network connection or no Internet connection, so that mobile applications could download remote data.
-	\item \textbf{GPS Sharing:} Because establishing a GPS connection is a highly energy-intensive operation, it would be impossible for a device with low battery to frequently update its location information. We built a simple application that can benefit GPS locations from healthier devices. In addition, our system can be used for Internet of Things devices that do not have GPS sensors.
-\end{itemize}
-
-\subsubsection{Image Processing}
-We applied blur effect, one of the high energy consuming image processes. We ran the test repeatedly with two images that have different sizes: the first image has size $2500 \times 1405$ and the second one's size is $4326 \times 2856$. For the second image, with 4 bytes allocated for each pixel, device had to allocate around $50MB$ of heap to open and hold another $50MB$ for the result, thus leading to app crash all the time. This problem will only be solved with the help of other collaborative peers to solve overload in terms of memory and energy consumption.
-
-\textbf{\emph{Design:}}
-The most important part when applying APIs for image processing is defining the \texttt{DataParser} (see Listing \ref{code:job_def}) for Bitmap with a divide strategy in vertical cut. For an input image, the \texttt{firstOffset} and \texttt{lastOffset} will decide the first and last offsets of the vertical cut correspondingly throughout the width, from the top to the bottom edges. The algorithm of the vertical cut is described in Listing \ref{code:get_single_part}. Regarding the placeholder, we override the \texttt{getJsonMetadata()} method to return a simple JSON string like below:
-
+%\begin{figure}
 %\noindent \shadowbox{%
 %\begin{minipage}{245pt}
-	%\captionof{lstlisting}{JSON for initiating placeholder}
-	\begin{lstlisting} 
-	JSON { "width": 4326, "height": 2856 } 
-	\end{lstlisting}
-%\end{minipage}
-%}
-
-The \texttt{createPlaceholder()} method obtains \texttt{width} and \texttt{height} from the JSON object and then initiates an empty placeholder bitmap. Finally \texttt{copyPartToPlaceholder()} method will place the partial result bitmap into its correct location on the placeholder defined by \texttt{sOffset} and \texttt{eOffset}.\\
-
-\begin{figure}
-\noindent \shadowbox{%
-\begin{minipage}{245pt}
-	\begin{lstlisting}
-public Object copyPartToPlaceholder(placeholder, 
-										part, sOffset, eOffset){
-	Bitmap bmpPart = BitmapFactory.decodeByteArray(part...);
-	int pieceWidth = partBmp.getWidth();
-	Canvas canvas = new Canvas(placeholder);
-	canvas.drawBitmap(bmpPart, sOffset, 0...);
-	return null;
-}
-	\end{lstlisting}
-\end{minipage}}
-	\captionof{lstlisting}{Merging results in the image processing app.}
-\end{figure}
-
-When all the partial bitmaps are received, the system throws a message titled \texttt{MAIN\_JOB\_DONE} to the UI in which \texttt{msg.obj} contains the final bitmap.
+	%\begin{lstlisting}
+%dataParser = new BitmapJobDataParser();
+%jobHandler = new JobHandler(this, dataParser);
+%
+%jobHandler.setSocketListener(
+	%new JobHandler.JobSocketListener() {
+		%@Override
+		%public void socketUpdated(... isConnected){
+			%...
+		%}});
+%deviceList.setAdapter(jobHandler.getDeviceListAdapter());
+%jobHandler.discoverPeers();
+%
+%String dataPath = downloadPath + "/mars.jpg";
+%String jobPath = downloadPath + "/Job.jar";
+%jobHandler.dispatchJob(dataPath, jobPath);
+%\end{lstlisting}
+%\end{minipage}}
+%
+%\captionof{lstlisting}{Using DataParser and JobHandler}
+%\end{figure}
 
 \begin{figure*}
 	\centering
@@ -659,15 +619,38 @@ When all the partial bitmaps are received, the system throws a message titled \t
 	\label{fig:cluster_performance}
 \end{figure*}
 
-\paragraph{Performance with large scale image}
-Running the large scale image test case throughout 50 tests by increasing number of devices from 1 to 5 within the network, we found that the test case doesn't work if there is only one device standing desolately. By utilizing 2 threads for the image process on that single device, we realized that only 1 thread works, while the other does not, due to an out of memory exception, and the processing time to complete half of the task is $12,581ms$. 
+\subsection{Case Study}
+To measure the performance of the system equipped with our APIs, we experimented with three case studies using five different Android devices at an emulated testbed:
+\begin{itemize} \denseitems
+	\item \textbf{Image Processing:} In this case study, we initiated a P2P network to blur a large size image, which could not be loaded and processed on a any single mobile device due to the limited memory space in mobile devices. Then, we distributed the blurring job to one to four mobile devices. 
+	%Particularly, to process an image with size $4000 \times 4000$ and 4 bytes to express each pixel color, application must spare the amount of memory equivalent to 64MB which is way too much for a device, which occasionally returns out of memory exception.
+	\item \textbf{Internet Access:} In this case study, we defined an Internet access request job for a mobile device that has limited/intermittent Internet connections, so that mobile applications could download remote data.
+	\item \textbf{GPS Sharing:} Because establishing a GPS connection is a highly energy-intensive operation, it would be impossible for a device with low battery to frequently update its location information. We built a simple application that can benefit GPS locations from healthier devices. In addition, our system can be used for Internet of Things devices that do not have GPS sensors.
+\end{itemize}
 
-By increasing the number of devices in network from 2 to 5 and sharing the task by sending jobs to other peers, we gathered average statistic data in 20 tests as in the Figure (\ref{fig:cluster_performance} - left) (groups with 2, 3, 4 and more devices). In this Figure, to accomplish the task, the two devices have to work in $13,541ms$ average. The execution time reduced when more devices participate the group, down to average $7387ms$ when more than 4 peers joined the group, which is twice as fast as having 2 devices (notice that system didn't fully work with only one device).
 
-To measure energy consumption on each device, we used Monsoon Power Monitor \cite{moosoon} and measured the velocity of energy drained on a single mobile device when utilizing power from the other peers. Figure \ref{fig:cluster_performance} (right) shows the energy measurement results from the two consecutive tests. Although the two tests showed the big gap when executing the 2 device group, in general the variability of energy consumption within multiple groups matches with time consumption one. By running the two consecutive tests with the same input for 20 times, we realized that the results didn't change, and by utilizing 3 or more devices, we can significantly reduce the amount of energy required for the task, sometimes up to 25\%. However when we increased the number of devices in a group, we didn't get the performance raised up at the corresponding value linearly, this can be explained by Amdahl's law \cite{amdahl}. Throughout our experiments, the number of devices at 3 to 5 will give the maximum benefit in terms of energy saving and device usage productivity.
+\subsubsection{Image Processing}
+We applied the blur effect, one of the high energy consuming image processes. We ran the test repeatedly with two images that have different sizes: the first image has size $2500 \times 1405$ and the second one's size is $4326 \times 2856$. For the second image, with 4 bytes allocated for each pixel, device had to allocate around $50MB$ of heap to open and hold another $50MB$ for the result, thus leading to app crash all the time. This problem will only be solved with the help of other collaborative peers to solve overload in terms of memory and energy consumption.
 
-\paragraph{Performance with normal scale image}
-To make any device in the network feasible for image processing, we reduced the input image size to $2500 \times 1405$. By reconfiguring the group from 1 to 4 devices and measure total execution time on the callers, we gathered performance data among them as shown in Figure \ref{fig:small_img_perf}. From our statistic data, the total time consumed by one device to run on itself is slightly fluctuated around $5400ms$ between multiple measurements, but if one more device joins the network the time consumed is decreased to $3500ms$ which is 35\% faster. When more devices (3 or 4) participate, performance will continuously increase although their finishing time largely varies. Specifically 4 devices will collaboratively execute twice as fast as one device, or 50\% faster according to our measurements.
+\textbf{\emph{Design:}}
+The most important part when implementing the image processing app using the provided APIs is to define the \texttt{DataParser} (see Listing \ref{code:job_def}) for an image. In this case study, since we blur a bitmap image file, a bitmap image can be easily partitioned into small bitmap images by the \texttt{DataParser}. However, if target image files are compressed as the jpg, gif, or png format, they will need additional image processing in the \texttt{DataParser} class.
+
+%For an input image, the \texttt{firstOffset} and \texttt{lastOffset} will decide the first and last offsets of the vertical cut correspondingly throughout the width, from the top to the bottom edges. The algorithm of the vertical cut is described in Listing \ref{code:get_single_part}. Regarding the placeholder, we override the \texttt{getJsonMetadata()} method to return a simple JSON string like below:
+
+%\noindent \shadowbox{%
+%\begin{minipage}{245pt}
+	%\captionof{lstlisting}{JSON for initiating placeholder}
+	%\begin{lstlisting} 
+	%JSON { "width": 4326, "height": 2856 } 
+	%\end{lstlisting}
+%\end{minipage}
+%}
+%
+%The \texttt{createPlaceholder()} method obtains \texttt{width} and \texttt{height} from the JSON object and then initiates an empty placeholder bitmap. Finally \texttt{copyPartToPlaceholder()} method will place the partial result bitmap into its correct location on the placeholder defined by \texttt{sOffset} and \texttt{eOffset}.\\
+%
+%
+%Once the complete bitmap data are received, the system sends the \texttt{MAIN\_JOB\_DONE} message to the UI, in which \texttt{msg.obj} contains the final bitmap.
+
 
 \begin{figure*}
 	\centering
@@ -678,6 +661,17 @@ To make any device in the network feasible for image processing, we reduced the 
 	\caption{Performance and energy consumption of the image processing tests with a normal image size.}
 	\label{fig:small_img_perf}
 \end{figure*}
+
+
+\paragraph{Performance with large scale image}
+Running the large scale image test case throughout 50 tests by increasing number of devices from 1 to 5 within the network, we found that the test case doesn't work if there is only one device standing desolately. By utilizing two threads for the image process on that single device, we realized that only 1 thread works, while the other does not, due to an out of memory exception, and the processing time to complete half of the task is $12,581ms$. 
+
+By increasing the number of devices in network from 2 to 5 and sharing the task by sending jobs to other peers, we gathered average statistic data in 20 tests as in the Figure (\ref{fig:cluster_performance} - left) (groups with 2, 3, 4 and more devices). In this Figure, to accomplish the task, the two devices have to work in $13,541ms$ average. The execution time reduced when more devices participate the group, down to average $7387ms$ when more than 4 peers joined the group, which is twice as fast as having 2 devices (notice that system didn't fully work with only one device).
+
+To measure energy consumption on each device, we used Monsoon Power Monitor \cite{moosoon} and measured the velocity of energy drained on a single mobile device when utilizing power from the other peers. Figure \ref{fig:cluster_performance} (right) shows the energy measurement results from the two consecutive tests. Although the two tests showed the big gap when executing the 2 device group, in general the variability of energy consumption within multiple groups matches with time consumption one. By running the two consecutive tests with the same input for 20 times, we realized that the results didn't change, and by utilizing 3 or more devices, we can significantly reduce the amount of energy required for the task, sometimes up to 25\%. However when we increased the number of devices in a group, we didn't get the performance raised up at the corresponding value linearly, this can be explained by Amdahl's law \cite{amdahl}. Throughout our experiments, the number of devices at 3 to 5 will give the maximum benefit in terms of energy saving and device usage productivity.
+
+\paragraph{Performance with normal scale image}
+To make any device in the network feasible for image processing, we reduced the input image size to $2500 \times 1405$. By reconfiguring the group from 1 to 4 devices and measure total execution time on the callers, we gathered performance data among them as shown in Figure \ref{fig:small_img_perf}. From our statistic data, the total time consumed by one device to run on itself is slightly fluctuated around $5400ms$ between multiple measurements, but if one more device joins the network the time consumed is decreased to $3500ms$ which is 35\% faster. When more devices (3 or 4) participate, performance will continuously increase although their finishing time largely varies. Specifically 4 devices will collaboratively execute twice as fast as one device, or 50\% faster according to our measurements.
 
 Basically the variability and fluctuation of energy consumption will reflect the performance, Figure (\ref{fig:small_img_perf} - right) displays the details. Through our experiments, running the group with 2 devices will preserve 20\% energy compare with 1 device, the number is better with 3 devices at $34\%$ and 4 devices at $37.5\%$ respectively.
 
@@ -694,12 +688,12 @@ Basically the variability and fluctuation of energy consumption will reflect the
 Theoretically, remote accessibility won't help reducing the amount of bytes downloaded, however the speed is guaranteed to be ameliorative since the downloading process is scattered over a number of devices, therefore less energy will be consumed. 
 
 \textbf{\emph{Design:}}
-To apply APIs for this application, from the caller we dispatch job requests, which contain the information of job with resources including URL, number of parts and index, to the peers having \texttt{IRS[network]} at \texttt{high} or \texttt{low}. At each peer, when a request is received, it executes the job to load the URL to achieve a page in HTML code. Then it will parse the HTML to detect resource links including multimedia resources (images, audio, videos), CSS, and JS. Depending on the number of parts and index, it narrows down the amount of resources and attempt to download and put them into a ZIP file before throwing it back to the caller.
+To apply APIs for this case study, from the caller we dispatch job requests, which contain the information of job with resources including URL, number of parts and index, to the peers having \texttt{IRS[network]} at \texttt{high} or \texttt{low}. At each peer, when a request is received, it executes the job to load the URL to achieve a page in HTML code. Then it will parse the HTML to detect resource links including multimedia resources (images, audio, videos), CSS, and JS. Depending on the number of parts and index, it narrows down the amount of resources and attempt to download and put them into a ZIP file before throwing it back to the caller.
 
-According to our system architecture, the caller needs to prepare a placeholder to hold every incoming result. For this test case, the placeholder is designated as a sub folder in the \texttt{Download} folder. When the result comes as a ZIP file, its contents will be extracted and filled into the placeholder folder. The final HTML file will contain all the modified resource links which are located at the same folder. Finally, the local HTML file can be opened by Android Web browser component using a local web server, for instance, NanoHttpd \cite{nanohttpd}.
+According to our system architecture, the caller should prepare a placeholder to hold every incoming result. For this case study, the placeholder is designated as a sub folder in the \texttt{Download} folder. When the result comes as a compressed file, its contents will be extracted and filled into the placeholder folder. The final HTML file will contain all the modified resource links which are located at the same folder. Finally, the local HTML file can be opened by Android Web browser component using a local web server, for instance, NanoHttpd \cite{nanohttpd}.
 
 \textbf{\emph{Performance:}}
-Figure (\ref{fig:net_clusters_perf} - left) describes performance of multi-device groups from 1 to more than 4 peers (some peers use a few more threads for simulating high performance) when remotely rendering web pages from CNN URLs. The figure describes the execution time of each peer in each group after being assigned a job, and the peak is reached when the last peer completes its work. In the group with only one device, it works desolately without any peer contacts; it will download web pages from the internet by opening Wi-Fi connection. It is obvious that executing Internet Remote access brings a high benefit in terms of performance since rendering time is reduced almost a half when at least three peers participate in the network. 
+Figure (\ref{fig:net_clusters_perf} - left) describes performance of multi-device groups from one to more than four peers (some peers use a few more threads for simulating high performance) when remotely rendering web pages from CNN URLs. The figure describes the execution time of each peer in each group after being assigned a job, and the peak is reached when the last peer completes its work. In the group with only one device, it works desolately without any peer contacts; it will download web pages from the internet by opening Wi-Fi connection. It is obvious that executing Internet Remote access brings a high benefit in terms of performance since rendering time is reduced almost a half when at least three peers participate in the network. 
 
 
 \begin{figure*}
@@ -713,7 +707,7 @@ Figure (\ref{fig:net_clusters_perf} - left) describes performance of multi-devic
 \end{figure*}
 
 
-To evaluate energy consumption, we performed the same tests similar to the first test case by measuring in multi-device groups with overheads and when remotely rendering web pages. From the outcome of energy test (Figure \ref{fig:net_clusters_perf} - right), we realized that by handing over computation utilizing system resources (Here is Internet accessibility) over peer-to-peer network with multiple peers will help reducing significantly energy consumed, particularly more than a half in compare with a solo device. The differences between the total energy and overheads are not fluctuated much between the multiple groups, which can be easily explained by \cite{wifi_energy}.\\
+To evaluate energy consumption, we performed the same tests similarly to the first test case by measuring in multi-device groups with overheads and when remotely rendering web pages. From the outcome of energy test (Figure \ref{fig:net_clusters_perf} - right), we realized that by handing over computation utilizing system resources (Here is Internet accessibility) over peer-to-peer network with multiple peers will help significantly reducing the amount of energy consumed during the computation, particularly more than a half compared to executing on one device. The differences between the total energy and overheads are not fluctuated much between the multiple groups, which can be easily explained by \cite{wifi_energy}.\\
 
 \subsubsection{GPS Sharing}
 Connecting and retrieving the GPS location is really energy consuming. Generally the smartphone will enable and contact at least 3 satellites through radio signals in order to start retrieving the GPS location (4 satellites to get more information like altitude). Therefore, energy can be saved if GPS requests are relayed to another device in the network which is healthier (higher remaining battery, in idle state, etc.) or has better specifications.
@@ -723,9 +717,9 @@ With GPS Share, only one peer is entrusted. Our strategy is letting the caller t
 
 
 \textbf{\emph{Performance}}
-We performed 3 GPS Share test cases, 2 for remote GPS requests and 1 for local GPS (Using GPS on it own). For each case we execute $10$ times on two devices with the same specifications and assign roles to them as a caller and a receiver to minimize the overloads throughout the system. Figure \ref{fig:gps_perf} interprets that GPS Share mechanism doesn't give any benefit in terms of performance, since the remote device has the same resource specs and remote GPS may require even more time including time for GPS plus time for data transmission back to the caller (however it is too short for consideration).
+We performed three GPS test cases: 2 for remote GPS requests and 1 for local GPS (Using GPS on it own). For each case we execute $10$ times on two devices with the same specifications and assign roles to them as a caller and a receiver to minimize the overloads throughout the system. Figure \ref{fig:gps_perf} interprets that GPS Share mechanism doesn't give any benefit in terms of performance, since the remote device has the same resource specs and remote GPS may require even more time including time for GPS plus time for data transmission back to the caller (however it is too short for consideration).
 
-Extracted from the above tests, Figure \ref{fig:gps_perf} describes the distribution of energy consumptions among the 3 test cases. By applying interpolation to find trend lines for these energy distributions, we got $y = 0.0528388 \times x + 7.31948$ formula for test 1, $y = 0.0547221 \times x + 7.42138$ for test 2 and $y = 0.0575331 \times x - 12.9403$ for test 3. The trend line 3 has the biggest slope, or at the same amount of time it consumed more energy than the first two cases. As we might see, the difference between the slopes of line 3 and line 1, 2 are very slim, however due to our later tests on the weak caller (low battery), the difference will highly increase. 
+Extracted from the above tests, Figure \ref{fig:gps_perf} describes the distribution of energy consumptions among the 3 test cases. By applying interpolation to find trend lines for these energy distributions, we got $y = 0.053 \times x + 7.32$ formula for test 1, $y = 0.055 \times x + 7.42$ for test 2 and $y = 0.057 \times x - 12.94$ for test 3. The trend line 3 has the biggest slope, or at the same amount of time it consumed more energy than the first two cases. As we might see, the difference between the slopes of line 3 and line 1, 2 are very slim, however due to our later tests on the weak caller (low battery), the difference will highly increase. 
 
 \textbf{\emph{Applications}}
 By integrating our system with either RetroSkeleton \cite{retro-skel} or Rio \cite{rio}, we can provide remote or local GPS location data without having to modify the current installed applications. Those systems provide interference methods to capture requests for system resources and instead inject their customized responses. 
@@ -741,21 +735,22 @@ By integrating our system with either RetroSkeleton \cite{retro-skel} or Rio \ci
 \end{figure*}
 
 \subsection{Threats to Validity}
-\subsubsection{Internal Validity}
-\subsubsection{External Validity}
+The results presented above are subject to internal and external validity threats. The internal validity is threatened by how the interactive subject applications were exercised. The performance and energy consumption of interaction applications depend on how the user chooses to use them. To minimize this threat, the benchmarked use cases were fixed to using the same media (i.e., picture file), location (i.e., GPS coordinates), and Internet URL. Another internal validity threat is the fashion in which we implemented the jobs (e.g., blur effect). To minimize this threat, we took advantage of built-in Android libraries to implement these jobs.
 
-\section{Discussion}
-\label{sec:discussion}
-\subsection{Advantages}
-\subsubsection{Applicability}
-\subsubsection{Extensibility}
+The external validity is threatened by the mechanism to measure energy consumption. We measure the physical consumed energy directly using a power monitoring tool, which does not isolate the energy consumption of the subject applications from the total energy consumption of the whole mobile device. Thus, the energy consumption of the subject applications are subject to background services. To minimize this threat, we uninstalled all the third-party applications and stopped unnecessary background services.
 
 \subsection{Limitations}
+Despite its benefits, one can argue that executing any class files in a mobile devices it harmful in terms of privacy and security. Thus, we want to make our runtime system configurable as a future research direction. The implementation will provide a configuration file that can be used to specify user preferences with respect to battery, privacy, security, etc. In particular, a configuration file contains a set of key/value pairs, with the keys of \texttt{battery\_level}, \texttt{trusted\_host}, and \texttt{privilege}, which will indicate the favorable battery level for requested job executions, trusted network or peer list, and local resource access rights (e.g., CPU, memory, local files, or sensors), respectively.
+
+
+%The \texttt{trusted_host} key points to the locations of the available offloading servers. The \texttt{mode} key points to the value specifying whether the offloading should be plain (i.e., always offload the specified hotspot method) or adaptive (i.e., decide whether to offload at runtime based on the conditions in place). The \texttt{criteria} key defines which notion of \emph{effectiveness} should be used with a given offloading. The \texttt{criteria} value of \texttt{energy} indicates the effectiveness to reduce energy consumption, while that of \texttt{performance} to speed up performance. The value of \texttt{epr} indicates the effectiveness to increase the energy/performance ratio that correlates performance and energy consumption values so as to maximize the resulting correlation. The \texttt{strategy} key points to well-known energy optimization techniques, including data compression, reducing image quality, and redirecting to an easier-to-reach remote server. 
+
+%Another limitation of our approach is 
 %\subsubsection{Security}
 
 \section{Related Work}
 \label{sec:related}
-The work presented here is related to other complementary efforts that optimize mobile applications via remote executions including computation offloading and peer to peer networking.
+The work presented here is related to other complementary efforts that optimize mobile applications' performance and energy efficiency via remote executions including computation offloading and peer to peer networking.
 
 Alljoyn \cite{alljoyn} is an open source framework that hides the complexity of network communications for application programmers. By providing interoperability between multiple platforms without any transport layers, Alljoyn makes the integration and initiation of network communication easy and simple. Prior to the the Wi-Fi Direct technology, peer to peer networks have demonstrated the initiative steps to establish the point-to-point collaborative WiFi networks \cite{m_p2p_tutor}. 
 
