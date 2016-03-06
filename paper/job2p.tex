@@ -495,11 +495,6 @@ Computational offloading \cite{kwon+:icsm13} has received much attention as an e
 %To handle execution failures, as well as 
 Due to the nature of volatile mobile networks, partial failure may occur because each component of a distributed execution (e.g., peers, offloading server, or the network) can fail independently. Thus, to ensure all jobs are completely executed at peers and their results are returned back to a caller, our runtime system listens to network-related updates (e.g, network join/leave events from the \texttt{BroadcastReceiver} class) and as well as catching exceptions thrown from the underlying system (e.g., TCP socket, WiFi Direct Controller, Android). Moreover, we use a simple checksum mechanism to check the integrity of execution results. If any types of execution failures occur, the \emph{Execution Manager} module immediately re-execute the failed job on the caller side.
 
-
-\subsection{Dicussion}
-Despite its benefits, one can argue that executing any class files in a mobile devices it harmful in terms of privacy and security. Thus, we want to make our runtime system configurable as a future research direction. The implementation will provide a configuration file that can be used to specify user preferences with respect to battery, privacy, security, etc. In particular, a configuration file contains a set of key/value pairs, with the keys of \texttt{battery\_level}, \texttt{trusted\_host}, and \texttt{privilege}, which will indicate the favorable battery level for requested job executions, trusted network or peer list, and local resource access rights (e.g., CPU, memory, local files, or sensors), respectively.
-
-
 %By comparing the previous and updated peer lists, we can figure out which devices are joining or leaving. Our middleware keeps the copies of all the running jobs after dispatching. If a job is being executed on a begone peer, the caller will use its copy to run it locally instead.
   
 \section{Evaluation}
@@ -643,6 +638,17 @@ To measure the performance of the system equipped with our APIs, we experimented
 \subsubsection{Image Processing}
 We applied the blur effect, one of the high energy consuming image processes. We ran the test repeatedly with two images that have different sizes: the big image has size $4326 \times 2856$ and the smaller one has size $2500 \times 1405$. For the big one, with 4 bytes allocated for each pixel, device had to allocate around $50MB$ of heap to open and another $50MB$ to hold the result, thus leading to app crashes every time. This overload problem will only be solved with the help of other collaborative peers.
 
+\begin{figure*}
+	\centering
+	%\resizebox{0.45\textwidth}{!}{
+		\includegraphics[width=0.48\textwidth]{data/img_small_perf_full.pdf}
+		\includegraphics[width=0.45\textwidth]{data/img_small_energy.pdf}
+	%}
+	\caption{Performance and energy consumption of the image processing tests with a normal image size.}
+	\label{fig:small_img_perf}
+\end{figure*}
+
+
 \textbf{\emph{Design:}}
 The most important part when implementing the image processing app using the provided APIs is to define the \texttt{DataParser} (see Listing \ref{code:job_def}) for an image. In this case study, since we blur a bitmap image file, a bitmap image can be easily partitioned into small bitmap images by the \texttt{DataParser}. However, if target image files are compressed as the jpg, gif, or png format, they will need additional image processing in the \texttt{DataParser} class.
 
@@ -663,26 +669,15 @@ The most important part when implementing the image processing app using the pro
 %Once the complete bitmap data are received, the system sends the \texttt{MAIN\_JOB\_DONE} message to the UI, in which \texttt{msg.obj} contains the final bitmap.
 
 
-\begin{figure*}
-	\centering
-	%\resizebox{0.45\textwidth}{!}{
-		\includegraphics[width=0.48\textwidth]{data/img_small_perf_full.pdf}
-		\includegraphics[width=0.45\textwidth]{data/img_small_energy.pdf}
-	%}
-	\caption{Performance and energy consumption of the image processing tests with a normal image size.}
-	\label{fig:small_img_perf}
-\end{figure*}
-
-
-\paragraph{Performance with large scale image:}
-Running the large scale image test case throughout 50 tests by increasing number of devices from 1 to 4 within the P2P network, we found that the test case didn't work if only one device executed desolately. By splitting the image process in two threads, we realized that only 1 thread worked, the other could not due to out of memory exception. 
+\paragraph{Performance with a large scale image:}
+Running a large scale image test case throughout 50 tests by increasing number of devices from 1 to 4 within the P2P network, we found that the test case didn't work if only one device executed desolately. By splitting the image process into two threads, we realized that only 1 thread worked, the other could not due to out of memory exception. 
 
 By increasing the number of devices in P2P network from 2 to 4 and sending image processing jobs to the other peers, we gathered average statistic data in 20 tests as in the Figure (\ref{fig:cluster_performance} - left) (groups of 2, 3 and 4 peers). In this Figure, to accomplish the task, the two peers have to work in $13,541ms$ average. The execution time reduced when more peers participated the group, down to $7387ms$ average when 4 peers joined the group, which is twice as fast as having 2 peers (notice that system didn't fully work with only one device).
 
 To measure energy consumption on each peer, we used Monsoon Power Monitor \cite{moosoon} to measure the velocity of energy drained on the calling device when utilizing power from the other peers. Figure \ref{fig:cluster_performance} (right) shows the energy consumption measurements from the two consecutive tests. The graph shows that the variability of energy consumption between the clusters of 2, 3 and 4 peers matches with the time consumption graph. By running the test with the same input for 20 times, we realized that the results didn't change. Also, by adding more than 3 peers, we can significantly reduce energy consumption for the image processing task to up to 25\%. However we realized that the performance didn't significantly increase when 6 or more peers participating network. This can be explained by Amdahl's law \cite{amdahl}. Through our experiments, the number of peers at 3 to 5 will maximize the benefit in terms of energy saving and performance.
 
-\paragraph{Performance with normal scale image:}
-We performed the image processing test on the input image with size $2500 \times 1405$. By reconfiguring the clusters with number of peers from 1 to 4, and measure total execution time on the caller, we gathered performance report as shown in the Figure \ref{fig:small_img_perf}. From our statistic data, the total time consumed by one device to run on itself is slightly fluctuated around $5400ms$ between 20 measurements. If one more peer joined the network, the time consumption is decreased to $3500ms$ which is 35\% faster. When more peers (3 or 4) participated, the performance of the caller will continuously increase, although their finishing time largely varied. Specifically the cluster with 4 peers collaboratively executed twice as fast as one device.
+\paragraph{Performance with a normal scale image:}
+We performed the image processing test on the input image with size $2500 \times 1405$. By reconfiguring the clusters with number of peers from 1 to 4, and measure total execution time on the caller, we gathered performance report as shown in the Figure \ref{fig:small_img_perf}. From our statistic data, the total time consumed by one device to run on itself is slightly fluctuated around $5400ms$ between 20 measurements. If one more peer joined the network, the time consumption is decreased to $3500ms$ which is 35\% faster. When more peers (3 or 4) participated, the performance of the caller will continuously increase, although their finishing time largely varied. Specifically the cluster with four peers collaboratively executed twice as fast as one device.
 
 Essentially the variability and fluctuation of energy consumption will reflect the performance (time consumption), Figure (\ref{fig:small_img_perf} - right) displays the details. Through our experiments, running the cluster with 2 peers will preserve 20\% energy compare with 1 device, the efficiency increased in cluster with 3 peers ($34\%$) and 4 peers ($37.5\%$).
 
@@ -699,14 +694,13 @@ Essentially the variability and fluctuation of energy consumption will reflect t
 Theoretically, remote accessibility won't help reducing the amount of bytes downloaded, however the speed is ameliorated since the downloading process is scattered over a number of peers. Thus less energy will be consumed. 
 
 \textbf{\emph{Design:}}
-For this case study, we defined job business is to download content from an URL, and the job content will comprise of URL, number of parts and index of the part. We also defined the initial criteria to select only the peers having Internet connection (\texttt{IRS[network]} at \texttt{high} or \texttt{low}). At the remote peers, when request is received, its \texttt{Execution Manager} module will execute the job to load the URL to achieve a page in HTML code. Then the job will parse the HTML to detect resource links including multimedia links (images, audio, videos), CSS, and JS. Depending on the number of parts and index of the part, it narrows down the amount of resource links, download and put them into a ZIP file before throwing back to the caller.
+For this case study, we defined job business is to download content from an URL, and the job content will comprise of URL, number of parts and index of the part. We also defined the initial criteria to select only the peers having Internet connection (\texttt{IRS[network]} at \texttt{high} or \texttt{low}). Once 
+remote peers receive a job request message, their \texttt{Execution Manager} module executes the job that loads the URL and archives HTML pages locally. 
 
-According to our system architecture, the caller should prepare a placeholder to hold every incoming result. To do that, we created \texttt{NetDataParser} to define the placeholder as a sub folder in the \texttt{Download} folder. When the result comes as a compressed file, its contents will be extracted and filled into the placeholder folder. The final HTML file will contain all the modified resource links which are located at the same folder. Finally, the local HTML file can be opened by Android Web browser component using a local web server, for instance, NanoHttpd \cite{nanohttpd}.
+As discussed in Section Section \ref{prog_model}, to process the downloaded files including multimedia links (images, audio, videos), CSS, and JS, the programmer must implement the \texttt{DataParser} interface.Thus, our \texttt{NetDataParser} class packs all the downloaded files into one single file, which is sent back to the caller. Finally, these HTML files are opened by the Android Web browser component using a local web server, for instance, NanoHttpd \cite{nanohttpd}.
 
 \textbf{\emph{Performance:}}
-Figure (\ref{fig:net_clusters_perf} - left) describes the performance of the clusters with the number of peers varied from 1 to 4  when rendering URLs from CNN website. At one pile, each area describes the execution time of each corresponding peer, and the pile peak is reached when the last peer completes its job. In the cluster with 1 device, we let it open Internet connection to download web page. 
-
-It is obvious that executing Internet Remote access brings a high benefit in terms of performance since rendering time is reduced almost a half when at least three peers participated in network. 
+Figure (\ref{fig:net_clusters_perf} - left) describes the performance of the clusters with the number of peers varied from one to four when rendering URLs from the CNN website. At one pile, each area describes the execution time of each corresponding peer, and the pile peak is reached when the last peer completes its job. Executing Internet access remotely through a P2P network brings a high benefit in terms of performance. For example, rendering time can be reduced by almost a half when three peers participated in network. 
 
 
 \begin{figure*}
@@ -729,9 +723,9 @@ With GPS Share, only one peer is entrusted. Our strategy is letting the caller t
 
 
 \textbf{\emph{Performance:}}
-We performed three GPS test cases: 2 for remote GPS requests and 1 for local GPS (Using GPS by itself). For each case we execute $10$ times on two devices with the same specifications and assign roles to them as a caller and a receiver to minimize the overloads throughout the system. Figure \ref{fig:gps_perf} interprets that GPS Share mechanism doesn't give any benefit in terms of performance, since the remote device has the same resource specs and remote GPS may require even more time including time for GPS location request, plus time for data transmission back to the caller (however it is too short for the consideration).
+We experimented with three GPS test cases: 2 for remote GPS requests and 1 for local GPS (Using GPS by itself). For each case we execute $10$ times on two devices with the same specifications and assign roles to them as a caller and a receiver to minimize the overloads throughout the system. Figure \ref{fig:gps_perf} interprets that GPS Share mechanism doesn't give any benefit in terms of performance, since the remote device has the same resource specs and remote GPS may require even more time including time for GPS location request, plus time for data transmission back to the caller (however it is too short for the consideration).
 
-Extracted from the above tests, Figure \ref{fig:gps_perf} describes the distribution of energy consumptions among the 3 test cases. By applying interpolation to find trend lines for these energy distributions, we got $y = 0.053 \times x + 7.32$ formula for test 1 (Remote GPS), $y = 0.055 \times x + 7.42$ for test 2 (Remote GPS) and $y = 0.057 \times x - 12.94$ for test 3 (Local GPS). Since the trend line 3 has the biggest slope, it refers that at the same running time, it consumed more energy than the others. As we might see, the difference between the slopes of line 3 and line 1, 2 is very slim, but due to our later tests on the weak caller (with low battery), the difference will highly increase. 
+Figure \ref{fig:gps_perf} describes the distribution of energy consumptions among the 3 test cases. By applying interpolation to find trend lines for these energy distributions, we got $y = 0.053 \times x + 7.32$ formula for test 1 (Remote GPS), $y = 0.055 \times x + 7.42$ for test 2 (Remote GPS) and $y = 0.057 \times x - 12.94$ for test 3 (Local GPS). Since the trend line 3 has the biggest slope, it refers that at the same running time, it consumed more energy than the others. As we might see, the difference between the slopes of line 3 and line 1, 2 is very slim, but due to our later tests on the weak caller (with low battery), the difference will highly increase. 
 
 \textbf{\emph{Applications:}}
 By integrating our system with either RetroSkeleton \cite{retro-skel} or Rio \cite{rio}, we can extend GPS location requests to the other nearby devices without any modification to the existing applications. Those systems provide interference methods to capture requests for system resources and instead inject their custom responses. 
@@ -747,23 +741,32 @@ By integrating our system with either RetroSkeleton \cite{retro-skel} or Rio \ci
 \end{figure*}
 
 \subsubsection{With Offloading Server}
+Lastly, we compare peer to peer- and offloading server-based executions in terms of performance and energy efficiency.
 
-\textbf{\emph{Design}}
-Like aforementioned, by installing Android x86 platform onto a PC server, we turned it into a powerful Android device that is able to host our middleware without any modification. The only difference is that the server will assign IP to the \texttt{device} property in IRS response instead of using device's name to inform the other peers that it is a server. 
+\textbf{\emph{Experimental Setup}}
+For an offloading server, we installed Android x86 platform on a PC, so that we could host our implementations without any modification. Only the server address was configured in advance. 
 
-When caller recognizes a server in network, it will immediately connect to that server and unbind connections to the other peers. Later, it will offload the whole task with data to the server. One copy of the task will be maintained at the caller, it will be used for fault tolerance when server does not respond within the timeout (defined in the caller's configuration file).
+If a caller determines that executing a job at the offloading server is more beneficial than executing through nearby devices, it connects to the server and disconnects the communication channels established with the other peers. Then, the runtime system offloads the whole job to the server with data. One copy of the job will be maintained at the caller for handling faults.
 
-To simulate different networks (LAN, WLAN and WAN), we installed a proxy software on our server to interfere network connection and setup the latency on it. Particularly, we set 0ms latency to emulate LAN, 50ms for WLAN and 150ms for WAN.
+To emulate different networks (LAN, WLAN and WAN), we have used \texttt{Network Emulator for Windows Toolkit} \cite{newt}, a popular network emulator. Particularly, we set 0ms latency for LAN, 50ms for WLAN, and 150ms for WAN.
 
-\textbf{\emph{Performance}}
-In this experiment, we performed again the image processing test with the same small-scale image. By increasing the latencies of both incoming and out-going packages of the server network from 0 to 500ms, we noticed that time and energy consumption also steadily increased (Figure \ref{fig:off_all}). However when latency is higher than 400, the slope of consumption becomes stable (less steep).
 
-Compare with results of the last image processing test, data in Figure \ref{fig:off_compare_img} shows some important points
+\textbf{\emph{Experimental Results}}
+We experimented with the image processing case study with the same small-scale image. When increasing the latencies of both incoming and out-going packages of the server network from 0 to 500ms, we observed that the time and energy consumption also steadily increased (Figure \ref{fig:off_all}). We have the following observations:
 \begin{itemize} \denseitems
-	\item Offloading technique in WAN environment (Slow speed connection) doesn't give any benefit about time or energy efficiency in compare with P2P collaboration.
-	\item In WLAN environment (Medium speed), offloading is somewhat more efficient in energy consumption than P2P, but it is not obvious with time consumption.
-	\item In LAN environment (High speed), or similar network capacities, offloading completely overwhelmed P2P collaboration regardless of the number of peers.
+	\item The cloud offloading in WAN environment (i.e., limited and intermittent latency/bandwidth) has limited benefits in terms of performance and energy efficiency compared to the P2P-based offloading.
+	\item The cloud offloading in WLAN environment (i.e., moderate latency/bandwidth), is sometimes more beneficial than the P2P-based offloading in terms of enery efficiency, but does not have performance benefits.
+	\item The cloud offloading in LAN environment (i.e., favorable latency/bandwidth)completely overwhelms the P2P-based offloading regardless of the number of peers.
 \end{itemize}
+
+As a result, we can argue that different offloading mechanisms should be selected in accordance with different network conditions (i.e., latency/bandwidth characteristics) and different jobs (i.e., computation-intensive vs. sensor-based executions) in a dynamic, adaptive way to achieve further optimizations. 
+%\cite{ELI}
+
+%When comparing with the previous results executing on a peer-to-peer network through nearby devices, 
+\subsection{Threats to Validity}
+The results presented above are subject to internal and external validity threats. The internal validity is threatened by how the interactive subject applications were exercised. The performance and energy consumption of interaction applications depend on how the user chooses to use them. To minimize this threat, the benchmarked use cases were fixed to using the same media (i.e., picture file), location (i.e., GPS coordinates), and Internet URL. Another internal validity threat is the fashion in which we implemented the jobs (e.g., blur effect). To minimize this threat, we took advantage of built-in Android libraries to implement these jobs.
+
+The external validity is threatened by the mechanism to measure energy consumption. We measure the physical consumed energy directly using a power monitoring tool, which does not isolate the energy consumption of the subject applications from the total energy consumption of the whole mobile device. Thus, the energy consumption of the subject applications are subject to background services. To minimize this threat, we uninstalled all the third-party applications and stopped unnecessary background services.
 
 \begin{figure*}
 	\centering
@@ -775,23 +778,8 @@ Compare with results of the last image processing test, data in Figure \ref{fig:
 	\label{fig:off_all}
 \end{figure*}
 
-\begin{figure*}
-	\centering
-	%\resizebox{0.36\textwidth}{!}{
-		\includegraphics[width=.42\textwidth]{data/off_compare_img_perf.pdf}
-		\includegraphics[width=.42\textwidth]{data/off_compare_img_energy.pdf}
-	%}
-	\caption{Performance and energy consumption comparison between remote and local GPS sensing.}
-	\label{fig:off_compare_img}
-\end{figure*}
-
-According to that, we can see that offloading mechanisms does not always bring the high performance. Depend on network characteristics (bandwidth or latency), we can decide which model to setup to maximize performance and energy efficiency for the circumstance.
-
-\subsection{Threats to Validity}
-The results presented above are subject to internal and external validity threats. The internal validity is threatened by how the interactive subject applications were exercised. The performance and energy consumption of interaction applications depend on how the user chooses to use them. To minimize this threat, the benchmarked use cases were fixed to using the same media (i.e., picture file), location (i.e., GPS coordinates), and Internet URL. Another internal validity threat is the fashion in which we implemented the jobs (e.g., blur effect). To minimize this threat, we took advantage of built-in Android libraries to implement these jobs.
-
-The external validity is threatened by the mechanism to measure energy consumption. We measure the physical consumed energy directly using a power monitoring tool, which does not isolate the energy consumption of the subject applications from the total energy consumption of the whole mobile device. Thus, the energy consumption of the subject applications are subject to background services. To minimize this threat, we uninstalled all the third-party applications and stopped unnecessary background services.
-
+\subsection{Discussion}
+Despite its benefits, one can argue that executing any class files in a mobile devices it harmful in terms of privacy and security. Thus, we will make our runtime system configurable as a future research direction. The implementation will provide a configuration file that can be used to specify user preferences with respect to battery, privacy, security, etc. In particular, a configuration file contains a set of key/value pairs, with the keys of \texttt{battery\_level}, \texttt{trusted\_host}, and \texttt{privilege}, which will indicate the favorable battery level for requested job executions, trusted network or peer list, and local resource access rights (e.g., CPU, memory, local files, or sensors), respectively.
 
 %The \texttt{trusted_host} key points to the locations of the available offloading servers. The \texttt{mode} key points to the value specifying whether the offloading should be plain (i.e., always offload the specified hotspot method) or adaptive (i.e., decide whether to offload at runtime based on the conditions in place). The \texttt{criteria} key defines which notion of \emph{effectiveness} should be used with a given offloading. The \texttt{criteria} value of \texttt{energy} indicates the effectiveness to reduce energy consumption, while that of \texttt{performance} to speed up performance. The value of \texttt{epr} indicates the effectiveness to increase the energy/performance ratio that correlates performance and energy consumption values so as to maximize the resulting correlation. The \texttt{strategy} key points to well-known energy optimization techniques, including data compression, reducing image quality, and redirecting to an easier-to-reach remote server. 
 
@@ -807,6 +795,17 @@ Alljoyn \cite{alljoyn} is an open source framework that hides the complexity of 
 In addition to the WiFi-based peer to peer network, there had been several efforts to use other communication medium such as bluetooth to share media contents \cite{media_share}. Rio \cite{rio} bases on I/O files to share contents and resources among the applications in different devices without having to modify them. Their use cases addressed multi-system photography and gaming, singular SIM card for multi-devices, music and video sharing. GameOn \cite{gameon} utilizes WiFi P2P to establish non-Internet connection between gamers with a focus on closed range networks like in public transportation. The other content sharing systems include CAMEO \cite{cameo}, Spartacus \cite{spartacus} and GigaSight \cite{crowd-sourcing}, which distribute data in closed range networks. By utilizing the Doppler effect, Spartacus help initiate and interact with nearby devices through pointing gesture with accuracy up to 90\% within 3 meters.
 
 Finally, our work shares objectives and techniques with the well-known computational offloading approaches \cite{maui,comet,mobile-cloud-middleware,fuzzy-engine}. These offloading mechanisms is a well-known mobile application optimization technique that makes it possible to execute the application's energy intensive functionality at a powerful cloud-based server, without draining the mobile device's battery. In this paper, we have focused on generalizing these offloading mechanisms using two different distributed execution models---client/server and peer to peer communication models. In addition, we enabled resource-limited devices to expand their hardware capacities through various distributed execution modles.
+
+\begin{figure*}
+\centering
+	%\resizebox{0.36\textwidth}{!}{
+		\includegraphics[width=.42\textwidth]{data/off_compare_img_perf.pdf}
+		\includegraphics[width=.42\textwidth]{data/off_compare_img_energy.pdf}
+	%}
+	\caption{Experimental results of the Image processing when using the cloud offloading.}
+	\label{fig:off_compare_img}
+\end{figure*}
+
 
 \section{Conclusions}
 \label{sec:conc}
