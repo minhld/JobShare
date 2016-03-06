@@ -377,6 +377,8 @@ Next, depending on the amount of job and data, an appropriate number of peers sh
 	\item \emph{Otherwise}: Select a list of available peers that have larger \texttt{"RL"} and meet other selection criteria.
 \end{itemize}
 
+The 3 above steps are implemented in the Algorithm \ref{alg:select_peers} below.
+
 \begin{algorithm}
 \caption{Selecting Available Peers}
 \label{alg:select_peers}
@@ -497,7 +499,7 @@ Due to the nature of volatile mobile networks, partial failure may occur because
   
 \section{Evaluation}
 \label{sec:eval}
-We have evaluated the effectiveness of our approach in improving energy- and performance-efficiency and introducing a new hardware capability by applying it to three applications. The experimental setup includes a testbed with five Android phones. Table \ref{table:devices} shows the device-specific values. The mobile devices have communicated with each other or a remote server in an emulated network. In particular, we have experimented with three emulated network conditions that have the following respective round trip time and bandwidth characteristics: 2ms and 50Mbps for LAN, 20ms and 10Mbps for WLAN, and 120ms and 1Mbps for WAN. To measure energy consumption, we used a Monsoon Power Monitor device \cite{moosoon}. Also, for the offloading server, we set up an Android-based server using Android x86 \cite{android-x86}.
+We have evaluated the effectiveness of our approach in improving energy- and performance-efficiency and introducing a new hardware capability by applying it to three applications. The experimental setup includes a testbed with five Android phones and one server for offloading. Table \ref{table:devices} shows the device-specific values. The mobile devices have communicated with each other or a remote server in an emulated network. In particular, we have experimented with three emulated network conditions that have the following respective round trip time and bandwidth characteristics: 2ms and 50Mbps for LAN, 20ms and 10Mbps for WLAN, and 120ms and 1Mbps for WAN. To measure energy consumption, we used a Monsoon Power Monitor device \cite{moosoon}. Also, for the offloading server, we set up an Android-based server using Android x86 \cite{android-x86}.
 
 \begin{table}[h]
 \caption{Specifications of the testing devices}
@@ -505,12 +507,13 @@ We have evaluated the effectiveness of our approach in improving energy- and per
 \centering \small
 \begin{tabular}{| l | l | l | l |}
     \hline
-    \textbf{Phone} & \textbf{CPU} & \textbf{RAM} & \textbf{Battery} \\ \hline \hline
+    \textbf{Devices} & \textbf{CPU} & \textbf{RAM} & \textbf{Battery} \\ \hline \hline
     LG Volt & Quad-core 1.2GHz & 1GB & 3000mAh\\ \hline
 		LG Opt. GK & Quad-core 1.7GHz & 2GB & 3100mAh\\ \hline
 		LG G Stylo & Quad-core 1.2GHz & 1GB & 3000mAh\\ \hline
 		LG Tribute & Quad-core 1.2GHz & 1GB & 2100mAh\\ \hline
 		Galaxy S5 & Quad-core 2.5GHz & 2GB & 2800mAh\\ \hline
+		Dell PC & Intel i7-4790 3.6GHz & 8GB & Charged\\ \hline
 \end{tabular}
 \end{table}
 
