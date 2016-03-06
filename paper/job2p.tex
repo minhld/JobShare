@@ -253,16 +253,16 @@ public interface DataParser {
 \end{figure}
 
 \subsubsection{Processing Application-Specific Data} \label{data_parser}
-The \texttt{DataParser} class codifies how data to be sent should be processed (e.g., read/write), partitioned, and merged. The \texttt{DataParser} interface described in Listing \ref{code:job_def} has the following methods:
+The \texttt{DataParser} interface defines how data should be processed (e.g., read/write), partitioned, and merged. \texttt{DataParser} described in Listing \ref{code:job_def} has the following methods:
 \begin{itemize} \denseitems
-	\item \texttt{getDataClass()} returns data type.
-	\item \texttt{parseObjectToBytes(object)} instructs system to serialize an object to binary array. In Android, not every object can be serialized, for instance, Bitmap.  
-	\item \texttt{parseBytesToObject(byte[])} deserializes a binary array back to object.
-	\item \texttt{getSinglePart()} returns a data slide based on number of parts (\texttt{numOfParts}) and its \texttt{index}. Listing \ref{code:get_single_part} shows an example getting one slice from a bitmap by \texttt{index}. When app runs, \texttt{JobDispatcher} will use this method to partition the task into slices.
-	\item \texttt{copyPartToPlaceholder()} instructs the application to merge it to the placeholder when a result is partially retrieved from a distant peer.
+	\item \texttt{getDataClass()} returns the data type.
+	\item \texttt{parseObjectToBytes(object)} serializes an object to a binary array. 
+	\item \texttt{parseBytesToObject(byte[])} deserializes a binary array back to an object.
+	\item \texttt{getSinglePart()} partitions data based on number of parts (\texttt{numOfParts}) and its \texttt{index}. Listing \ref{code:get_single_part} shows an example to partition a bitmap image file. 
+	\item \texttt{copyPartToPlaceholder()} merges partitioned and processed when a result is returned back to a caller from peers.
 \end{itemize}
 
-In our case studies (Section \ref{sec:eval}), we evaluated our programming model through three case studies (i.e., bitmap image processing, internet sharing, and GPS accessing).
+Through three case studies (Section \ref{sec:eval}), we evaluated our programming model (i.e., bitmap image processing, internet sharing, and GPS accessing). We will discuss how to use these APIs in Section \ref{sec:apiusage}.
 
 
 \subsection{Runtime System} \label{scheduling}
@@ -495,6 +495,11 @@ Computational offloading \cite{kwon+:icsm13} has received much attention as an e
 %To handle execution failures, as well as 
 Due to the nature of volatile mobile networks, partial failure may occur because each component of a distributed execution (e.g., peers, offloading server, or the network) can fail independently. Thus, to ensure all jobs are completely executed at peers and their results are returned back to a caller, our runtime system listens to network-related updates (e.g, network join/leave events from the \texttt{BroadcastReceiver} class) and as well as catching exceptions thrown from the underlying system (e.g., TCP socket, WiFi Direct Controller, Android). Moreover, we use a simple checksum mechanism to check the integrity of execution results. If any types of execution failures occur, the \emph{Execution Manager} module immediately re-execute the failed job on the caller side.
 
+
+\subsection{Dicussion}
+Despite its benefits, one can argue that executing any class files in a mobile devices it harmful in terms of privacy and security. Thus, we want to make our runtime system configurable as a future research direction. The implementation will provide a configuration file that can be used to specify user preferences with respect to battery, privacy, security, etc. In particular, a configuration file contains a set of key/value pairs, with the keys of \texttt{battery\_level}, \texttt{trusted\_host}, and \texttt{privilege}, which will indicate the favorable battery level for requested job executions, trusted network or peer list, and local resource access rights (e.g., CPU, memory, local files, or sensors), respectively.
+
+
 %By comparing the previous and updated peer lists, we can figure out which devices are joining or leaving. Our middleware keeps the copies of all the running jobs after dispatching. If a job is being executed on a begone peer, the caller will use its copy to run it locally instead.
   
 \section{Evaluation}
@@ -538,6 +543,7 @@ where $t$ is accumulated time in seconds and $E_{WiFi}$ is energy used by system
 
 
 \subsection{API Usage Scenario}
+\label{sec:apiusage}
 Next, we present how one can implement a mobile application using the provided programming model.
 
 \textbf{\emph{Job Definition.}} As discussed in Section \ref{prog_model}, the programmer must define what he/she will execute remotely by overriding \texttt{exec()} of the \texttt{Job} class. Then, the provided \texttt{DexCreator} tool compiles and compacts it into the DEX jar package, which will be sent to peers or an offloading server. 
@@ -565,6 +571,18 @@ public Object getSinglePart(...) {
   \label{code:get_single_part}
 \end{figure}
 
+
+
+\begin{figure*} 
+	\centering
+	%\resizebox{0.39\textwidth}{!}{
+	%\includegraphics[width=0.32\textwidth]{data/img_large_perf_full.pdf}
+		\includegraphics[width=0.45\textwidth]{data/img_perf.pdf}		
+		\includegraphics[width=0.45\textwidth]{data/img_energy.pdf}
+	%}
+	\caption{Performance and energy consumption of the large image processing tests in multiple devices.}
+	\label{fig:cluster_performance}
+\end{figure*}
 
 \textbf{\emph{Message Handler.}} \emph{Message Handler} is required to be instantiated during the initialization process to receive job-related events. In Listing \ref{ui_handler}, we created \texttt{UIHandler} which handles two events---\texttt{MAIN\_INFO} containing job-related information and \texttt{MAIN\_JOB\_DONE} containing job results. 
 
@@ -610,17 +628,6 @@ Handler UIHandler = new Handler() {
 %
 %\captionof{lstlisting}{Using DataParser and JobHandler}
 %\end{figure}
-
-\begin{figure*}
-	\centering
-	%\resizebox{0.39\textwidth}{!}{
-	%\includegraphics[width=0.32\textwidth]{data/img_large_perf_full.pdf}
-		\includegraphics[width=0.45\textwidth]{data/img_perf.pdf}		
-		\includegraphics[width=0.45\textwidth]{data/img_energy.pdf}
-	%}
-	\caption{Performance and energy consumption of the large image processing tests in multiple devices.}
-	\label{fig:cluster_performance}
-\end{figure*}
 
 \subsection{Case Study}
 To measure the performance of the system equipped with our APIs, we experimented with three case studies using five different Android devices at an emulated testbed:
@@ -784,9 +791,6 @@ The results presented above are subject to internal and external validity threat
 
 The external validity is threatened by the mechanism to measure energy consumption. We measure the physical consumed energy directly using a power monitoring tool, which does not isolate the energy consumption of the subject applications from the total energy consumption of the whole mobile device. Thus, the energy consumption of the subject applications are subject to background services. To minimize this threat, we uninstalled all the third-party applications and stopped unnecessary background services.
 
-\subsection{Limitations}
-Despite its benefits, one can argue that executing any class files in a mobile devices it harmful in terms of privacy and security. Thus, we want to make our runtime system configurable as a future research direction. The implementation will provide a configuration file that can be used to specify user preferences with respect to battery, privacy, security, etc. In particular, a configuration file contains a set of key/value pairs, with the keys of \texttt{battery\_level}, \texttt{trusted\_host}, and \texttt{privilege}, which will indicate the favorable battery level for requested job executions, trusted network or peer list, and local resource access rights (e.g., CPU, memory, local files, or sensors), respectively.
-
 
 %The \texttt{trusted_host} key points to the locations of the available offloading servers. The \texttt{mode} key points to the value specifying whether the offloading should be plain (i.e., always offload the specified hotspot method) or adaptive (i.e., decide whether to offload at runtime based on the conditions in place). The \texttt{criteria} key defines which notion of \emph{effectiveness} should be used with a given offloading. The \texttt{criteria} value of \texttt{energy} indicates the effectiveness to reduce energy consumption, while that of \texttt{performance} to speed up performance. The value of \texttt{epr} indicates the effectiveness to increase the energy/performance ratio that correlates performance and energy consumption values so as to maximize the resulting correlation. The \texttt{strategy} key points to well-known energy optimization techniques, including data compression, reducing image quality, and redirecting to an easier-to-reach remote server. 
 
@@ -801,7 +805,7 @@ Alljoyn \cite{alljoyn} is an open source framework that hides the complexity of 
 
 In addition to the WiFi-based peer to peer network, there had been several efforts to use other communication medium such as bluetooth to share media contents \cite{media_share}. Rio \cite{rio} bases on I/O files to share contents and resources among the applications in different devices without having to modify them. Their use cases addressed multi-system photography and gaming, singular SIM card for multi-devices, music and video sharing. GameOn \cite{gameon} utilizes WiFi P2P to establish non-Internet connection between gamers with a focus on closed range networks like in public transportation. The other content sharing systems include CAMEO \cite{cameo}, Spartacus \cite{spartacus} and GigaSight \cite{crowd-sourcing}, which distribute data in closed range networks. By utilizing the Doppler effect, Spartacus help initiate and interact with nearby devices through pointing gesture with accuracy up to 90\% within 3 meters.
 
-Finally, our work shares objectives and techniques with the well-known computational offloading approaches \cite{maui,comet,mobile-cloud-middleware,fuzzy-engine}. These offloading mechanisms is a well-known mobile application optimization technique that makes it possible to execute the application's energy intensive functionality at a powerful cloud-based server, without draining the mobile device's battery. In this research, we have focused on generalizing these offloading mechanisms using two different distributed execution models---client/server and peer to peer communication models.
+Finally, our work shares objectives and techniques with the well-known computational offloading approaches \cite{maui,comet,mobile-cloud-middleware,fuzzy-engine}. These offloading mechanisms is a well-known mobile application optimization technique that makes it possible to execute the application's energy intensive functionality at a powerful cloud-based server, without draining the mobile device's battery. In this paper, we have focused on generalizing these offloading mechanisms using two different distributed execution models---client/server and peer to peer communication models. In addition, we enabled resource-limited devices to expand their hardware capacities through various distributed execution modles.
 
 \section{Conclusions}
 \label{sec:conc}
