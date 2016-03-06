@@ -253,16 +253,16 @@ public interface DataParser {
 \end{figure}
 
 \subsubsection{Processing Application-Specific Data} \label{data_parser}
-The \texttt{DataParser} class codifies how data to be sent should be processed (e.g., read/write), partitioned, and merged. The \texttt{DataParser} interface described in Listing \ref{code:job_def} has the following methods:
+The \texttt{DataParser} interface defines how data should be processed (e.g., read/write), partitioned, and merged. \texttt{DataParser} described in Listing \ref{code:job_def} has the following methods:
 \begin{itemize} \denseitems
-	\item \texttt{getDataClass()} returns data type.
-	\item \texttt{parseObjectToBytes(object)} instructs system to serialize an object to binary array. In Android, not every object can be serialized, for instance, Bitmap.  
-	\item \texttt{parseBytesToObject(byte[])} deserializes a binary array back to object.
-	\item \texttt{getSinglePart()} returns a data slide based on number of parts (\texttt{numOfParts}) and its \texttt{index}. Listing \ref{code:get_single_part} shows an example getting one slice from a bitmap by \texttt{index}. When app runs, \texttt{JobDispatcher} will use this method to partition the task into slices.
-	\item \texttt{copyPartToPlaceholder()} instructs the application to merge it to the placeholder when a result is partially retrieved from a distant peer.
+	\item \texttt{getDataClass()} returns the data type.
+	\item \texttt{parseObjectToBytes(object)} serializes an object to a binary array. 
+	\item \texttt{parseBytesToObject(byte[])} deserializes a binary array back to an object.
+	\item \texttt{getSinglePart()} partitions data based on number of parts (\texttt{numOfParts}) and its \texttt{index}. Listing \ref{code:get_single_part} shows an example to partition a bitmap image file. 
+	\item \texttt{copyPartToPlaceholder()} merges partitioned and processed when a result is returned back to a caller from peers.
 \end{itemize}
 
-In our case studies (Section \ref{sec:eval}), we evaluated our programming model through three case studies (i.e., bitmap image processing, internet sharing, and GPS accessing).
+Through three case studies (Section \ref{sec:eval}), we evaluated our programming model (i.e., bitmap image processing, internet sharing, and GPS accessing). We will discuss how to use these APIs in Section \ref{sec:eval}.
 
 
 \subsection{Runtime System} \label{scheduling}
@@ -759,7 +759,7 @@ Alljoyn \cite{alljoyn} is an open source framework that hides the complexity of 
 
 In addition to the WiFi-based peer to peer network, there had been several efforts to use other communication medium such as bluetooth to share media contents \cite{media_share}. Rio \cite{rio} bases on I/O files to share contents and resources among the applications in different devices without having to modify them. Their use cases addressed multi-system photography and gaming, singular SIM card for multi-devices, music and video sharing. GameOn \cite{gameon} utilizes WiFi P2P to establish non-Internet connection between gamers with a focus on closed range networks like in public transportation. The other content sharing systems include CAMEO \cite{cameo}, Spartacus \cite{spartacus} and GigaSight \cite{crowd-sourcing}, which distribute data in closed range networks. By utilizing the Doppler effect, Spartacus help initiate and interact with nearby devices through pointing gesture with accuracy up to 90\% within 3 meters.
 
-Finally, our work shares objectives and techniques with the well-known computational offloading approaches \cite{maui,comet,mobile-cloud-middleware,fuzzy-engine}. These offloading mechanisms is a well-known mobile application optimization technique that makes it possible to execute the application's energy intensive functionality at a powerful cloud-based server, without draining the mobile device's battery. In this research, we have focused on generalizing these offloading mechanisms using two different distributed execution models---client/server and peer to peer communication models.
+Finally, our work shares objectives and techniques with the well-known computational offloading approaches \cite{maui,comet,mobile-cloud-middleware,fuzzy-engine}. These offloading mechanisms is a well-known mobile application optimization technique that makes it possible to execute the application's energy intensive functionality at a powerful cloud-based server, without draining the mobile device's battery. In this paper, we have focused on generalizing these offloading mechanisms using two different distributed execution models---client/server and peer to peer communication models. In addition, we enabled resource-limited devices to expand their hardware capacities through various distributed execution modles.
 
 \section{Conclusions}
 \label{sec:conc}
