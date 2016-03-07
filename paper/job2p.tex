@@ -213,7 +213,7 @@ Figure \ref{fig:architecture} shows the overall system design that comprises two
 	\label{fig:forming}
 \end{figure}
 
-\emph{Network Manager} opens a communication channel, monitors peers' execution status, and handles faults. First, the module discovers all available nearby devices through WiFi Direct and check the availability of a cloud-based offloading server. By providing transparent operations between the offloading server and nearby mobile devices, our approach allows the programmer only to focus on his/her business logic. The \emph{Network Manager} sends a very short status inquiry message to the discovered devices and measures runtime conditions such as end-to-end latency, etc, and then each peer sends its information in a JSON format (see \ref{ss_dfp}). Next, \emph{Execution Manager} can determine the best execution strategy (e.g., peer-to-peer execution vs. cloud offloading, the optimal number of peers, the amount of data to be assigned to each peer, etc.). Once the available device list is determined, a communication channel is organized as described in Figure \ref{fig:forming}. Finally, the module keeps monitoring peers' execution status through WiFi Direct's exception handling mechanism, so that if there is any fault during the execution, \emph{Network Manager} catches the exception and then \emph{Execution Manager} immediately restarts the failed job locally. In addition to the exception handling mechanism, the module uses checksum to verify data integrity.
+\emph{Network Manager} opens a communication channel, monitors peers' execution status, and handles faults. First, the module discovers all available nearby devices through WiFi Direct and check the availability of a cloud-based offloading server. By providing transparent operations between the offloading server and nearby mobile devices, our approach allows the programmer only to focus on his/her business logic. The \emph{Network Manager} sends a very short status inquiry message to the discovered devices and measures runtime conditions such as end-to-end latency, etc, and then each peer sends its information in a JSON format (see \ref{ss_dfp}). Next, \emph{Execution Manager} can determine the best execution strategy (e.g., peer-to-peer execution vs. cloud offloading, the optimal number of peers, the amount of data to be assigned to each peer, etc.). Once the available device list is determined, a communication channel is organized as described in Figure \ref{fig:forming}. Finally, the module keeps monitoring peers' execution status through WiFi Direct's exception handling mechanism, so that if there is any fault during the execution, \emph{Network Manager} catches the exception and then \emph{Execution Manager} immediately restarts the failed job locally. In addition to the exception handling mechanism, the module uses the checksum to verify data integrity.
 
 Our approach mainly comprises two parts: a programming model and runtime system. We describe these parts in turn next.
 
@@ -262,7 +262,7 @@ The \texttt{DataParser} interface defines how data should be processed (e.g., re
 	\item \texttt{copyPartToPlaceholder()} merges partitioned and processed when a result is returned back to a caller from peers.
 \end{itemize}
 
-Through three case studies (Section \ref{sec:eval}), we evaluated our programming model (i.e., bitmap image processing, internet sharing, and GPS accessing). We will discuss how to use these APIs in Section \ref{sec:apiusage}.
+Through four case studies (Section \ref{sec:eval}), we evaluated our programming model (i.e., bitmap image processing, internet sharing, GPS accessing and offloading server utilizing). We will discuss how to use these APIs in Section \ref{sec:apiusage}.
 
 
 \subsection{Runtime System} \label{scheduling}
@@ -270,7 +270,7 @@ In this section, we discuss about (1) how to discover available peers and exchan
 %These problems will be addressed by our \texttt{DecisionMaker} module.
 
 \subsubsection{Discovering Available Peers}\label{ss_dfp}
-During the initialization phase, our runtime system first bootstraps the peer discovery process by sending a broadcast messages to nearby peers for collecting peers' information. Once a runtime system receives a status inquiry message from nearby devices, it immediately sends a response message in a JSON format as shown in Listing \ref{code:jsonResponse}. While most fields are self-explanatory, \texttt{RL} (Responsiveness Level) is a parameter that represents how favorable the selected peer is to execute the requested job. We will further discuss this parameter in Section \ref{ss_ers}. The \texttt{availability} parameter is determined by the current level of battery usage. By default, if a device's battery level is higher than 80\%, its value is set to \texttt{on}. Otherwise, it is \texttt{off}. However user can override this threshold by updating the \texttt{availability-threshold} property in the configuration file\footnote{We currently use a simple key-value configuration file to specify user-specific preferences.} before the runtime system starts. 
+During the initialization phase, our runtime system first bootstraps the peer discovery process by sending broadcast messages to nearby peers for collecting peers' information. Once a runtime system receives a status inquiry message from nearby devices, it immediately sends a response message in a JSON format as shown in Listing \ref{code:jsonResponse}. While most fields are self-explanatory, \texttt{RL} (Responsiveness Level) is a parameter that represents how favorable the selected peer is to execute the requested job. We will further discuss this parameter in Section \ref{ss_ers}. The \texttt{availability} parameter is determined by the current level of battery usage. By default, if a device's battery level is higher than 80\%, its value is set to \texttt{on}. Otherwise, it is \texttt{off}. However, the user can override this threshold by updating the \texttt{availability-threshold} property in the configuration file\footnote{We currently use a simple key-value configuration file to specify user-specific preferences.} before the runtime system starts. 
 
 \begin{figure} [!tbh]
 \noindent \shadowbox{
@@ -334,7 +334,7 @@ Usage_{CPU} = \frac{(\sum{T_{CPU2}} - T_{Idle2}) - (\sum{T_{CPU1}} - T_{Idle1})}
 where $\sum{T_{CPU}}$ and $T_{Idle}$ are the total active time and idle time, respectively.
 
 
-Finally, \emph{Responsiveness Level} (or $RL$) of a device is proportional to its resource capacities (e.g., the number of cores, CPU speed, total memory) while it is inversely proportional to resource usage. As a result, the more resources consumed, the more responding time the peer would take. Since we only consider the main system resources including CPU, memory and battery, we estimate $RL$ as follows:
+Finally, \emph{Responsiveness Level} (or $RL$) of a device is proportional to its resource capacities (e.g., the number of cores, CPU speed, total memory) while it is inversely proportional to resource usage. As a result, the more resources consumed, the more responding time the peer would take. Since we only consider the primary system resources including CPU, memory and battery, we estimate $RL$ as follows:
 
 \begin{equation}
 \label{eq:res_level}
@@ -342,22 +342,22 @@ Finally, \emph{Responsiveness Level} (or $RL$) of a device is proportional to it
 RL = \frac{N_{Cores} \times CPU_{Speed}}{Usage_{CPU}} + \frac{Mem_{Spec}}{Usage_{Mem}} + \frac{Batt_{Spec}}{Usage_{Batt} \times 1000}
 \end{equation}
 
-\noindent where $N_{Cores}$ is the number of CPU cores. $CPU_{Speed}$ is speed of a single core in GHz. $Mem_{Spec}$ is the memory capacity in GB. $Batt_{Spec}$ is the battery capacity in mAh. For example, the current CPU utilization is 30\%, half of 1GB memory is being allocated, and 70\% of a 2800uAh capacity battery has bee consumed. Then, $RL$ will be 
+\noindent where $N_{Cores}$ is the number of CPU cores. $CPU_{Speed}$ is the speed of a single core in GHz. $Mem_{Spec}$ is the memory capacity in GB. $Batt_{Spec}$ is the battery capacity in mAh. For example, the current CPU utilization is 30\%, half of 1GB memory is being allocated, and 70\% of a 2800uAh capacity battery has bee consumed. Then, $RL$ will be 
 
 \begin{small} $$RL = \frac{5.2}{0.3} + \frac{1}{0.5} + \frac{2800}{0.7 \times 1000} = 23.33$$ \end{small}
 
-The higher value of $RL$ means the higher availability of the peer. Thus, if the selected peer is a powerful cloud-based server connected, $Batt_{Spec}$ can be considered $\infty$ and $Usage_{Batt}$ is 0. According to Equation \ref{eq:res_level}, its $RL$ ($RL_{offload}$) will be $\infty$. In our proof-of-concept implementation, to reduce the overhead caused by the calculation on the caller side, the $RL$ value is pre-calculated on each peer and then sent back to the caller in response to the inquiry message.
+The higher value of $RL$ means the greater availability of the peer. Thus, if the selected peer is a powerful cloud-based server connected, $Batt_{Spec}$ can be considered $\infty$ and $Usage_{Batt}$ is 0. According to Equation \ref{eq:res_level}, its $RL$ ($RL_{offload}$) will be $\infty$. In our proof-of-concept implementation, to reduce the overhead caused by the calculation on the caller side, the $RL$ value is pre-calculated on each peer and then sent back to the caller in response to the inquiry message.
 
 
 \subsubsection{Estimating Energy Consumption}
 When executing a task, an application may consume energy dedicating for running that task ($E$) and overhead during the execution (ex. maintaining GUI or callbacks - $E_{overhead}$). Therefore, the total energy the application may use during the execution ($E_{0}$) can be calculated as follows:
 $$E_{0} = E + E_{overhead}$$
 
-When the device joins P2P network, the task will be splitted into smaller jobs, one is assigned to the caller and the others are executed on remote peers. The one assigned to the caller has data size $M(\frac{RL_{caller}}{\sum_{j \neq caller}{RL_{i}}})$, (Equation \ref{eq:data_amount}). Theoretically, it will consume an amount of energy equivalent to $E(\frac{RL_{caller}}{\sum_{i \neq caller}{RL_{i}}})$. To dispatch the jobs to the other peers, the application has to maintain Wi-Fi connections ($E_{WiFi}$) and wait for the responses ($E_{overload}$). Then the total energy consumed by application when running task in P2P network can be estimated like below
+When the device joins P2P network, the task will be split into smaller jobs, one is assigned to the caller and the others are executed on remote peers. The one assigned to the caller has data size $M(\frac{RL_{caller}}{\sum_{j \neq caller}{RL_{i}}})$, (Equation \ref{eq:data_amount}). Theoretically, it will consume an amount of energy equivalent to $E(\frac{RL_{caller}}{\sum_{i \neq caller}{RL_{i}}})$. To dispatch the jobs to the other peers, the application has to maintain Wi-Fi connections ($E_{WiFi}$) and wait for the responses ($E_{overload}$). Then the total energy consumed by application when running task in P2P network can be estimated like below
 
 \begin{small} $$E_{p2p} = E(\frac{RL_{caller}}{\sum_{i \neq caller}{RL_{i}}}) + E_{WiFi} + E_{overload}$$  \end{small}
 
-Where $RL_{i} (i \neq caller)$ is the Responsibility Level of i-peer. In our estimation, we do not consider $E_{overload}$ because it will depend on the appearance of applications. If an application has no GUI, $E_{overload}$ will cause very little effect. From the two above equations, we can calculate the difference of energy consumption between two job processing mechanisms:
+Where $RL_{i} (i \neq caller)$ is the Responsibility Level of i-peer. In our estimation, we do not consider $E_{overload}$ because it will depend on the appearance of applications. If an application has no GUI, $E_{overload}$ will cause a very little effect. From the two above equations, we can calculate the difference of energy consumption between two job processing mechanisms:
 
 \begin{small} $$E_{Diff} = E_{0} - E_{p2p}$$ \end{small} Or 
 \begin{equation}
@@ -426,14 +426,14 @@ The three above steps are implemented in the Algorithm \ref{alg:select_peers} be
 \end{algorithm}
 
 \subsubsection{Partitioning Data}\label{ss_jqfp}
-After determining appropriate peers, the runtime system partitions the data to be sent along with a job. As a result, the runtime system can ensure that each peer receives appropriate amount of job that is suitable to execute. Specifically, the appropriate amount of data sent to peers is calculated as follows:
+After determining appropriate peers, the runtime system partitions the data to be sent along with a job. As a result, the runtime system can ensure that each peer receives an appropriate amount of job that is suitable to execute. Specifically, the appropriate amount of data sent to peers is calculated as follows:
 \begin{equation} 
 \label{eq:data_amount} \small
 M_{i} = M\frac{RL_{i}}{\sum_{j = \overline{1,n}}{RL_{j}}}
 \end{equation}
 
 \noindent 
-where $M$ is total size of data in bytes, $n$ is the number of active peers, and $j$-peer has its \emph{Responsibility Level}, $RL_{j}$, respectively. If an offloading server is available, we calculate the amount of data sent to the server $M_{offload}$
+where $M$ is the total size of data in bytes, $n$ is the number of active peers, and $j$-peer has its \emph{Responsibility Level}, $RL_{j}$, respectively. If an offloading server is available, we calculate the amount of data sent to the server $M_{offload}$
 
 \begin{small}
 $$M_{offload} = M\frac{RL_{offload}}{\sum_{j = \overline{1, n}}{RL_{j}}} = M\frac{1}{1 + \frac{\sum_{j \neq offload}{RL_{j}}}{RL_{offload}}}$$
@@ -443,7 +443,7 @@ From Section \ref{ss_ers}, we know that $RL_{offload}$ is $\infty$ for the offlo
 
 Based on these estimations, we design Algorithm \ref{alg:assign_job} that assigns appropriate amounts of data to each peer through the following steps:
 \begin{itemize} \denseitems
-	\item Calculate the total size of data ($M$) and the responsiveness level for all peers ($RL_{Total}$).
+	\item Calculate the total size of data ($M$) and the responsiveness level of all peers ($RL_{Total}$).
 	\item Estimate the data size to be sent to each peer ($M_{i}$) and then partition data into smaller parts using \texttt{DataParser.getSinglePart()}.
 	\item Produce $n$ distribution units containing an extended \texttt{Job} class and a \texttt{JobData} instance.
 	\item Dispatch each distribution to each peer.
@@ -493,7 +493,7 @@ Computational offloading \cite{kwon+:icsm13} has received much attention as an e
 
 \subsubsection{Handling Runtime Exceptions}
 %To handle execution failures, as well as 
-Due to the nature of volatile mobile networks, partial failure may occur because each component of a distributed execution (e.g., peers, offloading server, or the network) can fail independently. Thus, to ensure all jobs are completely executed at peers and their results are returned back to a caller, our runtime system listens to network-related updates (e.g, network join/leave events from the \texttt{BroadcastReceiver} class) and as well as catching exceptions thrown from the underlying system (e.g., TCP socket, WiFi Direct Controller, Android). Moreover, we use a simple checksum mechanism to check the integrity of execution results. If any types of execution failures occur, the \emph{Execution Manager} module immediately re-execute the failed job on the caller side.
+Due to the nature of volatile mobile networks, partial failure may occur because each component of a distributed execution (e.g., peers, offloading server, or the network) can fail independently. Thus, to ensure all jobs are completely executed at peers and their results are returned to a caller, our runtime system listens to network-related updates (e.g., network join/leave events from the \texttt{BroadcastReceiver} class) and as well as catching exceptions thrown from the underlying system (e.g., TCP socket, WiFi Direct Controller, Android). Moreover, we use a simple checksum mechanism to check the integrity of execution results. If any types of execution failures occur, the \emph{Execution Manager} module immediately re-execute the failed job on the caller side.
 
 %By comparing the previous and updated peer lists, we can figure out which devices are joining or leaving. Our middleware keeps the copies of all the running jobs after dispatching. If a job is being executed on a begone peer, the caller will use its copy to run it locally instead.
   
@@ -517,15 +517,15 @@ We have evaluated the effectiveness of our approach in improving energy- and per
 \end{tabular}
 \end{table}
 
-\subsection{Micro Benchmark}
-The purpose of this micro benchmark is to understand the overhead imposed by our runtime system, whose responsibilities include constructing a peer to peer network, monitoring nearby peers, and steering job executions. Figure (\ref{fig:microb_24}) shows the amount of energy consumed to maintain the constructed peer to peer network. Surprisingly, the number of peers does not influence the total energy consumption. This result is completely harmonized with results from \cite{wifi_energy}, especially since we transmit the same amount of data regularly over Wi-Fi connection. From the statistic information we collected, the energy variability of one device within P2P network in idle condition can be represented by the following linear formula:
+\subsection{Micro-benchmark}
+The purpose of this micro-benchmark is to understand the overhead imposed by our runtime system, whose responsibilities include constructing a peer to peer network, monitoring nearby peers, and steering job executions. Figure (\ref{fig:microb_24}) shows the amount of energy consumed to maintain the constructed peer to peer network. Surprisingly, the number of peers does not influence the total energy consumption. This result is completely harmonized with results from \cite{wifi_energy}, especially since we transmit the same amount of data regularly over Wi-Fi connection. From the statistic information we collected, the energy variability of one device within P2P network in idle condition can be represented by the following linear formula:
 \begin{equation} \small
 \label{eq:wifi_overload}
 E_{WiFi} = t \times 50
 \end{equation}
 
 \noindent 
-where $t$ is accumulated time in seconds and $E_{WiFi}$ is energy used by system in uAh (micro ampere hour).
+where $t$ is accumulated time in seconds and $E_{WiFi}$ is energy used by the system in uAh (micro ampere hour).
 
 \begin{figure}
 	\hspace*{-0.15cm}
@@ -546,7 +546,7 @@ Next, we present how one can implement a mobile application using the provided p
 
 %Also, to support dynamic class loading in Dalvik VM, we provide the \texttt{DexCreator} commandline tool that compiles the \texttt{Job} Java class file into a Dex package. The Dex package and sliced resources are packed as a \texttt{JobData} object by \texttt{JobDispatcher} and then dispatched to the available mobile devices or the cloud-based server. Next, the recipient of the \texttt{JobData} checks a checksum field to confirm the consistency, and then deserializes the object into \texttt{Job} and resources for the execution.
 
-\textbf{\emph{Data Parser:}} Next, the programmer needs to write the \texttt{DataParser} class, so that any uder-defined data can be processed at remote locations. The following code snippet \ref{code:get_single_part} shows how the programmer can partition an image file for his/her image processing application.
+\textbf{\emph{Data Parser:}} Next, the programmer needs to write the \texttt{DataParser} class, so that any user-defined data can be processed at remote locations. The following code snippet \ref{code:get_single_part} shows how the programmer can partition an image file for his/her image processing application.
 
 %\texttt{ExecutionHandler} is the main component which wraps up the complexity, and exposes only the necessary functions like \texttt{discoverPeers()} and \texttt{dispatchJob()}. To send ACK messages to other peers for exchanging acknowledgments and reforming network, we need to call \texttt{discoverPeers()} function on the program, which should be done as soon as the application starts.
 
@@ -625,12 +625,12 @@ Handler UIHandler = new Handler() {
 %\end{figure}
 
 \subsection{Case Study}
-To measure the performance of the system equipped with our APIs, we experimented with 4 case studies using five different Android devices and 1 offloading server at an emulated testbed:
+To measure the performance of the system equipped with our APIs, we experimented with four case studies using five different Android devices and one offloading server at an emulated testbed:
 \begin{itemize} \denseitems
-	\item \textbf{Image Processing:} In this case study, we initiated a P2P network to blur a large size image, which could not be loaded and processed on any single mobile device due to the limited memory space in mobile devices. Then, we distributed the blurring job to one to four mobile devices. 
+	\item \textbf{Image Processing:} In this case study, we initiated a P2P network to blur a large size image, which could not be loaded and processed on any single mobile device due to the limited memory space on mobile devices. Then, we distributed the blurring job to one to four mobile devices. 
 	%Particularly, to process an image with size $4000 \times 4000$ and 4 bytes to express each pixel color, application must spare the amount of memory equivalent to 64MB which is way too much for a device, which occasionally returns out of memory exception.
 	\item \textbf{Internet Access:} In this case study, we defined an Internet access request job for a mobile device that has limited/intermittent Internet connections, so that mobile applications could download remote data.
-	\item \textbf{GPS Sharing:} Because establishing a GPS connection is a highly energy-intensive operation, it would be impossible for a device with low battery to frequently update its location information. We built a simple application that can benefit GPS locations from healthier devices. In addition, our system can be used for Internet of Things devices that do not have GPS sensors.
+	\item \textbf{GPS Sharing:} Because establishing a GPS connection is a highly energy-intensive operation, it would be impossible for a device with a low battery to frequently update its location information. We built a simple application that can benefit GPS locations from healthier devices. In addition, our system can be used for Internet of Things devices that do not have GPS sensors.
 	\item \textbf{Using Offloading Server:} By installing Android x86 platform on a PC server, we can turn the server into a powerful and power-wired Android device and run our middleware on it without any modification.
 \end{itemize}
 
