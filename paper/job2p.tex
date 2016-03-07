@@ -346,7 +346,7 @@ RL = \frac{N_{Cores} \times CPU_{Speed}}{Usage_{CPU}} + \frac{Mem_{Spec}}{Usage_
 
 \begin{small} $$RL = \frac{5.2}{0.3} + \frac{1}{0.5} + \frac{2800}{0.7 \times 1000} = 23.33$$ \end{small}
 
-The higher value of $RL$ means the higher availability of the peer. Thus, if the selected peer is a powerful cloud-based server connected, $Batt_{Spec}$ can be considered $\infty$ and $Usage_{Batt}$ is 0. According to Equation \ref{eq:res_level}, its $RL$ will be $\infty$. In our proof-of-concept implementation, to reduce the overhead caused by the calculation on the caller side, the $RL$ value is pre-calculated on each peer and then sent back to the caller in response to the inquiry message.
+The higher value of $RL$ means the higher availability of the peer. Thus, if the selected peer is a powerful cloud-based server connected, $Batt_{Spec}$ can be considered $\infty$ and $Usage_{Batt}$ is 0. According to Equation \ref{eq:res_level}, its $RL$ ($RL_{offload}$) will be $\infty$. In our proof-of-concept implementation, to reduce the overhead caused by the calculation on the caller side, the $RL$ value is pre-calculated on each peer and then sent back to the caller in response to the inquiry message.
 
 
 \subsubsection{Estimating Energy Consumption}
@@ -627,7 +627,7 @@ Handler UIHandler = new Handler() {
 \subsection{Case Study}
 To measure the performance of the system equipped with our APIs, we experimented with 4 case studies using five different Android devices and 1 offloading server at an emulated testbed:
 \begin{itemize} \denseitems
-	\item \textbf{Image Processing:} In this case study, we initiated a P2P network to blur a large size image, which could not be loaded and processed on a any single mobile device due to the limited memory space in mobile devices. Then, we distributed the blurring job to one to four mobile devices. 
+	\item \textbf{Image Processing:} In this case study, we initiated a P2P network to blur a large size image, which could not be loaded and processed on any single mobile device due to the limited memory space in mobile devices. Then, we distributed the blurring job to one to four mobile devices. 
 	%Particularly, to process an image with size $4000 \times 4000$ and 4 bytes to express each pixel color, application must spare the amount of memory equivalent to 64MB which is way too much for a device, which occasionally returns out of memory exception.
 	\item \textbf{Internet Access:} In this case study, we defined an Internet access request job for a mobile device that has limited/intermittent Internet connections, so that mobile applications could download remote data.
 	\item \textbf{GPS Sharing:} Because establishing a GPS connection is a highly energy-intensive operation, it would be impossible for a device with low battery to frequently update its location information. We built a simple application that can benefit GPS locations from healthier devices. In addition, our system can be used for Internet of Things devices that do not have GPS sensors.
@@ -636,7 +636,7 @@ To measure the performance of the system equipped with our APIs, we experimented
 
 
 \subsubsection{Image Processing}
-We applied the blur effect, one of the high energy consuming image processes. We ran the test repeatedly with two images that have different sizes: the big image has size $4326 \times 2856$ and the smaller one has size $2500 \times 1405$. For the big one, with 4 bytes allocated for each pixel, device had to allocate around $50MB$ of heap to open and another $50MB$ to hold the result, thus leading to app crashes every time. This overload problem will only be solved with the help of other collaborative peers.
+We applied the blur effect, one of the high energy consuming image processes. We ran the test repeatedly with two images that have different sizes: the big image has size $4326 \times 2856$ and the smaller one has size $2500 \times 1405$. For the big one, with 4 bytes allocated for each pixel, the device had to allocate around $50MB$ of the heap to open and another $50MB$ to hold the result, thus leading to app crashes every time. This overload problem will only be solved with the help of other collaborative peers.
 
 \begin{figure*}
 	\centering
@@ -669,15 +669,15 @@ The most important part when implementing the image processing app using the pro
 %Once the complete bitmap data are received, the system sends the \texttt{MAIN\_JOB\_DONE} message to the UI, in which \texttt{msg.obj} contains the final bitmap.
 
 
-\textbf{\emph{Performance with a large scale image:}}
-Running a large scale image test case throughout 50 tests by increasing number of devices from 1 to 4 within the P2P network, we found that the test case didn't work if only one device executed desolately. By splitting the image process into two threads, we realized that only 1 thread worked, the other could not due to out of memory exception. 
+\textbf{\emph{Performance with a large-scale image:}}
+Running a large-scale image test case throughout 50 tests by increasing the number of devices from 1 to 4 within the P2P network, we found that the test case didn't work if only one device executed desolately. By splitting the image process into two threads, we realized that only 1 thread worked, the other could not due to out of memory exception. 
 
 By increasing the number of devices in P2P network from 2 to 4 and sending image processing jobs to the other peers, we gathered average statistic data in 20 tests as in the Figure (\ref{fig:cluster_performance} - left) (groups of 2, 3 and 4 peers). In this Figure, to accomplish the task, the two peers have to work in $13,541ms$ average. The execution time reduced when more peers participated the group, down to $7387ms$ average when 4 peers joined the group, which is twice as fast as having 2 peers (notice that system didn't fully work with only one device).
 
-To measure energy consumption on each peer, we used Monsoon Power Monitor \cite{moosoon} to measure the velocity of energy drained on the calling device when utilizing power from the other peers. Figure \ref{fig:cluster_performance} (right) shows the energy consumption measurements from the two consecutive tests. The graph shows that the variability of energy consumption between the clusters of 2, 3 and 4 peers matches with the time consumption graph. By running the test with the same input for 20 times, we realized that the results didn't change. Also, by adding more than 3 peers, we can significantly reduce energy consumption for the image processing task to up to 25\%. However we realized that the performance didn't significantly increase when 6 or more peers participating network. This can be explained by Amdahl's law \cite{amdahl}. Through our experiments, the number of peers at 3 to 5 will maximize the benefit in terms of energy saving and performance.
+To measure energy consumption on each peer, we used Monsoon Power Monitor \cite{moosoon} to measure the velocity of energy drained on the calling device when utilizing power from the other peers. Figure \ref{fig:cluster_performance} (right) shows the energy consumption measurements from the two consecutive tests. The graph shows that the variability of energy consumption between the clusters of 2, 3 and 4 peers matches with the time consumption graph. By running the test with the same input for 20 times, we realized that the results didn't change. Also, by adding more than 3 peers, we can significantly reduce energy consumption for the image processing task to up to 25\%. However, we realized that the performance didn't significantly increase when 6 or more peers participating network. This can be explained by Amdahl's law \cite{amdahl}. Through our experiments, the number of peers at 3 to 5 will maximize the benefit in terms of energy saving and performance.
 
-\textbf{\emph{Performance with a normal scale image:}}
-We performed the image processing test on the input image with size $2500 \times 1405$. By reconfiguring the clusters with number of peers from 1 to 4, and measure total execution time on the caller, we gathered performance report as shown in the Figure \ref{fig:small_img_perf}. From our statistic data, the total time consumed by one device to run on itself is slightly fluctuated around $5400ms$ between 20 measurements. If one more peer joined the network, the time consumption is decreased to $3500ms$ which is 35\% faster. When more peers (3 or 4) participated, the performance of the caller will continuously increase, although their finishing time largely varied. Specifically the cluster with four peers collaboratively executed twice as fast as one device.
+\textbf{\emph{Performance with a normal-scale image:}}
+We performed the image processing test on the input image with size $2500 \times 1405$. By reconfiguring the clusters with the number of peers from 1 to 4, and measure total execution time on the caller, we gathered performance report as shown in the Figure \ref{fig:small_img_perf}. From our statistic data, the total time consumed by one device to run on itself is slightly fluctuated around $5400ms$ between 20 measurements. If one more peer joined the network, the time consumption is decreased to $3500ms$ which is 35\% faster. When more peers (3 or 4) participated, the performance of the caller will continuously increase, although their finishing time largely varied. Specifically the cluster with four peers collaboratively executed twice as fast as one device.
 
 Essentially the variability and fluctuation of energy consumption will reflect the performance (time consumption), Figure (\ref{fig:small_img_perf} - right) displays the details. Through our experiments, running the cluster with 2 peers will preserve 20\% energy compare with 1 device, the efficiency increased in cluster with 3 peers ($34\%$) and 4 peers ($37.5\%$).
 
@@ -691,16 +691,15 @@ Essentially the variability and fluctuation of energy consumption will reflect t
 %\end{figure}
 
 \subsubsection{Internet Access} 
-Theoretically, remote accessibility won't help reducing the amount of bytes downloaded, however the speed is ameliorated since the downloading process is scattered over a number of peers. Thus less energy will be consumed. 
+Theoretically, remote accessibility won't help reduce the number of bytes downloaded, however, the speed is ameliorated since the downloading process is scattered over a number of peers. Thus, less energy will be consumed. 
 
 \textbf{\emph{Design:}}
-For this case study, we defined job business is to download content from an URL, and the job content will comprise of URL, number of parts and index of the part. We also defined the initial criteria to select only the peers having Internet connection (\texttt{IRS[network]} at \texttt{high} or \texttt{low}). Once 
-remote peers receive a job request message, their \texttt{Execution Manager} module executes the job that loads the URL and archives HTML pages locally. 
+For this case study, we defined job business is to download content from a URL, and the job content will comprise of three objects: URL, the number of parts and index of the part. We also defined the initial criteria to select only the peers having Internet connection (\texttt{IRS[network]} at \texttt{high} or \texttt{low}). Once remote peers receive a job request message, their \texttt{Execution Manager} module executes the job that loads the URL and archives HTML pages locally. 
 
 As discussed in Section Section \ref{prog_model}, to process the downloaded files including multimedia links (images, audio, videos), CSS, and JS, the programmer must implement the \texttt{DataParser} interface.Thus, our \texttt{NetDataParser} class packs all the downloaded files into one single file, which is sent back to the caller. Finally, these HTML files are opened by the Android Web browser component using a local web server, for instance, NanoHttpd \cite{nanohttpd}.
 
 \textbf{\emph{Performance:}}
-Figure (\ref{fig:net_clusters_perf} - left) describes the performance of the clusters with the number of peers varied from one to four when rendering URLs from the CNN website. At one pile, each area describes the execution time of each corresponding peer, and the pile peak is reached when the last peer completes its job. Executing Internet access remotely through a P2P network brings a high benefit in terms of performance. For example, rendering time can be reduced by almost a half when three peers participated in network. 
+Figure (\ref{fig:net_clusters_perf} - left) describes the performance of the clusters with the number of peers varied from one to four when rendering URLs from the CNN website. At one pile, each area describes the execution time of each corresponding peer, and the pile peak is reached when the last peer has completed its job. Executing Internet access remotely through a P2P network brings a high benefit in terms of performance. For example, rendering time can be reduced by almost a half when three peers participated in the network. 
 
 
 \begin{figure*}
@@ -716,10 +715,10 @@ Figure (\ref{fig:net_clusters_perf} - left) describes the performance of the clu
 Figure \ref{fig:net_clusters_perf} (right) depicts the outcome of the energy test. In the cluster with more than 3 peers, the energy consumption remarkably decreased up to 50\% in compare with the 1-peer cluster.
 
 \subsubsection{GPS Sharing}
-Connecting and retrieving the GPS location is really energy consuming. Generally the smartphone will enable and contact at least 3 satellites through radio signals in order to start retrieving the GPS location (4 satellites to get more information like altitude). Therefore, energy can be saved if GPS requests are relayed to another peer in P2P network which is healthier (little battery usage or CPU is in idle state) or has better specifications.
+Connecting and retrieving the GPS location is really energy consuming. Generally the smartphone will enable and contact at least 3 satellites through radio signals in order to start retrieving the GPS location (4 satellites to get more information like altitude). Therefore, energy can be saved if GPS requests are relayed to another peer in P2P network, which is healthier (less battery usage or CPU is in idle state) or has better specifications.
 
 \textbf{\emph{Design:}}
-With GPS Share, only one peer is entrusted. Our strategy is letting the caller to select the peer having GPS enabled and largest value of $RL$ by configuring the caller with initiative criteria comprise of \texttt{max} $RL$ and \texttt{GPS} is \texttt{on}. Regarding job definition, we utilize the \texttt{LocationManager} object from Android SDK to retrieve one single location result per each request and store the result to a simple string. For remote GPS request, we have to avoid callback function calls from \texttt{LocationManager}; therefore, retrieving multiple requests periodically is not effective.
+With GPS Share, only one peer is entrusted. Our strategy is letting the caller to select the peer having GPS enabled and largest value of $RL$ by configuring the caller with initiative criteria comprise of \texttt{max} $RL$ and \texttt{GPS} is \texttt{on}. Regarding job definition, we utilize the \texttt{LocationManager} object from the Android SDK to retrieve one single location result per each request and store the result to a simple string. For remote GPS request, we have to avoid callback function calls from \texttt{LocationManager}; therefore, retrieving multiple requests periodically is not effective.
 
 
 \textbf{\emph{Performance:}}
@@ -741,12 +740,12 @@ By integrating our system with either RetroSkeleton \cite{retro-skel} or Rio \ci
 \end{figure*}
 
 \subsubsection{With Offloading Server}
-Lastly, we compare peer to peer- and offloading server-based executions in terms of performance and energy efficiency.
+Lastly, we compare peer to peer- and offloading server-based executions regarding performance and energy efficiency.
 
 \textbf{\emph{Experimental Setup:}}
 For an offloading server, we installed Android x86 platform on a PC, so that we could host our implementations without any modification. Only the server address was configured in advance. 
 
-If a caller determines that executing a job at the offloading server is more beneficial than executing through nearby devices, it connects to the server and disconnects the communication channels established with the other peers. Then, the runtime system offloads the whole job to the server with data. One copy of the job will be maintained at the caller for handling faults.
+If a caller determines that executing a job on the offloading server is more beneficial than running through nearby devices, it will connect to the server and disconnects the communication channels established with the other peers. Then, the runtime system offloads the whole job to the server with data. One copy of the job will be maintained at the caller for handling faults.
 
 To emulate different networks (LAN, WLAN and WAN), we have used \texttt{Network Emulator for Windows Toolkit} \cite{newt}, a popular network emulator. Particularly, we set 0ms latency for LAN, 50ms for WLAN, and 150ms for WAN.
 
@@ -755,18 +754,18 @@ To emulate different networks (LAN, WLAN and WAN), we have used \texttt{Network 
 We experimented with the image processing case study with the same small-scale image. When increasing the latencies of both incoming and out-going packages of the server network from 0 to 500ms, we observed that the time and energy consumption also steadily increased (Figure \ref{fig:off_all}). We have the following observations:
 \begin{itemize} \denseitems
 	\item The cloud offloading in WAN environment (i.e., limited and intermittent latency/bandwidth) has limited benefits in terms of performance and energy efficiency compared to the P2P-based offloading.
-	\item The cloud offloading in WLAN environment (i.e., moderate latency/bandwidth), is sometimes more beneficial than the P2P-based offloading in terms of enery efficiency, but does not have performance benefits.
+	\item The cloud offloading in WLAN environment (i.e., moderate latency/bandwidth), is sometimes more beneficial than the P2P-based offloading in terms of energy efficiency but does not have performance benefits.
 	\item The cloud offloading in LAN environment (i.e., favorable latency/bandwidth)completely overwhelms the P2P-based offloading regardless of the number of peers.
 \end{itemize}
 
-As a result, we can argue that different offloading mechanisms should be selected in accordance with different network conditions (i.e., latency/bandwidth characteristics) and different jobs (i.e., computation-intensive vs. sensor-based executions) in a dynamic, adaptive way to achieve further optimizations. 
+As a result, we can argue that different offloading mechanisms should be selected in accordance with various network conditions (i.e., latency/bandwidth characteristics) and different jobs (i.e., computation-intensive vs. sensor-based executions) in a dynamic, adaptive way to achieve further optimizations. 
 %\cite{ELI}
 
 %When comparing with the previous results executing on a peer-to-peer network through nearby devices, 
 \subsection{Threats to Validity}
-The results presented above are subject to internal and external validity threats. The internal validity is threatened by how the interactive subject applications were exercised. The performance and energy consumption of interaction applications depend on how the user chooses to use them. To minimize this threat, the benchmarked use cases were fixed to using the same media (i.e., picture file), location (i.e., GPS coordinates), and Internet URL. Another internal validity threat is the fashion in which we implemented the jobs (e.g., blur effect). To minimize this threat, we took advantage of built-in Android libraries to implement these jobs.
+The results presented above are subject to internal and external validity threats. The internal validity is threatened by how the interactive subject applications were exercised. The performance and energy consumption of interaction applications depend on how the user chooses to use them. To minimize this threat, the benchmarked use cases were fixed to using the same media (i.e., picture file), location (i.e., GPS coordinates), and Internet URL. Another internal validity threat is the fashion in which we implemented the jobs (e.g., blur effect). To minimize this menace, we took advantage of built-in Android libraries to implement these jobs.
 
-The external validity is threatened by the mechanism to measure energy consumption. We measure the physical consumed energy directly using a power monitoring tool, which does not isolate the energy consumption of the subject applications from the total energy consumption of the whole mobile device. Thus, the energy consumption of the subject applications are subject to background services. To minimize this threat, we uninstalled all the third-party applications and stopped unnecessary background services.
+The external validity is threatened by the mechanism to measure energy consumption. We measure the physical consumed energy directly using a power monitoring tool, which does not isolate the energy consumption of the subject applications from the total energy consumption of the whole mobile device. Thus, the energy consumption of the subject applications is subject to background services. To minimize this threat, we uninstalled all the third-party applications and stopped unnecessary background services.
 
 \begin{figure*}
 	\centering
