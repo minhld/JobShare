@@ -1,0 +1,10 @@
+set boxwidth 0.35
+set style data histograms
+set xtics font "Verdana,11"
+set xtics rotate 45
+set ytics font "Verdana,12"
+set grid nopolar
+set style fill solid 1
+set ylabel "Energy Consumption (uAh)" 
+set yrange [ 0 : 800 ]
+plot 'D:\android\projects\JobShare\paper\data\gnuplot\off_all_compare_img_small.dat' using 2:xticlabels(1) title 'Energy drained for process' with boxes lt rgb "#666" fillstyle pattern 1

@@ -525,7 +525,7 @@ E_{WiFi} = t \times 50
 \end{equation}
 
 \noindent 
-where $t$ is accumulated time in milliseconds and $E_{WiFi}$ is energy used by system in uAh (micro ampere hour).
+where $t$ is accumulated time in seconds and $E_{WiFi}$ is energy used by system in uAh (micro ampere hour).
 
 \begin{figure}
 	\hspace*{-0.15cm}
@@ -629,6 +629,7 @@ To measure the performance of the system equipped with our APIs, we experimented
 	%Particularly, to process an image with size $4000 \times 4000$ and 4 bytes to express each pixel color, application must spare the amount of memory equivalent to 64MB which is way too much for a device, which occasionally returns out of memory exception.
 	\item \textbf{Internet Access:} In this case study, we defined an Internet access request job for a mobile device that has limited/intermittent Internet connections, so that mobile applications could download remote data.
 	\item \textbf{GPS Sharing:} Because establishing a GPS connection is a highly energy-intensive operation, it would be impossible for a device with low battery to frequently update its location information. We built a simple application that can benefit GPS locations from healthier devices. In addition, our system can be used for Internet of Things devices that do not have GPS sensors.
+	\item \textbf{Using Offloading Server:} By installing Android x86 platform on a PC server, we can turn the server into a powerful and power-wired Android device and run our middleware on it without any modification.
 \end{itemize}
 
 
@@ -736,6 +737,47 @@ By integrating our system with either RetroSkeleton \cite{retro-skel} or Rio \ci
 	\caption{Performance and energy consumption comparison between remote and local GPS sensing.}
 	\label{fig:gps_perf}
 \end{figure*}
+
+\subsubsection{With Offloading Server}
+
+\textbf{\emph{Design}}
+Like aforementioned, by installing Android x86 platform onto a PC server, we turned it into a powerful Android device that is able to host our middleware without any modification. The only difference is that the server will assign IP to the \texttt{device} property in IRS response instead of using device's name to inform the other peers that it is a server. 
+
+When caller recognizes a server, it will immediately connect to that server and unbind connections to the other peers. Later, it will offload the whole task with data to the server. One copy of the task will be maintained at the caller, it will be used for fault tolerance when server does not respond in a period of time defined in the caller's configuration file.
+
+To simulate different networks (LAN, WLAN and WAN), we installed a proxy software on our server to interfere network connection and setup the latency on it. Particularly, we set 0ms latency to emulate LAN, 50ms for WLAN and 150ms for WAN.
+
+\textbf{\emph{Performance}}
+In this experiment, we performed again the image processing test with the same small-scale image. By increasing the latencies of both incoming and out-going packages of the server network from 0 to 500ms, we noticed that time and energy consumption also steadily increased (Figure \ref{fig:off_all}). However when latency is higher than 400, the slope of consumption becomes less steep.
+
+Compare with results of the last image processing test, data in Figure \ref{fig:off_compare_img} shows out some important points
+\begin{itemize} \denseitems
+	\item Offloading technique in WAN environment (Slow speed connection) doesn't give any benefit about time or energy efficiency in compare with P2P collaboration.
+	\item In WLAN environment (Medium speed), offloading is somewhat more efficient in energy consumption than P2P, but it is not obvious with time consumption.
+	\item In LAN environment (High speed), or similar network capacities, offloading completely overwhelmed P2P collaboration regardless of the number of peers.
+\end{itemize}
+
+\begin{figure*}
+	\centering
+	%\resizebox{0.36\textwidth}{!}{
+		\includegraphics[width=.42\textwidth]{data/off_multi_perf.pdf}
+		\includegraphics[width=.42\textwidth]{data/off_multi_energy.pdf}
+	%}
+	\caption{Performance and energy consumption comparison between remote and local GPS sensing.}
+	\label{fig:off_all}
+\end{figure*}
+
+\begin{figure*}
+	\centering
+	%\resizebox{0.36\textwidth}{!}{
+		\includegraphics[width=.42\textwidth]{data/off_compare_img_perf.pdf}
+		\includegraphics[width=.42\textwidth]{data/off_compare_img_energy.pdf}
+	%}
+	\caption{Performance and energy consumption comparison between remote and local GPS sensing.}
+	\label{fig:off_compare_img}
+\end{figure*}
+
+According to that, we can see that offloading mechanisms does not always bring the high performance. Depend on network characteristics (bandwidth or latency), we can decide which model to setup to maximize performance and energy efficiency for the circumstance.
 
 \subsection{Threats to Validity}
 The results presented above are subject to internal and external validity threats. The internal validity is threatened by how the interactive subject applications were exercised. The performance and energy consumption of interaction applications depend on how the user chooses to use them. To minimize this threat, the benchmarked use cases were fixed to using the same media (i.e., picture file), location (i.e., GPS coordinates), and Internet URL. Another internal validity threat is the fashion in which we implemented the jobs (e.g., blur effect). To minimize this threat, we took advantage of built-in Android libraries to implement these jobs.

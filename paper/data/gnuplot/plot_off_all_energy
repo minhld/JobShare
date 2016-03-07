@@ -1,0 +1,20 @@
+# set terminal png transparent nocrop enhanced size 450,320 font "arial,8" 
+# set output 'datastrings.5.png'
+set boxwidth 0.5 absolute
+set style fill   solid 1.00 border lt -1
+set grid nopolar
+set grid nopolar
+set key inside right top vertical Right noreverse enhanced autotitle columnhead nobox
+set pointsize 2
+set xtics border in scale 0,0 mirror norotate  autojustify
+set xtics  norangelimit
+set xrange [ -0.500000 : 11.5000 ] noreverse nowriteback
+set ylabel "Energy Consumption (uAh)" 
+set xlabel "Latency (ms)" 
+set xtics font "Verdana,12"
+set ytics font "Verdana,12"
+set yrange [ 0 : 600 ] noreverse nowriteback
+set yrange [ 0 : 1200 ] noreverse nowriteback
+set bmargin  3
+x = 0.0
+plot 'D:/android/projects/JobShare/paper/data/gnuplot/off_all.dat' using 0:2:xtic(1) with linespoints ls 3 lw 2 ps 1 lc rgb "blue" title "Energy Consumption"
