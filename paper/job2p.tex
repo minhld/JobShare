@@ -357,7 +357,7 @@ Next, depending on the amount of job and data, an appropriate number of peers sh
 	\item \emph{Otherwise}: Select a list of available peers that have larger \texttt{"RL"} and meet other selection criteria.
 \end{itemize}
 
-The 3 above steps are implemented in the Algorithm \ref{alg:select_peers} below.
+The three above steps are implemented in the Algorithm \ref{alg:select_peers} below.
 
 \begin{algorithm}
 \caption{Selecting Available Peers}
@@ -540,12 +540,12 @@ where $t$ is accumulated time in seconds and $E_{WiFi}$ is energy used by system
 \label{sec:apiusage}
 Next, we present how one can implement a mobile application using the provided programming model.
 
-\textbf{\emph{Job Definition.}} As discussed in Section \ref{prog_model}, the programmer must define what he/she will execute remotely by overriding \texttt{exec()} of the \texttt{Job} class. Then, the provided \texttt{DexCreator} tool compiles and compacts it into the DEX jar package, which will be sent to peers or an offloading server. 
+\textbf{\emph{Job Definition:}} As discussed in Section \ref{prog_model}, the programmer must define what he/she will execute remotely by overriding \texttt{exec()} of the \texttt{Job} class. Then, the provided \texttt{DexCreator} tool compiles and compacts it into the DEX jar package, which will be sent to peers or an offloading server. 
 
 
 %Also, to support dynamic class loading in Dalvik VM, we provide the \texttt{DexCreator} commandline tool that compiles the \texttt{Job} Java class file into a Dex package. The Dex package and sliced resources are packed as a \texttt{JobData} object by \texttt{JobDispatcher} and then dispatched to the available mobile devices or the cloud-based server. Next, the recipient of the \texttt{JobData} checks a checksum field to confirm the consistency, and then deserializes the object into \texttt{Job} and resources for the execution.
 
-\textbf{\emph{Data Parser.}} Next, the programmer needs to write the \texttt{DataParser} class, so that any uder-defined data can be processed at remote locations. The following code snippet \ref{code:get_single_part} shows how the programmer can partition an image file for his/her image processing application.
+\textbf{\emph{Data Parser:}} Next, the programmer needs to write the \texttt{DataParser} class, so that any uder-defined data can be processed at remote locations. The following code snippet \ref{code:get_single_part} shows how the programmer can partition an image file for his/her image processing application.
 
 %\texttt{ExecutionHandler} is the main component which wraps up the complexity, and exposes only the necessary functions like \texttt{discoverPeers()} and \texttt{dispatchJob()}. To send ACK messages to other peers for exchanging acknowledgments and reforming network, we need to call \texttt{discoverPeers()} function on the program, which should be done as soon as the application starts.
 
@@ -578,7 +578,7 @@ public Object getSinglePart(...) {
 	\label{fig:cluster_performance}
 \end{figure*}
 
-\textbf{\emph{Message Handler.}} \emph{Message Handler} is required to be instantiated during the initialization process to receive job-related events. In Listing \ref{ui_handler}, we created \texttt{UIHandler} which handles two events---\texttt{MAIN\_INFO} containing job-related information and \texttt{MAIN\_JOB\_DONE} containing job results. 
+\textbf{\emph{Message Handler:}} \emph{Message Handler} is required to be instantiated during the initialization process to receive job-related events. In Listing \ref{ui_handler}, we created \texttt{UIHandler} which handles two events---\texttt{MAIN\_INFO} containing job-related information and \texttt{MAIN\_JOB\_DONE} containing job results. 
 
 \begin{figure} [!tbh]
 \noindent \shadowbox{%
