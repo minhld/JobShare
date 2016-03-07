@@ -348,26 +348,6 @@ RL = \frac{N_{Cores} \times CPU_{Speed}}{Usage_{CPU}} + \frac{Mem_{Spec}}{Usage_
 
 The higher value of $RL$ means the higher availability of the peer. Thus, if the selected peer is a powerful cloud-based server connected, $Batt_{Spec}$ can be considered $\infty$ and $Usage_{Batt}$ is 0. According to Equation \ref{eq:res_level}, its $RL$ will be $\infty$. In our proof-of-concept implementation, to reduce the overhead caused by the calculation on the caller side, the $RL$ value is pre-calculated on each peer and then sent back to the caller in response to the inquiry message.
 
-\subsubsection{Estimating Energy Consumption}
-When executing a task, an application may consume energy dedicating for running that task ($E$) and overhead during the execution (ex. maintaining GUI or callbacks - $E_{overhead}$). Therefore, the total energy the application may use during the execution ($E_{0}$) can be calculated as follows:
-$$E_{0} = E + E_{overhead}$$
-
-When the device joins P2P network, the task will be splitted into smaller jobs, one is assigned to the caller and the others are executed on remote peers. The one assigned to the caller has data size $M(\frac{RL_{caller}}{\sum_{j \neq caller}{RL_{i}}})$, (Equation \ref{eq:data_amount}). Theoretically, it will consume an amount of energy equivalent to $E(\frac{RL_{caller}}{\sum_{i \neq caller}{RL_{i}}})$. To dispatch the jobs to the other peers, the application has to maintain Wi-Fi connections ($E_{WiFi}$) and wait for the responses ($E_{overload}$). Then the total energy consumed by application when running task in P2P network can be estimated like below
-
-\begin{small} $$E_{p2p} = E(\frac{RL_{caller}}{\sum_{i \neq caller}{RL_{i}}}) + E_{WiFi} + E_{overload}$$  \end{small}
-
-Where $RL_{i} (i \neq caller)$ is the Responsibility Level of i-peer. In our estimation, we do not consider $E_{overload}$ because it will depend on the appearance of applications. If an application has no GUI, $E_{overload}$ will cause very little effect. From the two above equations, we can calculate the difference of energy consumption between two job processing mechanisms:
-
-\begin{small} $$E_{Diff} = E_{0} - E_{p2p}$$ \end{small} Or 
-\begin{equation}
-\label{eq:energy_diff} \small
-E_{Diff} = E(1 - \frac{RL_{caller}}{\sum_{i \neq caller}{RL_{i}}}) - E_{WiFi}
-\end{equation}
-
-Since Wi-Fi is known to drain a battery steadily by time during transmission \cite{wifi_energy}. Under the non-adventitious circumstances, Equation \ref{eq:energy_diff} infers that in a P2P mobile network with a certain number of devices, if E is big enough (in other words, if the task to perform is big enough), then $E_{Diff} > 0$ will result in, or $E_{P2P} < E_{0}$. This can be interpreted that executing heavy tasks in Wi-Fi P2P network will consume less energy than running the tasks in one device. The higher value of $E_{Diff}$, the more benefit we will obtain in terms of energy efficiency.
-
-In addition, if a cloud-based offloading server is available in the network, $RL_{offload}$ is $\infty$ (Sub section \ref{ss_ers}) $\Rightarrow \sum_{i \neq caller}{RL_{i}} \rightarrow \infty$, $E_{Diff} = E - E_{WiFi}$ which is the maximum value under the same conditions. In other words, utilizing offloading server will bring the maximum benefit in compare with P2P network.
-
 
 \subsubsection{Selecting Available Peers} \label{ss_ers}
 Next, depending on the amount of job and data, an appropriate number of peers should be chosen for the best execution result. To that end, we take various parameters including execution characteristics (e.g., CPU-intensive computation, sensor access), data size, performance/energy prediction, and peers' status into consideration. However, because it is a challenge to select an optimal number of peers, we use a heuristic way to select peers as follows:
@@ -487,6 +467,25 @@ Based on these estimations, we design Algorithm \ref{alg:assign_job} that assign
 \end{algorithmic}
 \end{algorithm}
 
+\subsubsection{Estimating Energy Consumption}
+When executing a task, an application may consume energy dedicating for running that task ($E$) and overhead during the execution (ex. maintaining GUI or callbacks - $E_{overhead}$). Therefore, the total energy the application may use during the execution ($E_{0}$) can be calculated as follows:
+$$E_{0} = E + E_{overhead}$$
+
+When the device joins P2P network, the task will be splitted into smaller jobs, one is assigned to the caller and the others are executed on remote peers. The one assigned to the caller has data size $M(\frac{RL_{caller}}{\sum_{j \neq caller}{RL_{i}}})$, (Equation \ref{eq:data_amount}). Theoretically, it will consume an amount of energy equivalent to $E(\frac{RL_{caller}}{\sum_{i \neq caller}{RL_{i}}})$. To dispatch the jobs to the other peers, the application has to maintain Wi-Fi connections ($E_{WiFi}$) and wait for the responses ($E_{overload}$). Then the total energy consumed by application when running task in P2P network can be estimated like below
+
+\begin{small} $$E_{p2p} = E(\frac{RL_{caller}}{\sum_{i \neq caller}{RL_{i}}}) + E_{WiFi} + E_{overload}$$  \end{small}
+
+Where $RL_{i} (i \neq caller)$ is the Responsibility Level of i-peer. In our estimation, we do not consider $E_{overload}$ because it will depend on the appearance of applications. If an application has no GUI, $E_{overload}$ will cause very little effect. From the two above equations, we can calculate the difference of energy consumption between two job processing mechanisms:
+
+\begin{small} $$E_{Diff} = E_{0} - E_{p2p}$$ \end{small} Or 
+\begin{equation}
+\label{eq:energy_diff} \small
+E_{Diff} = E(1 - \frac{RL_{caller}}{\sum_{i \neq caller}{RL_{i}}}) - E_{WiFi}
+\end{equation}
+
+Since Wi-Fi is known to drain a battery steadily by time during transmission \cite{wifi_energy}. Under the non-adventitious circumstances, Equation \ref{eq:energy_diff} infers that in a P2P mobile network with a certain number of devices, if E is big enough (in other words, if the task to perform is big enough), then $E_{Diff} > 0$ will result in, or $E_{P2P} < E_{0}$. This can be interpreted that executing heavy tasks in Wi-Fi P2P network will consume less energy than running the tasks in one device. The higher value of $E_{Diff}$, the more benefit we will obtain in terms of energy efficiency.
+
+In addition, if a cloud-based offloading server is available in the network, $RL_{offload}$ is $\infty$ (Sub section \ref{ss_ers}) $\Rightarrow \sum_{i \neq caller}{RL_{i}} \rightarrow \infty$, $E_{Diff} = E - E_{WiFi}$ which is the maximum value under the same conditions. In other words, utilizing offloading server will bring the maximum benefit in compare with P2P network.
 
 \subsubsection{Executing a Job in the Cloud}
 Computational offloading \cite{kwon+:icsm13} has received much attention as an energy/performance optimization mechanism. Thus, we will take advantage of a powerful cloud-based remote server for computation-intensive jobs to achieve further energy/performance optimization. Specifically, if an offloading server is available, our middleware estimates costs (e.g., network cost) and benefits (e.g., CPU savings) to execute a job on the offloading server. Then, if executing the job on the offloading server is beneficial in terms of energy- or performance-efficiency, the runtime system directly establishes a communication channel between the offloading server and mobile device.
